@@ -1,4 +1,4 @@
-# 🚫notto - Not To Do List
+# 🚫 notto 노또 - Not To Do List
  
 [WIKI](https://github.com/boostcampwm-2021/android07-notto/wiki)
 
