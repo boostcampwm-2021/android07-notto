@@ -10,9 +10,9 @@
 > 
 > **민정** : 이제는 notto와 함께 Not Todo List를 작성해보세요🙌
 
-<center>
- <img src="https://i.imgur.com/ivLAkAY.png" width=200>
-</center>
+<p align="center">
+ <img src="https://i.imgur.com/ivLAkAY.png" width=300>
+</p>
 
 ## 🐥Team GoJol
 
