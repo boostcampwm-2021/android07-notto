@@ -1,4 +1,4 @@
-package com.gojol.notto
+package com.gojol.notto.ui
 
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -7,6 +7,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
