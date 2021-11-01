@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.notifications
+package com.gojol.notto.ui.popular
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,13 +8,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.gojol.notto.R
-import com.gojol.notto.databinding.FragmentNotificationsBinding
+import com.gojol.notto.databinding.FragmentPopularBinding
 
-class NotificationsFragment : Fragment() {
+class PopularFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: NotificationsViewModel
-    private var _binding: FragmentNotificationsBinding? = null
+    private lateinit var popularViewModel: PopularViewModel
+    private var _binding: FragmentPopularBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -25,14 +24,14 @@ class NotificationsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        notificationsViewModel =
-            ViewModelProvider(this).get(NotificationsViewModel::class.java)
+        popularViewModel =
+            ViewModelProvider(this).get(PopularViewModel::class.java)
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        _binding = FragmentPopularBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
+        val textView: TextView = binding.textDashboard
+        popularViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root
