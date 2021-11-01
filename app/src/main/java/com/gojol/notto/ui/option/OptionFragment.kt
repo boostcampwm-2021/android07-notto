@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.dashboard
+package com.gojol.notto.ui.option
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,13 +8,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.gojol.notto.R
-import com.gojol.notto.databinding.FragmentDashboardBinding
+import com.gojol.notto.databinding.FragmentOptionBinding
 
-class DashboardFragment : Fragment() {
+class OptionFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
-    private var _binding: FragmentDashboardBinding? = null
+    private lateinit var optionViewModel: OptionViewModel
+    private var _binding: FragmentOptionBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -25,14 +24,14 @@ class DashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
+        optionViewModel =
+            ViewModelProvider(this).get(OptionViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentOptionBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
+        val textView: TextView = binding.textNotifications
+        optionViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root
