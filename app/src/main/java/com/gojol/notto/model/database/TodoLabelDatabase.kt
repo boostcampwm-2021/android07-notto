@@ -10,19 +10,19 @@ import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.database.todolabel.TodoLabelCrossRef
 
 @Database(entities = [Todo::class, Label::class, TodoLabelCrossRef::class], version = 1)
-abstract class TodoDatabase : RoomDatabase() {
+abstract class TodoLabelDatabase : RoomDatabase() {
     abstract fun todoLabelDao(): TodoLabelDao
 
     companion object {
-        private var instance: TodoDatabase? = null
+        private var instance: TodoLabelDatabase? = null
 
         @Synchronized
-        fun getInstance(context: Context): TodoDatabase? {
+        fun getInstance(context: Context): TodoLabelDatabase? {
             if (instance == null) {
-                synchronized(TodoDatabase::class) {
+                synchronized(TodoLabelDatabase::class) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
-                        TodoDatabase::class.java,
+                        TodoLabelDatabase::class.java,
                         "notto-database"
                     ).build()
                 }
