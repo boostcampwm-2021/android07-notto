@@ -12,13 +12,13 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        android:text="전체"
         android:textColor="@color/black"
-        android:textSize="@dimen/home_label_text"
+        android:textSize="@dimen/text_x_large"
         android:textStyle="bold"
         app:chipBackgroundColor="@color/bg_chip_normal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:checked="true" />
+        tools:checked="true"
+        tools:text="@string/home_label_all" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
