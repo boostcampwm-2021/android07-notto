@@ -38,13 +38,13 @@ android {
 }
 
 dependencies {
-
     // koala nlp
     implementation "kr.bydelta:koalanlp-kkma:2.1.4:assembly"
 
     // room
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
 
     // hilt
     implementation "com.google.dagger:hilt-android:$hiltVersion"
