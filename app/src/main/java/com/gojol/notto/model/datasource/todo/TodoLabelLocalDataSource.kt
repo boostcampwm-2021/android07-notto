@@ -3,54 +3,53 @@ package com.gojol.notto.model.datasource.todo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
+import com.gojol.notto.model.database.todolabel.TodoLabelCrossRef
+import com.gojol.notto.model.database.todolabel.TodoLabelDao
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
 
-class TodoLabelRepository(
-    private val localDataSource: TodoLabelDataSource
-) : TodoLabelDataSource {
+class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) : TodoLabelDataSource {
 
     override fun insertTodo(todo: Todo) {
-        println("repository")
-        localDataSource.insertTodo(todo)
+        todoLabelDao.insertTodo(todo)
     }
 
     override fun insertTodo(todo: Todo, label: Label) {
-        localDataSource.insertTodo(todo, label)
+        todoLabelDao.insert(TodoLabelCrossRef(todo.todoId, label.labelId))
     }
 
     override fun updateTodo(todo: Todo) {
-        localDataSource.updateTodo(todo)
+        todoLabelDao.updateTodo(todo)
     }
 
     override fun updateTodo(todo: Todo, label: Label) {
-        localDataSource.updateTodo(todo, label)
+        todoLabelDao.update(TodoLabelCrossRef(todo.todoId, label.labelId))
     }
 
     override fun deleteTodo(todo: Todo) {
-        localDataSource.deleteTodo(todo)
+        todoLabelDao.deleteTodo(todo)
     }
 
     override fun getTodoWithLabel(): List<TodoWithLabel> {
-        return localDataSource.getTodoWithLabel()
+        return todoLabelDao.getTodoWithLabel()
     }
 
     override fun insertLabel(label: Label) {
-        localDataSource.insertLabel(label)
+        todoLabelDao.insertLabel(label)
     }
 
     override fun insertLabel(todo: Todo, label: Label) {
-        localDataSource.insertLabel(todo, label)
+        todoLabelDao.insert(TodoLabelCrossRef(todo.todoId, label.labelId))
     }
 
     override fun updateLabel(label: Label) {
-        localDataSource.updateLabel(label)
+        todoLabelDao.updateLabel(label)
     }
 
     override fun deleteLabel(label: Label) {
-        localDataSource.deleteLabel(label)
+        todoLabelDao.deleteLabel(label)
     }
 
     override fun getLabelWithTodo(): List<LabelWithTodo> {
-        return localDataSource.getLabelWithTodo()
+        return todoLabelDao.getLabelWithTodo()
     }
 }
