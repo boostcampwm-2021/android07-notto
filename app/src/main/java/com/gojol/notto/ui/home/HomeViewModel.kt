@@ -35,7 +35,7 @@ class HomeViewModel : ViewModel() {
        Todo(false, listOf(Label(1, "a")), "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
     )
 
-    private val _date = MutableLiveData<String>("2021년 11월 2일")
+    private val _date = MutableLiveData<String>("2021년 11월")
     val date: LiveData<String> = _date
 
     private val _labelList = MutableLiveData<List<Label>>(dummyLabels)
