@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.chip.Chip
-        android:id="@+id/chip_home_label"
-        style="@style/Widget.MaterialComponents.Chip.Choice"
+    <data>
+        <variable
+            name="item"
+            type="com.gojol.notto.model.database.label.Label" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_x_large"
-        android:textStyle="bold"
-        app:chipBackgroundColor="@color/bg_chip_normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:checked="true"
-        tools:text="@string/home_label_all" />
+        android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_home_label"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@{item.name}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_x_large"
+            android:textStyle="bold"
+            app:chipBackgroundColor="@color/bg_chip_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:checked="true"
+            tools:text="@string/home_label_all" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
