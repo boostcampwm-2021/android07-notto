@@ -4,17 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ConcatAdapter
+import androidx.recyclerview.widget.GridLayoutManager
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
-    private var _binding: FragmentHomeBinding? = null
+    private lateinit var binding: FragmentHomeBinding
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -24,18 +25,45 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
-        return root
+        return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewmodel = homeViewModel
+
+        val layoutManager = GridLayoutManager(context, 7)
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (concatAdapter.getItemViewType(position)) {
+                    CalendarAdapter.VIEW_TYPE -> 7
+                    LabelAdapter.VIEW_TYPE -> 1
+                    TodoAdapter.VIEW_TYPE -> 7
+                    else -> 7
+                }
+            }
+        }
+        binding.rvHome.layoutManager = layoutManager
+        binding.rvHome.adapter = concatAdapter
+
+        homeViewModel.date.observe(viewLifecycleOwner, {
+            calendarAdapter.setDate(it)
+        })
+
+        homeViewModel.labelList.observe(viewLifecycleOwner, {
+            labelAdapter.submitList(it)
+        })
+
+        homeViewModel.todoList.observe(viewLifecycleOwner, {
+            todoAdapter.submitList(it)
+        })
     }
 }
