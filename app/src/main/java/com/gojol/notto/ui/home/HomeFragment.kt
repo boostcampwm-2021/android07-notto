@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentHomeBinding
+import androidx.recyclerview.widget.ItemTouchHelper
+import com.gojol.notto.ui.home.utils.TodoItemTouchCallback
+
 
 class HomeFragment : Fragment() {
 
@@ -66,12 +69,11 @@ class HomeFragment : Fragment() {
             calendarAdapter.setDate(it)
         })
 
-        homeViewModel.labelList.observe(viewLifecycleOwner, {
-            labelAdapter.submitList(it)
-        })
+        setTodoListItemTouchListener()
+    }
 
-        homeViewModel.todoList.observe(viewLifecycleOwner, {
-            todoAdapter.submitList(it)
-        })
+    private fun setTodoListItemTouchListener() {
+        val itemTouchHelper = ItemTouchHelper(TodoItemTouchCallback(todoAdapter))
+        itemTouchHelper.attachToRecyclerView(binding.rvHome)
     }
 }
