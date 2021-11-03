@@ -17,9 +17,17 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private val calendarAdapter = CalendarAdapter("2021년 11월 2일")
+    private val labelAdapter = LabelAdapter()
+    private val labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
+    private val todoAdapter = TodoAdapter()
+
+    private val concatAdapter: ConcatAdapter by lazy {
+        val config = ConcatAdapter.Config.Builder().apply {
+            setIsolateViewTypes(false)
+        }.build()
+        ConcatAdapter(config, calendarAdapter, labelWrapperAdapter, todoAdapter)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
