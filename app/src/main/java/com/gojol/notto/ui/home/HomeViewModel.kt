@@ -3,6 +3,7 @@ package com.gojol.notto.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.gojol.notto.model.data.BindingData
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.todo.Todo
@@ -26,13 +27,13 @@ class HomeViewModel : ViewModel() {
     )
 
     private val dummyTodos = listOf(
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
     )
 
     private val _date = MutableLiveData<String>("2021년 11월")
@@ -43,4 +44,7 @@ class HomeViewModel : ViewModel() {
 
     private val _todoList = MutableLiveData<List<Todo>>(dummyTodos)
     val todoList: LiveData<List<Todo>> = _todoList
+
+    private val _concatList = MutableLiveData(BindingData(todoList.value, labelList.value))
+    val concatList: LiveData<BindingData> = _concatList
 }
