@@ -17,17 +17,14 @@ abstract class TodoLabelDatabase : RoomDatabase() {
         private var instance: TodoLabelDatabase? = null
 
         @Synchronized
-        fun getInstance(context: Context): TodoLabelDatabase? {
-            if (instance == null) {
-                synchronized(TodoLabelDatabase::class) {
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        TodoLabelDatabase::class.java,
-                        "notto-database"
-                    ).build()
-                }
+        fun getInstance(context: Context): TodoLabelDatabase {
+            return instance ?: synchronized(TodoLabelDatabase::class) {
+                Room.databaseBuilder(
+                    context.applicationContext,
+                    TodoLabelDatabase::class.java,
+                    "notto-database"
+                ).build()
             }
-            return instance
         }
     }
 }

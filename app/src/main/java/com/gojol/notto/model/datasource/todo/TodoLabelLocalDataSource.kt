@@ -6,8 +6,9 @@ import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoLabelCrossRef
 import com.gojol.notto.model.database.todolabel.TodoLabelDao
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
+import javax.inject.Inject
 
-class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) : TodoLabelDataSource {
+class TodoLabelLocalDataSource @Inject constructor(private val todoLabelDao: TodoLabelDao) : TodoLabelDataSource {
 
     override fun insertTodo(todo: Todo) {
         todoLabelDao.insertTodo(todo)

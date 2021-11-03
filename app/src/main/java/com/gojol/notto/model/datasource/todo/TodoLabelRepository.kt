@@ -4,13 +4,14 @@ import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
+import javax.inject.Inject
 
-class TodoLabelRepository(
+class TodoLabelRepository @Inject constructor(
     private val localDataSource: TodoLabelDataSource
 ) : TodoLabelDataSource {
 
+    // TODO suspend로 변경
     override fun insertTodo(todo: Todo) {
-        println("repository")
         localDataSource.insertTodo(todo)
     }
 
