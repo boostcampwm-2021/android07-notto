@@ -17,8 +17,8 @@
             android:id="@+id/rv_home_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_median"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_home_label_edit"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -28,11 +28,11 @@
             android:id="@+id/btn_home_label_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/space_median"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_menu"
+            android:src="@drawable/ic_more_vert"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_home_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/rv_home_label" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
