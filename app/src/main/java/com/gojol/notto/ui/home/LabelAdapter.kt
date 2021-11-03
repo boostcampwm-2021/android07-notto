@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.databinding.ItemLabelBinding
-import com.gojol.notto.model.data.Label
+import com.gojol.notto.model.database.label.Label
 
 class LabelAdapter : ListAdapter<Label, LabelAdapter.LabelViewHolder>(LabelDiff()) {
 
@@ -39,7 +39,7 @@ class LabelAdapter : ListAdapter<Label, LabelAdapter.LabelViewHolder>(LabelDiff(
 
     class LabelDiff : DiffUtil.ItemCallback<Label>() {
         override fun areItemsTheSame(oldItem: Label, newItem: Label): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.labelId == newItem.labelId
         }
 
         override fun areContentsTheSame(oldItem: Label, newItem: Label): Boolean {

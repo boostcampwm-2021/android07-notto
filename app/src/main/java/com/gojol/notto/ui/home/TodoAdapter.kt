@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.databinding.ItemTodoBinding
-import com.gojol.notto.model.data.Todo
+import com.gojol.notto.model.database.todo.Todo
 
 class TodoAdapter : ListAdapter<Todo, TodoAdapter.TodoViewHolder>(TodoDiff()) {
 
@@ -39,7 +39,7 @@ class TodoAdapter : ListAdapter<Todo, TodoAdapter.TodoViewHolder>(TodoDiff()) {
 
     class TodoDiff : DiffUtil.ItemCallback<Todo>() {
         override fun areItemsTheSame(oldItem: Todo, newItem: Todo): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.todoId == newItem.todoId
         }
 
         override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {

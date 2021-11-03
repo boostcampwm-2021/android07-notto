@@ -6,7 +6,7 @@
     <data>
         <variable
             name="item"
-            type="com.gojol.notto.model.data.Todo" />
+            type="com.gojol.notto.model.database.todo.Todo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
