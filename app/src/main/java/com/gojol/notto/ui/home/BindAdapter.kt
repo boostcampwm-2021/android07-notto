@@ -8,13 +8,32 @@ import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 
 @BindingAdapter("item")
-fun bindItems(recyclerview: RecyclerView, concatList: List<List<Any>>) {
+fun bindItems(recyclerview: RecyclerView, concatList: List<List<Any>?>) {
     val adapter = recyclerview.adapter as ConcatAdapter
     adapter.adapters.forEach {
         Log.d("adapter", it.toString())
         when(it) {
-            is TodoAdapter -> it.submitList(concatList[0] as List<Todo>)
-            is LabelWrapperAdapter -> it.getLabelAdapter().submitList(concatList[1] as List<Label>)
+            is TodoAdapter -> {
+                concatList.forEach { list ->
+                    list?.let { li ->
+                        val nList = li.filterIsInstance<Todo>()
+                        if(nList.isNotEmpty()) {
+                            it.submitList(nList)
+                        }
+                    }
+                }
+            }
+            is LabelWrapperAdapter -> {
+                concatList.forEach { list ->
+                    list?.let { li ->
+                        val nList = li.filterIsInstance<Label>()
+                        if(nList.isNotEmpty()) {
+                            it.getLabelAdapter().submitList(nList)
+                        }
+                    }
+                }
+            }
         }
     }
 }
+
