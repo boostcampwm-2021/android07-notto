@@ -2,6 +2,7 @@ package com.gojol.notto.ui.home
 
 import android.content.Context
 import android.util.Log
+import androidx.room.Room
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.TodoLabelDatabase
 import com.gojol.notto.model.database.label.Label
@@ -11,7 +12,11 @@ import com.gojol.notto.model.database.todolabel.TodoLabelCrossRef
 
 class Dummy(context: Context) {
 
-    private val todoDao = TodoLabelDatabase.getInstance(context)?.todoLabelDao()!!
+    private val todoDao = Room.databaseBuilder(
+        context.applicationContext,
+        TodoLabelDatabase::class.java,
+        "notto-database"
+    ).build().todoLabelDao()
 
     var dummyLabels = listOf(
         Label(1, "동아리", 2),
@@ -56,11 +61,7 @@ class Dummy(context: Context) {
 //        }
 //    }
 
-    fun getLabelWithTodo(): List<Label> {
-        return todoDao.getAllLabel()
-    }
-
-    fun getLabel(): List<Label> {
+    suspend fun getLabel(): List<Label> {
         return todoDao.getAllLabel()
     }
 }
