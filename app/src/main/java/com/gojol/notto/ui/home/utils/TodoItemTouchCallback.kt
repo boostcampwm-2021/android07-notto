@@ -9,11 +9,8 @@ import com.gojol.notto.ui.home.TodoAdapter
 import android.graphics.RectF
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.ConcatAdapter
 import com.gojol.notto.R
 import com.gojol.notto.common.TodoSuccessType
-import com.gojol.notto.model.database.todo.Todo
-import java.lang.Math.abs
 
 
 class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : ItemTouchHelper.Callback() {
@@ -124,11 +121,6 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
         }
     }
 
-    companion object {
-        const val TODO_SUCCESS = "성공"
-        const val TODO_FAIL = "실패"
-    }
-
 //    override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
 //        return defaultValue * 10
 //    }
@@ -144,5 +136,10 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
             itemView.right.toFloat(),
             itemView.bottom.toFloat()
         )
+    }
+
+    companion object {
+        const val TODO_SUCCESS = "성공"
+        const val TODO_FAIL = "실패"
     }
 }

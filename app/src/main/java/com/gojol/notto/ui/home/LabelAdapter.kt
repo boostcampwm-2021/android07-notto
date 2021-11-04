@@ -86,7 +86,6 @@ class LabelAdapter(
         }
 
         private fun setItemLabel(adapter: LabelAdapter, labelWithCheck: LabelWithCheck) {
-
             val checkedList = adapter.currentList.filter { it.isChecked }
             viewModel.viewModelScope.launch {
                 viewModel.addTodoListByLabels(checkedList)

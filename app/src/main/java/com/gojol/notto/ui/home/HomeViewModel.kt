@@ -66,17 +66,13 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
         _todoList.value = repository.getAllTodo().toMutableList()
         val labelWithTodos = repository.getLabelWithTodo()
-        val nList = labelWithTodos.map { label -> LabelWithCheck(label, false) }.toMutableList()
+        val newLabelList = labelWithTodos.map { label -> LabelWithCheck(label, false) }.toMutableList()
 
         val totalLabel = LabelWithTodo(
             Label(0, LABEL_NAME_ALL), _todoList.value!!
         )
-        nList.add(0, LabelWithCheck(totalLabel, true))
-        _labelList.value = nList
-    }
-
-    companion object {
-        const val LABEL_NAME_ALL = "전체"
+        newLabelList.add(0, LabelWithCheck(totalLabel, true))
+        _labelList.value = newLabelList
     }
 
     suspend fun insertTodoLabel() {
@@ -135,6 +131,10 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         }
 
         _todoList.value = newTodoList
+    }
+
+    companion object {
+        const val LABEL_NAME_ALL = "전체"
     }
 }
 

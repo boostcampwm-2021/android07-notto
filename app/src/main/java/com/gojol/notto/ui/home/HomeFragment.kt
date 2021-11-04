@@ -25,9 +25,9 @@ class HomeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var calendarAdapter: CalendarAdapter
-    private lateinit var labelAdapter:LabelAdapter
-    private lateinit var labelWrapperAdapter:LabelWrapperAdapter
-    private lateinit var todoAdapter :TodoAdapter
+    private lateinit var labelAdapter: LabelAdapter
+    private lateinit var labelWrapperAdapter: LabelWrapperAdapter
+    private lateinit var todoAdapter: TodoAdapter
 
     private val concatAdapter: ConcatAdapter by lazy {
         val config = ConcatAdapter.Config.Builder().apply {
@@ -81,7 +81,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun setObserver() {
-
         homeViewModel.date.observe(viewLifecycleOwner, {
             calendarAdapter.setDate(it)
         })
