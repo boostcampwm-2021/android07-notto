@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.ui.home.utils.TodoItemTouchCallback
@@ -29,13 +30,6 @@ class HomeFragment : Fragment() {
     private lateinit var labelWrapperAdapter: LabelWrapperAdapter
     private lateinit var todoAdapter: TodoAdapter
 
-    private val concatAdapter: ConcatAdapter by lazy {
-        val config = ConcatAdapter.Config.Builder().apply {
-            setIsolateViewTypes(false)
-        }.build()
-        ConcatAdapter(config, calendarAdapter, labelWrapperAdapter, todoAdapter)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,39 +46,13 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = homeViewModel
 
-        initAdapter()
-        setObserver()
-        setData()
-        setTodoListItemTouchListener()
+        initRecyclerView()
+        initObserver()
+        initData()
+        initTodoListItemTouchListener()
     }
 
-    private fun initAdapter() {
-        calendarAdapter = CalendarAdapter("2021년 11월 2일")
-        labelAdapter = LabelAdapter(homeViewModel)
-        labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
-        todoAdapter = TodoAdapter(homeViewModel)
-
-        val layoutManager = GridLayoutManager(context, 7)
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (concatAdapter.getItemViewType(position)) {
-                    CalendarAdapter.VIEW_TYPE -> 7
-                    LabelAdapter.VIEW_TYPE -> 1
-                    TodoAdapter.VIEW_TYPE -> 7
-                    else -> 7
-                }
-            }
-        }
-
-        binding.rvHome.layoutManager = layoutManager
-        binding.rvHome.adapter = concatAdapter
-    }
-
-    private fun setObserver() {
-        homeViewModel.date.observe(viewLifecycleOwner, {
-            calendarAdapter.setDate(it)
-        })
-
+    private fun initObserver() {
         homeViewModel.todoList.observe(viewLifecycleOwner, {
             todoAdapter.submitList(it)
         })
@@ -94,14 +62,49 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun setData() {
+    private fun initData() {
         CoroutineScope(Dispatchers.IO).launch {
             homeViewModel.setDummyData()
         }
     }
 
-    private fun setTodoListItemTouchListener() {
+    private fun initTodoListItemTouchListener() {
         val itemTouchHelper = ItemTouchHelper(TodoItemTouchCallback(todoAdapter))
         itemTouchHelper.attachToRecyclerView(binding.rvHome)
+    }
+
+    private fun initRecyclerView() {
+        calendarAdapter = CalendarAdapter(homeViewModel)
+        labelAdapter = LabelAdapter(homeViewModel)
+        labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
+        todoAdapter = TodoAdapter(homeViewModel)
+
+        val concatAdapter: ConcatAdapter by lazy {
+            val config = ConcatAdapter.Config.Builder().apply {
+                setIsolateViewTypes(false)
+            }.build()
+            ConcatAdapter(config, calendarAdapter, labelWrapperAdapter, todoAdapter)
+        }
+
+        binding.rvHome.apply {
+            adapter = concatAdapter
+            layoutManager = getLayoutManager(concatAdapter)
+        }
+    }
+
+    private fun getLayoutManager(adapter: ConcatAdapter) : RecyclerView.LayoutManager{
+        val layoutManager = GridLayoutManager(context, 7)
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (adapter.getItemViewType(position)) {
+                    CalendarAdapter.VIEW_TYPE -> 7
+                    LabelAdapter.VIEW_TYPE -> 1
+                    TodoAdapter.VIEW_TYPE -> 7
+                    else -> 7
+                }
+            }
+        }
+
+        return layoutManager
     }
 }

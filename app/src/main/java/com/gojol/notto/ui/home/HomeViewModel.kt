@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.home
 
+import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,9 @@ import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.*
+import java.util.Calendar.Builder
+import java.util.Calendar.getInstance
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,8 +39,8 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         Todo(TodoSuccessType.NOTHING, "hello7", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
     )
 
-    private val _date = MutableLiveData("2021년 11월")
-    val date: LiveData<String> = _date
+    private val _date = MutableLiveData(getInstance())
+    val date: LiveData<Calendar> = _date
 
     private val _labelList = MutableLiveData<MutableList<LabelWithCheck>>()
     val labelList: LiveData<MutableList<LabelWithCheck>> = _labelList
@@ -53,7 +57,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         }
     }
 
-    suspend fun insertDummyTodoAndLabel() {
+    private suspend fun insertDummyTodoAndLabel() {
         dummyTodos.forEach {
             repository.insertTodo(it)
         }
@@ -75,7 +79,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         _labelList.value = newLabelList
     }
 
-    suspend fun insertTodoLabel() {
+    private suspend fun insertTodoLabel() {
         val labels = repository.getAllLabel()
         val todos = repository.getAllTodo()
 
@@ -97,6 +101,18 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         // 학원
         repository.insertTodo(todos[1], labels[3])
         repository.insertTodo(todos[2], labels[3])
+    }
+
+
+    fun updateDate(year: Int, month: Int, day: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            _date.value = Builder().setDate(year, month, day).build()
+        } else {
+            val calendar: Calendar = getInstance()
+            calendar.set(year, month, day)
+
+            _date.value = calendar
+        }
     }
 
     fun fetchTodoSuccessState(todo: Todo) {

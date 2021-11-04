@@ -3,15 +3,12 @@ package com.gojol.notto.ui.home.utils
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.gojol.notto.ui.home.TodoAdapter
-import android.graphics.RectF
-import android.view.View
-import androidx.core.content.ContextCompat
 import com.gojol.notto.R
 import com.gojol.notto.common.TodoSuccessType
-
+import com.gojol.notto.ui.home.TodoAdapter
 
 class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : ItemTouchHelper.Callback() {
 
@@ -34,9 +31,7 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
         return false
     }
 
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-
-    }
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) { }
 
     override fun onChildDraw(
         c: Canvas,
@@ -54,8 +49,10 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
             if (dX < 0) {
                 successType = TodoSuccessType.FAIL
 
-                paint.color = ContextCompat.getColor(itemView.context, R.color.blue_normal)
-                c.drawRect(drawBackground(itemView), paint)
+                val drawable = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
+                drawable?.setTint(ContextCompat.getColor(itemView.context, R.color.blue_normal))
+                drawable?.setBounds(itemView.left, itemView.top, itemView.right, itemView.bottom)
+                drawable?.draw(c)
 
                 paint.color = ContextCompat.getColor(itemView.context, R.color.white)
                 paint.textSize = 70F
@@ -78,11 +75,10 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
             else if (dX > 0) {
                 successType = TodoSuccessType.SUCCESS
 
-                paint.color = ContextCompat.getColor(itemView.context, R.color.yellow_normal)
-                val d = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
-                d?.setTint(ContextCompat.getColor(itemView.context, R.color.yellow_normal))
-                d?.setBounds(itemView.left, itemView.top, itemView.right, itemView.bottom)
-                d?.draw(c)
+                val drawable = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
+                drawable?.setTint(ContextCompat.getColor(itemView.context, R.color.yellow_normal))
+                drawable?.setBounds(itemView.left, itemView.top, itemView.right, itemView.bottom)
+                drawable?.draw(c)
 
                 paint.color = ContextCompat.getColor(itemView.context, R.color.white)
                 paint.textSize = 70F
@@ -106,13 +102,13 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
             if (!isCurrentlyActive) {
                 if (kotlin.math.abs(itemView.translationX).toInt() - itemView.width == 0) {
                     if (successType == TodoSuccessType.SUCCESS) {
-                        val d = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
-                        d?.setTint(ContextCompat.getColor(itemView.context, R.color.yellow_normal))
-                        itemView.background = d
+                        val drawable = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
+                        drawable?.setTint(ContextCompat.getColor(itemView.context, R.color.yellow_normal))
+                        itemView.background = drawable
                     } else if (successType == TodoSuccessType.FAIL) {
-                        val d = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
-                        d?.setTint(ContextCompat.getColor(itemView.context, R.color.blue_normal))
-                        itemView.background = d
+                        val drawable = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
+                        drawable?.setTint(ContextCompat.getColor(itemView.context, R.color.blue_normal))
+                        itemView.background = drawable
                     }
                     listener.onItemSwipe(viewHolder.bindingAdapterPosition, successType)
                     successType = TodoSuccessType.NOTHING
@@ -128,15 +124,6 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
 //    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
 //        return 2f
 //    }
-
-    private fun drawBackground(itemView: View): RectF {
-        return RectF(
-            itemView.left.toFloat(),
-            itemView.top.toFloat(),
-            itemView.right.toFloat(),
-            itemView.bottom.toFloat()
-        )
-    }
 
     companion object {
         const val TODO_SUCCESS = "성공"
