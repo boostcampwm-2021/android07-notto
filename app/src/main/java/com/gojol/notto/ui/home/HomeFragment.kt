@@ -69,10 +69,6 @@ class HomeFragment : Fragment() {
             calendarAdapter.setDate(it)
         })
 
-//        homeViewModel.labelList.observe(viewLifecycleOwner, {
-//            labelAdapter.submitList(it)
-//        })
-
         homeViewModel.todoList.observe(viewLifecycleOwner, {
             todoAdapter.submitList(it)
         })
