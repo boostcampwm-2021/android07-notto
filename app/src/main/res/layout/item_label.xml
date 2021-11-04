@@ -25,7 +25,7 @@
             android:focusable="true"
             android:text="@{item.name}"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_x_large"
+            android:textSize="@dimen/text_median"
             android:textStyle="bold"
             app:chipBackgroundColor="@color/bg_chip_normal"
             app:layout_constraintStart_toStartOf="parent"

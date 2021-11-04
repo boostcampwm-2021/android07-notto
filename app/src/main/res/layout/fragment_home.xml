@@ -12,14 +12,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="@dimen/space_median"
         tools:context=".ui.home.HomeFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_median"
+            android:layout_marginHorizontal="@dimen/space_median"
             android:orientation="vertical"
             app:item="@{viewmodel.concatList}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
