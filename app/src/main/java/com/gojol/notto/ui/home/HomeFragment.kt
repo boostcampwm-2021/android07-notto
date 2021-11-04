@@ -13,10 +13,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.ui.home.utils.TodoItemTouchCallback
-import dagger.hilt.android.AndroidEntryPoint
+import com.gojol.notto.model.database.label.Label
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -88,6 +89,16 @@ class HomeFragment : Fragment() {
         homeViewModel.todoList.observe(viewLifecycleOwner, {
             todoAdapter.submitList(it)
         })
+
+        CoroutineScope(Dispatchers.IO).launch {
+            context?.let {
+                val labelList = Dummy(it).getLabel()
+                    .map { label -> LabelWithCheck(label, false) }
+                    .toMutableList()
+                labelList.add(0, LabelWithCheck(Label(0, "전체"), true))
+                labelAdapter.submitList(labelList)
+            }
+        }
     }
 
     private fun setData() {
