@@ -46,14 +46,14 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     private val _date = MutableLiveData("2021년 11월")
     val date: LiveData<String> = _date
 
-    private val _labelList = MutableLiveData<MutableList<Label>>()
-    val labelList: LiveData<MutableList<Label>> = _labelList
+    private val _labelList = MutableLiveData<MutableList<LabelWithCheck>>()
+    val labelList: LiveData<MutableList<LabelWithCheck>> = _labelList
 
     private val _todoList = MutableLiveData<MutableList<Todo>>()
     val todoList: LiveData<MutableList<Todo>> = _todoList
 
-    private val _concatList = MutableLiveData<BindingData>()
-    val concatList: LiveData<BindingData> = _concatList
+    private val _concatList = MutableLiveData<BindingData?>()
+    val concatList: LiveData<BindingData?> = _concatList
 
     fun insertTodos() {
         viewModelScope.launch {
@@ -69,7 +69,8 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
             dummyLabels.forEach {
                 repository.insertLabel(it)
             }
-            _labelList.value = repository.getAllLabel().toMutableList()
+            val labels = repository.getAllLabel()
+            _labelList.value = labels.map { label -> LabelWithCheck(label, false) }.toMutableList()
         }
     }
 

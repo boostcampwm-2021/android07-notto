@@ -53,25 +53,6 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = homeViewModel
 
-        val layoutManager = GridLayoutManager(context, 7)
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (concatAdapter.getItemViewType(position)) {
-                    CalendarAdapter.VIEW_TYPE -> 7
-                    LabelAdapter.VIEW_TYPE -> 1
-                    TodoAdapter.VIEW_TYPE -> 7
-                    else -> 7
-                }
-            }
-        }
-        binding.rvHome.layoutManager = layoutManager
-        binding.rvHome.adapter = concatAdapter
-
-        homeViewModel.date.observe(viewLifecycleOwner, {
-            calendarAdapter.setDate(it)
-        })
-
-
         initAdapter()
         setObserver()
         setData()
@@ -83,22 +64,36 @@ class HomeFragment : Fragment() {
         labelAdapter = LabelAdapter()
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
         todoAdapter = TodoAdapter(homeViewModel)
+
+        val layoutManager = GridLayoutManager(context, 7)
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (concatAdapter.getItemViewType(position)) {
+                    CalendarAdapter.VIEW_TYPE -> 7
+                    LabelAdapter.VIEW_TYPE -> 1
+                    TodoAdapter.VIEW_TYPE -> 7
+                    else -> 7
+                }
+            }
+        }
+
+        binding.rvHome.layoutManager = layoutManager
+        binding.rvHome.adapter = concatAdapter
     }
 
     private fun setObserver() {
+
+        homeViewModel.date.observe(viewLifecycleOwner, {
+            calendarAdapter.setDate(it)
+        })
+
         homeViewModel.todoList.observe(viewLifecycleOwner, {
             todoAdapter.submitList(it)
         })
 
-        CoroutineScope(Dispatchers.IO).launch {
-            context?.let {
-                val labelList = Dummy(it).getLabel()
-                    .map { label -> LabelWithCheck(label, false) }
-                    .toMutableList()
-                labelList.add(0, LabelWithCheck(Label(0, "전체"), true))
-                labelAdapter.submitList(labelList)
-            }
-        }
+        homeViewModel.labelList.observe(viewLifecycleOwner, {
+            labelAdapter.submitList(it)
+        })
     }
 
     private fun setData() {
