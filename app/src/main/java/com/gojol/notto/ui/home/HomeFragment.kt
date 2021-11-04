@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.ui.home.utils.TodoItemTouchCallback
-import com.gojol.notto.model.database.label.Label
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

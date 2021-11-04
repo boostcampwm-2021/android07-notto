@@ -62,17 +62,21 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
             repository.insertLabel(it)
         }
 
-
         insertTodoLabel()
 
         _todoList.value = repository.getAllTodo().toMutableList()
-        val labels = repository.getLabelWithTodo()
-        val nList = labels.map { label -> LabelWithCheck(label, false) }.toMutableList()
+        val labelWithTodos = repository.getLabelWithTodo()
+        val nList = labelWithTodos.map { label -> LabelWithCheck(label, false) }.toMutableList()
+
         val totalLabel = LabelWithTodo(
-            Label(0, "전체"), _todoList.value!!
+            Label(0, LABEL_NAME_ALL), _todoList.value!!
         )
         nList.add(0, LabelWithCheck(totalLabel, true))
         _labelList.value = nList
+    }
+
+    companion object {
+        const val LABEL_NAME_ALL = "전체"
     }
 
     suspend fun insertTodoLabel() {
@@ -80,61 +84,57 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         val todos = repository.getAllTodo()
 
         //학교
-        println(labels[0])
         repository.insertTodo(todos[2], labels[0])
         repository.insertTodo(todos[3], labels[0])
         repository.insertTodo(todos[4], labels[0])
 
         // 동아리
-        println(labels[1])
         repository.insertTodo(todos[0], labels[1])
         repository.insertTodo(todos[1], labels[1])
         repository.insertTodo(todos[2], labels[1])
 
         // 집
-        println(labels[2])
         repository.insertTodo(todos[2], labels[2])
         repository.insertTodo(todos[4], labels[2])
         repository.insertTodo(todos[5], labels[2])
 
         // 학원
-        println(labels[3])
         repository.insertTodo(todos[1], labels[3])
         repository.insertTodo(todos[2], labels[3])
     }
 
     fun fetchTodoSuccessState(todo: Todo) {
-        val nList = mutableListOf<Todo>()
+        val newTodoList = mutableListOf<Todo>()
         viewModelScope.launch {
             repository.updateTodo(todo)
-            repository.getAllTodo().forEach { t1 ->
-                _todoList.value?.forEach { t2 ->
-                    if (t1.todoId == t2.todoId) {
-                        nList.add(t1)
+            repository.getAllTodo().forEach { databaseTodo ->
+                _todoList.value?.forEach { currentTodo ->
+                    if (databaseTodo.todoId == currentTodo.todoId) {
+                        newTodoList.add(databaseTodo)
                     }
                 }
             }
-            _todoList.value = nList
+            _todoList.value = newTodoList
         }
     }
 
     suspend fun addTodoListByLabels(labels: List<LabelWithCheck>) {
-        val nList = mutableListOf<Todo>()
+        val newTodoList = mutableListOf<Todo>()
 
         val todoSet = mutableSetOf<Todo>()
         labels.forEach {
-            todoSet.addAll(it.label.todo)
+            todoSet.addAll(it.labelWithTodo.todo)
         }
 
         repository.getAllTodo().forEach {
             todoSet.forEach { setTodo ->
-                if(it.todoId == setTodo.todoId) {
-                    nList.add(it)
+                if (it.todoId == setTodo.todoId) {
+                    newTodoList.add(it)
                 }
             }
         }
 
-        _todoList.value = nList
+        _todoList.value = newTodoList
     }
 }
 

@@ -64,7 +64,7 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
                 paint.textSize = 70F
                 paint.textAlign = Paint.Align.CENTER
 
-                val text = "실패"
+                val text = TODO_FAIL
                 val bounds = Rect()
                 paint.getTextBounds(text, 0, text.length, bounds)
                 val height = bounds.height()
@@ -91,7 +91,7 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
                 paint.textSize = 70F
                 paint.textAlign = Paint.Align.CENTER
 
-                val text = "성공"
+                val text = TODO_SUCCESS
                 val bounds = Rect()
                 paint.getTextBounds(text, 0, text.length, bounds)
                 val height = bounds.height()
@@ -122,6 +122,11 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
                 }
             }
         }
+    }
+
+    companion object {
+        const val TODO_SUCCESS = "성공"
+        const val TODO_FAIL = "실패"
     }
 
 //    override fun getSwipeEscapeVelocity(defaultValue: Float): Float {

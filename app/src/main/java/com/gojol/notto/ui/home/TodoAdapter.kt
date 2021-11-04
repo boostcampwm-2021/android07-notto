@@ -57,7 +57,6 @@ class TodoAdapter(
 
     override fun onItemSwipe(position: Int, successType: TodoSuccessType) {
         val todo = currentList[position].copy(isSuccess = successType)
-        println(todo)
         viewModel.fetchTodoSuccessState(todo)
         notifyDataSetChanged()
     }
