@@ -2,12 +2,17 @@ package com.gojol.notto.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.databinding.ItemLabelBinding
+import kotlinx.coroutines.launch
 
-class LabelAdapter : ListAdapter<LabelWithCheck, LabelAdapter.LabelViewHolder>(LabelDiff()) {
+class LabelAdapter(
+    private val viewModel: HomeViewModel
+) : ListAdapter<LabelWithCheck, LabelAdapter.LabelViewHolder>(LabelDiff()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LabelViewHolder {
         return LabelViewHolder(
@@ -27,7 +32,7 @@ class LabelAdapter : ListAdapter<LabelWithCheck, LabelAdapter.LabelViewHolder>(L
         var newList = currentList.toMutableList()
         if (newList[0].isChecked) {
             val header = newList[0].copy(isChecked = false)
-            newList = newList.filter { it.label.order != 0 }.toMutableList()
+            newList = newList.filter { it.label.label.order != 0 }.toMutableList()
             newList.add(0, header)
         }
 
@@ -40,9 +45,9 @@ class LabelAdapter : ListAdapter<LabelWithCheck, LabelAdapter.LabelViewHolder>(L
     fun allChipChecked() {
         val header = currentList[0].copy(isChecked = true)
         val newList = currentList
-            .filter { it.label.order != 0 }
+            .filter { it.label.label.order != 0 }
             .map { it.copy(isChecked = false) }
-            .sortedBy { it.label.order }
+            .sortedBy { it.label.label.order }
             .toMutableList()
         newList.add(0, header)
 
@@ -53,23 +58,24 @@ class LabelAdapter : ListAdapter<LabelWithCheck, LabelAdapter.LabelViewHolder>(L
         const val VIEW_TYPE = 3
     }
 
-    class LabelViewHolder(private val binding: ItemLabelBinding) :
+    inner class LabelViewHolder(private val binding: ItemLabelBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(labelWithCheck: LabelWithCheck) {
             val adapter = bindingAdapter as LabelAdapter
             binding.chipHomeLabel.isChecked = labelWithCheck.isChecked
-            when (labelWithCheck.label.order) {
+            when (labelWithCheck.label.label.order) {
                 0 -> setHeaderLabel(adapter, labelWithCheck)
                 else -> setItemLabel(adapter, labelWithCheck)
             }
 
+            binding.viewModel = viewModel
             binding.executePendingBindings()
         }
 
         private fun setHeaderLabel(adapter: LabelAdapter, labelWithCheck: LabelWithCheck) {
             with(binding) {
-                item = labelWithCheck.label
+                item = labelWithCheck.label.label
                 chipHomeLabel.setOnClickListener {
                     if (chipHomeLabel.isChecked) {
                         adapter.allChipChecked()
@@ -81,20 +87,25 @@ class LabelAdapter : ListAdapter<LabelWithCheck, LabelAdapter.LabelViewHolder>(L
         }
 
         private fun setItemLabel(adapter: LabelAdapter, labelWithCheck: LabelWithCheck) {
+
+            val checkedList = adapter.currentList.filter { it.isChecked }
+            viewModel.viewModelScope.launch {
+                viewModel.addTodoListByLabels(checkedList)
+            }
+
             with(binding) {
-                item = labelWithCheck.label
+                item = labelWithCheck.label.label
+
                 chipHomeLabel.setOnClickListener {
                     if (chipHomeLabel.isChecked) {
                         adapter.moveItem(bindingAdapterPosition, 1, true)
                     } else {
-                        val checkedList = adapter.currentList
-                            .filter { it.isChecked && it != labelWithCheck }
-
+                        val checkedList = adapter.currentList.filter { it.isChecked && it != labelWithCheck }
                         val unCheckedList = adapter.currentList
                             .filter { !it.isChecked }
-                            .toMutableList().apply {
-                                add(labelWithCheck)
-                            }.sortedBy { it.label.order }
+                            .toMutableList()
+                            .apply { add(labelWithCheck) }
+                            .sortedBy { it.label.label.order }
 
                         if (checkedList.isEmpty()) {
                             adapter.allChipChecked()
@@ -113,7 +124,7 @@ class LabelAdapter : ListAdapter<LabelWithCheck, LabelAdapter.LabelViewHolder>(L
 
     class LabelDiff : DiffUtil.ItemCallback<LabelWithCheck>() {
         override fun areItemsTheSame(oldItem: LabelWithCheck, newItem: LabelWithCheck): Boolean {
-            return oldItem.label.labelId == newItem.label.labelId
+            return oldItem.label.label.labelId == newItem.label.label.labelId
         }
 
         override fun areContentsTheSame(oldItem: LabelWithCheck, newItem: LabelWithCheck): Boolean {

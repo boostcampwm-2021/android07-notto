@@ -1,8 +1,8 @@
 package com.gojol.notto.ui.home
 
-import com.gojol.notto.model.database.label.Label
+import com.gojol.notto.model.database.todolabel.LabelWithTodo
 
 data class LabelWithCheck(
-    val label: Label,
+    val label: LabelWithTodo,
     val isChecked: Boolean,
 )
