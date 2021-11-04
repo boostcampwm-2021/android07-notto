@@ -125,7 +125,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         labels.forEach {
             todoSet.addAll(it.label.todo)
         }
-        
+
         repository.getAllTodo().forEach {
             todoSet.forEach { setTodo ->
                 if(it.todoId == setTodo.todoId) {
