@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="3dp"
         android:background="@drawable/bg_todo_normal"
-        android:backgroundTint="@{item.isSuccess==successType.SUCCESS ? @color/yellow_normal : item.isSuccess==successType.FAIL ? @color/blue_normal :  @color/gray_normal}">
+        android:backgroundTint="@{item.isSuccess==successType.SUCCESS ? @color/yellow_normal : item.isSuccess==successType.FAIL ? @color/blue_normal :  @color/gray_light}">
 
         <TextView
             android:id="@+id/tv_home_todo"
