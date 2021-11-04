@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.databinding.ItemMonthlyCalendarBinding
 
-class CalendarAdapter(private var date: String) :
+class CalendarAdapter(val viewModel: HomeViewModel) :
     RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
@@ -15,14 +15,10 @@ class CalendarAdapter(private var date: String) :
     }
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        holder.bind(date)
+        holder.bind(viewModel)
     }
 
     override fun getItemCount(): Int = 1
-
-    fun setDate(date: String) {
-        this.date = date
-    }
 
     override fun getItemViewType(position: Int): Int {
         return VIEW_TYPE
@@ -34,8 +30,20 @@ class CalendarAdapter(private var date: String) :
 
     class CalendarViewHolder(private val binding: ItemMonthlyCalendarBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: String) {
-            binding.date = item
+
+        init {
+            binding.cvHomeMonth.setOnDateChangeListener { _, y, m, d ->
+                val adapter = bindingAdapter as CalendarAdapter
+                adapter.viewModel.updateDate(y, m, d)
+                // T0D0: 추후에 BindingAdapter 사용
+                adapter.notifyDataSetChanged()
+
+                binding.executePendingBindings()
+            }
+        }
+
+        fun bind(viewModel: HomeViewModel) {
+            binding.viewmodel = viewModel
             binding.executePendingBindings()
         }
     }

@@ -1,13 +1,11 @@
 package com.gojol.notto.ui.home
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Room
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.TodoLabelDatabase
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoLabelCrossRef
 
 class Dummy(context: Context) {
@@ -50,14 +48,16 @@ class Dummy(context: Context) {
     )
 
 //    init {
-//        dummyLabels.forEach {
-//            todoDao.insertLabel(it)
-//        }
-//        dummyTodos.forEach {
-//            todoDao.insertTodo(it)
-//        }
-//        dummyRef.forEach {
-//            todoDao.insert(it)
+//        CoroutineScope(Dispatchers.IO).launch {
+//            dummyLabels.forEach {
+//                todoDao.insertLabel(it)
+//            }
+//            dummyTodos.forEach {
+//                todoDao.insertTodo(it)
+//            }
+//            dummyRef.forEach {
+//                todoDao.insert(it)
+//            }
 //        }
 //    }
 
