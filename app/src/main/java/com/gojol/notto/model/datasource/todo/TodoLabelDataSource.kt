@@ -6,25 +6,30 @@ import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
 
 interface TodoLabelDataSource {
-    fun insertTodo(todo: Todo)
 
-    fun insertTodo(todo: Todo, label: Label)
+    suspend fun getTodoWithLabel(): List<TodoWithLabel>
 
-    fun updateTodo(todo: Todo)
+    suspend fun getLabelWithTodo(): List<LabelWithTodo>
 
-    fun updateTodo(todo: Todo, label: Label)
+    suspend fun getAllTodo(): List<Todo>
 
-    fun deleteTodo(todo: Todo)
+    suspend fun getAllLabel(): List<Label>
 
-    fun getTodoWithLabel(): List<TodoWithLabel>
+    suspend fun insertTodo(todo: Todo)
 
-    fun insertLabel(label: Label)
+    suspend fun insertTodo(todo: Todo, label: Label)
 
-    fun insertLabel(todo: Todo, label: Label)
+    suspend fun updateTodo(todo: Todo)
 
-    fun updateLabel(label: Label)
+    suspend fun updateTodo(todo: Todo, label: Label)
 
-    fun deleteLabel(label: Label)
+    suspend fun insertLabel(label: Label)
 
-    fun getLabelWithTodo(): List<LabelWithTodo>
+    suspend fun insertLabel(todo: Todo, label: Label)
+
+    suspend fun updateLabel(label: Label)
+
+    suspend fun deleteTodo(todo: Todo)
+
+    suspend fun deleteLabel(label: Label)
 }
