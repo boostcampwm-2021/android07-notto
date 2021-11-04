@@ -5,10 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.databinding.ItemTodoBinding
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.ui.home.utils.ItemTouchHelperListener
 
-class TodoAdapter : ListAdapter<Todo, TodoAdapter.TodoViewHolder>(TodoDiff()) {
+class TodoAdapter(
+    private val viewModel: HomeViewModel
+) : ListAdapter<Todo, TodoAdapter.TodoViewHolder>(TodoDiff()), ItemTouchHelperListener {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         return TodoViewHolder(
@@ -45,5 +49,15 @@ class TodoAdapter : ListAdapter<Todo, TodoAdapter.TodoViewHolder>(TodoDiff()) {
         override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {
             return oldItem == newItem
         }
+    }
+
+    override fun onItemMove(from_position: Int, to_position: Int): Boolean {
+        return false
+    }
+
+    override fun onItemSwipe(position: Int, successType: TodoSuccessType) {
+        val todo = currentList[position].copy(isSuccess = successType)
+        viewModel.fetchTodoSuccessState(todo)
+        notifyDataSetChanged()
     }
 }

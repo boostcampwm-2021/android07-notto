@@ -61,4 +61,6 @@ class LabelWrapperAdapter(private val adapter: LabelAdapter) :
             }
         }
     }
+
+    fun getLabelAdapter() = adapter
 }
