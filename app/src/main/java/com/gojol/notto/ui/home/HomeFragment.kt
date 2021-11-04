@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentHomeBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -66,12 +69,26 @@ class HomeFragment : Fragment() {
             calendarAdapter.setDate(it)
         })
 
-        homeViewModel.labelList.observe(viewLifecycleOwner, {
-            labelAdapter.submitList(it)
-        })
+//        homeViewModel.labelList.observe(viewLifecycleOwner, {
+//            labelAdapter.submitList(it)
+//        })
 
         homeViewModel.todoList.observe(viewLifecycleOwner, {
             todoAdapter.submitList(it)
         })
+
+        CoroutineScope(Dispatchers.IO).launch {
+            context?.let {
+                Dummy(it).run {
+                    getLabelWithTodo().map { label ->
+                        if (label.labelId == 1) {
+                            LabelWithCheck(label, true)
+                        } else {
+                            LabelWithCheck(label, false)
+                        }
+                    }.also { labelList -> labelAdapter.submitList(labelList) }
+                }
+            }
+        }
     }
 }
