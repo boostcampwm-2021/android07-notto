@@ -6,51 +6,61 @@ import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoLabelCrossRef
 import com.gojol.notto.model.database.todolabel.TodoLabelDao
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
-import javax.inject.Inject
 
-class TodoLabelLocalDataSource @Inject constructor(private val todoLabelDao: TodoLabelDao) : TodoLabelDataSource {
+class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
+    TodoLabelDataSource {
 
-    override fun insertTodo(todo: Todo) {
-        todoLabelDao.insertTodo(todo)
-    }
-
-    override fun insertTodo(todo: Todo, label: Label) {
-        todoLabelDao.insert(TodoLabelCrossRef(todo.todoId, label.labelId))
-    }
-
-    override fun updateTodo(todo: Todo) {
-        todoLabelDao.updateTodo(todo)
-    }
-
-    override fun updateTodo(todo: Todo, label: Label) {
-        todoLabelDao.update(TodoLabelCrossRef(todo.todoId, label.labelId))
-    }
-
-    override fun deleteTodo(todo: Todo) {
-        todoLabelDao.deleteTodo(todo)
-    }
-
-    override fun getTodoWithLabel(): List<TodoWithLabel> {
+    override suspend fun getTodoWithLabel(): List<TodoWithLabel> {
         return todoLabelDao.getTodoWithLabel()
     }
 
-    override fun insertLabel(label: Label) {
-        todoLabelDao.insertLabel(label)
+    override suspend fun getLabelWithTodo(): List<LabelWithTodo> {
+        return todoLabelDao.getLabelWithTodo()
     }
 
-    override fun insertLabel(todo: Todo, label: Label) {
+    override suspend fun getAllTodo(): List<Todo> {
+        return todoLabelDao.getAllTodo()
+    }
+
+    override suspend fun getAllLabel(): List<Label> {
+        return todoLabelDao.getAllLabel()
+    }
+
+    override suspend fun insertTodo(todo: Todo) {
+        todoLabelDao.insertTodo(todo)
+    }
+
+    override suspend fun insertTodo(todo: Todo, label: Label) {
         todoLabelDao.insert(TodoLabelCrossRef(todo.todoId, label.labelId))
     }
 
-    override fun updateLabel(label: Label) {
+    override suspend fun insertLabel(label: Label) {
+        todoLabelDao.insertLabel(label)
+    }
+
+    override suspend fun insertLabel(todo: Todo, label: Label) {
+        todoLabelDao.insert(TodoLabelCrossRef(todo.todoId, label.labelId))
+    }
+
+    override suspend fun updateTodo(todo: Todo) {
+        todoLabelDao.updateTodo(todo)
+    }
+
+    override suspend fun updateTodo(todo: Todo, label: Label) {
+        todoLabelDao.update(TodoLabelCrossRef(todo.todoId, label.labelId))
+    }
+
+    override suspend fun updateLabel(label: Label) {
         todoLabelDao.updateLabel(label)
     }
 
-    override fun deleteLabel(label: Label) {
-        todoLabelDao.deleteLabel(label)
+    override suspend fun deleteTodo(todo: Todo) {
+        todoLabelDao.deleteTodo(todo)
+        todoLabelDao.deleteTodoLabelCrossRefByTodo(todo.todoId)
     }
 
-    override fun getLabelWithTodo(): List<LabelWithTodo> {
-        return todoLabelDao.getLabelWithTodo()
+    override suspend fun deleteLabel(label: Label) {
+        todoLabelDao.deleteLabel(label)
+        todoLabelDao.deleteTodoLabelCrossRefByLabel(label.labelId)
     }
 }

@@ -8,44 +8,50 @@ import com.gojol.notto.model.database.todo.Todo
 interface TodoLabelDao {
     @Transaction
     @Query("SELECT * FROM Todo")
-    fun getTodoWithLabel(): List<TodoWithLabel>
+    suspend fun getTodoWithLabel(): List<TodoWithLabel>
 
     @Transaction
     @Query("SELECT * FROM Label")
-    fun getLabelWithTodo(): List<LabelWithTodo>
+    suspend fun getLabelWithTodo(): List<LabelWithTodo>
 
     @Transaction
     @Query("SELECT * FROM Todo")
-    fun getAllTodo(): List<Todo>
+    suspend fun getAllTodo(): List<Todo>
 
     @Transaction
     @Query("SELECT * FROM Label")
-    fun getAllLabel(): List<Label>
+    suspend fun getAllLabel(): List<Label>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertTodo(todo: Todo)
+    suspend fun insertTodo(todo: Todo)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertLabel(label: Label)
+    suspend fun insertLabel(label: Label)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(todoLabelCrossRef: TodoLabelCrossRef)
+    suspend fun insert(todoLabelCrossRef: TodoLabelCrossRef)
 
     @Update
-    fun updateTodo(todo: Todo)
+    suspend fun updateTodo(todo: Todo)
 
     @Update
-    fun updateLabel(label: Label)
+    suspend fun updateLabel(label: Label)
 
     @Update
-    fun update(todoLabelCrossRef: TodoLabelCrossRef)
+    suspend fun update(todoLabelCrossRef: TodoLabelCrossRef)
 
     @Delete
-    fun deleteTodo(todo: Todo)
+    suspend fun deleteTodo(todo: Todo)
 
     @Delete
-    fun deleteLabel(label: Label)
+    suspend fun deleteLabel(label: Label)
 
     @Delete
-    fun delete(todoLabelCrossRef: TodoLabelCrossRef)
+    suspend fun delete(todoLabelCrossRef: TodoLabelCrossRef)
+
+    @Query("DELETE FROM TodoLabelCrossRef WHERE labelId = :labelId")
+    suspend fun deleteTodoLabelCrossRefByLabel(labelId: Int)
+
+    @Query("DELETE FROM TodoLabelCrossRef WHERE todoId = :todoId")
+    suspend fun deleteTodoLabelCrossRefByTodo(todoId: Int)
 }
