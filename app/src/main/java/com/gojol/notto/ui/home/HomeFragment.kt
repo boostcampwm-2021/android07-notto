@@ -9,12 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentHomeBinding
-import dagger.hilt.android.AndroidEntryPoint
-import androidx.recyclerview.widget.ItemTouchHelper
 import com.gojol.notto.ui.home.utils.TodoItemTouchCallback
-
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -22,10 +24,10 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
 
     private val homeViewModel: HomeViewModel by viewModels()
-    private val calendarAdapter = CalendarAdapter("2021년 11월 2일")
-    private val labelAdapter = LabelAdapter()
-    private val labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
-    private val todoAdapter = TodoAdapter()
+    private lateinit var calendarAdapter: CalendarAdapter
+    private lateinit var labelAdapter:LabelAdapter
+    private lateinit var labelWrapperAdapter:LabelWrapperAdapter
+    private lateinit var todoAdapter :TodoAdapter
 
     private val concatAdapter: ConcatAdapter by lazy {
         val config = ConcatAdapter.Config.Builder().apply {
@@ -68,7 +70,31 @@ class HomeFragment : Fragment() {
             calendarAdapter.setDate(it)
         })
 
+
+        initAdapter()
+        setObserver()
+        setData()
         setTodoListItemTouchListener()
+    }
+
+    private fun initAdapter() {
+        calendarAdapter = CalendarAdapter("2021년 11월 2일")
+        labelAdapter = LabelAdapter()
+        labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
+        todoAdapter = TodoAdapter(homeViewModel)
+    }
+
+    private fun setObserver() {
+        homeViewModel.todoList.observe(viewLifecycleOwner, {
+            todoAdapter.submitList(it)
+        })
+    }
+
+    private fun setData() {
+        CoroutineScope(Dispatchers.IO).launch {
+            homeViewModel.insertTodos()
+            homeViewModel.insertLabels()
+        }
     }
 
     private fun setTodoListItemTouchListener() {
