@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
 
     private fun initAdapter() {
         calendarAdapter = CalendarAdapter("2021년 11월 2일")
-        labelAdapter = LabelAdapter()
+        labelAdapter = LabelAdapter(homeViewModel)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
         todoAdapter = TodoAdapter(homeViewModel)
 
@@ -98,8 +98,7 @@ class HomeFragment : Fragment() {
 
     private fun setData() {
         CoroutineScope(Dispatchers.IO).launch {
-            homeViewModel.insertTodos()
-            homeViewModel.insertLabels()
+            homeViewModel.setDummyData()
         }
     }
 
