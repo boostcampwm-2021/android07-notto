@@ -3,15 +3,15 @@ package com.gojol.notto.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.data.RepeatType
+import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: TodoLabelRepository): ViewModel() {
+class HomeViewModel @Inject constructor(private val repository: TodoLabelRepository) : ViewModel() {
 
     private val dummyLabels = listOf(
         Label(0, "학교"),
@@ -30,13 +30,13 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     )
 
     private val dummyTodos = listOf(
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-       Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(false, "안녕하세요", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
     )
 
     private val _date = MutableLiveData<String>("2021년 11월")

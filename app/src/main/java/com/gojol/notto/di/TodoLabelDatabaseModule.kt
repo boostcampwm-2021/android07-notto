@@ -1,6 +1,7 @@
 package com.gojol.notto.di
 
 import android.content.Context
+import androidx.room.Room
 import com.gojol.notto.model.database.TodoLabelDatabase
 import com.gojol.notto.model.database.todolabel.TodoLabelDao
 import com.gojol.notto.model.datasource.todo.TodoLabelDataSource
@@ -19,7 +20,11 @@ class TodoLabelDatabaseModule {
     @Singleton
     @Provides
     fun provideTodoLabelDatabase(@ApplicationContext context: Context): TodoLabelDatabase {
-        return TodoLabelDatabase.getInstance(context)
+        return Room.databaseBuilder(
+            context.applicationContext,
+            TodoLabelDatabase::class.java,
+            "notto-database"
+        ).build()
     }
 
     @Provides
