@@ -5,6 +5,9 @@
 
     <data>
         <variable
+            name="viewModel"
+            type="com.gojol.notto.ui.home.HomeViewModel" />
+        <variable
             name="item"
             type="com.gojol.notto.model.database.label.Label" />
     </data>
