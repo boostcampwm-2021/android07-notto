@@ -14,7 +14,6 @@ class Dummy(context: Context) {
     private val todoDao = TodoLabelDatabase.getInstance(context)?.todoLabelDao()!!
 
     var dummyLabels = listOf(
-        Label(0, "전체", 1),
         Label(1, "동아리", 2),
         Label(2, "집", 3),
         Label(3, "회사", 4),
@@ -36,14 +35,6 @@ class Dummy(context: Context) {
     )
 
     private val dummyRef = listOf(
-        TodoLabelCrossRef(dummyTodos[0].todoId, dummyLabels[0].labelId),
-        TodoLabelCrossRef(dummyTodos[1].todoId, dummyLabels[0].labelId),
-        TodoLabelCrossRef(dummyTodos[2].todoId, dummyLabels[0].labelId),
-        TodoLabelCrossRef(dummyTodos[3].todoId, dummyLabels[0].labelId),
-        TodoLabelCrossRef(dummyTodos[4].todoId, dummyLabels[0].labelId),
-        TodoLabelCrossRef(dummyTodos[5].todoId, dummyLabels[0].labelId),
-        TodoLabelCrossRef(dummyTodos[6].todoId, dummyLabels[0].labelId),
-
         TodoLabelCrossRef(dummyTodos[0].todoId, dummyLabels[1].labelId),
         TodoLabelCrossRef(dummyTodos[0].todoId, dummyLabels[2].labelId),
         TodoLabelCrossRef(dummyTodos[1].todoId, dummyLabels[1].labelId),

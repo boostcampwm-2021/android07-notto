@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentHomeBinding
+import com.gojol.notto.model.database.label.Label
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -75,15 +76,11 @@ class HomeFragment : Fragment() {
 
         CoroutineScope(Dispatchers.IO).launch {
             context?.let {
-                Dummy(it).run {
-                    getLabelWithTodo().map { label ->
-                        if (label.labelId == 1) {
-                            LabelWithCheck(label, true)
-                        } else {
-                            LabelWithCheck(label, false)
-                        }
-                    }.also { labelList -> labelAdapter.submitList(labelList) }
-                }
+                val labelList = Dummy(it).getLabelWithTodo()
+                    .map { label -> LabelWithCheck(label, false) }
+                    .toMutableList()
+                labelList.add(0, LabelWithCheck(Label(0, "전체"), true))
+                labelAdapter.submitList(labelList)
             }
         }
     }
