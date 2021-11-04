@@ -10,7 +10,9 @@ import com.gojol.notto.databinding.ItemTodoBinding
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.ui.home.utils.ItemTouchHelperListener
 
-class TodoAdapter : ListAdapter<Todo, TodoAdapter.TodoViewHolder>(TodoDiff()), ItemTouchHelperListener {
+class TodoAdapter(
+    private val viewModel: HomeViewModel
+) : ListAdapter<Todo, TodoAdapter.TodoViewHolder>(TodoDiff()), ItemTouchHelperListener {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         return TodoViewHolder(
@@ -54,7 +56,9 @@ class TodoAdapter : ListAdapter<Todo, TodoAdapter.TodoViewHolder>(TodoDiff()), I
     }
 
     override fun onItemSwipe(position: Int, successType: TodoSuccessType) {
-        //notifyItemChanged(position)
+        val todo = currentList[position].copy(isSuccess = successType)
+        println(todo)
+        viewModel.fetchTodoSuccessState(todo)
         notifyDataSetChanged()
     }
 }
