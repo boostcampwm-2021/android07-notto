@@ -5,13 +5,16 @@
 
     <data>
         <variable
+            name="viewModel"
+            type="com.gojol.notto.ui.home.HomeViewModel" />
+        <variable
             name="item"
             type="com.gojol.notto.model.database.label.Label" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_home_label"

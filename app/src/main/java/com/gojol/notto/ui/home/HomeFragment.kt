@@ -9,10 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentHomeBinding
-import com.gojol.notto.model.database.label.Label
+import com.gojol.notto.ui.home.utils.TodoItemTouchCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,7 +25,6 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
 
     private val homeViewModel: HomeViewModel by viewModels()
-
     private lateinit var calendarAdapter: CalendarAdapter
     private lateinit var labelAdapter: LabelAdapter
     private lateinit var labelWrapperAdapter: LabelWrapperAdapter
@@ -43,31 +43,41 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRecyclerView()
-
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = homeViewModel
 
+        initRecyclerView()
+        initObserver()
+        initData()
+        initTodoListItemTouchListener()
+    }
+
+    private fun initObserver() {
         homeViewModel.todoList.observe(viewLifecycleOwner, {
             todoAdapter.submitList(it)
         })
 
+        homeViewModel.labelList.observe(viewLifecycleOwner, {
+            labelAdapter.submitList(it)
+        })
+    }
+
+    private fun initData() {
         CoroutineScope(Dispatchers.IO).launch {
-            context?.let {
-                val labelList = Dummy(it).getLabel()
-                    .map { label -> LabelWithCheck(label, false) }
-                    .toMutableList()
-                labelList.add(0, LabelWithCheck(Label(0, "전체"), true))
-                labelAdapter.submitList(labelList)
-            }
+            homeViewModel.setDummyData()
         }
+    }
+
+    private fun initTodoListItemTouchListener() {
+        val itemTouchHelper = ItemTouchHelper(TodoItemTouchCallback(todoAdapter))
+        itemTouchHelper.attachToRecyclerView(binding.rvHome)
     }
 
     private fun initRecyclerView() {
         calendarAdapter = CalendarAdapter(homeViewModel)
-        labelAdapter = LabelAdapter()
+        labelAdapter = LabelAdapter(homeViewModel)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
-        todoAdapter = TodoAdapter()
+        todoAdapter = TodoAdapter(homeViewModel)
 
         val concatAdapter: ConcatAdapter by lazy {
             val config = ConcatAdapter.Config.Builder().apply {
