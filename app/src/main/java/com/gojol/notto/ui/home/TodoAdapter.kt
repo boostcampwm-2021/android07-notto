@@ -54,6 +54,7 @@ class TodoAdapter : ListAdapter<Todo, TodoAdapter.TodoViewHolder>(TodoDiff()), I
     }
 
     override fun onItemSwipe(position: Int, successType: TodoSuccessType) {
-
+        //notifyItemChanged(position)
+        notifyDataSetChanged()
     }
 }

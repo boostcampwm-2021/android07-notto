@@ -9,8 +9,11 @@ import com.gojol.notto.ui.home.TodoAdapter
 import android.graphics.RectF
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ConcatAdapter
 import com.gojol.notto.R
 import com.gojol.notto.common.TodoSuccessType
+import com.gojol.notto.model.database.todo.Todo
+import java.lang.Math.abs
 
 
 class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : ItemTouchHelper.Callback() {
@@ -52,8 +55,6 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             // 실패 배경 그리기
             if (dX < 0) {
-                // TODO: room 데이터베이스에 successful 정보 update
-                //   room 데이터 update와 view 디자인 변화 시점이 동일하게..
                 successType = TodoSuccessType.FAIL
 
                 paint.color = ContextCompat.getColor(itemView.context, R.color.blue_normal)
@@ -81,10 +82,10 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
                 successType = TodoSuccessType.SUCCESS
 
                 paint.color = ContextCompat.getColor(itemView.context, R.color.yellow_normal)
-                val background = RectF(
-                    itemView.left.toFloat(), itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat()
-                )
-                c.drawRect(background, paint)
+                val d = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
+                d?.setTint(ContextCompat.getColor(itemView.context, R.color.yellow_normal))
+                d?.setBounds(itemView.left, itemView.top, itemView.right, itemView.bottom)
+                d?.draw(c)
 
                 paint.color = ContextCompat.getColor(itemView.context, R.color.white)
                 paint.textSize = 70F
@@ -105,30 +106,31 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
             }
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-        }
-
-        // TODO: success -> success or fail -> fail : 취소로 변경
-        //  backgroundcolor로 바꾸니까 모양도 같이 바뀜. 수정할 것.
-        if(!isCurrentlyActive) {
-            if(successType == TodoSuccessType.SUCCESS) {
-                itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.blue_normal))
-            } else if(successType == TodoSuccessType.FAIL) {
-                itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.yellow_normal))
+            if (!isCurrentlyActive) {
+                if (kotlin.math.abs(itemView.translationX).toInt() - itemView.width == 0) {
+                    if (successType == TodoSuccessType.SUCCESS) {
+                        val d = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
+                        d?.setTint(ContextCompat.getColor(itemView.context, R.color.yellow_normal))
+                        itemView.background = d
+                    } else if (successType == TodoSuccessType.FAIL) {
+                        val d = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
+                        d?.setTint(ContextCompat.getColor(itemView.context, R.color.blue_normal))
+                        itemView.background = d
+                    }
+                    listener.onItemSwipe(viewHolder.bindingAdapterPosition, successType)
+                    successType = TodoSuccessType.NOTHING
+                }
             }
-            listener.onItemSwipe(viewHolder.bindingAdapterPosition, successType)
-            successType = TodoSuccessType.NOTHING
-
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         }
     }
 
-    override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
-        return defaultValue * 10
-    }
-
-    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
-        return 2f
-    }
+//    override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
+//        return defaultValue * 10
+//    }
+//
+//    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+//        return 2f
+//    }
 
     private fun drawBackground(itemView: View): RectF {
         return RectF(
