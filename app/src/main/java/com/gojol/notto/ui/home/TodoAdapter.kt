@@ -59,6 +59,6 @@ class TodoAdapter(
         val todo = currentList[position].copy(isSuccess = successType)
         println(todo)
         viewModel.fetchTodoSuccessState(todo)
-        notifyDataSetChanged()
+        //notifyDataSetChanged()
     }
 }
