@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home
+package com.gojol.notto.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.databinding.ItemTodoBinding
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.ui.home.HomeViewModel
 import com.gojol.notto.ui.home.utils.ItemTouchHelperListener
 
 class TodoAdapter(

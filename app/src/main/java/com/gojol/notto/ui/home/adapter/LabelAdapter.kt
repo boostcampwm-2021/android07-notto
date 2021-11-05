@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home
+package com.gojol.notto.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.databinding.ItemLabelBinding
 import com.gojol.notto.model.data.LabelWithCheck
+import com.gojol.notto.ui.home.HomeViewModel
 import kotlinx.coroutines.launch
 
 class LabelAdapter(

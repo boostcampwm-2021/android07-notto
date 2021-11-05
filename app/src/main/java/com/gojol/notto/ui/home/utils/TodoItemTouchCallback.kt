@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.common.TodoSuccessType
-import com.gojol.notto.ui.home.TodoAdapter
+import com.gojol.notto.ui.home.adapter.TodoAdapter
 
 class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : ItemTouchHelper.Callback() {
 

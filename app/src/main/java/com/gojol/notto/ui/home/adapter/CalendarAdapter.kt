@@ -1,9 +1,10 @@
-package com.gojol.notto.ui.home
+package com.gojol.notto.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.databinding.ItemMonthlyCalendarBinding
+import com.gojol.notto.ui.home.HomeViewModel
 
 class CalendarAdapter(val viewModel: HomeViewModel) :
     RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {

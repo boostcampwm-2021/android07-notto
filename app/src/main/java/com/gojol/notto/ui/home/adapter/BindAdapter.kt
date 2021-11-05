@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home
+package com.gojol.notto.ui.home.adapter
 
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ConcatAdapter

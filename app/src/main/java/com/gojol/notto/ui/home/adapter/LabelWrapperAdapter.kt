@@ -4,7 +4,7 @@
  * modified by gojol
  */
 
-package com.gojol.notto.ui.home
+package com.gojol.notto.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
