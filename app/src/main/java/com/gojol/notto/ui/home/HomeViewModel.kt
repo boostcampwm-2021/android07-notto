@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.model.data.BindingData
+import com.gojol.notto.model.data.LabelWithCheck
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.todo.Todo

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.databinding.ItemLabelBinding
+import com.gojol.notto.model.data.LabelWithCheck
 import kotlinx.coroutines.launch
 
 class LabelAdapter(
