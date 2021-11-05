@@ -24,19 +24,19 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
     private val dummyLabels = mutableListOf(
         Label(1, "학교"),
-        Label(2, "동아리"),
+        Label(2, "건강"),
         Label(3, "집"),
-        Label(4, "학원")
+        Label(4, "과제")
     )
 
     private val dummyTodos = mutableListOf(
-        Todo(TodoSuccessType.NOTHING, "hello1", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "hello2", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "hello3", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "hello4", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "hello5", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "hello6", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "hello7", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(TodoSuccessType.NOTHING, "밥 굶지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(TodoSuccessType.NOTHING, "과제 미루지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(TodoSuccessType.NOTHING, "지각하지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(TodoSuccessType.NOTHING, "밥 먹을 때 물 먹지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(TodoSuccessType.NOTHING, "회의 지각 안하기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(TodoSuccessType.NOTHING, "핸드폰 보지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(TodoSuccessType.NOTHING, "누워있지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
     )
 
     private val _date = MutableLiveData(getInstance())
@@ -83,24 +83,26 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         val labels = repository.getAllLabel()
         val todos = repository.getAllTodo()
 
-        //학교
-        repository.insertTodo(todos[2], labels[0])
-        repository.insertTodo(todos[3], labels[0])
-        repository.insertTodo(todos[4], labels[0])
-
-        // 동아리
+        repository.insertTodo(todos[0], labels[0])
         repository.insertTodo(todos[0], labels[1])
-        repository.insertTodo(todos[1], labels[1])
-        repository.insertTodo(todos[2], labels[1])
+        repository.insertTodo(todos[0], labels[2])
 
-        // 집
-        repository.insertTodo(todos[2], labels[2])
-        repository.insertTodo(todos[4], labels[2])
-        repository.insertTodo(todos[5], labels[2])
-
-        // 학원
         repository.insertTodo(todos[1], labels[3])
-        repository.insertTodo(todos[2], labels[3])
+
+        repository.insertTodo(todos[2], labels[0])
+
+        repository.insertTodo(todos[3], labels[1])
+
+        repository.insertTodo(todos[4], labels[0])
+        repository.insertTodo(todos[4], labels[3])
+
+        repository.insertTodo(todos[5], labels[0])
+        repository.insertTodo(todos[5], labels[1])
+        repository.insertTodo(todos[5], labels[2])
+        repository.insertTodo(todos[5], labels[3])
+
+        repository.insertTodo(todos[6], labels[0])
+        repository.insertTodo(todos[6], labels[2])
     }
 
 
