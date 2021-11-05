@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home.utils
+package com.gojol.notto.ui.home.util
 
 import android.graphics.Canvas
 import android.graphics.Paint

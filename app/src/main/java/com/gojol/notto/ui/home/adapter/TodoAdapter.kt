@@ -9,7 +9,7 @@ import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.databinding.ItemTodoBinding
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.ui.home.HomeViewModel
-import com.gojol.notto.ui.home.utils.ItemTouchHelperListener
+import com.gojol.notto.ui.home.util.ItemTouchHelperListener
 
 class TodoAdapter(
     private val viewModel: HomeViewModel
