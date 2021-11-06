@@ -112,6 +112,11 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
                     }
                     listener.onItemSwipe(viewHolder.bindingAdapterPosition, successType)
                     successType = TodoSuccessType.NOTHING
+
+                    val drawable = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
+                    drawable?.setTint(ContextCompat.getColor(itemView.context, R.color.white))
+                    drawable?.setBounds(itemView.left, itemView.top, itemView.right, itemView.bottom)
+                    drawable?.draw(c)
                 }
             }
         }
