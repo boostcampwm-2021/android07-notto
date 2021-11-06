@@ -78,6 +78,8 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         )
         newLabelList.add(0, LabelWithCheck(totalLabel, true))
         _labelList.value = newLabelList
+
+        _concatList.value = BindingData(todoList.value, labelList.value)
     }
 
     private suspend fun insertTodoLabel() {
@@ -130,6 +132,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
                 }
             }
             _todoList.value = newTodoList
+            _concatList.value = BindingData(todoList.value, labelList.value)
         }
     }
 
@@ -150,6 +153,12 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         }
 
         _todoList.value = newTodoList
+        _concatList.value = BindingData(todoList.value, labelList.value)
+    }
+
+    fun updateLabelList(list: MutableList<LabelWithCheck>) {
+        _labelList.value = list
+        _concatList.value = BindingData(todoList.value, labelList.value)
     }
 
     companion object {
