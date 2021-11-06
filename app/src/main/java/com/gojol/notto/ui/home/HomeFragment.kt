@@ -93,6 +93,7 @@ class HomeFragment : Fragment() {
         binding.rvHome.apply {
             adapter = concatAdapter
             layoutManager = getLayoutManager(concatAdapter)
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null)
         }
     }
 

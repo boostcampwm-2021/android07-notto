@@ -8,6 +8,7 @@ import com.gojol.notto.R
 import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.ui.home.adapter.TodoAdapter
 import android.view.View
+import android.os.Build
 
 
 class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : ItemTouchHelper.Callback() {
@@ -65,8 +66,14 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
                 setDrawTextPaint(itemView, text, c)
             }
 
+            // TODO: 이 방법은 성능 이슈가 있는 듯 하다. 너무 많은 drawRect의 호출로 인한 성능 저하인지,
+            //  setLayerType으로 인한 성능 저하인지 확인할 것
             if (kotlin.math.abs(itemView.translationX).toInt() - itemView.width >= 0) {
-                drawItemBackground(itemView, R.color.white, c)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+                } else {
+                    c.drawColor(Color.TRANSPARENT, BlendMode.CLEAR)
+                }
             }
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
@@ -90,7 +97,7 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
         val height = bounds.height()
         val width = bounds.width()
 
-        val x: Float = if(text == TODO_FAIL) {
+        val x: Float = if (text == TODO_FAIL) {
             itemView.right.toFloat() - width
         } else {
             itemView.left.toFloat() + width
