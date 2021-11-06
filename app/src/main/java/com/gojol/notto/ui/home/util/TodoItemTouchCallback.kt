@@ -82,7 +82,7 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
 
     private fun setDrawTextPaint(itemView: View, text: String, canvas: Canvas) {
         paint.color = ContextCompat.getColor(itemView.context, R.color.white)
-        paint.textSize = 70F
+        paint.textSize = itemView.resources.getDimensionPixelSize(R.dimen.text_median).toFloat()
         paint.textAlign = Paint.Align.CENTER
 
         val bounds = Rect()
