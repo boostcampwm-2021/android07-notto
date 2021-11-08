@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.R
 import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.databinding.ItemTodoBinding
@@ -28,7 +29,7 @@ class TodoAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return VIEW_TYPE
+        return AdapterViewType.TODO.viewType
     }
 
     override fun onItemMove(from: Int, to: Int): Boolean {
@@ -41,10 +42,6 @@ class TodoAdapter(
         val todo = currentList[position].copy(isSuccess = successType)
         swipeCallback(todo)
         notifyDataSetChanged()
-    }
-
-    companion object {
-        const val VIEW_TYPE = 4
     }
 
     class TodoViewHolder(private val binding: ItemTodoBinding) :

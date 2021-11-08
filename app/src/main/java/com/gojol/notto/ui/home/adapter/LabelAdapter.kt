@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.ItemLabelBinding
 import com.gojol.notto.model.data.LabelWithCheck
 import com.gojol.notto.ui.home.HomeViewModel
@@ -26,7 +27,7 @@ class LabelAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return VIEW_TYPE
+        return AdapterViewType.LABEL.viewType
     }
 
     fun moveItem(from: Int, to: Int, isChecked: Boolean) {
@@ -53,10 +54,6 @@ class LabelAdapter(
         newList.add(0, header)
 
         viewModel.updateLabelList(newList)
-    }
-
-    companion object {
-        const val VIEW_TYPE = 3
     }
 
     inner class LabelViewHolder(private val binding: ItemLabelBinding) :
