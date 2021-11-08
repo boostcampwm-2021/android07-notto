@@ -1,6 +1,5 @@
 package com.gojol.notto.ui.home
 
-import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,8 +14,6 @@ import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
-import java.util.Calendar.Builder
-import java.util.Calendar.getInstance
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,7 +36,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         Todo(TodoSuccessType.NOTHING, "누워있지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
     )
 
-    private val _date = MutableLiveData(getInstance())
+    private val _date = MutableLiveData(Calendar.getInstance())
     val date: LiveData<Calendar> = _date
 
     private val _labelList = MutableLiveData<List<LabelWithCheck>>()
@@ -104,14 +101,10 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
 
     fun updateDate(year: Int, month: Int, day: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            _date.value = Builder().setDate(year, month, day).build()
-        } else {
-            val calendar: Calendar = getInstance()
-            calendar.set(year, month, day)
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.set(year, month, day)
 
-            _date.value = calendar
-        }
+        _date.value = calendar
     }
 
     fun fetchTodoSuccessState(todo: Todo) {
