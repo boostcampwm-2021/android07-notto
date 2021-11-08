@@ -3,9 +3,11 @@ package com.gojol.notto.ui.home.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.gojol.notto.R
 import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.databinding.ItemTodoBinding
 import com.gojol.notto.model.database.todo.Todo
@@ -54,6 +56,12 @@ class TodoAdapter(
             binding.item = item
             successType = item.isSuccess
 
+            val color = when (successType) {
+                TodoSuccessType.NOTHING -> R.color.black
+                else -> R.color.white
+            }
+
+            binding.tvHomeTodo.setTextColor(ContextCompat.getColor(binding.root.context, color))
             binding.executePendingBindings()
         }
     }

@@ -125,7 +125,7 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) :
                 else -> ContextCompat.getColor(itemView.context, R.color.white)
             }
 
-            textSize = itemView.resources.getDimensionPixelSize(R.dimen.text_median).toFloat()
+            textSize = itemView.resources.getDimensionPixelSize(R.dimen.text_x_small).toFloat()
             textAlign = Paint.Align.CENTER
             getTextBounds(text, 0, text.length, bounds)
         }
