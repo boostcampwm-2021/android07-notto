@@ -31,7 +31,7 @@ class TodoAdapter(
         return VIEW_TYPE
     }
 
-    override fun onItemMove(from_position: Int, to_position: Int): Boolean {
+    override fun onItemMove(from: Int, to: Int): Boolean {
         return false
     }
 
