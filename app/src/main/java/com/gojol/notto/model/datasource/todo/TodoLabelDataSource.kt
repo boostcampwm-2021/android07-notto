@@ -7,9 +7,9 @@ import com.gojol.notto.model.database.todolabel.TodoWithLabel
 
 interface TodoLabelDataSource {
 
-    suspend fun getTodoWithLabel(): List<TodoWithLabel>
+    suspend fun getTodosWithLabels(): List<TodoWithLabel>
 
-    suspend fun getLabelWithTodo(): List<LabelWithTodo>
+    suspend fun getLabelsWithTodos(): List<LabelWithTodo>
 
     suspend fun getAllTodo(): List<Todo>
 
@@ -19,13 +19,11 @@ interface TodoLabelDataSource {
 
     suspend fun insertTodo(todo: Todo, label: Label)
 
-    suspend fun updateTodo(todo: Todo)
-
-    suspend fun updateTodo(todo: Todo, label: Label)
-
     suspend fun insertLabel(label: Label)
 
-    suspend fun insertLabel(todo: Todo, label: Label)
+    suspend fun updateTodo(todo: Todo)
+
+    suspend fun updateTodo(todo: Todo, labels: List<Label>)
 
     suspend fun updateLabel(label: Label)
 
