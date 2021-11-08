@@ -43,8 +43,8 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     }
 
     override suspend fun updateTodo(todo: Todo, labels: List<Label>) {
-        for (label in labels) {
-            todoLabelDao.update(TodoLabelCrossRef(todo.todoId, label.labelId))
+        labels.forEach {
+            todoLabelDao.update(TodoLabelCrossRef(todo.todoId, it.labelId))
         }
     }
 
