@@ -57,13 +57,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun initObserver() {
-//        homeViewModel.todoList.observe(viewLifecycleOwner, {
-//            todoAdapter.submitList(it)
-//        })
-//
-//        homeViewModel.labelList.observe(viewLifecycleOwner, {
-//            labelAdapter.submitList(it)
-//        })
+        homeViewModel.todoList.observe(viewLifecycleOwner, {
+            todoAdapter.submitList(it)
+        })
+
+        homeViewModel.labelList.observe(viewLifecycleOwner, {
+            labelAdapter.submitList(it)
+        })
     }
 
     private fun initData() {

@@ -6,18 +6,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gojol.notto.common.TodoSuccessType
-import com.gojol.notto.model.data.BindingData
 import com.gojol.notto.model.data.LabelWithCheck
-import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.data.RepeatType
+import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.util.*
 import java.util.Calendar.Builder
 import java.util.Calendar.getInstance
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,9 +48,6 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     private val _todoList = MutableLiveData<MutableList<Todo>>()
     val todoList: LiveData<MutableList<Todo>> = _todoList
 
-    private val _concatList = MutableLiveData<BindingData?>()
-    val concatList: LiveData<BindingData?> = _concatList
-
     fun setDummyData() {
         viewModelScope.launch {
             insertDummyTodoAndLabel()
@@ -78,8 +74,6 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         )
         newLabelList.add(0, LabelWithCheck(totalLabel, true))
         _labelList.value = newLabelList
-
-        _concatList.value = BindingData(todoList.value, labelList.value)
     }
 
     private suspend fun insertTodoLabel() {
@@ -132,7 +126,6 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
                 }
             }
             _todoList.value = newTodoList
-            _concatList.value = BindingData(todoList.value, labelList.value)
         }
     }
 
@@ -153,12 +146,10 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         }
 
         _todoList.value = newTodoList
-        _concatList.value = BindingData(todoList.value, labelList.value)
     }
 
     fun updateLabelList(list: MutableList<LabelWithCheck>) {
         _labelList.value = list
-        _concatList.value = BindingData(todoList.value, labelList.value)
     }
 
     companion object {
