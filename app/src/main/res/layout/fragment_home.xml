@@ -21,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_median"
             android:orientation="vertical"
-            app:item="@{viewmodel.concatList}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

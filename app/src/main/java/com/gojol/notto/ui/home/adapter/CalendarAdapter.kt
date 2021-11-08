@@ -3,6 +3,7 @@ package com.gojol.notto.ui.home.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.ItemMonthlyCalendarBinding
 import com.gojol.notto.ui.home.HomeViewModel
 
@@ -22,11 +23,7 @@ class CalendarAdapter(val viewModel: HomeViewModel) :
     override fun getItemCount(): Int = 1
 
     override fun getItemViewType(position: Int): Int {
-        return VIEW_TYPE
-    }
-
-    companion object {
-        const val VIEW_TYPE = 1
+        return AdapterViewType.CALENDAR.viewType
     }
 
     class CalendarViewHolder(private val binding: ItemMonthlyCalendarBinding) :
