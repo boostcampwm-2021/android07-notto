@@ -19,13 +19,11 @@ interface TodoLabelDataSource {
 
     suspend fun insertTodo(todo: Todo, label: Label)
 
-    suspend fun updateTodo(todo: Todo)
-
-    suspend fun updateTodo(todo: Todo, label: Label)
-
     suspend fun insertLabel(label: Label)
 
-    suspend fun insertLabel(todo: Todo, label: Label)
+    suspend fun updateTodo(todo: Todo)
+
+    suspend fun updateTodo(todo: Todo, labels: List<Label>)
 
     suspend fun updateLabel(label: Label)
 
