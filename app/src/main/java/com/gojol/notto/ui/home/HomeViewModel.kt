@@ -42,11 +42,11 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     private val _date = MutableLiveData(getInstance())
     val date: LiveData<Calendar> = _date
 
-    private val _labelList = MutableLiveData<MutableList<LabelWithCheck>>()
-    val labelList: LiveData<MutableList<LabelWithCheck>> = _labelList
+    private val _labelList = MutableLiveData<List<LabelWithCheck>>()
+    val labelList: LiveData<List<LabelWithCheck>> = _labelList
 
-    private val _todoList = MutableLiveData<MutableList<Todo>>()
-    val todoList: LiveData<MutableList<Todo>> = _todoList
+    private val _todoList = MutableLiveData<List<Todo>>()
+    val todoList: LiveData<List<Todo>> = _todoList
 
     fun setDummyData() {
         viewModelScope.launch {
