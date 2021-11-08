@@ -123,9 +123,9 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     }
 
     override suspend fun updateLabel(label: Label) {
-        for (i in labels.indices) {
-            if (labels[i].labelId == label.labelId) {
-                labels[i] = label
+        labels.forEachIndexed { index, _ ->
+            if (labels[index].labelId == label.labelId) {
+                labels[index] = label
 
                 return
             }
