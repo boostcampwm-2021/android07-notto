@@ -56,6 +56,26 @@ class HomeFragment : Fragment() {
         initTodoListItemTouchListener()
     }
 
+    private fun initRecyclerView() {
+        calendarAdapter = CalendarAdapter(homeViewModel)
+        labelAdapter = LabelAdapter(homeViewModel)
+        labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
+        todoAdapter = TodoAdapter(homeViewModel)
+
+        val concatAdapter: ConcatAdapter by lazy {
+            val config = ConcatAdapter.Config.Builder().apply {
+                setIsolateViewTypes(false)
+            }.build()
+            ConcatAdapter(config, calendarAdapter, labelWrapperAdapter, todoAdapter)
+        }
+
+        binding.rvHome.apply {
+            adapter = concatAdapter
+            layoutManager = getLayoutManager(concatAdapter)
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        }
+    }
+
     private fun initObserver() {
         homeViewModel.todoList.observe(viewLifecycleOwner, {
             todoAdapter.submitList(it)
@@ -75,26 +95,6 @@ class HomeFragment : Fragment() {
     private fun initTodoListItemTouchListener() {
         val itemTouchHelper = ItemTouchHelper(TodoItemTouchCallback(todoAdapter))
         itemTouchHelper.attachToRecyclerView(binding.rvHome)
-    }
-
-    private fun initRecyclerView() {
-        calendarAdapter = CalendarAdapter(homeViewModel)
-        labelAdapter = LabelAdapter(homeViewModel)
-        labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
-        todoAdapter = TodoAdapter(homeViewModel)
-
-        val concatAdapter: ConcatAdapter by lazy {
-            val config = ConcatAdapter.Config.Builder().apply {
-                setIsolateViewTypes(false)
-            }.build()
-            ConcatAdapter(config, calendarAdapter, labelWrapperAdapter, todoAdapter)
-        }
-
-        binding.rvHome.apply {
-            adapter = concatAdapter
-            layoutManager = getLayoutManager(concatAdapter)
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-        }
     }
 
     private fun getLayoutManager(adapter: ConcatAdapter) : RecyclerView.LayoutManager{
