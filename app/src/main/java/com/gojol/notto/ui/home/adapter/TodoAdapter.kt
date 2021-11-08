@@ -9,11 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.databinding.ItemTodoBinding
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.ui.home.HomeViewModel
 import com.gojol.notto.ui.home.util.ItemTouchHelperListener
 
 class TodoAdapter(
-    private val viewModel: HomeViewModel
+    private val swipeCallback: (Todo) -> (Unit)
 ) : ListAdapter<Todo, TodoAdapter.TodoViewHolder>(TodoDiff()), ItemTouchHelperListener {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
@@ -28,6 +27,18 @@ class TodoAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return VIEW_TYPE
+    }
+
+    override fun onItemMove(from_position: Int, to_position: Int): Boolean {
+        return false
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onItemSwipe(position: Int, successType: TodoSuccessType) {
+        if (position < 0) return
+        val todo = currentList[position].copy(isSuccess = successType)
+        swipeCallback(todo)
+        notifyDataSetChanged()
     }
 
     companion object {
@@ -51,17 +62,5 @@ class TodoAdapter(
         override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {
             return oldItem == newItem
         }
-    }
-
-    override fun onItemMove(from_position: Int, to_position: Int): Boolean {
-        return false
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onItemSwipe(position: Int, successType: TodoSuccessType) {
-        if(position < 0) return
-        val todo = currentList[position].copy(isSuccess = successType)
-        viewModel.fetchTodoSuccessState(todo)
-        notifyDataSetChanged()
     }
 }
