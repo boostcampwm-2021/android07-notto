@@ -58,7 +58,9 @@ class HomeFragment : Fragment() {
         calendarAdapter = CalendarAdapter(homeViewModel)
         labelAdapter = LabelAdapter(homeViewModel)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
-        todoAdapter = TodoAdapter(homeViewModel)
+        todoAdapter = TodoAdapter{
+            homeViewModel.fetchTodoSuccessState(it)
+        }
 
         val concatAdapter: ConcatAdapter by lazy {
             val config = ConcatAdapter.Config.Builder().apply {
