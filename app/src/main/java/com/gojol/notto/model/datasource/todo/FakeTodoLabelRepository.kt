@@ -9,7 +9,7 @@ import com.gojol.notto.model.database.todolabel.TodoWithLabel
 
 class FakeTodoLabelRepository : TodoLabelDataSource {
 
-    private val todos = mutableListOf(
+    private var todos = mutableListOf(
         Todo(TodoSuccessType.NOTHING, "밥 굶지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 0),
         Todo(TodoSuccessType.NOTHING, "과제 미루지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 1),
         Todo(TodoSuccessType.NOTHING, "지각하지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 2),
@@ -18,13 +18,13 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         Todo(TodoSuccessType.NOTHING, "핸드폰 보지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 5),
         Todo(TodoSuccessType.NOTHING, "누워있지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 6),
     )
-    private val labels = mutableListOf(
+    private var labels = mutableListOf(
         Label(1, "학교", 0),
         Label(2, "건강", 1),
         Label(3, "집", 2),
         Label(4, "과제", 3)
     )
-    private val todosWithLabels = mutableListOf(
+    private var todosWithLabels = mutableListOf(
         TodoWithLabel(todos[0], listOf(labels[1])),
         TodoWithLabel(todos[1], listOf(labels[1], labels[3])),
         TodoWithLabel(todos[2], listOf(labels[0], labels[1], labels[2], labels[3])),
@@ -32,7 +32,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         TodoWithLabel(todos[4], listOf(labels[0], labels[2])),
         TodoWithLabel(todos[5], listOf(labels[2]))
     )
-    private val labelsWithTodos = mutableListOf(
+    private var labelsWithTodos = mutableListOf(
         LabelWithTodo(labels[0], listOf(todos[2], todos[3], todos[4])),
         LabelWithTodo(labels[1], listOf(todos[0], todos[1], todos[2])),
         LabelWithTodo(labels[2], listOf(todos[2], todos[4], todos[5])),
@@ -154,15 +154,9 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     override suspend fun deleteTodo(todo: Todo) {
         todos.remove(todo)
 
-        for (i in 0 until todosWithLabels.size) {
-            if (todosWithLabels[i].todo == todo) {
-                todosWithLabels.removeAt(i)
-            }
-        }
-
-        todosWithLabels.filter {
+        todosWithLabels = todosWithLabels.filter {
             it.todo != todo
-        }
+        }.toMutableList()
 
         for (i in 0 until labelsWithTodos.size) {
             if (labelsWithTodos[i].todo.contains(todo)) {
@@ -175,15 +169,9 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     override suspend fun deleteLabel(label: Label) {
         labels.remove(label)
 
-        for (i in 0 until labelsWithTodos.size) {
-            if (labelsWithTodos[i].label == label) {
-                labelsWithTodos.removeAt(i)
-            }
-        }
-
-        labelsWithTodos.filter {
+        labelsWithTodos = labelsWithTodos.filter {
             it.label != label
-        }
+        }.toMutableList()
 
         for (i in 0 until todosWithLabels.size) {
             if (todosWithLabels[i].labels.contains(label)) {
