@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.home.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -56,7 +57,9 @@ class TodoAdapter(
         return false
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onItemSwipe(position: Int, successType: TodoSuccessType) {
+        if(position < 0) return
         val todo = currentList[position].copy(isSuccess = successType)
         viewModel.fetchTodoSuccessState(todo)
         notifyDataSetChanged()

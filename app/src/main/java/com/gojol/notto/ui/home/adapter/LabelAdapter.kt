@@ -40,7 +40,7 @@ class LabelAdapter(
         val currentLabel = newList.removeAt(from).copy(isChecked = isChecked)
         newList.add(to, currentLabel)
 
-        submitList(newList)
+        viewModel.updateLabelList(newList)
     }
 
     fun allChipChecked() {
@@ -52,7 +52,7 @@ class LabelAdapter(
             .toMutableList()
         newList.add(0, header)
 
-        submitList(newList)
+        viewModel.updateLabelList(newList)
     }
 
     companion object {

@@ -1,14 +1,15 @@
 package com.gojol.notto.ui.home.util
 
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.ui.home.adapter.TodoAdapter
+import android.view.View
+import android.os.Build
+
 
 class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : ItemTouchHelper.Callback() {
 
@@ -31,7 +32,10 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
         return false
     }
 
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) { }
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        listener.onItemSwipe(viewHolder.bindingAdapterPosition, successType)
+        successType = TodoSuccessType.NOTHING
+    }
 
     override fun onChildDraw(
         c: Canvas,
@@ -49,81 +53,63 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) : Ite
             if (dX < 0) {
                 successType = TodoSuccessType.FAIL
 
-                val drawable = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
-                drawable?.setTint(ContextCompat.getColor(itemView.context, R.color.blue_normal))
-                drawable?.setBounds(itemView.left, itemView.top, itemView.right, itemView.bottom)
-                drawable?.draw(c)
-
-                paint.color = ContextCompat.getColor(itemView.context, R.color.white)
-                paint.textSize = 70F
-                paint.textAlign = Paint.Align.CENTER
-
                 val text = TODO_FAIL
-                val bounds = Rect()
-                paint.getTextBounds(text, 0, text.length, bounds)
-                val height = bounds.height()
-                val width = bounds.width()
-
-                c.drawText(
-                    text,
-                    itemView.right.toFloat() - width,
-                    ((itemView.top + itemView.bottom) / 2 + (height / 2)).toFloat(),
-                    paint
-                )
+                drawItemBackground(itemView, R.color.blue_normal, c)
+                setDrawTextPaint(itemView, text, c)
             }
             // 성공 배경 그리기
             else if (dX > 0) {
                 successType = TodoSuccessType.SUCCESS
 
-                val drawable = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
-                drawable?.setTint(ContextCompat.getColor(itemView.context, R.color.yellow_normal))
-                drawable?.setBounds(itemView.left, itemView.top, itemView.right, itemView.bottom)
-                drawable?.draw(c)
-
-                paint.color = ContextCompat.getColor(itemView.context, R.color.white)
-                paint.textSize = 70F
-                paint.textAlign = Paint.Align.CENTER
-
                 val text = TODO_SUCCESS
-                val bounds = Rect()
-                paint.getTextBounds(text, 0, text.length, bounds)
-                val height = bounds.height()
-                val width = bounds.width()
+                drawItemBackground(itemView, R.color.yellow_normal, c)
+                setDrawTextPaint(itemView, text, c)
+            }
 
-                c.drawText(
-                    text,
-                    itemView.left.toFloat() + width,
-                    ((itemView.top + itemView.bottom) / 2 + (height / 2)).toFloat(),
-                    paint
-                )
+            // TODO: 이 방법은 성능 이슈가 있는 듯 하다. 너무 많은 drawRect의 호출로 인한 성능 저하인지,
+            //  setLayerType으로 인한 성능 저하인지 확인할 것
+            if (kotlin.math.abs(itemView.translationX).toInt() - itemView.width >= 0) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+                } else {
+                    c.drawColor(Color.TRANSPARENT, BlendMode.CLEAR)
+                }
             }
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-            if (!isCurrentlyActive) {
-                if (kotlin.math.abs(itemView.translationX).toInt() - itemView.width == 0) {
-                    if (successType == TodoSuccessType.SUCCESS) {
-                        val drawable = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
-                        drawable?.setTint(ContextCompat.getColor(itemView.context, R.color.yellow_normal))
-                        itemView.background = drawable
-                    } else if (successType == TodoSuccessType.FAIL) {
-                        val drawable = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
-                        drawable?.setTint(ContextCompat.getColor(itemView.context, R.color.blue_normal))
-                        itemView.background = drawable
-                    }
-                    listener.onItemSwipe(viewHolder.bindingAdapterPosition, successType)
-                    successType = TodoSuccessType.NOTHING
-                }
-            }
         }
     }
 
-//    override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
-//        return defaultValue * 10
-//    }
-//
-//    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
-//        return 2f
-//    }
+    private fun drawItemBackground(itemView: View, color: Int, canvas: Canvas) {
+        val drawable = ContextCompat.getDrawable(itemView.context, R.drawable.bg_todo_normal)
+        drawable?.setTint(ContextCompat.getColor(itemView.context, color))
+        drawable?.setBounds(itemView.left, itemView.top, itemView.right, itemView.bottom)
+        drawable?.draw(canvas)
+    }
+
+    private fun setDrawTextPaint(itemView: View, text: String, canvas: Canvas) {
+        paint.color = ContextCompat.getColor(itemView.context, R.color.white)
+        paint.textSize = itemView.resources.getDimensionPixelSize(R.dimen.text_median).toFloat()
+        paint.textAlign = Paint.Align.CENTER
+
+        val bounds = Rect()
+        paint.getTextBounds(text, 0, text.length, bounds)
+        val height = bounds.height()
+        val width = bounds.width()
+
+        val x: Float = if (text == TODO_FAIL) {
+            itemView.right.toFloat() - width
+        } else {
+            itemView.left.toFloat() + width
+        }
+
+        canvas.drawText(
+            text,
+            x,
+            ((itemView.top + itemView.bottom) / 2 + (height / 2)).toFloat(),
+            paint
+        )
+    }
 
     companion object {
         const val TODO_SUCCESS = "성공"
