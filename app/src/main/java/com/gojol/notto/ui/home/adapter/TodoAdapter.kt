@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.databinding.ItemTodoBinding
 import com.gojol.notto.model.database.todo.Todo
@@ -27,11 +28,7 @@ class TodoAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return VIEW_TYPE
-    }
-
-    companion object {
-        const val VIEW_TYPE = 4
+        return AdapterViewType.TODO.viewType
     }
 
     class TodoViewHolder(private val binding: ItemTodoBinding) :

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
+import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.ui.home.adapter.CalendarAdapter
 import com.gojol.notto.ui.home.adapter.LabelAdapter
@@ -97,9 +98,9 @@ class HomeFragment : Fragment() {
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when (adapter.getItemViewType(position)) {
-                    CalendarAdapter.VIEW_TYPE -> 7
-                    LabelAdapter.VIEW_TYPE -> 1
-                    TodoAdapter.VIEW_TYPE -> 7
+                    AdapterViewType.CALENDAR.viewType -> 7
+                    AdapterViewType.LABEL.viewType -> 1
+                    AdapterViewType.TODO.viewType -> 7
                     else -> 7
                 }
             }
