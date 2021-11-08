@@ -48,8 +48,12 @@ class TodoAdapter(
     class TodoViewHolder(private val binding: ItemTodoBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        lateinit var successType: TodoSuccessType
+
         fun bind(item: Todo) {
             binding.item = item
+            successType = item.isSuccess
+
             binding.executePendingBindings()
         }
     }
