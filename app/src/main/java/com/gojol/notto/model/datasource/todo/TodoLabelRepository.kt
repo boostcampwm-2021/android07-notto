@@ -40,16 +40,12 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.insertLabel(label)
     }
 
-    override suspend fun insertLabel(todo: Todo, label: Label) {
-        localDataSource.insertLabel(todo, label)
-    }
-
     override suspend fun updateTodo(todo: Todo) {
         localDataSource.updateTodo(todo)
     }
 
-    override suspend fun updateTodo(todo: Todo, label: Label) {
-        localDataSource.updateTodo(todo, label)
+    override suspend fun updateTodo(todo: Todo, labels: List<Label>) {
+        localDataSource.updateTodo(todo, labels)
     }
 
     override suspend fun updateLabel(label: Label) {

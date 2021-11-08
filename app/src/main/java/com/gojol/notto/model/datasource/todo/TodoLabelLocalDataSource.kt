@@ -38,16 +38,14 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         todoLabelDao.insertLabel(label)
     }
 
-    override suspend fun insertLabel(todo: Todo, label: Label) {
-        todoLabelDao.insert(TodoLabelCrossRef(todo.todoId, label.labelId))
-    }
-
     override suspend fun updateTodo(todo: Todo) {
         todoLabelDao.updateTodo(todo)
     }
 
-    override suspend fun updateTodo(todo: Todo, label: Label) {
-        todoLabelDao.update(TodoLabelCrossRef(todo.todoId, label.labelId))
+    override suspend fun updateTodo(todo: Todo, labels: List<Label>) {
+        for (label in labels) {
+            todoLabelDao.update(TodoLabelCrossRef(todo.todoId, label.labelId))
+        }
     }
 
     override suspend fun updateLabel(label: Label) {
