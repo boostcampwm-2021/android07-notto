@@ -74,7 +74,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         insertTodoLabel()
 
         _todoList.value = repository.getAllTodo().toMutableList()
-        val labelWithTodos = repository.getLabelWithTodo()
+        val labelWithTodos = repository.getLabelsWithTodos()
         val newLabelList = labelWithTodos.map { label -> LabelWithCheck(label, false) }.toMutableList()
 
         val totalLabel = LabelWithTodo(

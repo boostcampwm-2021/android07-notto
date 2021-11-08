@@ -10,12 +10,12 @@ import com.gojol.notto.model.database.todolabel.TodoWithLabel
 class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     TodoLabelDataSource {
 
-    override suspend fun getTodoWithLabel(): List<TodoWithLabel> {
-        return todoLabelDao.getTodoWithLabel()
+    override suspend fun getTodosWithLabels(): List<TodoWithLabel> {
+        return todoLabelDao.getTodosWithLabels()
     }
 
-    override suspend fun getLabelWithTodo(): List<LabelWithTodo> {
-        return todoLabelDao.getLabelWithTodo()
+    override suspend fun getLabelsWithTodos(): List<LabelWithTodo> {
+        return todoLabelDao.getLabelsWithTodos()
     }
 
     override suspend fun getAllTodo(): List<Todo> {
