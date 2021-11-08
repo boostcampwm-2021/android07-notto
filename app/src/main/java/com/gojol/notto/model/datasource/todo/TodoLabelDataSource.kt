@@ -7,9 +7,9 @@ import com.gojol.notto.model.database.todolabel.TodoWithLabel
 
 interface TodoLabelDataSource {
 
-    suspend fun getTodoWithLabel(): List<TodoWithLabel>
+    suspend fun getTodosWithLabels(): List<TodoWithLabel>
 
-    suspend fun getLabelWithTodo(): List<LabelWithTodo>
+    suspend fun getLabelsWithTodos(): List<LabelWithTodo>
 
     suspend fun getAllTodo(): List<Todo>
 

@@ -8,11 +8,11 @@ import com.gojol.notto.model.database.todo.Todo
 interface TodoLabelDao {
     @Transaction
     @Query("SELECT * FROM Todo")
-    suspend fun getTodoWithLabel(): List<TodoWithLabel>
+    suspend fun getTodosWithLabels(): List<TodoWithLabel>
 
     @Transaction
     @Query("SELECT * FROM Label")
-    suspend fun getLabelWithTodo(): List<LabelWithTodo>
+    suspend fun getLabelsWithTodos(): List<LabelWithTodo>
 
     @Transaction
     @Query("SELECT * FROM Todo")

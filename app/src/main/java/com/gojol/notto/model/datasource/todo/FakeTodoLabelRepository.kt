@@ -39,11 +39,11 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         LabelWithTodo(labels[3], listOf(todos[1], todos[2]))
     )
 
-    override suspend fun getTodoWithLabel(): List<TodoWithLabel> {
+    override suspend fun getTodosWithLabels(): List<TodoWithLabel> {
         return todosWithLabels
     }
 
-    override suspend fun getLabelWithTodo(): List<LabelWithTodo> {
+    override suspend fun getLabelsWithTodos(): List<LabelWithTodo> {
         return labelsWithTodos
     }
 

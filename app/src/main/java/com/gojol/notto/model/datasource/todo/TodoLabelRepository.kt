@@ -12,12 +12,12 @@ class TodoLabelRepository @Inject constructor(
     private val localDataSource: TodoLabelDataSource
 ) : TodoLabelDataSource {
 
-    override suspend fun getTodoWithLabel(): List<TodoWithLabel> {
-        return localDataSource.getTodoWithLabel()
+    override suspend fun getTodosWithLabels(): List<TodoWithLabel> {
+        return localDataSource.getTodosWithLabels()
     }
 
-    override suspend fun getLabelWithTodo(): List<LabelWithTodo> {
-        return localDataSource.getLabelWithTodo()
+    override suspend fun getLabelsWithTodos(): List<LabelWithTodo> {
+        return localDataSource.getLabelsWithTodos()
     }
 
     override suspend fun getAllTodo(): List<Todo> {
