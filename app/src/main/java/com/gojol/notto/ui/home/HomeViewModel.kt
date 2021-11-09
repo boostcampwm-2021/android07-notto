@@ -30,7 +30,18 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         Todo(TodoSuccessType.NOTHING, "밥 굶지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
         Todo(TodoSuccessType.NOTHING, "과제 미루지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
         Todo(TodoSuccessType.NOTHING, "지각하지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "밥 먹을 때 물 먹지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
+        Todo(
+            TodoSuccessType.NOTHING,
+            "밥 먹을 때 물 먹지 않기",
+            "1",
+            false,
+            RepeatType.DAY,
+            false,
+            "1:00",
+            "2:00",
+            "1:00",
+            false
+        ),
         Todo(TodoSuccessType.NOTHING, "회의 지각 안하기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
         Todo(TodoSuccessType.NOTHING, "핸드폰 보지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
         Todo(TodoSuccessType.NOTHING, "누워있지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
@@ -122,6 +133,46 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         }
     }
 
+    fun setLabelClickListener(labelWithCheck: LabelWithCheck) {
+        if (labelWithCheck.labelWithTodo.label.order == 0) {
+            allChipChecked()
+        } else {
+            itemLabelClick(labelWithCheck)
+        }
+    }
+
+    fun updateTodoList(list: List<LabelWithCheck>) {
+        val checkList = list.filter { it.isChecked }
+        viewModelScope.launch { addTodoListByLabels(checkList) }
+    }
+
+    private fun itemLabelClick(labelWithCheck: LabelWithCheck) {
+        _labelList.value?.let { list ->
+            if (labelWithCheck.isChecked) {
+                moveItem(1, true, labelWithCheck)
+            } else {
+                val checkedList = list.filter { it.isChecked && it != labelWithCheck }
+                val unCheckedList = list
+                    .asSequence()
+                    .filter { !it.isChecked }
+                    .toMutableList()
+                    .apply { add(labelWithCheck) }
+                    .sortedBy { it.labelWithTodo.label.order }
+
+                if (checkedList.isEmpty()) {
+                    allChipChecked()
+                } else {
+
+                    moveItem(
+                        checkedList.size + unCheckedList.indexOf(labelWithCheck),
+                        false,
+                        labelWithCheck
+                    )
+                }
+            }
+        }
+    }
+
     suspend fun addTodoListByLabels(labels: List<LabelWithCheck>) {
         val newTodoList = mutableListOf<Todo>()
 
@@ -137,12 +188,37 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
                 }
             }
         }
-
         _todoList.value = newTodoList
     }
 
-    fun updateLabelList(list: MutableList<LabelWithCheck>) {
-        _labelList.value = list
+    private fun moveItem(to: Int, isChecked: Boolean, labelWithCheck: LabelWithCheck) {
+        _labelList.value?.let { list ->
+
+            var newList = list.toMutableList()
+            newList = newList.filter {
+                it.labelWithTodo.label.labelId != labelWithCheck.labelWithTodo.label.labelId
+            }.toMutableList()
+            newList[0] = newList[0].copy(isChecked = false)
+
+            labelWithCheck.isChecked = isChecked
+            newList.add(to, labelWithCheck)
+
+            _labelList.value = newList
+        }
+    }
+
+    private fun allChipChecked() {
+        _labelList.value?.let { list ->
+            val header = list[0].copy(isChecked = true)
+            val newList = list
+                .asSequence()
+                .filter { it.labelWithTodo.label.order != 0 }
+                .map { it.copy(isChecked = false) }
+                .sortedBy { it.labelWithTodo.label.order }
+                .toMutableList()
+            newList.add(0, header)
+            _labelList.value = newList
+        }
     }
 
     companion object {
