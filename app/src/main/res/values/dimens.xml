@@ -14,4 +14,5 @@
     <dimen name="space_s_large">18dp</dimen>
     <dimen name="space_large">20dp</dimen>
     <dimen name="space_x_large">24dp</dimen>
+    <dimen name="calendar_day_size">40dp</dimen>
 </resources>

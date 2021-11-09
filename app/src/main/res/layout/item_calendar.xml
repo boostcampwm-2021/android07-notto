@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_calendar_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_small"
+            app:layout_constraintBottom_toBottomOf="@id/btn_calendar_control"
+            app:layout_constraintStart_toStartOf="@id/tv_calendar_sunday"
+            app:layout_constraintTop_toTopOf="@id/btn_calendar_control"
+            tools:text="2021년 10월" />
+
+        <Button
+            android:id="@+id/btn_calendar_control"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_calendar_collapse"
+            app:backgroundTint="@color/black"
+            app:layout_constraintBottom_toTopOf="@id/tv_calendar_sunday"
+            app:layout_constraintEnd_toEndOf="@id/tv_calendar_saturday"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tv_calendar_sunday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_median"
+            android:layout_marginTop="@dimen/space_large"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/calendar_sunday"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_x_small"
+            app:layout_constraintEnd_toStartOf="@id/tv_calendar_monday"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_calendar_control" />
+
+        <TextView
+            android:id="@+id/tv_calendar_monday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/calendar_monday"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_x_small"
+            app:layout_constraintBottom_toBottomOf="@id/tv_calendar_sunday"
+            app:layout_constraintEnd_toStartOf="@id/tv_calendar_tuesday"
+            app:layout_constraintStart_toEndOf="@id/tv_calendar_sunday"
+            app:layout_constraintTop_toTopOf="@id/tv_calendar_sunday" />
+
+        <TextView
+            android:id="@+id/tv_calendar_tuesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/calendar_tuesday"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_x_small"
+            app:layout_constraintBottom_toBottomOf="@id/tv_calendar_sunday"
+            app:layout_constraintEnd_toStartOf="@id/tv_calendar_wednesday"
+            app:layout_constraintStart_toEndOf="@id/tv_calendar_monday"
+            app:layout_constraintTop_toTopOf="@id/tv_calendar_sunday" />
+
+        <TextView
+            android:id="@+id/tv_calendar_wednesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/calendar_wednesday"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_x_small"
+            app:layout_constraintBottom_toBottomOf="@id/tv_calendar_sunday"
+            app:layout_constraintEnd_toStartOf="@id/tv_calendar_thursday"
+            app:layout_constraintStart_toEndOf="@id/tv_calendar_tuesday"
+            app:layout_constraintTop_toTopOf="@id/tv_calendar_sunday" />
+
+        <TextView
+            android:id="@+id/tv_calendar_thursday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/calendar_thursday"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_x_small"
+            app:layout_constraintBottom_toBottomOf="@id/tv_calendar_sunday"
+            app:layout_constraintEnd_toStartOf="@id/tv_calendar_friday"
+            app:layout_constraintStart_toEndOf="@id/tv_calendar_wednesday"
+            app:layout_constraintTop_toTopOf="@id/tv_calendar_sunday" />
+
+        <TextView
+            android:id="@+id/tv_calendar_friday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/calendar_friday"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_x_small"
+            app:layout_constraintBottom_toBottomOf="@id/tv_calendar_sunday"
+            app:layout_constraintEnd_toStartOf="@id/tv_calendar_saturday"
+            app:layout_constraintStart_toEndOf="@id/tv_calendar_thursday"
+            app:layout_constraintTop_toTopOf="@id/tv_calendar_sunday" />
+
+        <TextView
+            android:id="@+id/tv_calendar_saturday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_median"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/calendar_saturday"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_x_small"
+            app:layout_constraintBottom_toBottomOf="@id/tv_calendar_sunday"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toEndOf="@id/tv_calendar_friday"
+            app:layout_constraintTop_toTopOf="@id/tv_calendar_sunday" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_calendar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_median"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_calendar_sunday" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
