@@ -10,9 +10,12 @@ import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentCalendarBinding
 import com.gojol.notto.ui.home.adapter.CalendarDayAdapter
 import com.gojol.notto.ui.home.util.GridSpacingDecoration
+import java.util.Calendar
+import com.gojol.notto.util.getDayOfWeek
+import com.gojol.notto.util.getFirstDayOfMonth
+import com.gojol.notto.util.getLastDayOfMonth
 
-
-class CalendarFragment : Fragment() {
+class CalendarFragment(private val year: Int, private val month: Int) : Fragment() {
 
     private lateinit var binding: FragmentCalendarBinding
 
@@ -32,12 +35,22 @@ class CalendarFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        val dateList = (1..31).toList() // sample data
+        val dateList = setCalendarDateList()
         binding.rvCalendar.apply {
             adapter = CalendarDayAdapter().apply { submitList(dateList) }
             context?.resources?.displayMetrics?.widthPixels?.let {
                 addItemDecoration(GridSpacingDecoration(it, 7))
             }
         }
+    }
+
+    private fun setCalendarDateList(): List<Int> {
+        val calendar = Calendar.getInstance().apply { set(year, month, 1) }
+        val dateList = (calendar.getFirstDayOfMonth()..calendar.getLastDayOfMonth()).toList()
+
+        val dayOfWeek = calendar.getDayOfWeek() - 1
+        val prefixDateList = (0 until dayOfWeek).map { 0 }
+
+        return prefixDateList + dateList
     }
 }

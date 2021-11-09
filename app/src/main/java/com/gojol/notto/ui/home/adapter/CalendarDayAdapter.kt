@@ -22,10 +22,12 @@ class CalendarDayAdapter :
 
     class CalendarDayViewHolder(private val binding: ItemCalendarDayBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Int) {
-            binding.tvCalendarDay.text = item.toString()
-        }
 
+        fun bind(item: Int) {
+            if (item != 0){
+                binding.tvCalendarDay.text = item.toString()
+            }
+        }
     }
 
     class CalendarDayDiff : DiffUtil.ItemCallback<Int>() {
