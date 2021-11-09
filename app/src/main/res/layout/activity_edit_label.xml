@@ -1,54 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.label.EditLabelActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:layout_width="36dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/space_median"
-        android:contentDescription="@string/close"
-        android:src="@drawable/ic_close"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView"
-        app:layout_constraintDimensionRatio="1:1"
-        app:tint="@color/black" />
+    <data>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_large"
-        android:text="@string/edit_label"
-        android:textSize="@dimen/text_x_large"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <variable
+            name="viewmodel"
+            type="com.gojol.notto.ui.label.EditLabelViewModel" />
 
-    <ImageView
-        android:layout_width="28dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/space_s_large"
-        android:background="@null"
-        android:src="@drawable/edit_label_create"
-        android:contentDescription="@string/edit_label_create"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView"
-        app:layout_constraintDimensionRatio="1:1" />
+    </data>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/space_x_large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:listitem="@layout/item_edit_label" />
+        android:layout_height="match_parent"
+        tools:context=".ui.label.EditLabelActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/space_median"
+            android:contentDescription="@string/close"
+            android:src="@drawable/ic_close"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_edit_label_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_edit_label_title"
+            app:layout_constraintDimensionRatio="1:1"
+            app:tint="@color/black" />
+
+        <TextView
+            android:id="@+id/tv_edit_label_title"
+            android:text="@string/edit_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            style="@style/edit_label_title" />
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="@dimen/space_s_large"
+            android:background="@null"
+            android:src="@drawable/edit_label_create"
+            android:contentDescription="@string/edit_label_create"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_edit_label_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_edit_label_title"
+            app:layout_constraintDimensionRatio="1:1" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/space_x_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_edit_label_title"
+            app:items="@{viewmodel.items}"
+            tools:listitem="@layout/item_edit_label" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
