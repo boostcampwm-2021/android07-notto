@@ -14,5 +14,7 @@
     <color name="blue_normal">#003F88</color>
     <color name="blue_light">#00509D</color>
     <color name="gray_light">#F5F6F8</color>
-    <color name="gray_normal">#8C8C8C</color>
+    <color name="gray_normal">#CDCDCD</color>
+    <color name="gray_deep">#8C8C8C</color>
+    <color name="charcoal_normal">#534F4F</color>
 </resources>
