@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentCalendarBinding
 import com.gojol.notto.ui.home.adapter.CalendarDayAdapter
+import com.gojol.notto.ui.home.util.GridSpacingDecoration
 
 
 class CalendarFragment : Fragment() {
@@ -32,8 +33,11 @@ class CalendarFragment : Fragment() {
 
     private fun initRecyclerView() {
         val dateList = (1..31).toList() // sample data
-        binding.rvCalendar.adapter = CalendarDayAdapter().apply {
-            submitList(dateList)
+        binding.rvCalendar.apply {
+            adapter = CalendarDayAdapter().apply { submitList(dateList) }
+            context?.resources?.displayMetrics?.widthPixels?.let {
+                addItemDecoration(GridSpacingDecoration(it, 7))
+            }
         }
     }
 }
