@@ -4,10 +4,9 @@ import android.app.Dialog
 import android.content.Context
 import android.view.View
 import android.view.Window
-import android.view.WindowManager
 import android.view.LayoutInflater
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.DataBindingUtil.setContentView
 import com.gojol.notto.R
 import com.gojol.notto.databinding.DialogDeletionBinding
 
@@ -22,9 +21,9 @@ class TodoDeletionDialog(context: Context) : View(context) {
     private var dialog: Dialog = Dialog(context)
 
     init {
-
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(binding.root)
+        dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.bg_dialog))
 
         initClickListener()
         show()
