@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ui.label.CreateOrEditLabelFragment">
+        tools:context=".ui.label.EditLabelDialogFragment">
 
         <TextView
             android:id="@+id/tv_edit_label_dialog_title"

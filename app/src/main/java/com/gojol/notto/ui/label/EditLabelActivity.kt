@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivityEditLabelBinding
 import com.gojol.notto.model.database.label.Label
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,6 +44,11 @@ class EditLabelActivity : AppCompatActivity() {
     }
 
     private fun showDialog(label: Label?) {
-        CreateOrEditLabelFragment().show(supportFragmentManager, label?.name)
+        val json = Gson().toJson(label)
+        val bundle = Bundle().apply { putString("label", json) }
+        val dialog = EditLabelDialogFragment()
+
+        dialog.arguments = bundle
+        dialog.show(supportFragmentManager, "EditLabelDialogFragment")
     }
 }
