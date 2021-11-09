@@ -15,4 +15,5 @@
     <dimen name="space_large">20dp</dimen>
     <dimen name="space_x_large">24dp</dimen>
     <dimen name="edit_label_bg_radius">8dp</dimen>
+    <dimen name="home_recyclerview_padding">100dp</dimen>
 </resources>
