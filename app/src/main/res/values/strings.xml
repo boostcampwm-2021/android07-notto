@@ -4,10 +4,18 @@
     <string name="bottom_popular">인기</string>
     <string name="bottom_option">옵션</string>
     <string name="home_label_all">전체</string>
+
+    <!-- dialog -->
     <string name="dialog_deletion_title">Not Todo 삭제하기</string>
     <string name="dialog_deletion_description">삭제하면 다시 복구할 수 없습니다. \n정말 삭제하시겠습니까?</string>
     <string name="dialog_deletion_reject">취소</string>
     <string name="dialog_deletion_confirm">확인</string>
+    <string name="dialog_alarm_period_5">5분</string>
+    <string name="dialog_alarm_period_10">10분</string>
+    <string name="dialog_alarm_period_15">15분</string>
+    <string name="dialog_alarm_period_30">30분</string>
+    <string name="dialog_alarm_period_60">1시간</string>
+    <string name="dialog_alarm_period_1440">1일</string>
 
 
 </resources>
