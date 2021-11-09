@@ -8,13 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.databinding.ItemEditLabelBinding
 import com.gojol.notto.model.database.label.Label
 
-class EditLabelAdapter(private val clickLabelCallback: (Label?) -> (Unit)) :
-    ListAdapter<Label, EditLabelAdapter.EditLabelViewHolder>(EditLabelDiffCallback()) {
+class EditLabelAdapter(
+    private val deleteLabelCallback: (Label?) -> Unit,
+    private val updateLabelCallback: (Label?) -> Unit
+) : ListAdapter<Label, EditLabelAdapter.EditLabelViewHolder>(EditLabelDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditLabelViewHolder {
         return EditLabelViewHolder(
             ItemEditLabelBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            clickLabelCallback
+            deleteLabelCallback,
+            updateLabelCallback
         )
     }
 
@@ -24,12 +27,17 @@ class EditLabelAdapter(private val clickLabelCallback: (Label?) -> (Unit)) :
 
     class EditLabelViewHolder(
         private val binding: ItemEditLabelBinding,
-        private val clickLabelCallback: (Label?) -> (Unit)
+        private val deleteLabelCallback: (Label?) -> Unit,
+        private val updateLabelCallback: (Label?) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.setClickListener {
-                clickLabelCallback(binding.label)
+            binding.setDeleteClickListener {
+                deleteLabelCallback(binding.label)
+            }
+
+            binding.setUpdateClickListener {
+                updateLabelCallback(binding.label)
             }
         }
 

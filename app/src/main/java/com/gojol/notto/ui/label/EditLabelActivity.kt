@@ -25,7 +25,7 @@ class EditLabelActivity : AppCompatActivity() {
             lifecycleOwner = this@EditLabelActivity
             viewmodel = editLabelViewModel
             rvEditLabel.layoutManager = LinearLayoutManager(this@EditLabelActivity)
-            rvEditLabel.adapter = EditLabelAdapter(::showDialog)
+            rvEditLabel.adapter = EditLabelAdapter(::deleteLabel, ::showDialog)
         }
 
         initObservers()
@@ -41,6 +41,13 @@ class EditLabelActivity : AppCompatActivity() {
         editLabelViewModel.dialogToShow.observe(this, {
             showDialog(it)
         })
+    }
+
+    private fun deleteLabel(label: Label?) {
+        // TODO: 삭제 확인 Dialog 구현
+        if (label != null) {
+            editLabelViewModel.deleteLabel(label)
+        }
     }
 
     private fun showDialog(label: Label?) {
