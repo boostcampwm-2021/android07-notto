@@ -16,6 +16,10 @@
     <string name="dialog_alarm_period_30">30분</string>
     <string name="dialog_alarm_period_60">1시간</string>
     <string name="dialog_alarm_period_1440">1일</string>
+    <string name="dialog_repeat_type_everyday">매일</string>
+    <string name="dialog_repeat_type_everyweek">매주</string>
+    <string name="dialog_repeat_type_everymonth">매월</string>
+    <string name="dialog_repeat_type_everyyear">매년</string>
 
 
 </resources>
