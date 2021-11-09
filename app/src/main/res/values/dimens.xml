@@ -14,5 +14,7 @@
     <dimen name="space_s_large">18dp</dimen>
     <dimen name="space_large">20dp</dimen>
     <dimen name="space_x_large">24dp</dimen>
+    <dimen name="space_x_x_large">30dp</dimen>
     <dimen name="home_recyclerview_padding">100dp</dimen>
+    <dimen name="todo_edit_button_margin">70dp</dimen>
 </resources>
