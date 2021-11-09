@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -54,6 +55,7 @@ class HomeFragment : Fragment() {
         initObserver()
         initData()
         initTodoListItemTouchListener()
+        initClickListener()
     }
 
     private fun initRecyclerView() {
@@ -118,5 +120,11 @@ class HomeFragment : Fragment() {
 
     private fun labelTouchCallback(labelWithCheck: LabelWithCheck) {
         homeViewModel.setLabelClickListener(labelWithCheck)
+    }
+
+    private fun initClickListener() {
+        binding.fabHome.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_home_to_todoEditActivity)
+        }
     }
 }

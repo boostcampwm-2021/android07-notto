@@ -19,7 +19,7 @@ class TodoEditActivity : AppCompatActivity() {
 
     private fun initAppbar() {
         binding.tbTodoEdit.setNavigationOnClickListener {
-            // TODO: activity finish
+            finish()
         }
 
         binding.tbTodoEdit.setOnMenuItemClickListener {
