@@ -19,10 +19,10 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         Todo(TodoSuccessType.NOTHING, "누워있지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 6),
     )
     private var labels = mutableListOf(
-        Label(1, "학교", 0),
-        Label(2, "건강", 1),
-        Label(3, "집", 2),
-        Label(4, "과제", 3)
+        Label(1, "학교", 1),
+        Label(2, "건강", 2),
+        Label(3, "집", 3),
+        Label(4, "과제", 4)
     )
     private var todosWithLabels = mutableListOf(
         TodoWithLabel(todos[0], listOf(labels[1])),
