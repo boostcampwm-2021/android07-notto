@@ -4,5 +4,5 @@ import com.gojol.notto.model.database.todolabel.LabelWithTodo
 
 data class LabelWithCheck(
     val labelWithTodo: LabelWithTodo,
-    var isChecked: Boolean,
+    val isChecked: Boolean,
 )

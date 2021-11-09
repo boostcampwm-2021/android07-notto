@@ -199,9 +199,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
                 it.labelWithTodo.label.labelId != labelWithCheck.labelWithTodo.label.labelId
             }.toMutableList()
             newList[0] = newList[0].copy(isChecked = false)
-
-            labelWithCheck.isChecked = isChecked
-            newList.add(to, labelWithCheck)
+            newList.add(to, labelWithCheck.copy(isChecked = isChecked))
 
             _labelList.value = newList
         }
