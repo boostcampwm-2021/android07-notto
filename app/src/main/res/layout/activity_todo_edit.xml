@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="viewmodel"
+            type="com.gojol.notto.ui.todo.TodoEditViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
