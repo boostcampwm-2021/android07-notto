@@ -85,6 +85,10 @@ class HomeFragment : Fragment() {
             homeViewModel.updateTodoList(it)
             labelAdapter.submitList(it)
         })
+
+        homeViewModel.date.observe(viewLifecycleOwner, {
+            calendarAdapter.setDate(it)
+        })
     }
 
     private fun initData() {

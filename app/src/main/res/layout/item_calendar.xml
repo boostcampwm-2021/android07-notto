@@ -5,6 +5,11 @@
 
     <data>
 
+        <import type="com.gojol.notto.util.ExtensionsKt" />
+
+        <variable
+            name="date"
+            type="java.util.Calendar" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +25,7 @@
             app:layout_constraintBottom_toBottomOf="@id/btn_calendar_control"
             app:layout_constraintStart_toStartOf="@id/tv_calendar_sunday"
             app:layout_constraintTop_toTopOf="@id/btn_calendar_control"
-            tools:text="2021년 10월" />
+            tools:text="@{ExtensionsKt.toYearMonth(date)}" />
 
         <Button
             android:id="@+id/btn_calendar_control"
@@ -31,7 +36,6 @@
             app:layout_constraintBottom_toTopOf="@id/tv_calendar_sunday"
             app:layout_constraintEnd_toEndOf="@id/tv_calendar_saturday"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <TextView
             android:id="@+id/tv_calendar_sunday"
