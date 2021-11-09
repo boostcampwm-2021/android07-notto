@@ -17,9 +17,16 @@ class EditLabelViewModel @Inject constructor(private val repository: TodoLabelRe
     private val _items = MutableLiveData<List<Label>>().apply { value = emptyList() }
     val items: LiveData<List<Label>> = _items
 
+    private val _dialogToShow = MutableLiveData<Label?>()
+    val dialogToShow: LiveData<Label?> = _dialogToShow
+
     fun loadLabels() {
         viewModelScope.launch {
             _items.value = repository.getAllLabel()
         }
+    }
+
+    fun onClickCreateButton() {
+        _dialogToShow.value = null
     }
 }

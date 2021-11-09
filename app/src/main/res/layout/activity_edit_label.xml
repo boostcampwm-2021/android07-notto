@@ -43,12 +43,14 @@
             android:background="@null"
             android:src="@drawable/edit_label_create"
             android:contentDescription="@string/edit_label_create"
+            android:onClick="@{() -> viewmodel.onClickCreateButton()}"
             app:layout_constraintBottom_toBottomOf="@+id/tv_edit_label_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_edit_label_title"
             app:layout_constraintDimensionRatio="1:1" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_edit_label"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/space_x_large"

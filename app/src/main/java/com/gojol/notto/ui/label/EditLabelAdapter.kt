@@ -8,12 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.databinding.ItemEditLabelBinding
 import com.gojol.notto.model.database.label.Label
 
-class EditLabelAdapter :
+class EditLabelAdapter(private val clickLabelCallback: (Label?) -> (Unit)) :
     ListAdapter<Label, EditLabelAdapter.EditLabelViewHolder>(EditLabelDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditLabelViewHolder {
         return EditLabelViewHolder(
-            ItemEditLabelBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemEditLabelBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            clickLabelCallback
         )
     }
 
@@ -21,8 +22,16 @@ class EditLabelAdapter :
         holder.bind(getItem(position))
     }
 
-    class EditLabelViewHolder(private val binding: ItemEditLabelBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class EditLabelViewHolder(
+        private val binding: ItemEditLabelBinding,
+        private val clickLabelCallback: (Label?) -> (Unit)
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.setClickListener {
+                clickLabelCallback(binding.label)
+            }
+        }
 
         fun bind(item: Label) {
             binding.apply {

@@ -13,6 +13,7 @@
     <style name="edit_label_dialog_cancel_ok_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/space_x_large</item>
         <item name="android:layout_marginBottom">@dimen/space_median</item>
         <item name="android:textSize">@dimen/text_median</item>
         <item name="android:textColor">@color/black</item>

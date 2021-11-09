@@ -13,6 +13,10 @@
             name="label"
             type="com.gojol.notto.model.database.label.Label" />
 
+        <variable
+            name="clickListener"
+            type="android.view.View.OnClickListener"/>
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +37,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tv_edit_label_existing_label"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginHorizontal="@dimen/space_small"
@@ -43,6 +47,7 @@
             android:text="@{label.name}"
             android:textSize="@dimen/text_small"
             android:textColor="@color/black"
+            android:onClick="@{clickListener}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imageView2"
             app:layout_constraintStart_toEndOf="@+id/imageView"
