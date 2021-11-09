@@ -44,18 +44,16 @@ class LabelAdapter(
         private fun setHeaderLabel(labelWithCheck: LabelWithCheck, labelClickCallback: (LabelWithCheck) -> (Unit)) {
             with(binding) {
                 chipHomeLabel.setOnClickListener {
-                    labelWithCheck.isChecked = true
                     chipHomeLabel.isChecked = true
-                    labelClickCallback(labelWithCheck)
+                    labelClickCallback(labelWithCheck.copy(isChecked = true))
                 }
             }
         }
 
         private fun setItemLabel(labelWithCheck: LabelWithCheck, labelClickCallback: (LabelWithCheck) -> (Unit)) {
             binding.chipHomeLabel.setOnClickListener {
-                labelWithCheck.isChecked = !labelWithCheck.isChecked
-                binding.chipHomeLabel.isChecked = labelWithCheck.isChecked
-                labelClickCallback(labelWithCheck)
+                binding.chipHomeLabel.isChecked = !labelWithCheck.isChecked
+                labelClickCallback(labelWithCheck.copy(isChecked = !labelWithCheck.isChecked))
             }
         }
     }
