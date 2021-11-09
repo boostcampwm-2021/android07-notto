@@ -2,22 +2,22 @@ package com.gojol.notto.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.common.AdapterViewType
-import com.gojol.notto.databinding.ItemMonthlyCalendarBinding
-import com.gojol.notto.ui.home.HomeViewModel
+import com.gojol.notto.databinding.ItemCalendarBinding
 
-class CalendarAdapter(val viewModel: HomeViewModel) :
-    RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
+class CalendarAdapter(private val requireActivity: FragmentActivity) :
+    RecyclerView.Adapter<CalendarAdapter.CustomCalendarViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
-        return CalendarViewHolder(
-            ItemMonthlyCalendarBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomCalendarViewHolder {
+        return CustomCalendarViewHolder(
+            ItemCalendarBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        holder.bind(viewModel)
+    override fun onBindViewHolder(holder: CustomCalendarViewHolder, position: Int) {
+        holder.bind(requireActivity)
     }
 
     override fun getItemCount(): Int = 1
@@ -26,22 +26,14 @@ class CalendarAdapter(val viewModel: HomeViewModel) :
         return AdapterViewType.CALENDAR.viewType
     }
 
-    class CalendarViewHolder(private val binding: ItemMonthlyCalendarBinding) :
+    class CustomCalendarViewHolder(private val binding: ItemCalendarBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.cvHomeMonth.setOnDateChangeListener { _, y, m, d ->
-                val adapter = bindingAdapter as CalendarAdapter
-                adapter.viewModel.updateDate(y, m, d)
-                // T0D0: 추후에 BindingAdapter 사용
-                adapter.notifyDataSetChanged()
-
-                binding.executePendingBindings()
-            }
-        }
-
-        fun bind(viewModel: HomeViewModel) {
-            binding.viewmodel = viewModel
+        fun bind(requireActivity: FragmentActivity) {
+            val calendarViewPagerAdapter = CalendarViewPagerAdapter(requireActivity)
+            binding.vpCalendar.adapter = calendarViewPagerAdapter
+            binding.vpCalendar.setCurrentItem(calendarViewPagerAdapter.firstFragmentPosition, false)
+            binding.tvCalendarTitle.text = "2021년 11월" // sample text
             binding.executePendingBindings()
         }
     }

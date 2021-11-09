@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        calendarAdapter = CalendarAdapter(homeViewModel)
+        calendarAdapter = CalendarAdapter(requireActivity())
         labelAdapter = LabelAdapter(homeViewModel)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
         todoAdapter = TodoAdapter{
