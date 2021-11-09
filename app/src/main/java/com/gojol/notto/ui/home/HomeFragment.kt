@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.FragmentHomeBinding
+import com.gojol.notto.model.data.LabelWithCheck
+import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.ui.home.adapter.CalendarAdapter
 import com.gojol.notto.ui.home.adapter.LabelAdapter
 import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
@@ -56,11 +58,9 @@ class HomeFragment : Fragment() {
 
     private fun initRecyclerView() {
         calendarAdapter = CalendarAdapter(requireActivity())
-        labelAdapter = LabelAdapter(homeViewModel)
+        labelAdapter = LabelAdapter(::labelTouchCallback)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
-        todoAdapter = TodoAdapter{
-            homeViewModel.fetchTodoSuccessState(it)
-        }
+        todoAdapter = TodoAdapter(::todoTouchCallback)
 
         val concatAdapter: ConcatAdapter by lazy {
             val config = ConcatAdapter.Config.Builder().apply {
@@ -82,6 +82,7 @@ class HomeFragment : Fragment() {
         })
 
         homeViewModel.labelList.observe(viewLifecycleOwner, {
+            homeViewModel.updateTodoList(it)
             labelAdapter.submitList(it)
         })
     }
@@ -95,7 +96,7 @@ class HomeFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.rvHome)
     }
 
-    private fun getLayoutManager(adapter: ConcatAdapter) : RecyclerView.LayoutManager{
+    private fun getLayoutManager(adapter: ConcatAdapter): RecyclerView.LayoutManager {
         val layoutManager = GridLayoutManager(context, 7)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -109,5 +110,13 @@ class HomeFragment : Fragment() {
         }
 
         return layoutManager
+    }
+
+    private fun todoTouchCallback(todo: Todo) {
+        homeViewModel.fetchTodoSuccessState(todo)
+    }
+
+    private fun labelTouchCallback(labelWithCheck: LabelWithCheck) {
+        homeViewModel.setLabelClickListener(labelWithCheck)
     }
 }
