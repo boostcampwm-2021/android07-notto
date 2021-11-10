@@ -55,13 +55,17 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="adfssfsfsasfsssssssssssssssssssssssssssssssssssssss" />
 
-                <Spinner
-                    android:id="@+id/spinner_todo_edit"
+                <Button
+                    android:id="@+id/btn_todo_edit_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_median"
                     android:layout_marginTop="@dimen/space_x_large"
-                    android:spinnerMode="dialog"
+                    android:background="@drawable/bg_todo_edit_label_add_button"
+                    android:paddingHorizontal="5dp"
+                    android:text="@string/todo_edit_label_select"
+                    android:textColor="@color/white"
+                    app:icon="@drawable/ic_add"
                     app:layout_constraintEnd_toStartOf="@id/rv_todo_edit"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_todo_edit" />
@@ -74,10 +78,10 @@
                     android:layout_marginEnd="@dimen/space_median"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintBottom_toBottomOf="@id/spinner_todo_edit"
+                    app:layout_constraintBottom_toBottomOf="@+id/btn_todo_edit_label"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/spinner_todo_edit"
-                    app:layout_constraintTop_toTopOf="@id/spinner_todo_edit"
+                    app:layout_constraintStart_toEndOf="@+id/btn_todo_edit_label"
+                    app:layout_constraintTop_toTopOf="@+id/btn_todo_edit_label"
                     tools:listitem="@layout/item_label" />
 
                 <!-- 반복 설정 -->
@@ -101,7 +105,7 @@
                     android:textSize="@dimen/text_small"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@id/iv_todo_edit_repeat"
-                    app:layout_constraintTop_toBottomOf="@id/spinner_todo_edit" />
+                    app:layout_constraintTop_toBottomOf="@id/btn_todo_edit_label" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switch_todo_edit_repeat"

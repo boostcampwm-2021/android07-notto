@@ -1,10 +1,8 @@
 package com.gojol.notto.ui.todo
 
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
@@ -17,8 +15,8 @@ class TodoEditActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTodoEditBinding
     private val todoEditViewModel: TodoEditViewModel by viewModels()
-    private lateinit var spinnerAdapter: ArrayAdapter<String>
     private lateinit var selectedLabelAdapter: SelectedLabelAdapter
+    private lateinit var labelAddDialog: AlertDialog.Builder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +28,8 @@ class TodoEditActivity : AppCompatActivity() {
         initAppbar()
         initSelectedLabelRecyclerView()
         initObserver()
-        initSpinnerHandler()
         initSwitchListener()
+        initButtonListener()
         todoEditViewModel.setDummyLabelData()
     }
 
@@ -63,38 +61,13 @@ class TodoEditActivity : AppCompatActivity() {
 
     private fun initObserver() {
         todoEditViewModel.labelList.observe(this) {
-            val newList = it.map { label -> label.name }.toMutableList()
-            newList.add(0, "선택")
-            spinnerAdapter =
-                ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, newList)
-            binding.spinnerTodoEdit.adapter = spinnerAdapter
+            val newList = it.map { label -> label.name }.toTypedArray()
+            initLabelAddDialog(newList)
         }
 
         todoEditViewModel.selectedLabelList.observe(this) {
             selectedLabelAdapter.submitList(it)
         }
-    }
-
-    private fun initSpinnerHandler() {
-        binding.spinnerTodoEdit.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    p0: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    todoEditViewModel.addLabelToSelectedLabelList(
-                        binding.spinnerTodoEdit.getItemAtPosition(
-                            position
-                        ).toString()
-                    )
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    println("onNothingSelected")
-                }
-            }
     }
 
     private fun initSwitchListener() {
@@ -107,5 +80,19 @@ class TodoEditActivity : AppCompatActivity() {
         binding.switchTodoEditKeyword.setOnCheckedChangeListener { _, isChecked ->
             todoEditViewModel.updateIsKeywordChecked(isChecked)
         }
+    }
+
+    private fun initButtonListener() {
+        binding.btnTodoEditLabel.setOnClickListener {
+            labelAddDialog.show()
+        }
+    }
+
+    private fun initLabelAddDialog(items: Array<String>) {
+        labelAddDialog =
+            AlertDialog.Builder(this).setTitle(getString(R.string.todo_edit_label_select_sentence))
+                .setItems(items) { _, which ->
+                    todoEditViewModel.addLabelToSelectedLabelList(items[which])
+                }
     }
 }
