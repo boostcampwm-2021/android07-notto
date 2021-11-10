@@ -128,10 +128,11 @@
                     android:id="@+id/tv_todo_edit_repeat_type_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@{viewmodel.repeatType}"
+                    android:textColor="@{viewmodel.isRepeatChecked ? @color/black : @color/gray_normal}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_type"
                     app:layout_constraintEnd_toEndOf="@id/switch_todo_edit_repeat"
-                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_type"
-                    tools:text="@string/todo_edit_repeat_type" />
+                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_type" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_repeat_start"
@@ -146,10 +147,11 @@
                     android:id="@+id/tv_todo_edit_repeat_start_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@{viewmodel.repeatStart}"
+                    android:textColor="@{viewmodel.isRepeatChecked ? @color/black : @color/gray_normal}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_start"
                     app:layout_constraintEnd_toEndOf="@id/switch_todo_edit_repeat"
-                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_start"
-                    tools:text="@string/todo_edit_repeat_type" />
+                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_start" />
 
                 <View
                     android:id="@+id/divider_todo_edit_repeat"
@@ -208,10 +210,11 @@
                     android:id="@+id/tv_todo_edit_time_start_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@{viewmodel.timeStart}"
+                    android:textColor="@{viewmodel.isTimeChecked ? @color/black : @color/gray_normal}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_start"
                     app:layout_constraintEnd_toEndOf="@id/switch_todo_edit_time"
-                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_start"
-                    tools:text="@string/todo_edit_repeat_type" />
+                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_start" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_finish"
@@ -226,10 +229,11 @@
                     android:id="@+id/tv_todo_edit_time_finish_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@{viewmodel.timeFinish}"
+                    android:textColor="@{viewmodel.isTimeChecked ? @color/black : @color/gray_normal}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_finish"
                     app:layout_constraintEnd_toEndOf="@id/switch_todo_edit_time"
-                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_finish"
-                    tools:text="@string/todo_edit_repeat_type" />
+                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_finish" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_repeat"
@@ -244,10 +248,11 @@
                     android:id="@+id/tv_todo_edit_time_repeat_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@{viewmodel.timeRepeat}"
+                    android:textColor="@{viewmodel.isTimeChecked ? @color/black : @color/gray_normal}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_repeat"
                     app:layout_constraintEnd_toEndOf="@id/switch_todo_edit_time"
-                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_repeat"
-                    tools:text="@string/todo_edit_repeat_type" />
+                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_repeat" />
 
                 <View
                     android:id="@+id/divider_todo_edit_time"

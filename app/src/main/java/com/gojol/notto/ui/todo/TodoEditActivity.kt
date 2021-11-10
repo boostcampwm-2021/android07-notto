@@ -31,6 +31,7 @@ class TodoEditActivity : AppCompatActivity() {
         initSelectedLabelRecyclerView()
         initObserver()
         initSpinnerHandler()
+        initSwitchListener()
         todoEditViewModel.setDummyLabelData()
     }
 
@@ -94,5 +95,17 @@ class TodoEditActivity : AppCompatActivity() {
                     println("onNothingSelected")
                 }
             }
+    }
+
+    private fun initSwitchListener() {
+        binding.switchTodoEditRepeat.setOnCheckedChangeListener { _, isChecked ->
+            todoEditViewModel.updateIsRepeatChecked(isChecked)
+        }
+        binding.switchTodoEditTime.setOnCheckedChangeListener { _, isChecked ->
+            todoEditViewModel.updateIsTimeChecked(isChecked)
+        }
+        binding.switchTodoEditKeyword.setOnCheckedChangeListener { _, isChecked ->
+            todoEditViewModel.updateIsKeywordChecked(isChecked)
+        }
     }
 }
