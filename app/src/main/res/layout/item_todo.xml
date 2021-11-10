@@ -6,7 +6,7 @@
     <data>
         <variable
             name="successType"
-            type="com.gojol.notto.common.TodoSuccessType" />
+            type="com.gojol.notto.common.TodoState" />
         <variable
             name="item"
             type="com.gojol.notto.model.database.todo.Todo" />

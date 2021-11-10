@@ -1,6 +1,6 @@
 package com.gojol.notto.common
 
-enum class TodoSuccessType {
+enum class TodoState {
     SUCCESS, FAIL, NOTHING
 }
 

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.R
-import com.gojol.notto.common.TodoSuccessType
+import com.gojol.notto.common.TodoState
 import com.gojol.notto.databinding.ItemTodoBinding
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.ui.home.util.ItemTouchHelperListener
@@ -37,9 +37,9 @@ class TodoAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    override fun onItemSwipe(position: Int, successType: TodoSuccessType) {
+    override fun onItemSwipe(position: Int, state: TodoState) {
         if (position < 0) return
-        val todo = currentList[position].copy(isSuccess = successType)
+        val todo = currentList[position].copy(isSuccess = state)
         swipeCallback(todo)
         notifyDataSetChanged()
     }
@@ -47,14 +47,14 @@ class TodoAdapter(
     class TodoViewHolder(private val binding: ItemTodoBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        lateinit var successType: TodoSuccessType
+        lateinit var state: TodoState
 
         fun bind(item: Todo) {
             binding.item = item
-            successType = item.isSuccess
+            state = item.isSuccess
 
-            val color = when (successType) {
-                TodoSuccessType.NOTHING -> R.color.black
+            val color = when (state) {
+                TodoState.NOTHING -> R.color.black
                 else -> R.color.white
             }
 
