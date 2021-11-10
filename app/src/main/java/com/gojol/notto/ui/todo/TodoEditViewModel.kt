@@ -31,22 +31,22 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _labelList = MutableLiveData<List<Label>>()
     val labelList: LiveData<List<Label>> = _labelList
 
-    private val _selectedLabelList = MutableLiveData<List<Label>>()
+    private val _selectedLabelList = MutableLiveData(listOf<Label>())
     val selectedLabelList: LiveData<List<Label>> = _selectedLabelList
 
-    private val _todoContent = MutableLiveData<String>()
+    private val _todoContent = MutableLiveData("")
     val todoContent: LiveData<String> = _todoContent
 
-    private val _isRepeatChecked = MutableLiveData<Boolean>()
+    private val _isRepeatChecked = MutableLiveData(false)
     val isRepeatChecked: LiveData<Boolean> = _isRepeatChecked
 
-    private val _repeatType = MutableLiveData<RepeatType>()
+    private val _repeatType = MutableLiveData(RepeatType.YEAR)
     val repeatType: LiveData<RepeatType> = _repeatType
 
     private val _repeatStart = MutableLiveData<String>()
     val repeatStart: LiveData<String> = _repeatStart
 
-    private val _isTimeChecked = MutableLiveData<Boolean>()
+    private val _isTimeChecked = MutableLiveData(false)
     val isTimeChecked: LiveData<Boolean> = _isTimeChecked
 
     private val _timeStart = MutableLiveData<String>()
@@ -55,28 +55,20 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _timeFinish = MutableLiveData<String>()
     val timeFinish: LiveData<String> = _timeFinish
 
-    private val _timeRepeat = MutableLiveData<String>()
+    private val _timeRepeat = MutableLiveData("5")
     val timeRepeat: LiveData<String> = _timeRepeat
 
-    private val _isKeywordChecked = MutableLiveData<Boolean>()
+    private val _isKeywordChecked = MutableLiveData(false)
     val isKeywordChecked: LiveData<Boolean> = _isKeywordChecked
 
     private val _isSaveButtonEnabled = MutableLiveData<Boolean>()
     val isSaveButtonEnabled: LiveData<Boolean> = _isSaveButtonEnabled
 
     init {
-        _selectedLabelList.value = listOf()
-
         val date = Date(Calendar.getInstance().timeInMillis)
-        _todoContent.value = ""
         _repeatStart.value = getFormattedCurrentDate(date)
-        _isRepeatChecked.value = false
-        _repeatType.value = RepeatType.YEAR
-        _isTimeChecked.value = false
         _timeStart.value = getFormattedCurrentTime(date)
         _timeFinish.value = getFormattedCurrentTime(date)
-        _timeRepeat.value = "5"
-        _isKeywordChecked.value = false
     }
 
     fun setDummyLabelData() {
@@ -86,7 +78,6 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun addLabelToSelectedLabelList(labelName: String) {
-        if (labelName == "선택") return
         if (selectedLabelList.value?.find { it.name == labelName } != null) return
 
         val label = labelList.value?.find { it.name == labelName } ?: return
@@ -97,7 +88,6 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun removeLabelFromSelectedLabelList(label: Label) {
-        println("label clicked: $label")
         val newLabelList = selectedLabelList.value?.toMutableList()?.apply {
             remove(label)
         } ?: return
@@ -134,7 +124,6 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             return
         }
 
-        // TODO: 초기값을 넣어서 저장할지 아니면 null 그대로 저장할지...?
         val todo = Todo(
             TodoSuccessType.NOTHING,
             todoContent.value!!,
@@ -149,7 +138,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         )
 
         viewModelScope.launch {
-            selectedLabelList.value?.let{ labels ->
+            selectedLabelList.value?.let { labels ->
                 if (labels.isEmpty()) fakeRepository.insertTodo(todo)
                 else {
                     labels.forEach { label ->
