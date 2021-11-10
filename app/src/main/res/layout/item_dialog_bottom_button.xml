@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="50dp">
+        android:paddingTop="10dp">
 
         <Button
             android:id="@+id/btn_dialog_base_reject"
