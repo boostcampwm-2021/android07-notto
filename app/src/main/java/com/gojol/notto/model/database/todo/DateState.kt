@@ -2,9 +2,11 @@ package com.gojol.notto.model.database.todo
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import com.gojol.notto.common.TodoState
 
 @Entity(primaryKeys = ["date"])
-data class Date(
+data class DateState(
+    @ColumnInfo(name = "todo_state") val todoState: TodoState,
+    @ColumnInfo(name = "parent_todo_id") val parentTodoId: Int,
     @ColumnInfo(name = "date") val date: String,
-    @ColumnInfo(name = "todo_state") val todoState: String,
 )
