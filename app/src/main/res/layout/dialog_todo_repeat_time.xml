@@ -4,35 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="dialog"
             type="com.gojol.notto.ui.home.dialog.TodoRepeatTimeDialog" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-            android:id="@+id/cv_repeat_time"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:paddingHorizontal="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:mcv_selectionColor="@color/yellow_deep" />
+            android:layout_height="wrap_content">
 
-        <include
-            android:id="@+id/bv_dialog_deletion"
-            layout="@layout/item_dialog_bottom_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:bottom="@{1}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cv_repeat_time" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                android:id="@+id/cv_repeat_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dialog_margin"
+                android:paddingHorizontal="@dimen/dialog_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:mcv_selectionColor="@color/yellow_deep" />
+
+            <include
+                android:id="@+id/bv_dialog_deletion"
+                layout="@layout/item_dialog_bottom_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:bottom="@{1}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
 </layout>
