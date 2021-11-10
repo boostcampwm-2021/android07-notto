@@ -8,11 +8,12 @@ import com.gojol.notto.databinding.DialogTodoRepeatTypeBinding
 
 
 class TodoRepeatTypeDialog(context: Context) : TodoBaseDialogImpl(context) {
-    private val binding: DialogTodoRepeatTypeBinding = DataBindingUtil.inflate(
-        LayoutInflater.from(context), R.layout.dialog_todo_repeat_type,
-        null,
-        false
-    )
+    private val binding: DialogTodoRepeatTypeBinding =
+        DataBindingUtil.inflate(
+            LayoutInflater.from(context), R.layout.dialog_todo_repeat_type,
+            null,
+            false
+        )
 
     init {
         initClickListener()

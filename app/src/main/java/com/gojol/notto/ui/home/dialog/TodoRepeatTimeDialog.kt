@@ -9,11 +9,12 @@ import java.util.*
 
 
 class TodoRepeatTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
-    private val binding: DialogTodoRepeatTimeBinding = DataBindingUtil.inflate(
-        LayoutInflater.from(context), R.layout.dialog_todo_repeat_time,
-        null,
-        false
-    )
+    private val binding: DialogTodoRepeatTimeBinding =
+        DataBindingUtil.inflate(
+            LayoutInflater.from(context), R.layout.dialog_todo_repeat_time,
+            null,
+            false
+        )
 
     init {
         initClickListener()
@@ -35,6 +36,7 @@ class TodoRepeatTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
 
     override fun confirm() {
         val selectedDate = binding.cvRepeatTime.selectedDate
+        // TODO : 데이트를 Todo 편집 화면으로 보내기
         super.confirm()
     }
 }

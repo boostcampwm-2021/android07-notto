@@ -9,8 +9,8 @@ import com.gojol.notto.databinding.DialogTodoSetTimeBinding
 
 
 class TodoSetTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
-
-    private val binding: DialogTodoSetTimeBinding = DataBindingUtil.inflate(
+    private val binding: DialogTodoSetTimeBinding =
+        DataBindingUtil.inflate(
         LayoutInflater.from(context), R.layout.dialog_todo_set_time,
         null,
         false
@@ -38,6 +38,7 @@ class TodoSetTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
             val hour = binding.tpSetTime.currentHour
             val minute = binding.tpSetTime.currentMinute
         }
+        // TODO : 얻은 정보 Todo 편집 화면으로 보내기
         super.confirm()
     }
 }
