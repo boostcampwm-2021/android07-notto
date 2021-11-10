@@ -88,16 +88,6 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) :
 
             drawItemBackground(itemView, backgroundColor, c)
             setDrawTextPaint(itemView, text, c, swipeDirection)
-
-            // TODO: 이 방법은 성능 이슈가 있는 듯 하다. 너무 많은 drawRect의 호출로 인한 성능 저하인지,
-            //  setLayerType으로 인한 성능 저하인지 확인할 것
-            if (kotlin.math.abs(itemView.translationX).toInt() - itemView.width >= 0) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                    c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-                } else {
-                    c.drawColor(Color.TRANSPARENT, BlendMode.CLEAR)
-                }
-            }
         }
 
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
@@ -148,3 +138,4 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) :
         const val TODO_CANCEL = "취소"
     }
 }
+

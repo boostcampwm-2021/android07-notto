@@ -15,9 +15,12 @@ import com.gojol.notto.util.getDayOfWeek
 import com.gojol.notto.util.getFirstDayOfMonth
 import com.gojol.notto.util.getLastDayOfMonth
 
-class CalendarFragment(private val year: Int, private val month: Int) : Fragment() {
+const val TIME = "time"
+
+class CalendarFragment : Fragment() {
 
     private lateinit var binding: FragmentCalendarBinding
+    private var time: Long? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,6 +28,11 @@ class CalendarFragment(private val year: Int, private val month: Int) : Fragment
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_calendar, container, false)
+
+        arguments?.let {
+            time = it.getLong(TIME)
+        }
+
         return binding.root
     }
 
@@ -45,12 +53,19 @@ class CalendarFragment(private val year: Int, private val month: Int) : Fragment
     }
 
     private fun setCalendarDateList(): List<Int> {
-        val calendar = Calendar.getInstance().apply { set(year, month, 1) }
-        val dateList = (calendar.getFirstDayOfMonth()..calendar.getLastDayOfMonth()).toList()
+        time?.let {
+            val year = (it / 100).toInt()
+            val month = (it % 100).toInt()
 
-        val dayOfWeek = calendar.getDayOfWeek() - 1
-        val prefixDateList = (0 until dayOfWeek).map { 0 }
+            val calendar = Calendar.getInstance().apply { set(year, month, 1) }
+            val dateList = (calendar.getFirstDayOfMonth()..calendar.getLastDayOfMonth()).toList()
 
-        return prefixDateList + dateList
+            val dayOfWeek = calendar.getDayOfWeek() - 1
+            val prefixDateList = (0 until dayOfWeek).map { 0 }
+
+            return prefixDateList + dateList
+        } ?: kotlin.run {
+            return emptyList()
+        }
     }
 }

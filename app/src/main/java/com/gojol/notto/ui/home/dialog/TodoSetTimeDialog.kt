@@ -17,7 +17,13 @@ class TodoSetTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
 
     init {
         setBinding(binding)
+        setDialog(WIDTH, HEIGHT)
         initClickListener()
+    }
+
+    companion object {
+        const val WIDTH = 0.8f
+        const val HEIGHT = 0.8f
     }
 
     private fun initClickListener() {
