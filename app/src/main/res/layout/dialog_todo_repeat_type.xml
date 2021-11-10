@@ -15,8 +15,8 @@
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dialog_radiogroup_width"
+            android:layout_height="@dimen/dialog_radiogroup_height"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -24,10 +24,7 @@
                 android:id="@+id/rg_repeat_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="20dp"
-                android:paddingTop="20dp"
-                android:paddingEnd="200dp"
-                android:paddingBottom="20dp"
+                android:padding="@dimen/dialog_padding"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -40,7 +37,7 @@
                     android:checked="true"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="5"
+                    android:tag="@string/dialog_alarm_period_tag_everyday"
                     android:text="@string/dialog_repeat_type_everyday"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -53,7 +50,7 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="10"
+                    android:tag="@string/dialog_alarm_period_tag_everyweek"
                     android:text="@string/dialog_repeat_type_everyweek"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -66,7 +63,7 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="15"
+                    android:tag="@string/dialog_alarm_period_tag_everymonth"
                     android:text="@string/dialog_repeat_type_everymonth"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -79,7 +76,7 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="30"
+                    android:tag="@string/dialog_alarm_period_tag_everyyear"
                     android:text="@string/dialog_repeat_type_everyyear"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
