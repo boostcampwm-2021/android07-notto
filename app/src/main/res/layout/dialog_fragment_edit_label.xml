@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="viewmodel"
+            type="com.gojol.notto.ui.label.EditLabelDialogViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,10 +17,10 @@
 
         <TextView
             android:id="@+id/tv_edit_label_dialog_title"
+            android:text="@{viewmodel.title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="라벨 추가"
             style="@style/edit_label_title" />
 
         <EditText
@@ -28,6 +32,7 @@
             android:paddingHorizontal="@dimen/space_small"
             android:background="@drawable/bg_edit_label"
             android:hint="@string/edit_label_edit_text_hint"
+            android:text="@={viewmodel.name}"
             android:inputType="textShortMessage"
             android:maxLength="10"
             app:layout_constraintEnd_toEndOf="parent"
@@ -39,6 +44,7 @@
             style="@style/edit_label_dialog_cancel_ok_text"
             android:layout_marginEnd="@dimen/space_x_large"
             android:text="@string/cancel"
+            android:onClick="@{() -> viewmodel.clickCancel()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_edit_label_okay"
             app:layout_constraintTop_toBottomOf="@+id/et_edit_label" />
@@ -47,6 +53,7 @@
             android:id="@+id/tv_edit_label_okay"
             style="@style/edit_label_dialog_cancel_ok_text"
             android:text="@string/okay"
+            android:onClick="@{() -> viewmodel.clickOkay()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/et_edit_label"
             app:layout_constraintTop_toBottomOf="@+id/et_edit_label" />

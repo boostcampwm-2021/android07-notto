@@ -115,13 +115,15 @@ class EditLabelActivity : AppCompatActivity() {
     private fun showDialog(label: Label?) {
         val json = Gson().toJson(label)
         val bundle = Bundle().apply { putString("label", json) }
-        val dialog = EditLabelDialogFragment(::onOkayCallback)
+        val dialog = EditLabelDialogFragment()
 
         dialog.arguments = bundle
         dialog.show(supportFragmentManager, "EditLabelDialogFragment")
-    }
 
-    private fun onOkayCallback() {
-        editLabelViewModel.loadLabels()
+        supportFragmentManager.executePendingTransactions()
+
+        dialog.dialog?.setOnDismissListener {
+            editLabelViewModel.loadLabels()
+        }
     }
 }
