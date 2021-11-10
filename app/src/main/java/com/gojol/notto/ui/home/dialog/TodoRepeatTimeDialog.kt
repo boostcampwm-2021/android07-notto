@@ -17,6 +17,7 @@ class TodoRepeatTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
         )
 
     init {
+        setBinding(binding)
         initClickListener()
         initCalendar()
     }

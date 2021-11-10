@@ -7,7 +7,6 @@ import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.DialogTodoSetTimeBinding
 
-
 class TodoSetTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
     private val binding: DialogTodoSetTimeBinding =
         DataBindingUtil.inflate(
@@ -17,8 +16,8 @@ class TodoSetTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
     )
 
     init {
+        setBinding(binding)
         initClickListener()
-        show()
     }
 
     private fun initClickListener() {
