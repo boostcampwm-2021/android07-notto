@@ -24,4 +24,16 @@
         <item name="colorSecondary">@color/yellow_light</item>
     </style>
 
+    <style name="TodoSetTimeDialogTheme" parent="Theme.AppCompat.Light">
+        <item name="android:timePickerDialogTheme">@style/TodoTimePickerDialogStyle</item>
+    </style>
+    <style name="TodoTimePickerDialogStyle" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="showTitle">false</item>
+        <item name="colorControlActivated">@color/yellow_normal</item>
+    </style>
+    <style name="TodoTimePickerWidgetStyle" parent="@android:style/Widget.Material.TimePicker">
+        <item name="android:headerBackground">@color/yellow_deep</item>
+        <item name="android:numbersSelectorColor">@color/yellow_deep</item>
+        <item name="android:numbersBackgroundColor">@color/gray_light</item>
+    </style>
 </resources>
