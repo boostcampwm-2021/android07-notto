@@ -27,8 +27,7 @@ class SelectedLabelAdapter(private val labelCallback: (Label) -> (Unit)) :
     class SelectedLabelViewHolder(
         private val binding: ItemLabelBinding,
         private val callback: (Label) -> Unit
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.chipHomeLabel.setOnClickListener {
