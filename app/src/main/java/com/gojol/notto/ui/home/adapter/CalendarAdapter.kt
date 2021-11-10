@@ -1,23 +1,29 @@
 package com.gojol.notto.ui.home.adapter
 
 import android.view.LayoutInflater
+import android.view.View.MeasureSpec
 import android.view.ViewGroup
+import androidx.core.view.get
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.gojol.notto.common.AdapterViewType
-import com.gojol.notto.databinding.ItemMonthlyCalendarBinding
-import com.gojol.notto.ui.home.HomeViewModel
+import com.gojol.notto.databinding.ItemCalendarBinding
+import java.util.Calendar
 
-class CalendarAdapter(val viewModel: HomeViewModel) :
-    RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
+class CalendarAdapter(private val requireActivity: FragmentActivity) :
+    RecyclerView.Adapter<CalendarAdapter.CustomCalendarViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
-        return CalendarViewHolder(
-            ItemMonthlyCalendarBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    private var date: Calendar = Calendar.getInstance()
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomCalendarViewHolder {
+        return CustomCalendarViewHolder(
+            ItemCalendarBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        holder.bind(viewModel)
+    override fun onBindViewHolder(holder: CustomCalendarViewHolder, position: Int) {
+        holder.bind(requireActivity, date)
     }
 
     override fun getItemCount(): Int = 1
@@ -26,23 +32,46 @@ class CalendarAdapter(val viewModel: HomeViewModel) :
         return AdapterViewType.CALENDAR.viewType
     }
 
-    class CalendarViewHolder(private val binding: ItemMonthlyCalendarBinding) :
+    fun setDate(newDate: Calendar) {
+        date = newDate
+    }
+
+    class CustomCalendarViewHolder(private val binding: ItemCalendarBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.cvHomeMonth.setOnDateChangeListener { _, y, m, d ->
-                val adapter = bindingAdapter as CalendarAdapter
-                adapter.viewModel.updateDate(y, m, d)
-                // T0D0: 추후에 BindingAdapter 사용
-                adapter.notifyDataSetChanged()
-
-                binding.executePendingBindings()
-            }
+        fun bind(requireActivity: FragmentActivity, date: Calendar) {
+            binding.date = date
+            val calendarViewPagerAdapter = CalendarViewPagerAdapter(requireActivity)
+            binding.vpCalendar.adapter = calendarViewPagerAdapter
+            binding.vpCalendar.setCurrentItem(calendarViewPagerAdapter.firstFragmentPosition, false)
+            setViewPagerDynamicHeight()
+            binding.executePendingBindings()
         }
 
-        fun bind(viewModel: HomeViewModel) {
-            binding.viewmodel = viewModel
-            binding.executePendingBindings()
+        private fun setViewPagerDynamicHeight() {
+            binding.vpCalendar.registerOnPageChangeCallback(object :
+                ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    val viewPager = binding.vpCalendar
+                    val view =
+                        (viewPager[0] as RecyclerView).layoutManager?.findViewByPosition(position)
+
+                    view?.post {
+                        val widthMeasureSpec =
+                            MeasureSpec.makeMeasureSpec(view.width, MeasureSpec.EXACTLY)
+                        val heightMeasureSpec =
+                            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+                        view.measure(widthMeasureSpec, heightMeasureSpec)
+
+                        if (viewPager.layoutParams.height != view.measuredHeight) {
+                            viewPager.layoutParams = (viewPager.layoutParams).also {
+                                it.height = view.measuredHeight
+                            }
+                        }
+                    }
+                }
+            })
         }
     }
 }
