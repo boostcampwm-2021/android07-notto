@@ -12,15 +12,17 @@ import javax.inject.Inject
 class EditLabelDialogViewModel @Inject constructor(private val repository: TodoLabelRepository) : ViewModel() {
 
     // TODO: 데이터 변경 내용 적용
-    fun createLabel(label: Label) {
+    fun createLabel(label: Label, callback: () -> Unit) {
         viewModelScope.launch {
             repository.insertLabel(label)
+            callback()
         }
     }
 
-    fun updateLabel(label: Label) {
+    fun updateLabel(label: Label, callback: () -> Unit) {
         viewModelScope.launch {
             repository.updateLabel(label)
+            callback()
         }
     }
 }

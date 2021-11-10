@@ -29,6 +29,8 @@ class EditLabelViewModel @Inject constructor(private val repository: TodoLabelRe
     fun deleteLabel(label: Label) {
         viewModelScope.launch {
             repository.deleteLabel(label)
+
+            _items.value = repository.getAllLabel()
         }
     }
 

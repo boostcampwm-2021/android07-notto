@@ -15,7 +15,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EditLabelDialogFragment : DialogFragment() {
+class EditLabelDialogFragment(private val onOkayCallback: () -> Unit) : DialogFragment() {
 
     private lateinit var binding: DialogFragmentEditLabelBinding
     private lateinit var editType: EditType
@@ -77,11 +77,11 @@ class EditLabelDialogFragment : DialogFragment() {
                 EditType.CREATE -> {
                     // TODO: Label order 기본값 설정
                     val newLabel = Label(1000, labelName)
-                    viewModel.createLabel(newLabel)
+                    viewModel.createLabel(newLabel, onOkayCallback)
                 }
                 EditType.UPDATE -> {
                     val newLabel = label!!.copy(name = labelName)
-                    viewModel.updateLabel(newLabel)
+                    viewModel.updateLabel(newLabel, onOkayCallback)
                 }
             }
 
