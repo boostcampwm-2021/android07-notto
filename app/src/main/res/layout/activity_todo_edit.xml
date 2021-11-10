@@ -62,7 +62,6 @@
                     android:layout_marginStart="@dimen/space_median"
                     android:layout_marginTop="@dimen/space_x_large"
                     android:background="@drawable/bg_todo_edit_label_add_button"
-                    android:paddingHorizontal="5dp"
                     android:text="@string/todo_edit_label_select"
                     android:textColor="@color/white"
                     app:icon="@drawable/ic_add"

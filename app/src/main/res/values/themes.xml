@@ -20,8 +20,8 @@
     </style>
 
     <style name="ThemeOverlay.App.Switch" parent="">
-        <item name="colorOnSurface">@color/yellow_deep</item>
-        <item name="colorSecondary">@color/yellow_light</item>
+        <item name="colorOnSurface">@color/yellow_light</item>
+        <item name="colorSecondary">@color/yellow_deep</item>
     </style>
 
     <style name="TodoSetTimeDialogTheme" parent="Theme.AppCompat.Light">
