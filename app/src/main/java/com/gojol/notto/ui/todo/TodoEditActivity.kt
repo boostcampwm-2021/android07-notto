@@ -65,7 +65,6 @@ class TodoEditActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.delete_todo -> {
                     //TODO todo 삭제
-                    println("delete todo")
                     true
                 }
                 else -> false
@@ -127,13 +126,9 @@ class TodoEditActivity : AppCompatActivity() {
 
     private fun initEditTextListener() {
         binding.etTodoEdit.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
                 todoEditViewModel.updateTodoContent(p0.toString())
@@ -142,6 +137,6 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     private fun showSaveButtonDisabled() {
-        Toast.makeText(this, "부족한 항목을 채워주세요!", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, getString(R.string.todo_edit_button_disabled_message), Toast.LENGTH_LONG).show()
     }
 }
