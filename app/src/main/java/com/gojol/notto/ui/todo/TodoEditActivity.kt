@@ -3,6 +3,9 @@ package com.gojol.notto.ui.todo
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -35,6 +38,22 @@ class TodoEditActivity : AppCompatActivity() {
         initButtonListener()
         initEditTextListener()
         todoEditViewModel.setDummyLabelData()
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        val view = currentFocus
+        if (view != null && (ev.action == MotionEvent.ACTION_UP || ev.action == MotionEvent.ACTION_MOVE) &&
+            view is EditText && !view.javaClass.name.startsWith("android.webkit.")
+        ) {
+            val scrcoords = IntArray(2)
+            view.getLocationOnScreen(scrcoords)
+            val x = ev.rawX + view.getLeft() - scrcoords[0]
+            val y = ev.rawY + view.getTop() - scrcoords[1]
+            if (x < view.getLeft() || x > view.getRight() || y < view.getTop() || y > view.getBottom())
+                (this.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager)
+                    .hideSoftInputFromWindow(this.window.decorView.applicationWindowToken, 0)
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     private fun initAppbar() {
@@ -119,7 +138,6 @@ class TodoEditActivity : AppCompatActivity() {
             override fun afterTextChanged(p0: Editable?) {
                 todoEditViewModel.updateTodoContent(p0.toString())
             }
-
         })
     }
 
