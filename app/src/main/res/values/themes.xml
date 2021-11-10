@@ -19,10 +19,7 @@
     </style>
     <style name="TodoTimePickerDialogStyle" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
         <item name="showTitle">false</item>
-        <item name="colorControlActivated">#ffd600</item>
-        <item name="colorAccent">#b71c1c</item>
-        <item name="android:textColorPrimary">#43a047</item>
-        <item name="android:textColorSecondary">#f44336</item>
+        <item name="colorControlActivated">@color/yellow_normal</item>
     </style>
     <style name="TodoTimePickerWidgetStyle" parent="@android:style/Widget.Material.TimePicker">
         <item name="android:headerBackground">@color/yellow_deep</item>
