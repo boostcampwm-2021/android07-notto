@@ -15,7 +15,7 @@ import com.gojol.notto.R
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.model.data.LabelWithCheck
-import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.database.todo.DateState
 import com.gojol.notto.ui.home.adapter.CalendarAdapter
 import com.gojol.notto.ui.home.adapter.LabelAdapter
 import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
@@ -116,8 +116,8 @@ class HomeFragment : Fragment() {
         return layoutManager
     }
 
-    private fun todoTouchCallback(todo: Todo) {
-        homeViewModel.fetchTodoSuccessState(todo)
+    private fun todoTouchCallback(dateState: DateState) {
+        homeViewModel.updateDateState(dateState)
     }
 
     private fun labelTouchCallback(labelWithCheck: LabelWithCheck) {

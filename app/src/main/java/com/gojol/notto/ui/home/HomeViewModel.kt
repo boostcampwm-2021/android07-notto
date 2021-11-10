@@ -5,8 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gojol.notto.model.data.LabelWithCheck
+import com.gojol.notto.model.data.TodoWithTodayDateState
 import com.gojol.notto.model.database.label.Label
-import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.database.todo.DateState
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.datasource.todo.FakeTodoLabelRepository
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
@@ -23,11 +24,11 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     private val _date = MutableLiveData(Calendar.getInstance())
     val date: LiveData<Calendar> = _date
 
+    private val _todoList = MutableLiveData<List<TodoWithTodayDateState>>()
+    val todoList: LiveData<List<TodoWithTodayDateState>> = _todoList
+
     private val _labelList = MutableLiveData<List<LabelWithCheck>>()
     val labelList: LiveData<List<LabelWithCheck>> = _labelList
-
-    private val _todoList = MutableLiveData<List<Todo>>()
-    val todoList: LiveData<List<Todo>> = _todoList
 
     fun setDummyData() {
         viewModelScope.launch {
@@ -36,15 +37,15 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     }
 
     private suspend fun insertDummyTodoAndLabel() {
-        _todoList.value = fakeRepository.getAllTodo().toMutableList()
-        val labelWithTodos = fakeRepository.getLabelsWithTodos()
-        val newLabelList = labelWithTodos.map { label -> LabelWithCheck(label, false) }.toMutableList()
+        val totalLabel = LabelWithTodo(Label(0, LABEL_NAME_ALL), fakeRepository.getAllTodo())
+        val newLabelList = fakeRepository.getLabelsWithTodos()
+            .asSequence()
+            .map { label -> LabelWithCheck(label, false) }
+            .toMutableList()
+            .apply { add(0, LabelWithCheck(totalLabel, true)) }
 
-        val totalLabel = LabelWithTodo(
-            Label(0, LABEL_NAME_ALL), _todoList.value!!
-        )
-        newLabelList.add(0, LabelWithCheck(totalLabel, true))
         _labelList.value = newLabelList
+        _todoList.value = fakeRepository.getTodosWithTodayDateState()
     }
 
     fun updateDate(year: Int, month: Int, day: Int) {
@@ -54,19 +55,28 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         _date.value = calendar
     }
 
-    fun fetchTodoSuccessState(todo: Todo) {
-        val newTodoList = mutableListOf<Todo>()
+    fun updateDateState(dateState: DateState) {
         viewModelScope.launch {
-            fakeRepository.updateTodo(todo)
-            fakeRepository.getAllTodo().forEach { databaseTodo ->
-                _todoList.value?.forEach { currentTodo ->
-                    if (databaseTodo.todoId == currentTodo.todoId) {
-                        newTodoList.add(databaseTodo)
-                    }
-                }
-            }
-            _todoList.value = newTodoList
+            fakeRepository.updateDateState(dateState)
+            _todoList.value = fakeRepository.getTodosWithTodayDateState()
         }
+    }
+
+    fun updateTodoList(list: List<LabelWithCheck>) {
+        val checkList = list.filter { it.isChecked }
+        viewModelScope.launch { addTodoListByLabels(checkList) }
+    }
+
+    private suspend fun addTodoListByLabels(labels: List<LabelWithCheck>) {
+        val todoIdList = labels
+            .asSequence()
+            .flatMap { it.labelWithTodo.todo }
+            .map { it.todoId }
+
+        val newTodoList = fakeRepository.getTodosWithTodayDateState()
+            .filter { it.todo.todoId in todoIdList }
+
+        _todoList.value = newTodoList
     }
 
     fun setLabelClickListener(labelWithCheck: LabelWithCheck) {
@@ -77,23 +87,24 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         }
     }
 
-    fun updateTodoList(list: List<LabelWithCheck>) {
-        val checkList = list.filter { it.isChecked }
-        viewModelScope.launch { addTodoListByLabels(checkList) }
-    }
-
     private fun itemLabelClick(labelWithCheck: LabelWithCheck) {
         _labelList.value?.let { list ->
             if (labelWithCheck.isChecked) {
                 moveItem(1, true, labelWithCheck)
             } else {
-                val checkedList = list.filter { it.isChecked && it != labelWithCheck }
+                val checkedList = list.filter {
+                    it.isChecked &&
+                            it.labelWithTodo.label.labelId != labelWithCheck.labelWithTodo.label.labelId &&
+                            it.labelWithTodo.label.order != 0
+                }
+
                 val uncheckedList = list
                     .asSequence()
-                    .filter { !it.isChecked }
+                    .filter { !it.isChecked && it.labelWithTodo.label.order != 0 }
                     .toMutableList()
                     .apply { add(labelWithCheck) }
                     .sortedBy { it.labelWithTodo.label.order }
+
                 if (checkedList.isEmpty()) {
                     allChipChecked()
                 } else {
@@ -105,25 +116,6 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
                 }
             }
         }
-    }
-
-    suspend fun addTodoListByLabels(labels: List<LabelWithCheck>) {
-        val newTodoList = mutableListOf<Todo>()
-
-        val todoSet = mutableSetOf<Todo>()
-        labels.forEach {
-            todoSet.addAll(it.labelWithTodo.todo)
-        }
-
-        fakeRepository.getAllTodo().forEach {
-            todoSet.forEach { setTodo ->
-                if (it.todoId == setTodo.todoId) {
-                    newTodoList.add(it)
-                }
-            }
-        }
-
-        _todoList.value = newTodoList
     }
 
     private fun moveItem(to: Int, isChecked: Boolean, labelWithCheck: LabelWithCheck) {

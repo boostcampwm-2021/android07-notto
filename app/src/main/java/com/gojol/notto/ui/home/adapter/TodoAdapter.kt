@@ -11,12 +11,13 @@ import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.R
 import com.gojol.notto.common.TodoState
 import com.gojol.notto.databinding.ItemTodoBinding
-import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.data.TodoWithTodayDateState
+import com.gojol.notto.model.database.todo.DateState
 import com.gojol.notto.ui.home.util.ItemTouchHelperListener
 
 class TodoAdapter(
-    private val swipeCallback: (Todo) -> (Unit)
-) : ListAdapter<Todo, TodoAdapter.TodoViewHolder>(TodoDiff()), ItemTouchHelperListener {
+    private val swipeCallback: (DateState) -> (Unit)
+) : ListAdapter<TodoWithTodayDateState, TodoAdapter.TodoViewHolder>(TodoDiff()), ItemTouchHelperListener {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         return TodoViewHolder(
@@ -39,8 +40,10 @@ class TodoAdapter(
     @SuppressLint("NotifyDataSetChanged")
     override fun onItemSwipe(position: Int, state: TodoState) {
         if (position < 0) return
-        val todo = currentList[position].copy(isSuccess = state)
-        swipeCallback(todo)
+
+        val todoDateState = currentList[position].todayDateState.copy(todoState = state)
+        swipeCallback(todoDateState)
+
         notifyDataSetChanged()
     }
 
@@ -49,9 +52,9 @@ class TodoAdapter(
 
         lateinit var state: TodoState
 
-        fun bind(item: Todo) {
+        fun bind(item: TodoWithTodayDateState) {
             binding.item = item
-            state = item.isSuccess
+            state = item.todayDateState.todoState
 
             val color = when (state) {
                 TodoState.NOTHING -> R.color.black
@@ -63,12 +66,12 @@ class TodoAdapter(
         }
     }
 
-    class TodoDiff : DiffUtil.ItemCallback<Todo>() {
-        override fun areItemsTheSame(oldItem: Todo, newItem: Todo): Boolean {
-            return oldItem.todoId == newItem.todoId
+    class TodoDiff : DiffUtil.ItemCallback<TodoWithTodayDateState>() {
+        override fun areItemsTheSame(oldItem: TodoWithTodayDateState, newItem: TodoWithTodayDateState): Boolean {
+            return oldItem.todo.todoId == newItem.todo.todoId
         }
 
-        override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {
+        override fun areContentsTheSame(oldItem: TodoWithTodayDateState, newItem: TodoWithTodayDateState): Boolean {
             return oldItem == newItem
         }
     }
