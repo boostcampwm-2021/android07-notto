@@ -182,10 +182,13 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     }
 
     fun updateDateState(dateState: DateState) {
-        if (!dateStates.contains(dateState)) {
+        val selectedDateState =
+            dateStates.find { it.date == dateState.date && it.parentTodoId == dateState.parentTodoId }
+
+        if (!dateStates.contains(selectedDateState)) {
             insertDateState(dateState)
         } else {
-            val selectedIndex = dateStates.indexOf(dateState)
+            val selectedIndex = dateStates.indexOf(selectedDateState)
             dateStates[selectedIndex] = dateState
         }
     }
