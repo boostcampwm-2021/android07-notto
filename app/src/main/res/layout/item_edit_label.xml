@@ -54,13 +54,13 @@
             android:textColor="@color/black"
             android:onClick="@{updateClickListener}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView2"
+            app:layout_constraintEnd_toStartOf="@+id/iv_drag_handle"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="일반" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/iv_drag_handle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_edit_label_move"

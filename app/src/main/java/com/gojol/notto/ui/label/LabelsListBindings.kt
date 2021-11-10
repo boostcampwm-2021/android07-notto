@@ -10,7 +10,7 @@ object LabelsListBindings {
     @JvmStatic
     fun setItems(recyclerView: RecyclerView, items: List<Label>?) {
         if (items.isNullOrEmpty().not()) {
-            (recyclerView.adapter as EditLabelAdapter).submitList(items)
+            (recyclerView.adapter as EditLabelAdapter).differ.submitList(items)
         }
     }
 }
