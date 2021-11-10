@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivityEditLabelBinding
 import com.gojol.notto.model.database.label.Label
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -68,7 +67,7 @@ class EditLabelActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_label)
-        editLabelAdapter = EditLabelAdapter(::deleteLabel, ::showDialog)
+        editLabelAdapter = EditLabelAdapter(::showDeleteDialog, ::showEditDialog)
 
         itemTouchHelper.attachToRecyclerView(binding.rvEditLabel)
 
@@ -97,36 +96,43 @@ class EditLabelActivity : AppCompatActivity() {
 
     private fun initObservers() {
         editLabelViewModel.dialogToShow.observe(this, {
-            editLabelViewModel.updateLabels()
-
-            showDialog(it)
+            showEditDialog(it)
         })
     }
 
-    private fun deleteLabel(label: Label?) {
+    private fun showDeleteDialog(label: Label?) {
         label ?: return
 
         val dialog = DeleteLabelDialogFragment(label)
 
         dialog.show(supportFragmentManager, "DeleteLabelDialogFragment")
+
         supportFragmentManager.executePendingTransactions()
-        dialog.dialog?.setOnDismissListener {
-            editLabelViewModel.loadLabels()
+
+        dialog.dialog?.apply {
+            setOnShowListener {
+                editLabelViewModel.updateLabels()
+            }
+            setOnDismissListener {
+                editLabelViewModel.loadLabels()
+            }
         }
     }
 
-    private fun showDialog(label: Label?) {
-        val json = Gson().toJson(label)
-        val bundle = Bundle().apply { putString("label", json) }
-        val dialog = EditLabelDialogFragment()
+    private fun showEditDialog(label: Label?) {
+        val dialog = EditLabelDialogFragment(label)
 
-        dialog.arguments = bundle
         dialog.show(supportFragmentManager, "EditLabelDialogFragment")
 
         supportFragmentManager.executePendingTransactions()
 
-        dialog.dialog?.setOnDismissListener {
-            editLabelViewModel.loadLabels()
+        dialog.dialog?.apply {
+            setOnShowListener {
+                editLabelViewModel.updateLabels()
+            }
+            setOnDismissListener {
+                editLabelViewModel.loadLabels()
+            }
         }
     }
 }
