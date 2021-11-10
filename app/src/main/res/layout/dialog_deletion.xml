@@ -17,7 +17,7 @@
             android:id="@+id/tv_dialog_deletion_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dialog_padding"
+            android:layout_marginTop="@dimen/dialog_margin"
             android:fontFamily="@font/font_nanumsquare"
             android:text="@string/dialog_deletion_title"
             android:textColor="@color/black"
