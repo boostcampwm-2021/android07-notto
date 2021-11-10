@@ -17,6 +17,7 @@ class TodoSetTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
 
     init {
         setBinding(binding)
+        setDialog(0.8f, 0.8f)
         initClickListener()
     }
 

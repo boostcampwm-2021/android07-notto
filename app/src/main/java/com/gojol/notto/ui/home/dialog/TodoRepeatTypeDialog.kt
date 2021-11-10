@@ -17,6 +17,7 @@ class TodoRepeatTypeDialog(context: Context) : TodoBaseDialogImpl(context) {
 
     init {
         setBinding(binding)
+        setDialog()
         initClickListener()
     }
 
