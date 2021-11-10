@@ -79,32 +79,14 @@
 
         </RadioGroup>
 
-        <Button
-            android:id="@+id/btn_dialog_repeat_Type_reject"
+        <include
+            android:id="@+id/bv_dialog_deletion"
+            layout="@layout/item_dialog_bottom_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/nanumsquare_aceb"
-            android:text="@string/dialog_deletion_reject"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/btn_dialog_repeat_Type_confirm"
-            app:layout_constraintTop_toBottomOf="@+id/rg_repeat_type" />
-
-        <Button
-            android:id="@+id/btn_dialog_repeat_Type_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/nanumsquare_aceb"
-            android:text="@string/dialog_deletion_confirm"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            app:bottom="@{1}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rg_repeat_type" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="dialog"
             type="com.gojol.notto.ui.home.dialog.TodoRepeatTimeDialog" />
@@ -19,40 +20,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:paddingHorizontal="10dp"
-            app:mcv_selectionColor="@color/yellow_deep"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:mcv_selectionColor="@color/yellow_deep" />
 
-        <Button
-            android:id="@+id/btn_dialog_repeat_time_reject"
+        <include
+            android:id="@+id/bv_dialog_deletion"
+            layout="@layout/item_dialog_bottom_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/nanumsquare_aceb"
-            android:text="@string/dialog_deletion_reject"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_dialog_repeat_time_confirm" />
-
-        <Button
-            android:id="@+id/btn_dialog_repeat_time_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/nanumsquare_aceb"
-            android:text="@string/dialog_deletion_confirm"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            app:bottom="@{1}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cv_repeat_time"
-            app:layout_constraintVertical_bias="1.0" />
-
-
+            app:layout_constraintTop_toBottomOf="@+id/cv_repeat_time" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
