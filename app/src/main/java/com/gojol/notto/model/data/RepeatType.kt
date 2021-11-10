@@ -1,7 +1,7 @@
 package com.gojol.notto.model.data
 
-enum class RepeatType {
-    DAY,
-    MONTH,
-    YEAR
+enum class RepeatType(val text: String) {
+    DAY("매일"),
+    MONTH("매월"),
+    YEAR("매년")
 }

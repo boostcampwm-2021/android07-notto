@@ -1,6 +1,9 @@
 package com.gojol.notto.ui.todo
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +33,7 @@ class TodoEditActivity : AppCompatActivity() {
         initObserver()
         initSwitchListener()
         initButtonListener()
+        initEditTextListener()
         todoEditViewModel.setDummyLabelData()
     }
 
@@ -64,9 +68,12 @@ class TodoEditActivity : AppCompatActivity() {
             val newList = it.map { label -> label.name }.toTypedArray()
             initLabelAddDialog(newList)
         }
-
         todoEditViewModel.selectedLabelList.observe(this) {
             selectedLabelAdapter.submitList(it)
+        }
+        todoEditViewModel.isSaveButtonEnabled.observe(this) {
+            if (!it) showSaveButtonDisabled()
+            else finish()
         }
     }
 
@@ -86,6 +93,9 @@ class TodoEditActivity : AppCompatActivity() {
         binding.btnTodoEditLabel.setOnClickListener {
             labelAddDialog.show()
         }
+        binding.btnTodoEditSave.setOnClickListener {
+            todoEditViewModel.saveTodo()
+        }
     }
 
     private fun initLabelAddDialog(items: Array<String>) {
@@ -94,5 +104,26 @@ class TodoEditActivity : AppCompatActivity() {
                 .setItems(items) { _, which ->
                     todoEditViewModel.addLabelToSelectedLabelList(items[which])
                 }
+    }
+
+    private fun initEditTextListener() {
+        binding.etTodoEdit.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                todoEditViewModel.updateTodoContent(p0.toString())
+            }
+
+        })
+    }
+
+    private fun showSaveButtonDisabled() {
+        Toast.makeText(this, "부족한 항목을 채워주세요!", Toast.LENGTH_LONG).show()
     }
 }

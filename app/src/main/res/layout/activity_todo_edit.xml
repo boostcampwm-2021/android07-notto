@@ -132,7 +132,7 @@
                     android:id="@+id/tv_todo_edit_repeat_type_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{viewmodel.repeatType}"
+                    android:text="@{viewmodel.repeatType.text}"
                     android:textColor="@{viewmodel.isRepeatChecked ? @color/black : @color/gray_normal}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_type"
                     app:layout_constraintEnd_toEndOf="@id/switch_todo_edit_repeat"
@@ -303,6 +303,7 @@
                     tools:checked="false" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_todo_edit_save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/todo_edit_button_margin"
