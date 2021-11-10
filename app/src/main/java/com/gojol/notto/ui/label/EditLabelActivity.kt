@@ -105,6 +105,8 @@ class EditLabelActivity : AppCompatActivity() {
 
     private fun deleteLabel(label: Label?) {
         // TODO: 삭제 확인 Dialog 구현
+        DeleteLabelDialogFragment().show(supportFragmentManager, "DeleteLabelDialogFragment")
+
         if (label != null) {
             editLabelViewModel.deleteLabel(label)
         }

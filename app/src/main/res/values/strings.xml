@@ -12,4 +12,5 @@
     <string name="cancel">취소</string>
     <string name="okay">확인</string>
     <string name="edit_label_edit_text_hint">라벨 이름을 입력해주세요.</string>
+    <string name="edit_label_delete_alert">Not-todo에 더이상 이 라벨이 표시되지 않습니다.\n정말 삭제하시겠습니까?</string>
 </resources>
