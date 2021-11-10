@@ -4,4 +4,11 @@
     <string name="bottom_popular">인기</string>
     <string name="bottom_option">옵션</string>
     <string name="home_label_all">전체</string>
+    <string name="calendar_sunday">일</string>
+    <string name="calendar_monday">월</string>
+    <string name="calendar_tuesday">화</string>
+    <string name="calendar_wednesday">수</string>
+    <string name="calendar_thursday">목</string>
+    <string name="calendar_friday">금</string>
+    <string name="calendar_saturday">토</string>
 </resources>

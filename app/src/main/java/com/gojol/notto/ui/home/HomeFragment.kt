@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        calendarAdapter = CalendarAdapter(homeViewModel)
+        calendarAdapter = CalendarAdapter(requireActivity())
         labelAdapter = LabelAdapter(::labelTouchCallback)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
         todoAdapter = TodoAdapter(::todoTouchCallback)
@@ -84,6 +84,10 @@ class HomeFragment : Fragment() {
         homeViewModel.labelList.observe(viewLifecycleOwner, {
             homeViewModel.updateTodoList(it)
             labelAdapter.submitList(it)
+        })
+
+        homeViewModel.date.observe(viewLifecycleOwner, {
+            calendarAdapter.setDate(it)
         })
     }
 

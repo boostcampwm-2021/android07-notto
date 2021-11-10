@@ -15,4 +15,5 @@
     <dimen name="space_large">20dp</dimen>
     <dimen name="space_x_large">24dp</dimen>
     <dimen name="home_recyclerview_padding">100dp</dimen>
+    <dimen name="calendar_day_size">40dp</dimen>
 </resources>
