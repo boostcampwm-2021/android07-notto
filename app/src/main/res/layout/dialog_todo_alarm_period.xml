@@ -5,7 +5,7 @@
     <data>
         <variable
             name="dialog"
-            type="com.gojol.notto.ui.home.TodoAlarmPeriodDialog" />
+            type="com.gojol.notto.ui.home.dialog.TodoAlarmPeriodDialog" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

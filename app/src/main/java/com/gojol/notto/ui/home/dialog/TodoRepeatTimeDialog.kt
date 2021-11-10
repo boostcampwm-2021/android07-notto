@@ -1,23 +1,21 @@
-package com.gojol.notto.ui.home
+package com.gojol.notto.ui.home.dialog
 
 import android.app.Dialog
 import android.content.Context
-import android.content.res.ColorStateList
 import android.view.View
 import android.view.Window
 import android.view.LayoutInflater
-import android.widget.RadioButton
 import androidx.core.content.ContextCompat
-import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
-import com.gojol.notto.databinding.DialogTodoAlarmPeriodBinding
+import com.gojol.notto.databinding.DialogTodoRepeatTimeBinding
+import java.util.*
 
 
-class TodoAlarmPeriodDialog(context: Context) : View(context) {
+class TodoRepeatTimeDialog(context: Context) : View(context) {
 
-    private val binding: DialogTodoAlarmPeriodBinding = DataBindingUtil.inflate(
-        LayoutInflater.from(context), R.layout.dialog_todo_alarm_period,
+    private val binding: DialogTodoRepeatTimeBinding = DataBindingUtil.inflate(
+        LayoutInflater.from(context), R.layout.dialog_todo_repeat_time,
         null,
         false
     )
@@ -30,16 +28,21 @@ class TodoAlarmPeriodDialog(context: Context) : View(context) {
         dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.bg_dialog))
 
         initClickListener()
+        initCalendar()
         show()
     }
 
     private fun initClickListener() {
-        binding.btnDialogAlarmPeriodConfirm.setOnClickListener {
+        binding.btnDialogRepeatTimeConfirm.setOnClickListener {
             confirm()
         }
-        binding.btnDialogAlarmPeriodReject.setOnClickListener {
+        binding.btnDialogRepeatTimeReject.setOnClickListener {
             dismiss()
         }
+    }
+
+    private fun initCalendar() {
+        binding.cvRepeatTime.setSelectedDate(Date(System.currentTimeMillis()))
     }
 
     fun show() {
@@ -47,7 +50,7 @@ class TodoAlarmPeriodDialog(context: Context) : View(context) {
     }
 
     private fun confirm() {
-
+        val selectedDate = binding.cvRepeatTime.selectedDate
     }
 
     private fun dismiss() {

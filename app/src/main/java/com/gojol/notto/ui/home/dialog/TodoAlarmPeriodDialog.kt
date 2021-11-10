@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home
+package com.gojol.notto.ui.home.dialog
 
 import android.app.Dialog
 import android.content.Context
@@ -8,13 +8,13 @@ import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
-import com.gojol.notto.databinding.DialogTodoRepeatTypeBinding
+import com.gojol.notto.databinding.DialogTodoAlarmPeriodBinding
 
 
-class TodoRepeatTypeDialog(context: Context) : View(context) {
+class TodoAlarmPeriodDialog(context: Context) : View(context) {
 
-    private val binding: DialogTodoRepeatTypeBinding = DataBindingUtil.inflate(
-        LayoutInflater.from(context), R.layout.dialog_todo_repeat_type,
+    private val binding: DialogTodoAlarmPeriodBinding = DataBindingUtil.inflate(
+        LayoutInflater.from(context), R.layout.dialog_todo_alarm_period,
         null,
         false
     )
@@ -31,10 +31,10 @@ class TodoRepeatTypeDialog(context: Context) : View(context) {
     }
 
     private fun initClickListener() {
-        binding.btnDialogRepeatTypeConfirm.setOnClickListener {
+        binding.btnDialogAlarmPeriodConfirm.setOnClickListener {
             confirm()
         }
-        binding.btnDialogRepeatTypeReject.setOnClickListener {
+        binding.btnDialogAlarmPeriodReject.setOnClickListener {
             dismiss()
         }
     }

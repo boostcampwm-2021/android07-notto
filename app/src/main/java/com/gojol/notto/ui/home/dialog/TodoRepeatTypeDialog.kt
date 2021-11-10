@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home
+package com.gojol.notto.ui.home.dialog
 
 import android.app.Dialog
 import android.content.Context
@@ -8,19 +8,20 @@ import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
-import com.gojol.notto.databinding.DialogDeletionBinding
+import com.gojol.notto.databinding.DialogTodoRepeatTypeBinding
 
 
-class TodoDeletionDialog(context: Context) : View(context) {
+class TodoRepeatTypeDialog(context: Context) : View(context) {
 
-    private val binding: DialogDeletionBinding = DataBindingUtil.inflate(
-        LayoutInflater.from(context), R.layout.dialog_deletion,
+    private val binding: DialogTodoRepeatTypeBinding = DataBindingUtil.inflate(
+        LayoutInflater.from(context), R.layout.dialog_todo_repeat_type,
         null,
         false
     )
     private var dialog: Dialog = Dialog(context)
 
     init {
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(binding.root)
         dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.bg_dialog))
@@ -30,10 +31,10 @@ class TodoDeletionDialog(context: Context) : View(context) {
     }
 
     private fun initClickListener() {
-        binding.btnDialogDeletionConfirm.setOnClickListener {
+        binding.btnDialogRepeatTypeConfirm.setOnClickListener {
             confirm()
         }
-        binding.btnDialogDeletionReject.setOnClickListener {
+        binding.btnDialogRepeatTypeReject.setOnClickListener {
             dismiss()
         }
     }

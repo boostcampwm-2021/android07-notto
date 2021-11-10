@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home
+package com.gojol.notto.ui.home.dialog
 
 import android.app.Dialog
 import android.content.Context
@@ -9,11 +9,7 @@ import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
-import com.gojol.notto.databinding.DialogTodoRepeatTimeBinding
 import com.gojol.notto.databinding.DialogTodoSetTimeBinding
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
-import java.util.*
 
 
 class TodoSetTimeDialog(context: Context) : View(context) {

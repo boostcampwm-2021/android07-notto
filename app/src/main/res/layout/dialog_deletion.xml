@@ -6,7 +6,7 @@
     <data>
         <variable
             name="dialog"
-            type="com.gojol.notto.ui.home.TodoDeletionDialog" />
+            type="com.gojol.notto.ui.home.dialog.TodoDeletionDialog" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

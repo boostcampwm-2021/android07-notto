@@ -6,7 +6,7 @@
     <data>
         <variable
             name="dialog"
-            type="com.gojol.notto.ui.home.TodoRepeatTimeDialog" />
+            type="com.gojol.notto.ui.home.dialog.TodoRepeatTimeDialog" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
