@@ -20,9 +20,35 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _labelList = MutableLiveData<List<Label>>()
     val labelList: LiveData<List<Label>> = _labelList
 
+    private val _selectedLabelList = MutableLiveData<List<Label>>()
+    val selectedLabelList: LiveData<List<Label>> = _selectedLabelList
+
+    init {
+        _selectedLabelList.value = listOf()
+    }
+
     fun setDummyLabelData() {
-        viewModelScope.launch{
+        viewModelScope.launch {
             _labelList.value = fakeRepository.getAllLabel()
         }
+    }
+
+    fun addLabelToSelectedLabelList(labelName: String) {
+        if (labelName == "선택") return
+        if (selectedLabelList.value?.find { it.name == labelName } != null) return
+
+        val label = labelList.value?.find { it.name == labelName } ?: return
+        val newLabelList = selectedLabelList.value?.toMutableList()?.apply {
+            add(label)
+        } ?: return
+        _selectedLabelList.value = newLabelList
+    }
+
+    fun removeLabelFromSelectedLabelList(label: Label) {
+        println("label clicked: $label")
+        val newLabelList = selectedLabelList.value?.toMutableList()?.apply{
+            remove(label)
+        } ?: return
+        _selectedLabelList.value = newLabelList
     }
 }
