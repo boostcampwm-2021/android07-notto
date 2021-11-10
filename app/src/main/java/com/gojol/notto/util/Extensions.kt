@@ -14,6 +14,10 @@ fun Calendar.getMonth(): Int {
     return this.get(Calendar.MONTH)
 }
 
+fun Calendar.getDate(): Int {
+    return this.get(Calendar.DATE)
+}
+
 fun Calendar.getDayOfWeek(): Int{
     return this.get(Calendar.DAY_OF_WEEK)
 }
