@@ -11,6 +11,7 @@ import com.gojol.notto.model.database.todo.DateState
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.datasource.todo.FakeTodoLabelRepository
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
+import com.gojol.notto.util.toYearMonthDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -45,7 +46,9 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
             .apply { add(0, LabelWithCheck(totalLabel, true)) }
 
         _labelList.value = newLabelList
-        _todoList.value = fakeRepository.getTodosWithTodayDateState()
+        _todoList.value =
+            _date.value?.let { fakeRepository.getTodosWithTodayDateState(it.toYearMonthDate()) }
+        _date.value = Calendar.getInstance()
     }
 
     fun updateDate(year: Int, month: Int, day: Int) {
@@ -58,7 +61,8 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     fun updateDateState(dateState: DateState) {
         viewModelScope.launch {
             fakeRepository.updateDateState(dateState)
-            _todoList.value = fakeRepository.getTodosWithTodayDateState()
+            _todoList.value =
+                _date.value?.let { fakeRepository.getTodosWithTodayDateState(it.toYearMonthDate()) }
         }
     }
 
@@ -73,10 +77,14 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
             .flatMap { it.labelWithTodo.todo }
             .map { it.todoId }
 
-        val newTodoList = fakeRepository.getTodosWithTodayDateState()
-            .filter { it.todo.todoId in todoIdList }
+        val newTodoList = _date.value?.let { date ->
+            fakeRepository.getTodosWithTodayDateState(date.toYearMonthDate())
+                .filter { it.todo.todoId in todoIdList }
+        }
 
-        _todoList.value = newTodoList
+        newTodoList?.let {
+            _todoList.value = it
+        }
     }
 
     fun setLabelClickListener(labelWithCheck: LabelWithCheck) {

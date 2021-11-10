@@ -1,17 +1,18 @@
 package com.gojol.notto.model.datasource.todo
 
-import java.util.Calendar
 import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.data.TodoWithTodayDateState
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DateState
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.database.todo.TodoWithDateState
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
 import com.gojol.notto.util.getDate
 import com.gojol.notto.util.getMonth
 import com.gojol.notto.util.getYear
+import java.util.*
 
 class FakeTodoLabelRepository : TodoLabelDataSource {
 
@@ -59,13 +60,24 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         return todosWithLabels
     }
 
-    fun getTodosWithTodayDateState(): List<TodoWithTodayDateState> {
+    override suspend fun getTodosWithDateStates(): List<TodoWithDateState> {
         return todos.map { todo ->
-            TodoWithTodayDateState(
-                todo,
-                dateStates.find { it.parentTodoId == todo.todoId && it.date == selectedDate }
-                    ?: DateState(TodoState.NOTHING, todo.todoId, selectedDate)
-            )
+            TodoWithDateState(todo, dateStates.filter { it.parentTodoId == todo.todoId })
+        }
+    }
+
+    override suspend fun getTodosWithTodayDateState(selectedDate: String): List<TodoWithTodayDateState> {
+        return todos.map { todo ->
+            var todayDateState =
+                dateStates.find { it.parentTodoId == todo.todoId && it.date == this.selectedDate }
+
+            if (todayDateState == null) {
+                todayDateState = DateState(TodoState.NOTHING, todo.todoId, this.selectedDate)
+                dateStates.add(todayDateState)
+            }
+
+            TodoWithTodayDateState(todo, todayDateState)
+
         }
     }
 
@@ -109,7 +121,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         labels.add(label)
     }
 
-    private fun insertDateState(dateState: DateState) {
+    override suspend fun insertDateState(dateState: DateState) {
         dateStates.add(dateState)
     }
 
@@ -181,16 +193,12 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         }
     }
 
-    fun updateDateState(dateState: DateState) {
+    override suspend fun updateDateState(dateState: DateState) {
         val selectedDateState =
             dateStates.find { it.date == dateState.date && it.parentTodoId == dateState.parentTodoId }
+        val selectedIndex = dateStates.indexOf(selectedDateState)
 
-        if (!dateStates.contains(selectedDateState)) {
-            insertDateState(dateState)
-        } else {
-            val selectedIndex = dateStates.indexOf(selectedDateState)
-            dateStates[selectedIndex] = dateState
-        }
+        dateStates[selectedIndex] = dateState
     }
 
     override suspend fun deleteTodo(todo: Todo) {
