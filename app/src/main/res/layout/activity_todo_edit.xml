@@ -175,10 +175,10 @@
                 <View
                     android:id="@+id/divider_todo_edit_repeat"
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_marginHorizontal="@dimen/space_median"
                     android:layout_marginTop="@dimen/space_median"
-                    android:background="@color/gray_normal"
+                    android:background="@color/gray_light"
                     app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_repeat_start" />
 
                 <!-- 시간 설정 -->
@@ -284,10 +284,10 @@
                 <View
                     android:id="@+id/divider_todo_edit_time"
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:layout_marginHorizontal="@dimen/space_median"
                     android:layout_marginTop="@dimen/space_median"
-                    android:background="@color/gray_normal"
+                    android:background="@color/gray_light"
                     app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_time_repeat" />
 
                 <!-- 키워드 공개 설정 -->
