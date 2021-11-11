@@ -42,6 +42,12 @@ class LabelWrapperAdapter(private val adapter: LabelAdapter) :
     class LabelWrapperViewHolder(private val binding: ItemLabelListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        init {
+            binding.setEditClickListener {
+                it.context.startActivity(Intent(it.context, EditLabelActivity::class.java))
+            }
+        }
+
         fun bind(adapter: LabelAdapter, lastScrollX: Int, onScrolled: (Int) -> Unit) {
             val context = binding.root.context
 
@@ -58,12 +64,6 @@ class LabelWrapperAdapter(private val adapter: LabelAdapter) :
                     }
                 })
             }
-
-            binding.btnHomeLabelEdit.setOnClickListener {
-                it.context.startActivity(Intent(it.context, EditLabelActivity::class.java))
-            }
         }
     }
-
-    fun getLabelAdapter() = adapter
 }
