@@ -19,7 +19,6 @@ import com.gojol.notto.ui.todo.dialog.TodoDeletionDialog
 import com.gojol.notto.ui.todo.dialog.TodoRepeatTimeDialog
 import com.gojol.notto.ui.todo.dialog.TodoRepeatTypeDialog
 import com.gojol.notto.ui.todo.dialog.TodoSetTimeDialog
-import com.gojol.notto.util.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,12 +35,25 @@ class TodoEditActivity : AppCompatActivity() {
     private lateinit var todoSetTimeDialog: TodoSetTimeDialog
     private lateinit var todoAlarmPeriodDialog: TodoAlarmPeriodDialog
 
+    companion object {
+        const val TIME_START = "timeStart"
+        const val TIME_FINISH = "timeFinish"
+        const val TIME_REPEAT = "timeRepeat"
+        const val REPEAT_TYPE = "repeatType"
+        const val REPEAT_TIME = "repeatTime"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_todo_edit)
         binding.lifecycleOwner = this
         binding.viewmodel = todoEditViewModel
+        savedInstanceState?.getBoolean(TIME_START)?.let { todoEditViewModel.restoreOnTimeStartState(it) }
+        savedInstanceState?.getBoolean(TIME_FINISH)?.let { todoEditViewModel.restoreOnTimeFinishState(it) }
+        savedInstanceState?.getBoolean(TIME_REPEAT)?.let { todoEditViewModel.restoreOnTimeRepeatState(it) }
+        savedInstanceState?.getBoolean(REPEAT_TIME)?.let { todoEditViewModel.restoreOnRepeatStartState(it) }
+        savedInstanceState?.getBoolean(REPEAT_TYPE)?.let { todoEditViewModel.restoreOnRepeatTypeState(it) }
 
         initAppbar()
         initSelectedLabelRecyclerView()
@@ -105,32 +117,52 @@ class TodoEditActivity : AppCompatActivity() {
             if (!it) showSaveButtonDisabled()
             else finish()
         }
-        todoEditViewModel.repeatTypeClick.observe(this, EventObserver {
+        todoEditViewModel.repeatTypeClick.observe(this) {
             if (it) {
                 todoRepeatTypeDialog.show()
             }
-        })
-        todoEditViewModel.repeatStartClick.observe(this, EventObserver {
+        }
+        todoEditViewModel.repeatStartClick.observe(this) {
             if (it) {
                 todoRepeatTimeDialog.show()
             }
-        })
-        todoEditViewModel.timeStartClick.observe(this, EventObserver {
+        }
+        todoEditViewModel.timeStartClick.observe(this) {
             if (it) {
                 todoSetTimeDialog.show()
             }
-        })
-        todoEditViewModel.timeFinishClick.observe(this, EventObserver {
+        }
+        todoEditViewModel.timeFinishClick.observe(this) {
             if (it) {
                 todoSetTimeDialog.show()
             }
-        })
-        todoEditViewModel.timeRepeatClick.observe(this, EventObserver {
+        }
+        todoEditViewModel.timeRepeatClick.observe(this) {
             if (it) {
                 todoAlarmPeriodDialog.show()
             }
-        })
+        }
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        todoEditViewModel.timeStartClick.value?.let { bool ->
+            outState.putBoolean(TIME_START, bool)
+
+        }
+        todoEditViewModel.timeFinishClick.value?.let { bool ->
+            outState.putBoolean(TIME_FINISH, bool)
+        }
+        todoEditViewModel.timeRepeatClick.value?.let { bool ->
+            outState.putBoolean(TIME_REPEAT, bool)
+        }
+        todoEditViewModel.repeatTypeClick.value?.let { bool ->
+            outState.putBoolean(REPEAT_TYPE, bool)
+        }
+        todoEditViewModel.repeatStartClick.value?.let { bool ->
+            outState.putBoolean(REPEAT_TIME, bool)
+        }
     }
 
     private fun initSwitchListener() {
