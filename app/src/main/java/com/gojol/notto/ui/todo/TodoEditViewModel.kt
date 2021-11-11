@@ -9,7 +9,6 @@ import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.datasource.todo.FakeTodoLabelRepository
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.util.get12Hour
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,8 +24,6 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRepository) :
     ViewModel() {
-
-    private val fakeRepository = FakeTodoLabelRepository.getInstance()
 
     private val _isTodoEditing = MutableLiveData<Boolean>()
     val isTodoEditing: LiveData<Boolean> = _isTodoEditing
@@ -126,7 +123,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     fun setupExistedTodo() {
         val todo = existedTodo.value ?: return
         viewModelScope.launch {
-            _selectedLabelList.value = fakeRepository.getTodosWithLabels().find { todoWithLabel ->
+            _selectedLabelList.value = repository.getTodosWithLabels().find { todoWithLabel ->
                 todo.todoId == todoWithLabel.todo.todoId
             }?.labels
         }
@@ -264,7 +261,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         )
 
         viewModelScope.launch {
-            val job = launch { repository.insertTodo(newTodo) }.join()
+            launch { repository.insertTodo(newTodo) }.join()
 
             val saveTodo = withContext(Dispatchers.Default) {
                 repository.getTodosWithLabels().find { it.labels.isEmpty() }?.todo
