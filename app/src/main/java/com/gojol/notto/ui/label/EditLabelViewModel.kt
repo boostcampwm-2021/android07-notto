@@ -28,7 +28,7 @@ class EditLabelViewModel @Inject constructor(private val repository: TodoLabelRe
                 .filter { it.labelId != 1 }
                 .sortedBy { it.order }
             _items.value = labels
-
+            _updatedItems.value = labels
         }
     }
 
