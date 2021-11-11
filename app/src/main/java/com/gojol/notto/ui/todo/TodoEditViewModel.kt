@@ -20,7 +20,7 @@ import javax.inject.Inject
 class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRepository) :
     ViewModel() {
 
-    private val fakeRepository = FakeTodoLabelRepository()
+    private val fakeRepository = FakeTodoLabelRepository.getInstance()
 
     private val _isTodoEditing = MutableLiveData<Boolean>()
     val isTodoEditing: LiveData<Boolean> = _isTodoEditing
@@ -124,6 +124,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             return
         }
 
+        // TODO: FakeRepository 지우면 todoId 항목 삭제
         val todo = Todo(
             TodoSuccessType.NOTHING,
             todoContent.value!!,
@@ -134,13 +135,15 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             timeStart.value ?: return,
             timeFinish.value ?: return,
             timeRepeat.value ?: return,
-            isKeywordChecked.value ?: return
+            isKeywordChecked.value ?: return,
+            fakeRepository.todoId++
         )
 
         viewModelScope.launch {
             selectedLabelList.value?.let { labels ->
                 if (labels.isEmpty()) fakeRepository.insertTodo(todo)
                 else {
+                    fakeRepository.insertTodo(todo)
                     labels.forEach { label ->
                         fakeRepository.insertTodo(todo, label)
                     }

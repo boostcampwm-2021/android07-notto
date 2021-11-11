@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val repository: TodoLabelRepository) : ViewModel() {
 
-    private val fakeRepository = FakeTodoLabelRepository()
+    private val fakeRepository = FakeTodoLabelRepository.getInstance()
 
     private val _date = MutableLiveData(Calendar.getInstance())
     val date: LiveData<Calendar> = _date

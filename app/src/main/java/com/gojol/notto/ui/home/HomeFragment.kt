@@ -53,9 +53,15 @@ class HomeFragment : Fragment() {
 
         initRecyclerView()
         initObserver()
-        initData()
+       //initData()
         initTodoListItemTouchListener()
         initClickListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        initData()
     }
 
     private fun initRecyclerView() {
