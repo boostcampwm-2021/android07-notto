@@ -25,6 +25,9 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _isTodoEditing = MutableLiveData<Boolean>()
     val isTodoEditing: LiveData<Boolean> = _isTodoEditing
 
+    private val _popLabelAddDialog = MutableLiveData<Boolean>()
+    val popLabelAddDialog: LiveData<Boolean> = _popLabelAddDialog
+
     private val _existedTodo = MutableLiveData<Todo>()
     val existedTodo: LiveData<Todo> = _existedTodo
 
@@ -112,6 +115,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
     fun updateIsSaveButtonEnabled(bool: Boolean) {
         _isSaveButtonEnabled.value = bool
+    }
+
+    fun updatePopLabelAddDialog() {
+        _popLabelAddDialog.value = true
     }
 
     fun saveTodo() {

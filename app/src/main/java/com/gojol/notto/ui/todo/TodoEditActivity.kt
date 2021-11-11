@@ -34,8 +34,6 @@ class TodoEditActivity : AppCompatActivity() {
         initAppbar()
         initSelectedLabelRecyclerView()
         initObserver()
-        initSwitchListener()
-        initButtonListener()
         initEditTextListener()
         todoEditViewModel.setDummyLabelData()
     }
@@ -93,26 +91,8 @@ class TodoEditActivity : AppCompatActivity() {
             if (!it) showSaveButtonDisabled()
             else finish()
         }
-    }
-
-    private fun initSwitchListener() {
-        binding.switchTodoEditRepeat.setOnCheckedChangeListener { _, isChecked ->
-            todoEditViewModel.updateIsRepeatChecked(isChecked)
-        }
-        binding.switchTodoEditTime.setOnCheckedChangeListener { _, isChecked ->
-            todoEditViewModel.updateIsTimeChecked(isChecked)
-        }
-        binding.switchTodoEditKeyword.setOnCheckedChangeListener { _, isChecked ->
-            todoEditViewModel.updateIsKeywordChecked(isChecked)
-        }
-    }
-
-    private fun initButtonListener() {
-        binding.btnTodoEditLabel.setOnClickListener {
-            labelAddDialog.show()
-        }
-        binding.btnTodoEditSave.setOnClickListener {
-            todoEditViewModel.saveTodo()
+        todoEditViewModel.popLabelAddDialog.observe(this) {
+            if (it) showLabelAddDialog()
         }
     }
 
@@ -134,6 +114,10 @@ class TodoEditActivity : AppCompatActivity() {
                 todoEditViewModel.updateTodoContent(p0.toString())
             }
         })
+    }
+
+    private fun showLabelAddDialog() {
+        labelAddDialog.show()
     }
 
     private fun showSaveButtonDisabled() {
