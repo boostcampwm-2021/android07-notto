@@ -1,7 +1,8 @@
-package com.gojol.notto.ui.label
+package com.gojol.notto.ui.label.util
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.gojol.notto.ui.label.EditLabelAdapter
 
 class ItemTouchCallback(private val moveItemCallback: (Int, Int) -> Unit) :
     ItemTouchHelper.SimpleCallback(

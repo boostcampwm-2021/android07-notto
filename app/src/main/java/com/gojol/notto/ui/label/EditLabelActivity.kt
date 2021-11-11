@@ -8,6 +8,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivityEditLabelBinding
+import com.gojol.notto.ui.label.dialog.edit.EditLabelDialogFragment
+import com.gojol.notto.ui.label.util.ItemTouchCallback
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

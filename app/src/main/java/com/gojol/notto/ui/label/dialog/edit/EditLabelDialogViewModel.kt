@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.label
+package com.gojol.notto.ui.label.dialog.edit
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

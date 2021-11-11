@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.databinding.ItemEditLabelBinding
 import com.gojol.notto.model.database.label.Label
+import com.gojol.notto.ui.label.dialog.delete.DeleteLabelDialogFragment
+import com.gojol.notto.ui.label.dialog.edit.EditLabelDialogFragment
 
 class EditLabelAdapter(
     private val dialogCallback: (DialogFragment) -> Unit

@@ -7,12 +7,12 @@
 
         <variable
             name="viewmodel"
-            type="com.gojol.notto.ui.label.DeleteLabelDialogViewModel" />
+            type="com.gojol.notto.ui.label.dialog.delete.DeleteLabelDialogViewModel" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        tools:context=".ui.label.DeleteLabelDialogFragment"
+        tools:context=".ui.label.dialog.delete.DeleteLabelDialogFragment"
         style="@style/edit_label_dialog_layout">
 
         <TextView
