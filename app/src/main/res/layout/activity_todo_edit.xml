@@ -100,6 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_median"
                     android:src="@drawable/ic_calendar"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_setting"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_setting" />
 
@@ -111,7 +112,7 @@
                     android:layout_marginTop="@dimen/space_x_x_large"
                     android:text="@string/todo_edit_repeat_setting"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_small"
+                    android:textSize="@dimen/text_x_small"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@id/iv_todo_edit_repeat"
                     app:layout_constraintTop_toBottomOf="@id/btn_todo_edit_label" />
@@ -188,6 +189,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_median"
                     android:src="@drawable/ic_time_filled"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_setting"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_setting" />
 
@@ -199,7 +201,7 @@
                     android:layout_marginTop="@dimen/space_median"
                     android:text="@string/todo_edit_time_setting"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_small"
+                    android:textSize="@dimen/text_x_small"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@id/iv_todo_edit_time"
                     app:layout_constraintTop_toBottomOf="@id/divider_todo_edit_repeat" />
@@ -297,6 +299,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_median"
                     android:src="@drawable/ic_visibility_outline"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_keyword_setting"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_keyword_setting" />
 
@@ -308,7 +311,7 @@
                     android:layout_marginTop="@dimen/space_median"
                     android:text="@string/todo_edit_keyword_setting"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_small"
+                    android:textSize="@dimen/text_x_small"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@id/iv_todo_edit_keyword"
                     app:layout_constraintTop_toBottomOf="@id/divider_todo_edit_time" />
