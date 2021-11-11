@@ -24,9 +24,11 @@ class EditLabelViewModel @Inject constructor(private val repository: TodoLabelRe
 
     fun loadLabels() {
         viewModelScope.launch {
-            val labels = repository.getAllLabel().sortedBy { it.order }
+            val labels = repository.getAllLabel()
+                .filter { it.labelId != 1 }
+                .sortedBy { it.order }
             _items.value = labels
-            _updatedItems.value = labels
+
         }
     }
 
@@ -40,7 +42,7 @@ class EditLabelViewModel @Inject constructor(private val repository: TodoLabelRe
 
         val updatedLabels = mutableListOf<Label>()
         labels.forEachIndexed { index, label ->
-            updatedLabels.add(label.copy(order = index + 1))
+            updatedLabels.add(label.copy(order = index + 2))
 
             _updatedItems.value = updatedLabels
         }
