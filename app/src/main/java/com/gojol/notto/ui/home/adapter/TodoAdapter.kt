@@ -1,6 +1,5 @@
 package com.gojol.notto.ui.home.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -36,7 +35,6 @@ class TodoAdapter(
     override fun onItemMove(from: Int, to: Int): Boolean {
         return false
     }
-
 
     override fun onItemSwipe(position: Int, state: TodoState) {
         val todoDateState = currentList[position].todayDateState.copy(todoState = state)
