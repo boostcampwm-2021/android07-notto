@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
+import com.gojol.notto.model.database.todo.Todo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,6 +32,7 @@ class TodoEditActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewmodel = todoEditViewModel
 
+        initIntentExtra()
         initAppbar()
         initSelectedLabelRecyclerView()
         initObserver()
@@ -52,6 +54,11 @@ class TodoEditActivity : AppCompatActivity() {
                     .hideSoftInputFromWindow(this.window.decorView.applicationWindowToken, 0)
         }
         return super.dispatchTouchEvent(ev)
+    }
+
+    private fun initIntentExtra() {
+        val todo = intent.getSerializableExtra("todo") as Todo?
+        todoEditViewModel.updateIsTodoEditing(todo)
     }
 
     private fun initAppbar() {
@@ -76,6 +83,9 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
+        todoEditViewModel.isTodoEditing.observe(this) {
+            if (it) todoEditViewModel.setupExistedTodo()
+        }
         todoEditViewModel.isCloseButtonCLicked.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
                 finish()

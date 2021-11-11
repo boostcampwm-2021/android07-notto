@@ -3,6 +3,7 @@ package com.gojol.notto.model.database.todo
 import androidx.room.*
 import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.model.data.RepeatType
+import java.io.Serializable
 
 @Entity
 data class Todo(
@@ -17,4 +18,4 @@ data class Todo(
     @ColumnInfo(name = "period_time") val periodTime: String,
     @ColumnInfo(name = "is_keyword_open") val isKeywordOpen: Boolean,
     @PrimaryKey(autoGenerate = true) var todoId: Int = 0
-)
+): Serializable

@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
         calendarAdapter = CalendarAdapter(requireActivity())
         labelAdapter = LabelAdapter(::labelTouchCallback)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
-        todoAdapter = TodoAdapter(::todoTouchCallback)
+        todoAdapter = TodoAdapter(::todoTouchCallback, ::todoEditButtonCallback)
 
         val concatAdapter: ConcatAdapter by lazy {
             val config = ConcatAdapter.Config.Builder().apply {
@@ -105,6 +105,12 @@ class HomeFragment : Fragment() {
                 startTodoEditActivity()
             }
         })
+
+        homeViewModel.todoEditButtonClicked.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let { todo ->
+                startTodoCreateActivity(todo)
+            }
+        })
     }
 
     private fun initData() {
@@ -136,12 +142,22 @@ class HomeFragment : Fragment() {
         homeViewModel.fetchTodoSuccessState(todo)
     }
 
+    private fun todoEditButtonCallback(todo: Todo) {
+        homeViewModel.updateIsTodoEditButtonClicked(todo)
+    }
+
     private fun labelTouchCallback(labelWithCheck: LabelWithCheck) {
         homeViewModel.setLabelClickListener(labelWithCheck)
     }
 
     private fun startTodoEditActivity() {
         val intent = Intent(activity, TodoEditActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun startTodoCreateActivity(todo: Todo) {
+        val intent = Intent(activity, TodoEditActivity::class.java)
+        intent.putExtra("todo", todo)
         startActivity(intent)
     }
 }

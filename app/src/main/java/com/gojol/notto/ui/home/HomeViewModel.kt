@@ -24,6 +24,9 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     private val _isTodoCreateButtonClicked = MutableLiveData<Event<Boolean>>()
     val isTodoCreateButtonClicked: LiveData<Event<Boolean>> = _isTodoCreateButtonClicked
 
+    private val _todoEditButtonClicked = MutableLiveData<Event<Todo>>()
+    val todoEditButtonClicked: LiveData<Event<Todo>> = _todoEditButtonClicked
+
     private val _date = MutableLiveData(Calendar.getInstance())
     val date: LiveData<Calendar> = _date
 
@@ -165,6 +168,10 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
     fun updateNavigateToTodoEdit() {
         _isTodoCreateButtonClicked.value = Event(true)
+    }
+
+    fun updateIsTodoEditButtonClicked(todo: Todo) {
+        _todoEditButtonClicked.value = Event(todo)
     }
 
     companion object {

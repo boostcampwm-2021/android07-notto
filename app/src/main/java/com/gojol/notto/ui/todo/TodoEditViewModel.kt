@@ -101,6 +101,34 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _selectedLabelList.value = newLabelList
     }
 
+    fun setupExistedTodo() {
+        val todo = existedTodo.value ?: return
+        viewModelScope.launch {
+            _selectedLabelList.value = fakeRepository.getTodosWithLabels().find { todoWithLabel ->
+                todo.todoId == todoWithLabel.todo.todoId
+            }?.labels
+        }
+
+        _todoContent.value = todo.content
+        _isRepeatChecked.value = todo.isRepeat
+        _repeatType.value = todo.repeatType
+        _repeatStart.value = todo.targetDate
+        _isTimeChecked.value = todo.hasAlarm
+        _timeStart.value = todo.startTime
+        _timeFinish.value = todo.endTime
+        _timeRepeat.value = todo.periodTime
+        _isKeywordChecked.value = todo.isKeywordOpen
+    }
+
+    fun updateIsTodoEditing (todo: Todo?) {
+        todo?.let {
+            _isTodoEditing.value = true
+            _existedTodo.value = it
+        } ?: run {
+            _isTodoEditing.value = false
+        }
+    }
+
     fun updateIsCloseButtonClicked() {
         _isCloseButtonClicked.value = Event(true)
     }
