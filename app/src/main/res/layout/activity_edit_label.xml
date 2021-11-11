@@ -22,6 +22,7 @@
             android:layout_marginStart="@dimen/space_median"
             android:contentDescription="@string/close"
             android:src="@drawable/ic_close"
+            android:onClick="@{() -> viewmodel.onClickClose()}"
             app:layout_constraintBottom_toBottomOf="@+id/tv_edit_label_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_edit_label_title"

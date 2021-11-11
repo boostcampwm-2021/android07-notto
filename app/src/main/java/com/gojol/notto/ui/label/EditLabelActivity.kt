@@ -95,7 +95,14 @@ class EditLabelActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        editLabelViewModel.dialogToShow.observe(this, {
+        editLabelViewModel.close.observe(this, {
+            if (it) {
+                finish()
+                // TODO: HomeFragment 업데이트
+            }
+        })
+
+        editLabelViewModel.labelToEdit.observe(this, {
             showEditDialog(it)
         })
     }

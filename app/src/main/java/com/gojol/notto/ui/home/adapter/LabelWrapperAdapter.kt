@@ -6,6 +6,7 @@
 
 package com.gojol.notto.ui.home.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.ItemLabelListBinding
+import com.gojol.notto.ui.label.EditLabelActivity
 
 class LabelWrapperAdapter(private val adapter: LabelAdapter) :
     RecyclerView.Adapter<LabelWrapperAdapter.LabelWrapperViewHolder>() {
@@ -55,6 +57,10 @@ class LabelWrapperAdapter(private val adapter: LabelAdapter) :
                         onScrolled(recyclerView.computeHorizontalScrollOffset())
                     }
                 })
+            }
+
+            binding.btnHomeLabelEdit.setOnClickListener {
+                it.context.startActivity(Intent(it.context, EditLabelActivity::class.java))
             }
         }
     }

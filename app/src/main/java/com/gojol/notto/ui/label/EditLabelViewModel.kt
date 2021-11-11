@@ -14,13 +14,16 @@ import javax.inject.Inject
 class EditLabelViewModel @Inject constructor(private val repository: TodoLabelRepository) :
     ViewModel() {
 
-    private val _items = MutableLiveData<List<Label>>().apply { value = emptyList() }
+    private val _items = MutableLiveData<List<Label>>(emptyList())
     val items: LiveData<List<Label>> = _items
 
-    private val _updatedItems = MutableLiveData<List<Label>>().apply { value = emptyList() }
+    private val _close = MutableLiveData(false)
+    val close: LiveData<Boolean> = _close
 
-    private val _dialogToShow = MutableLiveData<Label?>()
-    val dialogToShow: LiveData<Label?> = _dialogToShow
+    private val _updatedItems = MutableLiveData<List<Label>>(emptyList())
+
+    private val _labelToEdit = MutableLiveData<Label?>()
+    val labelToEdit: LiveData<Label?> = _labelToEdit
 
     fun loadLabels() {
         viewModelScope.launch {
@@ -30,16 +33,12 @@ class EditLabelViewModel @Inject constructor(private val repository: TodoLabelRe
         }
     }
 
-    fun deleteLabel(label: Label) {
-        viewModelScope.launch {
-            repository.deleteLabel(label)
-
-            _items.value = repository.getAllLabel()
-        }
+    fun onClickClose() {
+        _close.value = true
     }
 
     fun onClickCreateButton() {
-        _dialogToShow.value = null
+        _labelToEdit.value = null
     }
 
     fun moveItem(from: Int, to: Int) {
