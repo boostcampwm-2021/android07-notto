@@ -64,7 +64,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
     fun updateDailyTodo(dailyTodo: DailyTodo) {
         viewModelScope.launch {
-            val job = launch { repository.updateDailyTodo(dailyTodo) }.join()
+            launch { repository.updateDailyTodo(dailyTodo) }.join()
             val currentShowTodoList = _labelList.value
                 ?.asSequence()
                 ?.filter { it.isChecked }
