@@ -38,25 +38,25 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     }
 
     private suspend fun insertDummyTodoAndLabel() {
-        val totalLabel = LabelWithTodo(Label(0, LABEL_NAME_ALL), fakeRepository.getAllTodo())
-        val newLabelList = fakeRepository.getLabelsWithTodos()
+        val totalLabel = LabelWithTodo(Label(0, LABEL_NAME_ALL, 1), repository.getAllTodo())
+        val fakeList = fakeRepository.getAllLabel()
             .asSequence()
-            .map { label -> LabelWithCheck(label, false) }
+            .map { label -> LabelWithCheck(LabelWithTodo(label, emptyList()), false) }
             .toMutableList()
-            .apply { add(0, LabelWithCheck(totalLabel, true)) }
 
         // dummy data insert to db
-        newLabelList.forEach {
+        fakeList.forEach {
             repository.insertLabel(it.labelWithTodo.label)
-            it.labelWithTodo.todo.forEach { todo->
-                repository.insertTodo(todo)
-                repository.insertTodo(todo, it.labelWithTodo.label)
-            }
         }
+
+        val newLabelList =
+            repository.getLabelsWithTodos().asSequence().map { LabelWithCheck(it, false) }
+                .toMutableList()
+                .apply { add(0, LabelWithCheck(totalLabel, true)) }
 
         _labelList.value = newLabelList
         _todoList.value =
-            _date.value?.let { fakeRepository.getTodosWithTodayDateState(it.toYearMonthDate()) }
+            _date.value?.let { repository.getTodosWithTodayDateState(it.toYearMonthDate()) }
         _date.value = Calendar.getInstance()
     }
 
@@ -69,9 +69,17 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
     fun updateDateState(dateState: DateState) {
         viewModelScope.launch {
-            repository.updateDateState(dateState)
-            _todoList.value =
-                _date.value?.let { repository.getTodosWithTodayDateState(it.toYearMonthDate()) }
+            val job = launch { repository.updateDateState(dateState) }.join()
+            val currentShowTodoList = _labelList.value
+                ?.asSequence()
+                ?.filter { it.isChecked }
+                ?.flatMap { it.labelWithTodo.todo }
+
+            if (currentShowTodoList != null) {
+                _todoList.value = _date.value?.let { date ->
+                    repository.getTodosWithTodayDateState(date.toYearMonthDate())
+                }?.filter { currentShowTodoList.contains(it.todo) }
+            }
         }
     }
 
