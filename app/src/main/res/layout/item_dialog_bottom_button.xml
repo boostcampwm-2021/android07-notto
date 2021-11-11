@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="50dp">
+        android:paddingTop="@dimen/dialog_padding">
 
         <Button
             android:id="@+id/btn_dialog_base_reject"
@@ -24,7 +24,7 @@
             android:fontFamily="@font/nanumsquare_aceb"
             android:text="@string/dialog_deletion_reject"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_median"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_dialog_base_confirm" />
@@ -37,7 +37,7 @@
             android:fontFamily="@font/nanumsquare_aceb"
             android:text="@string/dialog_deletion_confirm"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_median"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

@@ -74,7 +74,9 @@ class HomeFragment : Fragment() {
         binding.rvHome.apply {
             adapter = concatAdapter
             layoutManager = getLayoutManager(concatAdapter)
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+            itemAnimator?.removeDuration = 0
+            itemAnimator?.addDuration = 0
+            itemAnimator?.changeDuration = 0
         }
     }
 

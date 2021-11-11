@@ -42,4 +42,14 @@
     <string name="calendar_thursday">목</string>
     <string name="calendar_friday">금</string>
     <string name="calendar_saturday">토</string>
+    <string name="dialog_alarm_period_tag_5">5</string>
+    <string name="dialog_alarm_period_tag_10">10</string>
+    <string name="dialog_alarm_period_tag_15">15</string>
+    <string name="dialog_alarm_period_tag_30">30</string>
+    <string name="dialog_alarm_period_tag_60">60</string>
+    <string name="dialog_alarm_period_tag_1440">1440</string>
+    <string name="dialog_alarm_period_tag_everyday">매일</string>
+    <string name="dialog_alarm_period_tag_everyweek">매주</string>
+    <string name="dialog_alarm_period_tag_everymonth">매월</string>
+    <string name="dialog_alarm_period_tag_everyyear">매년</string>
 </resources>
