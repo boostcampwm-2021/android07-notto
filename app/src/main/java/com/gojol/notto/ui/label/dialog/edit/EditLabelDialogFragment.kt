@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.label
+package com.gojol.notto.ui.label.dialog.edit
 
 import android.app.AlertDialog
 import android.app.Dialog
