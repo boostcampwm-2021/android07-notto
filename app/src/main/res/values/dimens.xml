@@ -14,8 +14,10 @@
     <dimen name="space_s_large">18dp</dimen>
     <dimen name="space_large">20dp</dimen>
     <dimen name="space_x_large">24dp</dimen>
+    <dimen name="space_x_x_large">30dp</dimen>
     <dimen name="edit_label_bg_radius">8dp</dimen>
     <dimen name="home_recyclerview_padding">100dp</dimen>
+    <dimen name="todo_edit_button_margin">70dp</dimen>
     <dimen name="calendar_day_size">40dp</dimen>
     <dimen name="dialog_radiogroup_height">300dp</dimen>
     <dimen name="dialog_radiogroup_width">250dp</dimen>
