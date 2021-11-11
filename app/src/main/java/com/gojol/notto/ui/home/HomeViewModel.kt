@@ -45,6 +45,15 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
             .toMutableList()
             .apply { add(0, LabelWithCheck(totalLabel, true)) }
 
+        // dummy data insert to db
+        newLabelList.forEach {
+            repository.insertLabel(it.labelWithTodo.label)
+            it.labelWithTodo.todo.forEach { todo->
+                repository.insertTodo(todo)
+                repository.insertTodo(todo, it.labelWithTodo.label)
+            }
+        }
+
         _labelList.value = newLabelList
         _todoList.value =
             _date.value?.let { fakeRepository.getTodosWithTodayDateState(it.toYearMonthDate()) }
@@ -60,9 +69,9 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
     fun updateDateState(dateState: DateState) {
         viewModelScope.launch {
-            fakeRepository.updateDateState(dateState)
+            repository.updateDateState(dateState)
             _todoList.value =
-                _date.value?.let { fakeRepository.getTodosWithTodayDateState(it.toYearMonthDate()) }
+                _date.value?.let { repository.getTodosWithTodayDateState(it.toYearMonthDate()) }
         }
     }
 
@@ -78,7 +87,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
             .map { it.todoId }
 
         val newTodoList = _date.value?.let { date ->
-            fakeRepository.getTodosWithTodayDateState(date.toYearMonthDate())
+            repository.getTodosWithTodayDateState(date.toYearMonthDate())
                 .filter { it.todo.todoId in todoIdList }
         }
 
