@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.gojol.notto.model.data.RepeatType"/>
 
         <variable
             name="dialog"
-            type="com.gojol.notto.ui.home.dialog.TodoRepeatTypeDialog" />
+            type="com.gojol.notto.ui.todo.dialog.TodoRepeatTypeDialog" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,10 +35,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/bg_radio_button_normal"
-                    android:checked="true"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@string/dialog_alarm_period_tag_everyday"
+                    android:checked="true"
+                    android:tag="@{RepeatType.DAY}"
                     android:text="@string/dialog_repeat_type_everyday"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -50,7 +51,7 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@string/dialog_alarm_period_tag_everyweek"
+                    android:tag="@{RepeatType.WEEK}"
                     android:text="@string/dialog_repeat_type_everyweek"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -63,7 +64,7 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@string/dialog_alarm_period_tag_everymonth"
+                    android:tag="@{RepeatType.MONTH}"
                     android:text="@string/dialog_repeat_type_everymonth"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -76,7 +77,7 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@string/dialog_alarm_period_tag_everyyear"
+                    android:tag="@{RepeatType.YEAR}"
                     android:text="@string/dialog_repeat_type_everyyear"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
