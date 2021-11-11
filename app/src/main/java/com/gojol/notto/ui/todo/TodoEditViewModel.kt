@@ -5,11 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gojol.notto.common.Event
-import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.datasource.todo.FakeTodoLabelRepository
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,8 +20,6 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRepository) :
     ViewModel() {
-
-    private val fakeRepository = FakeTodoLabelRepository.getInstance()
 
     private val _isTodoEditing = MutableLiveData<Boolean>()
     val isTodoEditing: LiveData<Boolean> = _isTodoEditing
@@ -106,7 +102,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     fun setupExistedTodo() {
         val todo = existedTodo.value ?: return
         viewModelScope.launch {
-            _selectedLabelList.value = fakeRepository.getTodosWithLabels().find { todoWithLabel ->
+            _selectedLabelList.value = repository.getTodosWithLabels().find { todoWithLabel ->
                 todo.todoId == todoWithLabel.todo.todoId
             }?.labels
         }
@@ -122,7 +118,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _isKeywordChecked.value = todo.isKeywordOpen
     }
 
-    fun updateIsTodoEditing (todo: Todo?) {
+    fun updateIsTodoEditing(todo: Todo?) {
         todo?.let {
             _isTodoEditing.value = true
             _existedTodo.value = it
@@ -160,15 +156,19 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun saveTodo() {
-        saveNewTodo()
-    }
-
-    private fun saveNewTodo() {
         if (todoContent.value.isNullOrEmpty()) {
             _isSaveButtonEnabled.value = false
             return
         }
 
+        when (isTodoEditing.value) {
+            true -> updateTodo()
+            false -> saveNewTodo()
+            else -> return
+        }
+    }
+
+    private fun saveNewTodo() {
         val newTodo = Todo(
             todoContent.value!!,
             isRepeatChecked.value ?: return,
@@ -205,6 +205,32 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
                 _isSaveButtonEnabled.value = true
             }
+        }
+    }
+
+    private fun updateTodo() {
+        val newTodo = Todo(
+            todoContent.value!!,
+            isRepeatChecked.value ?: return,
+            repeatType.value ?: return,
+            repeatStart.value ?: return,
+            isTimeChecked.value ?: return,
+            timeStart.value ?: return,
+            timeFinish.value ?: return,
+            timeRepeat.value ?: return,
+            isKeywordChecked.value ?: return,
+            false,
+            "",
+            existedTodo.value?.todoId ?: return
+        )
+
+        viewModelScope.launch {
+            repository.updateTodo(newTodo)
+            selectedLabelList.value?.let { list ->
+                val newList = list.filterNot { it.order == 0 }
+                repository.updateTodo(newTodo, newList)
+            }
+            _isSaveButtonEnabled.value = true
         }
     }
 
