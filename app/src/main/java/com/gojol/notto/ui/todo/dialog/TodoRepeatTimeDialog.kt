@@ -7,7 +7,7 @@ import com.gojol.notto.R
 import com.gojol.notto.databinding.DialogTodoRepeatTimeBinding
 import com.gojol.notto.util.getDate
 import com.gojol.notto.util.getDateString
-import java.util.*
+import java.util.Date
 
 
 class TodoRepeatTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
