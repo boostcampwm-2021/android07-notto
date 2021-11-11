@@ -4,11 +4,11 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivityEditLabelBinding
-import com.gojol.notto.model.database.label.Label
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -66,7 +66,7 @@ class EditLabelActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_label)
-        editLabelAdapter = EditLabelAdapter(::showDeleteDialog, ::showEditDialog)
+        editLabelAdapter = EditLabelAdapter(::showDialog)
 
         itemTouchHelper.attachToRecyclerView(binding.rvEditLabel)
 
@@ -101,7 +101,7 @@ class EditLabelActivity : AppCompatActivity() {
         binding.toolbarEditLabel.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.edit_label_menu_create -> {
-                    showEditDialog(null)
+                    showCreateDialog()
                     true
                 }
                 else -> {
@@ -120,29 +120,12 @@ class EditLabelActivity : AppCompatActivity() {
         })
     }
 
-    private fun showDeleteDialog(label: Label?) {
-        label ?: return
-
-        val dialog = DeleteLabelDialogFragment(label)
-
-        dialog.show(supportFragmentManager, "DeleteLabelDialogFragment")
-
-        supportFragmentManager.executePendingTransactions()
-
-        dialog.dialog?.apply {
-            setOnShowListener {
-                editLabelViewModel.updateLabels()
-            }
-            setOnDismissListener {
-                editLabelViewModel.loadLabels()
-                dialog.dismiss()
-            }
-        }
+    private fun showCreateDialog() {
+        val dialog = EditLabelDialogFragment(null)
+        showDialog(dialog)
     }
 
-    private fun showEditDialog(label: Label?) {
-        val dialog = EditLabelDialogFragment(label)
-
+    private fun showDialog(dialog: DialogFragment) {
         dialog.show(supportFragmentManager, "EditLabelDialogFragment")
 
         supportFragmentManager.executePendingTransactions()
