@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivityEditLabelBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,49 +17,7 @@ class EditLabelActivity : AppCompatActivity() {
     private lateinit var editLabelAdapter: EditLabelAdapter
 
     private val editLabelViewModel: EditLabelViewModel by viewModels()
-    private val itemTouchHelper by lazy {
-        val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
-            0
-        ) {
-
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                val adapter = recyclerView.adapter as EditLabelAdapter
-                val from = viewHolder.bindingAdapterPosition
-                val to = target.bindingAdapterPosition
-
-                editLabelViewModel.moveItem(from, to)
-                adapter.notifyItemMoved(from, to)
-
-                return true
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
-
-            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-                super.onSelectedChanged(viewHolder, actionState)
-
-                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-                    viewHolder?.itemView?.alpha = 0.5f
-                }
-            }
-
-            override fun clearView(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder
-            ) {
-                super.clearView(recyclerView, viewHolder)
-
-                viewHolder.itemView.alpha = 1.0f
-            }
-        }
-
-        ItemTouchHelper(simpleItemTouchCallback)
-    }
+    private val itemTouchHelper = ItemTouchHelper(ItemTouchCallback(::moveItem))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,6 +48,10 @@ class EditLabelActivity : AppCompatActivity() {
         super.onPause()
 
         editLabelViewModel.updateLabels()
+    }
+
+    private fun moveItem(from: Int, to: Int) {
+        editLabelViewModel.moveItem(from , to)
     }
 
     private fun initToolbar() {
