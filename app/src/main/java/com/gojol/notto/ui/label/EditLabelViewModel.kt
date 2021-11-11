@@ -22,23 +22,12 @@ class EditLabelViewModel @Inject constructor(private val repository: TodoLabelRe
 
     private val _updatedItems = MutableLiveData<List<Label>>(emptyList())
 
-    private val _labelToEdit = MutableLiveData<Label?>()
-    val labelToEdit: LiveData<Label?> = _labelToEdit
-
     fun loadLabels() {
         viewModelScope.launch {
             val labels = repository.getAllLabel().sortedBy { it.order }
             _items.value = labels
             _updatedItems.value = labels
         }
-    }
-
-    fun onClickClose() {
-        _close.value = true
-    }
-
-    fun onClickCreateButton() {
-        _labelToEdit.value = null
     }
 
     fun moveItem(from: Int, to: Int) {

@@ -103,7 +103,7 @@ class EditLabelActivity : AppCompatActivity() {
         binding.toolbarEditLabel.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.edit_label_menu_create -> {
-                    showEditDialog(editLabelViewModel.labelToEdit.value)
+                    showEditDialog(null)
                     true
                 }
                 else -> {
@@ -119,10 +119,6 @@ class EditLabelActivity : AppCompatActivity() {
                 finish()
                 // TODO: HomeFragment 업데이트
             }
-        })
-
-        editLabelViewModel.labelToEdit.observe(this, {
-            showEditDialog(it)
         })
     }
 
@@ -141,6 +137,7 @@ class EditLabelActivity : AppCompatActivity() {
             }
             setOnDismissListener {
                 editLabelViewModel.loadLabels()
+                dialog.dismiss()
             }
         }
     }
@@ -158,6 +155,7 @@ class EditLabelActivity : AppCompatActivity() {
             }
             setOnDismissListener {
                 editLabelViewModel.loadLabels()
+                dialog.dismiss()
             }
         }
     }
