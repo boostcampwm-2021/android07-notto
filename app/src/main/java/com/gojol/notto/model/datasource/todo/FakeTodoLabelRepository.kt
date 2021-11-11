@@ -16,6 +16,8 @@ import com.gojol.notto.util.getYear
 
 class FakeTodoLabelRepository : TodoLabelDataSource {
 
+    var todoId = 10
+
     private val today = Calendar.getInstance()
 
     private var selectedDate =
@@ -98,21 +100,23 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     }
 
     override suspend fun insertTodo(todo: Todo, label: Label) {
-        labelsWithTodos.forEach {
-            if (it.label == label && it.todo.contains(todo).not()) {
-                labelsWithTodos.add(it.copy(todo = it.todo + todo))
-                labelsWithTodos.remove(it)
-
-                return@forEach
+        val labelsWithTodosIterator = labelsWithTodos.iterator()
+        while (labelsWithTodosIterator.hasNext()) {
+            val labelWithTodo = labelsWithTodosIterator.next()
+            if (labelWithTodo.label == label && labelWithTodo.todo.contains(todo).not()) {
+                labelsWithTodos.add(labelWithTodo.copy(todo = labelWithTodo.todo + todo))
+                labelsWithTodos.remove(labelWithTodo)
+                break
             }
         }
 
-        todosWithLabels.forEach {
-            if (it.todo == todo && it.labels.contains(label).not()) {
-                todosWithLabels.add(it.copy(labels = it.labels + label))
-                todosWithLabels.remove(it)
-
-                return@forEach
+        val todosWithLabelsIterator = todosWithLabels.iterator()
+        while (todosWithLabelsIterator.hasNext()) {
+            val todoWithLabel = todosWithLabelsIterator.next()
+            if (todoWithLabel.todo == todo && todoWithLabel.labels.contains(label).not()) {
+                todosWithLabels.add(todoWithLabel.copy(labels = todoWithLabel.labels + label))
+                todosWithLabels.remove(todoWithLabel)
+                break
             }
         }
     }
@@ -229,5 +233,14 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
                     TodoWithLabel(todosWithLabels[i].todo, todosWithLabels[i].labels - label)
             }
         }
+    }
+
+    companion object {
+        private var INSTANCE: FakeTodoLabelRepository? = null
+
+        fun getInstance(): FakeTodoLabelRepository =
+            INSTANCE ?: FakeTodoLabelRepository().apply {
+                INSTANCE = this
+            }
     }
 }

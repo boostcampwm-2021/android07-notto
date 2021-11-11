@@ -17,6 +17,7 @@ import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.model.data.LabelWithCheck
 import com.gojol.notto.model.database.todo.DailyTodo
+import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.ui.home.adapter.CalendarAdapter
 import com.gojol.notto.ui.home.adapter.LabelAdapter
 import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
@@ -55,7 +56,6 @@ class HomeFragment : Fragment() {
         initRecyclerView()
         initObserver()
         initTodoListItemTouchListener()
-        initClickListener()
     }
 
     override fun onResume() {
@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
         calendarAdapter = CalendarAdapter(requireActivity())
         labelAdapter = LabelAdapter(::labelTouchCallback)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
-        todoAdapter = TodoAdapter(::todoTouchCallback)
+        todoAdapter = TodoAdapter(::todoTouchCallback, ::todoEditButtonCallback)
 
         val concatAdapter: ConcatAdapter by lazy {
             val config = ConcatAdapter.Config.Builder().apply {
@@ -98,6 +98,18 @@ class HomeFragment : Fragment() {
 
         homeViewModel.date.observe(viewLifecycleOwner, {
             calendarAdapter.setDate(it)
+        })
+
+        homeViewModel.isTodoCreateButtonClicked.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let {
+                startTodoEditActivity()
+            }
+        })
+
+        homeViewModel.todoEditButtonClicked.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let { todo ->
+                startTodoCreateActivity(todo)
+            }
         })
     }
 
@@ -130,14 +142,22 @@ class HomeFragment : Fragment() {
         homeViewModel.updateDailyTodo(dailyTodo)
     }
 
+    private fun todoEditButtonCallback(todo: Todo) {
+        homeViewModel.updateIsTodoEditButtonClicked(todo)
+    }
+
     private fun labelTouchCallback(labelWithCheck: LabelWithCheck) {
         homeViewModel.setLabelClickListener(labelWithCheck)
     }
 
-    private fun initClickListener() {
-        binding.fabHome.setOnClickListener {
-            val intent = Intent(context, TodoEditActivity::class.java)
-            startActivity(intent)
-        }
+    private fun startTodoEditActivity() {
+        val intent = Intent(activity, TodoEditActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun startTodoCreateActivity(todo: Todo) {
+        val intent = Intent(activity, TodoEditActivity::class.java)
+        intent.putExtra("todo", todo)
+        startActivity(intent)
     }
 }

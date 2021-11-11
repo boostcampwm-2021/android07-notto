@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gojol.notto.common.Event
+import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.datasource.todo.FakeTodoLabelRepository
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,10 +23,16 @@ import javax.inject.Inject
 class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRepository) :
     ViewModel() {
 
-//    private val fakeRepository = FakeTodoLabelRepository()
+    private val fakeRepository = FakeTodoLabelRepository.getInstance()
 
     private val _isTodoEditing = MutableLiveData<Boolean>()
     val isTodoEditing: LiveData<Boolean> = _isTodoEditing
+
+    private val _popLabelAddDialog = MutableLiveData<Boolean>()
+    val popLabelAddDialog: LiveData<Boolean> = _popLabelAddDialog
+
+    private val _isCloseButtonClicked = MutableLiveData<Event<Boolean>>()
+    val isCloseButtonCLicked: LiveData<Event<Boolean>> = _isCloseButtonClicked
 
     private val _existedTodo = MutableLiveData<Todo>()
     val existedTodo: LiveData<Todo> = _existedTodo
@@ -94,6 +103,38 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _selectedLabelList.value = newLabelList
     }
 
+    fun setupExistedTodo() {
+        val todo = existedTodo.value ?: return
+        viewModelScope.launch {
+            _selectedLabelList.value = fakeRepository.getTodosWithLabels().find { todoWithLabel ->
+                todo.todoId == todoWithLabel.todo.todoId
+            }?.labels
+        }
+
+        _todoContent.value = todo.content
+        _isRepeatChecked.value = todo.isRepeated
+        _repeatType.value = todo.repeatType
+        _repeatStart.value = todo.startDate
+        _isTimeChecked.value = todo.hasAlarm
+        _timeStart.value = todo.startTime
+        _timeFinish.value = todo.endTime
+        _timeRepeat.value = todo.periodTime
+        _isKeywordChecked.value = todo.isKeywordOpen
+    }
+
+    fun updateIsTodoEditing (todo: Todo?) {
+        todo?.let {
+            _isTodoEditing.value = true
+            _existedTodo.value = it
+        } ?: run {
+            _isTodoEditing.value = false
+        }
+    }
+
+    fun updateIsCloseButtonClicked() {
+        _isCloseButtonClicked.value = Event(true)
+    }
+
     fun updateTodoContent(content: String) {
         _todoContent.value = content
     }
@@ -112,6 +153,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
     fun updateIsSaveButtonEnabled(bool: Boolean) {
         _isSaveButtonEnabled.value = bool
+    }
+
+    fun updatePopLabelAddDialog() {
+        _popLabelAddDialog.value = true
     }
 
     fun saveTodo() {
