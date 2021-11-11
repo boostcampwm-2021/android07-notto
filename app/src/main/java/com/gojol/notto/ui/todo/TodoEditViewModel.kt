@@ -44,14 +44,14 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _repeatType = MutableLiveData(RepeatType.YEAR)
     val repeatType: LiveData<RepeatType> = _repeatType
 
-    private val _repeatTypeClick = MutableLiveData<Event<Unit>>()
-    val repeatTypeClick: LiveData<Event<Unit>> = _repeatTypeClick
+    private val _repeatTypeClick = MutableLiveData(Event(false))
+    val repeatTypeClick: LiveData<Event<Boolean>> = _repeatTypeClick
 
     private val _repeatStart = MutableLiveData<String>()
     val repeatStart: LiveData<String> = _repeatStart
 
-    private val _repeatStartClick = MutableLiveData<Event<Unit>>()
-    val repeatStartClick: LiveData<Event<Unit>> = _repeatStartClick
+    private val _repeatStartClick = MutableLiveData(Event(false))
+    val repeatStartClick: LiveData<Event<Boolean>> = _repeatStartClick
 
     private val _isTimeChecked = MutableLiveData(false)
     val isTimeChecked: LiveData<Boolean> = _isTimeChecked
@@ -59,20 +59,20 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _timeStart = MutableLiveData<String>()
     val timeStart: LiveData<String> = _timeStart
 
-    private val _timeStartClick = MutableLiveData<Event<Unit>>()
-    val timeStartClick: LiveData<Event<Unit>> = _timeStartClick
+    private val _timeStartClick = MutableLiveData(Event(false))
+    val timeStartClick: LiveData<Event<Boolean>> = _timeStartClick
 
     private val _timeFinish = MutableLiveData<String>()
     val timeFinish: LiveData<String> = _timeFinish
 
-    private val _timeFinishClick = MutableLiveData<Event<Unit>>()
-    val timeFinishClick: LiveData<Event<Unit>> = _timeFinishClick
+    private val _timeFinishClick = MutableLiveData(Event(false))
+    val timeFinishClick: LiveData<Event<Boolean>> = _timeFinishClick
 
     private val _timeRepeat = MutableLiveData("5")
     val timeRepeat: LiveData<String> = _timeRepeat
 
-    private val _timeRepeatClick = MutableLiveData<Event<Unit>>()
-    val timeRepeatClick: LiveData<Event<Unit>> = _timeFinishClick
+    private val _timeRepeatClick = MutableLiveData(Event(false))
+    val timeRepeatClick: LiveData<Event<Boolean>> = _timeRepeatClick
 
     private val _isKeywordChecked = MutableLiveData(false)
     val isKeywordChecked: LiveData<Boolean> = _isKeywordChecked
@@ -119,11 +119,11 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onRepeatTypeClick() {
-        _repeatTypeClick.value = Event(Unit)
+        _repeatTypeClick.value = Event(true)
     }
 
     fun onRepeatStartClick() {
-        _repeatStartClick.value = Event(Unit)
+        _repeatStartClick.value = Event(true)
     }
 
     fun updateIsTimeChecked(isChecked: Boolean) {
@@ -131,15 +131,15 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onTimeStartClick() {
-        _timeStartClick.value = Event(Unit)
+        _timeStartClick.value = Event(true)
     }
 
     fun onTimeFinishClick() {
-        _timeFinishClick.value = Event(Unit)
+        _timeFinishClick.value = Event(true)
     }
 
     fun onTimeRepeatClick() {
-        _timeRepeatClick.value = Event(Unit)
+        _timeRepeatClick.value = Event(true)
     }
 
     fun updateIsKeywordChecked(isChecked: Boolean) {

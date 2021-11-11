@@ -19,6 +19,7 @@ import com.gojol.notto.ui.todo.dialog.TodoDeletionDialog
 import com.gojol.notto.ui.todo.dialog.TodoRepeatTimeDialog
 import com.gojol.notto.ui.todo.dialog.TodoRepeatTypeDialog
 import com.gojol.notto.ui.todo.dialog.TodoSetTimeDialog
+import com.gojol.notto.util.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -104,6 +105,32 @@ class TodoEditActivity : AppCompatActivity() {
             if (!it) showSaveButtonDisabled()
             else finish()
         }
+        todoEditViewModel.repeatTypeClick.observe(this, EventObserver {
+            if (it) {
+                todoRepeatTypeDialog.show()
+            }
+        })
+        todoEditViewModel.repeatStartClick.observe(this, EventObserver {
+            if (it) {
+                todoRepeatTimeDialog.show()
+            }
+        })
+        todoEditViewModel.timeStartClick.observe(this, EventObserver {
+            if (it) {
+                todoSetTimeDialog.show()
+            }
+        })
+        todoEditViewModel.timeFinishClick.observe(this, EventObserver {
+            if (it) {
+                todoSetTimeDialog.show()
+            }
+        })
+        todoEditViewModel.timeRepeatClick.observe(this, EventObserver {
+            if (it) {
+                todoAlarmPeriodDialog.show()
+            }
+        })
+
     }
 
     private fun initSwitchListener() {
