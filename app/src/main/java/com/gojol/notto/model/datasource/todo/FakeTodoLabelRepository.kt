@@ -1,5 +1,6 @@
 package com.gojol.notto.model.datasource.todo
 
+import java.util.Calendar
 import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.data.TodoWithTodayDateState
@@ -12,7 +13,6 @@ import com.gojol.notto.model.database.todolabel.TodoWithLabel
 import com.gojol.notto.util.getDate
 import com.gojol.notto.util.getMonth
 import com.gojol.notto.util.getYear
-import java.util.*
 
 class FakeTodoLabelRepository : TodoLabelDataSource {
 
@@ -32,10 +32,10 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     )
 
     private var labels = mutableListOf(
-        Label(1, "학교", 1),
-        Label(2, "건강", 2),
-        Label(3, "집", 3),
-        Label(4, "과제", 4)
+        Label(1, "학교", 2),
+        Label(2, "건강", 3),
+        Label(3, "집", 4),
+        Label(4, "과제", 5)
     )
 
     private var dateStates = mutableListOf<DateState>()
