@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home.dialog
+package com.gojol.notto.ui.todo.dialog
 
 import android.app.Dialog
 import android.content.Context
