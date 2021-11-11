@@ -79,6 +79,7 @@ class EditLabelActivity : AppCompatActivity() {
             rvEditLabel.adapter = editLabelAdapter
         }
 
+        initToolbar()
         initObservers()
     }
 
@@ -92,6 +93,24 @@ class EditLabelActivity : AppCompatActivity() {
         super.onPause()
 
         editLabelViewModel.updateLabels()
+    }
+
+    private fun initToolbar() {
+        binding.toolbarEditLabel.setNavigationOnClickListener {
+            finish()
+        }
+
+        binding.toolbarEditLabel.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.edit_label_menu_create -> {
+                    showEditDialog(editLabelViewModel.labelToEdit.value)
+                    true
+                }
+                else -> {
+                    false
+                }
+            }
+        }
     }
 
     private fun initObservers() {
