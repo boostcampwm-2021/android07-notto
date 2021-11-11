@@ -121,7 +121,8 @@ class TodoEditActivity : AppCompatActivity() {
             initDialog(newList)
         }
         todoEditViewModel.selectedLabelList.observe(this) {
-            selectedLabelAdapter.submitList(it)
+            val newList = it.filterNot { label -> label.order == 0}
+            selectedLabelAdapter.submitList(newList)
         }
         todoEditViewModel.isSaveButtonEnabled.observe(this) {
             if (!it) showSaveButtonDisabled()
