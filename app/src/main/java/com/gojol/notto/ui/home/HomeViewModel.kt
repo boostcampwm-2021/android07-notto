@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gojol.notto.common.Event
 import com.gojol.notto.model.data.LabelWithCheck
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
@@ -19,6 +20,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(private val repository: TodoLabelRepository) : ViewModel() {
 
     private val fakeRepository = FakeTodoLabelRepository.getInstance()
+
+    private val _navigateToTodoEdit = MutableLiveData<Event<Boolean>>()
+    val navigateToTodoEdit: LiveData<Event<Boolean>> = _navigateToTodoEdit
 
     private val _date = MutableLiveData(Calendar.getInstance())
     val date: LiveData<Calendar> = _date
@@ -156,6 +160,10 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
             newList.add(0, header)
             _labelList.value = newList
         }
+    }
+
+    fun updateNavigateToTodoEdit() {
+        _navigateToTodoEdit.value = Event(true)
     }
 
     companion object {
