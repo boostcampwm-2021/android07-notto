@@ -126,7 +126,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
                     allChipChecked()
                 } else {
                     moveItem(
-                        checkedList.size + uncheckedList.indexOf(labelWithCheck),
+                        checkedList.size + uncheckedList.indexOf(labelWithCheck) + 1,
                         false,
                         labelWithCheck
                     )
