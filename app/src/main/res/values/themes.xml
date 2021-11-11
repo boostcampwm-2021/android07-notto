@@ -36,4 +36,10 @@
         <item name="android:numbersSelectorColor">@color/yellow_deep</item>
         <item name="android:numbersBackgroundColor">@color/gray_light</item>
     </style>
+
+    <style name="Theme.Notto.Toolbar.Primary" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:elevation">0dp</item>
+        <item name="android:background">@color/white</item>
+        <item name="titleTextColor">@color/black</item>
+    </style>
 </resources>
