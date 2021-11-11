@@ -57,17 +57,22 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="adfssfsfsasfsssssssssssssssssssssssssssssssssssssss" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_todo_edit_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/todo_edit_btn_size"
+                    android:layout_height="@dimen/todo_edit_btn_size"
                     android:layout_marginStart="@dimen/space_median"
                     android:layout_marginTop="@dimen/space_x_large"
-                    android:background="@drawable/bg_todo_edit_label_add_button"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
                     android:onClick="@{() -> viewmodel.updatePopLabelAddDialog()}"
-                    android:text="@string/todo_edit_label_select"
                     android:textColor="@color/white"
+                    app:cornerRadius="@dimen/todo_edit_btn_corner_radius"
                     app:icon="@drawable/ic_add"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
                     app:layout_constraintEnd_toStartOf="@id/rv_todo_edit"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_todo_edit" />
@@ -136,10 +141,10 @@
                     android:id="@+id/tv_todo_edit_repeat_type_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{viewmodel.repeatType.text}"
-                    android:textColor="@{viewmodel.isRepeatChecked ? @color/black : @color/gray_normal}"
                     android:enabled="@{viewmodel.isRepeatChecked ? true : false}"
                     android:onClick="@{()->viewmodel.onRepeatTypeClick()}"
+                    android:text="@{viewmodel.repeatType.text}"
+                    android:textColor="@{viewmodel.isRepeatChecked ? @color/black : @color/gray_normal}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_type"
                     app:layout_constraintEnd_toEndOf="@id/switch_todo_edit_repeat"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_type" />
