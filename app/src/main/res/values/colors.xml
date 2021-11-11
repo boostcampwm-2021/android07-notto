@@ -10,6 +10,7 @@
     <color name="yellow_deep">#FDC500</color>
     <color name="yellow_normal">#FFD500</color>
     <color name="yellow_light">#FFDD4A</color>
+    <color name="yellow_x_light">#FFF6D0</color>
     <color name="blue_deep">#00296B</color>
     <color name="blue_normal">#003F88</color>
     <color name="blue_light">#00509D</color>
