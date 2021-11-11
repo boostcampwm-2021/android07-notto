@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import com.gojol.notto.common.TodoState
 
-@Entity(primaryKeys = ["date"])
+@Entity(primaryKeys = ["date", "parent_todo_id"])
 data class DateState(
     @ColumnInfo(name = "todo_state") val todoState: TodoState,
     @ColumnInfo(name = "parent_todo_id") val parentTodoId: Int,
