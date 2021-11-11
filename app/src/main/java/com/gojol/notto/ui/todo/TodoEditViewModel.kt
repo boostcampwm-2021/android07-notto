@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
@@ -11,6 +12,7 @@ import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.FakeTodoLabelRepository
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.util.Event
+import com.gojol.notto.util.get12Time
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -68,8 +70,8 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _timeFinishClick = MutableLiveData(false)
     val timeFinishClick: LiveData<Boolean> = _timeFinishClick
 
-    private val _timeRepeat = MutableLiveData("5")
-    val timeRepeat: LiveData<String> = _timeRepeat
+    private val _timeRepeat = MutableLiveData(TimeRepeatType.MINUTE_5)
+    val timeRepeat: LiveData<TimeRepeatType> = _timeRepeat
 
     private val _timeRepeatClick = MutableLiveData(false)
     val timeRepeatClick: LiveData<Boolean> = _timeRepeatClick
@@ -82,6 +84,8 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
     init {
         val date = Date(Calendar.getInstance().timeInMillis)
+        _repeatType.value = RepeatType.DAY
+        _timeRepeat.value = TimeRepeatType.MINUTE_5
         _repeatStart.value = getFormattedCurrentDate(date)
         _timeStart.value = getFormattedCurrentTime(date)
         _timeFinish.value = getFormattedCurrentTime(date)
@@ -122,12 +126,20 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _repeatTypeClick.value = true
     }
 
+    fun updateRepeatType(value: RepeatType) {
+        _repeatType.value = value
+    }
+
     fun restoreOnRepeatTypeState(bool: Boolean) {
         _repeatTypeClick.value = bool
     }
 
     fun onRepeatStartClick() {
         _repeatStartClick.value = true
+    }
+
+    fun updateRepeatTime(value: String) {
+        _repeatStart.value = value
     }
 
     fun restoreOnRepeatStartState(bool: Boolean) {
@@ -142,6 +154,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _timeStartClick.value = true
     }
 
+    fun updateTimeStart(value: String) {
+        _timeStart.value = value.get12Time()
+    }
+
     fun restoreOnTimeStartState(bool: Boolean) {
         _timeStartClick.value = bool
     }
@@ -150,12 +166,20 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _timeFinishClick.value = true
     }
 
+    fun updateTimeFinish(value: String) {
+        _timeFinish.value = value.get12Time()
+    }
+
     fun restoreOnTimeFinishState(bool: Boolean) {
         _timeFinishClick.value = bool
     }
 
     fun onTimeRepeatClick() {
         _timeRepeatClick.value = true
+    }
+
+    fun updateTimeRepeat(value: TimeRepeatType) {
+        _timeRepeat.value = value
     }
 
     fun restoreOnTimeRepeatState(bool: Boolean) {
@@ -189,7 +213,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             isTimeChecked.value ?: return,
             timeStart.value ?: return,
             timeFinish.value ?: return,
-            timeRepeat.value ?: return,
+            timeRepeat.value?.time ?: return,
             isKeywordChecked.value ?: return
         )
 
@@ -208,7 +232,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     private fun getFormattedCurrentDate(date: Date): String {
-        val simpleDateFormatDate = SimpleDateFormat("MM월 dd일", Locale.KOREA)
+        val simpleDateFormatDate = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA)
         return simpleDateFormatDate.format(date)
     }
 

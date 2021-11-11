@@ -117,28 +117,43 @@ class TodoEditActivity : AppCompatActivity() {
             if (!it) showSaveButtonDisabled()
             else finish()
         }
+
         todoEditViewModel.repeatTypeClick.observe(this) {
             if (it) {
+                todoRepeatTypeDialog.data = todoEditViewModel.repeatType.value
+                todoRepeatTypeDialog.callback = todoEditViewModel::updateRepeatType
                 todoRepeatTypeDialog.show()
             }
         }
+
         todoEditViewModel.repeatStartClick.observe(this) {
             if (it) {
+                todoRepeatTimeDialog.data = todoEditViewModel.repeatStart.value
+                todoRepeatTimeDialog.callback = todoEditViewModel::updateRepeatTime
                 todoRepeatTimeDialog.show()
             }
         }
+
         todoEditViewModel.timeStartClick.observe(this) {
             if (it) {
+                todoSetTimeDialog.data = todoEditViewModel.timeStart.value
+                todoSetTimeDialog.callback = todoEditViewModel::updateTimeStart
                 todoSetTimeDialog.show()
             }
         }
+
         todoEditViewModel.timeFinishClick.observe(this) {
             if (it) {
+                todoSetTimeDialog.data = todoEditViewModel.timeFinish.value
+                todoSetTimeDialog.callback = todoEditViewModel::updateTimeFinish
                 todoSetTimeDialog.show()
             }
         }
+
         todoEditViewModel.timeRepeatClick.observe(this) {
             if (it) {
+                todoAlarmPeriodDialog.data = todoEditViewModel.timeRepeat.value
+                todoAlarmPeriodDialog.callback = todoEditViewModel::updateTimeRepeat
                 todoAlarmPeriodDialog.show()
             }
         }
@@ -149,7 +164,6 @@ class TodoEditActivity : AppCompatActivity() {
 
         todoEditViewModel.timeStartClick.value?.let { bool ->
             outState.putBoolean(TIME_START, bool)
-
         }
         todoEditViewModel.timeFinishClick.value?.let { bool ->
             outState.putBoolean(TIME_FINISH, bool)
