@@ -1,7 +1,11 @@
 package com.gojol.notto.model.datasource.todo
 
+import com.gojol.notto.common.TodoState
+import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
+import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.database.todo.TodoWithDailyTodo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoLabelCrossRef
 import com.gojol.notto.model.database.todolabel.TodoLabelDao
@@ -12,6 +16,27 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
 
     override suspend fun getTodosWithLabels(): List<TodoWithLabel> {
         return todoLabelDao.getTodosWithLabels()
+    }
+
+    override suspend fun getTodosWithDailyTodos(): List<TodoWithDailyTodo> {
+        return todoLabelDao.getTodosWithDailyTodos()
+    }
+
+    override suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo> {
+        return todoLabelDao.getTodosWithDailyTodos().map { todoWithDailyTodo ->
+            val todo = todoWithDailyTodo.todo
+            val dailyTodos = todoWithDailyTodo.dailyTodos
+
+            var todayDailyTodo =
+                dailyTodos.find { it.parentTodoId == todo.todoId && it.date == selectedDate }
+
+            if (todayDailyTodo == null) {
+                todayDailyTodo = DailyTodo(TodoState.NOTHING, todo.todoId, selectedDate)
+                todoLabelDao.insertDailyTodo(todayDailyTodo)
+            }
+
+            TodoWithTodayDailyTodo(todo, todayDailyTodo)
+        }
     }
 
     override suspend fun getLabelsWithTodos(): List<LabelWithTodo> {
@@ -38,6 +63,10 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         todoLabelDao.insertLabel(label)
     }
 
+    override suspend fun insertDailyTodo(dailyTodo: DailyTodo) {
+        todoLabelDao.insertDailyTodo(dailyTodo)
+    }
+
     override suspend fun updateTodo(todo: Todo) {
         todoLabelDao.updateTodo(todo)
     }
@@ -50,6 +79,10 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
 
     override suspend fun updateLabel(label: Label) {
         todoLabelDao.updateLabel(label)
+    }
+
+    override suspend fun updateDailyTodo(dailyTodo: DailyTodo) {
+        todoLabelDao.updateDailyTodo(dailyTodo)
     }
 
     override suspend fun deleteTodo(todo: Todo) {

@@ -92,7 +92,8 @@ class TodoEditActivity : AppCompatActivity() {
             }
         }
         todoEditViewModel.labelList.observe(this) {
-            val newList = it.map { label -> label.name }.toTypedArray()
+            val newList = it.filterNot { label -> label.order == 0 }
+                .map { label -> label.name }.toTypedArray()
             initLabelAddDialog(newList)
         }
         todoEditViewModel.selectedLabelList.observe(this) {

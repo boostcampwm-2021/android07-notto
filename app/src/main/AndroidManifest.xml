@@ -21,6 +21,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.label.EditLabelActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.todo.TodoEditActivity"
             android:exported="true" />
     </application>
