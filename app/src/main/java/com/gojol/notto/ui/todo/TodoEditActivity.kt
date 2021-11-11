@@ -55,10 +55,6 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     private fun initAppbar() {
-        binding.tbTodoEdit.setNavigationOnClickListener {
-            finish()
-        }
-
         binding.tbTodoEdit.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.delete_todo -> {
@@ -80,6 +76,11 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
+        todoEditViewModel.isCloseButtonCLicked.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
+                finish()
+            }
+        }
         todoEditViewModel.labelList.observe(this) {
             val newList = it.map { label -> label.name }.toTypedArray()
             initLabelAddDialog(newList)
@@ -121,6 +122,10 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     private fun showSaveButtonDisabled() {
-        Toast.makeText(this, getString(R.string.todo_edit_button_disabled_message), Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            this,
+            getString(R.string.todo_edit_button_disabled_message),
+            Toast.LENGTH_LONG
+        ).show()
     }
 }

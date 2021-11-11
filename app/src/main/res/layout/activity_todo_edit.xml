@@ -26,6 +26,7 @@
                 android:background="@android:color/white"
                 app:menu="@menu/todo_edit_top_app_bar"
                 app:navigationIcon="@drawable/ic_close"
+                app:navigationOnClickListener="@{() -> viewmodel.updateIsCloseButtonClicked()}"
                 app:title="@string/todo_edit_title"
                 app:titleCentered="true"
                 app:titleTextColor="@color/black" />

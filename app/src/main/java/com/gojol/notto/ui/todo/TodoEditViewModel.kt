@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gojol.notto.common.Event
 import com.gojol.notto.common.TodoSuccessType
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
@@ -27,6 +28,9 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
     private val _popLabelAddDialog = MutableLiveData<Boolean>()
     val popLabelAddDialog: LiveData<Boolean> = _popLabelAddDialog
+
+    private val _isCloseButtonClicked = MutableLiveData<Event<Boolean>>()
+    val isCloseButtonCLicked: LiveData<Event<Boolean>> = _isCloseButtonClicked
 
     private val _existedTodo = MutableLiveData<Todo>()
     val existedTodo: LiveData<Todo> = _existedTodo
@@ -95,6 +99,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             remove(label)
         } ?: return
         _selectedLabelList.value = newLabelList
+    }
+
+    fun updateIsCloseButtonClicked() {
+        _isCloseButtonClicked.value = Event(true)
     }
 
     fun updateTodoContent(content: String) {
