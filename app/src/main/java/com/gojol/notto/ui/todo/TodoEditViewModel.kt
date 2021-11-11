@@ -10,6 +10,7 @@ import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.FakeTodoLabelRepository
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
+import com.gojol.notto.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -43,8 +44,14 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _repeatType = MutableLiveData(RepeatType.YEAR)
     val repeatType: LiveData<RepeatType> = _repeatType
 
+    private val _repeatTypeClick = MutableLiveData<Event<Unit>>()
+    val repeatTypeClick: LiveData<Event<Unit>> = _repeatTypeClick
+
     private val _repeatStart = MutableLiveData<String>()
     val repeatStart: LiveData<String> = _repeatStart
+
+    private val _repeatStartClick = MutableLiveData<Event<Unit>>()
+    val repeatStartClick: LiveData<Event<Unit>> = _repeatStartClick
 
     private val _isTimeChecked = MutableLiveData(false)
     val isTimeChecked: LiveData<Boolean> = _isTimeChecked
@@ -52,11 +59,20 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _timeStart = MutableLiveData<String>()
     val timeStart: LiveData<String> = _timeStart
 
+    private val _timeStartClick = MutableLiveData<Event<Unit>>()
+    val timeStartClick: LiveData<Event<Unit>> = _timeStartClick
+
     private val _timeFinish = MutableLiveData<String>()
     val timeFinish: LiveData<String> = _timeFinish
 
+    private val _timeFinishClick = MutableLiveData<Event<Unit>>()
+    val timeFinishClick: LiveData<Event<Unit>> = _timeFinishClick
+
     private val _timeRepeat = MutableLiveData("5")
     val timeRepeat: LiveData<String> = _timeRepeat
+
+    private val _timeRepeatClick = MutableLiveData<Event<Unit>>()
+    val timeRepeatClick: LiveData<Event<Unit>> = _timeFinishClick
 
     private val _isKeywordChecked = MutableLiveData(false)
     val isKeywordChecked: LiveData<Boolean> = _isKeywordChecked
@@ -102,8 +118,28 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _isRepeatChecked.value = isChecked
     }
 
+    fun onRepeatTypeClick() {
+        _repeatTypeClick.value = Event(Unit)
+    }
+
+    fun onRepeatStartClick() {
+        _repeatStartClick.value = Event(Unit)
+    }
+
     fun updateIsTimeChecked(isChecked: Boolean) {
         _isTimeChecked.value = isChecked
+    }
+
+    fun onTimeStartClick() {
+        _timeStartClick.value = Event(Unit)
+    }
+
+    fun onTimeFinishClick() {
+        _timeFinishClick.value = Event(Unit)
+    }
+
+    fun onTimeRepeatClick() {
+        _timeRepeatClick.value = Event(Unit)
     }
 
     fun updateIsKeywordChecked(isChecked: Boolean) {
