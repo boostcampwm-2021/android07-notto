@@ -7,10 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.datasource.todo.FakeTodoLabelRepository
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -140,7 +141,11 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         viewModelScope.launch {
             val job = launch { repository.insertTodo(newTodo) }.join()
 
-            repository.getTodosWithLabels().find { it.labels.isEmpty() }?.todo?.let { todo ->
+            val saveTodo = withContext(Dispatchers.Default) {
+                repository.getTodosWithLabels().find { it.labels.isEmpty() }?.todo
+            }
+
+            saveTodo?.let { todo ->
                 // 전체 라벨에 투두 넣기
                 _labelList.value?.find { it.order == 0 }?.let {
                     repository.insertTodo(todo, it)
