@@ -29,8 +29,6 @@ class EditLabelActivity : AppCompatActivity() {
 
         binding.apply {
             lifecycleOwner = this@EditLabelActivity
-            viewmodel = editLabelViewModel
-
             rvEditLabel.adapter = editLabelAdapter
         }
 
@@ -73,6 +71,10 @@ class EditLabelActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
+        editLabelViewModel.items.observe(this, {
+            editLabelAdapter.differ.submitList(it)
+        })
+
         editLabelViewModel.close.observe(this, {
             if (it) {
                 finish()
