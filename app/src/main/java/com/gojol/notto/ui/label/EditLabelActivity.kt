@@ -5,7 +5,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivityEditLabelBinding
@@ -75,7 +74,6 @@ class EditLabelActivity : AppCompatActivity() {
             lifecycleOwner = this@EditLabelActivity
             viewmodel = editLabelViewModel
 
-            rvEditLabel.layoutManager = LinearLayoutManager(this@EditLabelActivity)
             rvEditLabel.adapter = editLabelAdapter
         }
 

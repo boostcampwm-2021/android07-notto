@@ -61,11 +61,11 @@ class EditLabelDialogViewModel @Inject constructor(private val repository: TodoL
     fun setEditType(label: Label?) {
         if (label == null) {
             _type.value = EditType.CREATE
-            title.value = "라벨 추가"
+            title.value = EditType.CREATE.text
         } else {
             _type.value = EditType.UPDATE
+            title.value = EditType.UPDATE.text
             _label.value = label!!
-            title.value = "라벨 수정"
             name.value = label.name
         }
     }

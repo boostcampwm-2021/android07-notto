@@ -8,6 +8,6 @@ enum class AdapterViewType(val viewType: Int) {
     CALENDAR(0), LABELWRAPPER(1), LABEL(2), TODO(3)
 }
 
-enum class EditType() {
-    CREATE, UPDATE;
+enum class EditType(val text: String) {
+    CREATE("라벨 추가"), UPDATE("라벨 수정")
 }

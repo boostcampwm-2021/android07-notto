@@ -36,6 +36,7 @@
             app:items="@{viewmodel.items}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_edit_label"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_edit_label" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
