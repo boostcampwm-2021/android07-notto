@@ -12,15 +12,18 @@ import com.gojol.notto.common.TodoState
 import com.gojol.notto.databinding.ItemTodoBinding
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.todo.DailyTodo
+import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.ui.home.util.ItemTouchHelperListener
 
 class TodoAdapter(
-    private val swipeCallback: (DailyTodo) -> (Unit)
+    private val swipeCallback: (DailyTodo) -> (Unit),
+    private val editButtonCallback: (Todo) -> (Unit)
 ) : ListAdapter<TodoWithTodayDailyTodo, TodoAdapter.TodoViewHolder>(TodoDiff()), ItemTouchHelperListener {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         return TodoViewHolder(
-            ItemTodoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemTodoBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            editButtonCallback
         )
     }
 
@@ -44,10 +47,19 @@ class TodoAdapter(
         notifyItemInserted(position)
     }
 
-    class TodoViewHolder(private val binding: ItemTodoBinding) :
+    class TodoViewHolder(private val binding: ItemTodoBinding,
+                         private val editButtonCallback: (Todo) -> (Unit)) :
         RecyclerView.ViewHolder(binding.root) {
 
         lateinit var state: TodoState
+
+        init {
+            binding.btnHomeTodoEdit.setOnClickListener {
+                binding.item?.let { todoWithTodayDailyTodo ->
+                    editButtonCallback(todoWithTodayDailyTodo.todo)
+                }
+            }
+        }
 
         fun bind(item: TodoWithTodayDailyTodo) {
             binding.item = item

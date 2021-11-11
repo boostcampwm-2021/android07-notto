@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.gojol.notto.model.data.RepeatType
+import java.io.Serializable
 
 @Entity
 data class Todo(
@@ -19,4 +20,4 @@ data class Todo(
     @ColumnInfo(name = "is_finished") val isFinished: Boolean,
     @ColumnInfo(name = "finish_date") val finishDate: String,
     @PrimaryKey(autoGenerate = true) var todoId: Int = 0
-)
+): Serializable

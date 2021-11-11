@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
+import com.gojol.notto.model.database.todo.Todo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,11 +32,10 @@ class TodoEditActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewmodel = todoEditViewModel
 
+        initIntentExtra()
         initAppbar()
         initSelectedLabelRecyclerView()
         initObserver()
-        initSwitchListener()
-        initButtonListener()
         initEditTextListener()
         todoEditViewModel.setDummyLabelData()
     }
@@ -56,11 +56,12 @@ class TodoEditActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(ev)
     }
 
-    private fun initAppbar() {
-        binding.tbTodoEdit.setNavigationOnClickListener {
-            finish()
-        }
+    private fun initIntentExtra() {
+        val todo = intent.getSerializableExtra("todo") as Todo?
+        todoEditViewModel.updateIsTodoEditing(todo)
+    }
 
+    private fun initAppbar() {
         binding.tbTodoEdit.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.delete_todo -> {
@@ -82,6 +83,14 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
+        todoEditViewModel.isTodoEditing.observe(this) {
+            if (it) todoEditViewModel.setupExistedTodo()
+        }
+        todoEditViewModel.isCloseButtonCLicked.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
+                finish()
+            }
+        }
         todoEditViewModel.labelList.observe(this) {
             val newList = it.filterNot { label -> label.order == 0 }
                 .map { label -> label.name }.toTypedArray()
@@ -94,26 +103,8 @@ class TodoEditActivity : AppCompatActivity() {
             if (!it) showSaveButtonDisabled()
             else finish()
         }
-    }
-
-    private fun initSwitchListener() {
-        binding.switchTodoEditRepeat.setOnCheckedChangeListener { _, isChecked ->
-            todoEditViewModel.updateIsRepeatChecked(isChecked)
-        }
-        binding.switchTodoEditTime.setOnCheckedChangeListener { _, isChecked ->
-            todoEditViewModel.updateIsTimeChecked(isChecked)
-        }
-        binding.switchTodoEditKeyword.setOnCheckedChangeListener { _, isChecked ->
-            todoEditViewModel.updateIsKeywordChecked(isChecked)
-        }
-    }
-
-    private fun initButtonListener() {
-        binding.btnTodoEditLabel.setOnClickListener {
-            labelAddDialog.show()
-        }
-        binding.btnTodoEditSave.setOnClickListener {
-            todoEditViewModel.saveTodo()
+        todoEditViewModel.popLabelAddDialog.observe(this) {
+            if (it) showLabelAddDialog()
         }
     }
 
@@ -135,6 +126,10 @@ class TodoEditActivity : AppCompatActivity() {
                 todoEditViewModel.updateTodoContent(p0.toString())
             }
         })
+    }
+
+    private fun showLabelAddDialog() {
+        labelAddDialog.show()
     }
 
     private fun showSaveButtonDisabled() {

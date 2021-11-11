@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gojol.notto.common.Event
 import com.gojol.notto.model.data.LabelWithCheck
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo
+import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.datasource.todo.FakeTodoLabelRepository
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
@@ -20,7 +22,13 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val repository: TodoLabelRepository) : ViewModel() {
 
-    private val fakeRepository = FakeTodoLabelRepository()
+    private val fakeRepository = FakeTodoLabelRepository.getInstance()
+
+    private val _isTodoCreateButtonClicked = MutableLiveData<Event<Boolean>>()
+    val isTodoCreateButtonClicked: LiveData<Event<Boolean>> = _isTodoCreateButtonClicked
+
+    private val _todoEditButtonClicked = MutableLiveData<Event<Todo>>()
+    val todoEditButtonClicked: LiveData<Event<Todo>> = _todoEditButtonClicked
 
     private val _date = MutableLiveData(Calendar.getInstance())
     val date: LiveData<Calendar> = _date
@@ -166,6 +174,14 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
             newList.add(0, header)
             _labelList.value = newList
         }
+    }
+
+    fun updateNavigateToTodoEdit() {
+        _isTodoCreateButtonClicked.value = Event(true)
+    }
+
+    fun updateIsTodoEditButtonClicked(todo: Todo) {
+        _todoEditButtonClicked.value = Event(todo)
     }
 
     companion object {

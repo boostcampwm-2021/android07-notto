@@ -9,8 +9,7 @@
         android:id="@+id/navigation_home"
         android:name="com.gojol.notto.ui.home.HomeFragment"
         android:label="@string/bottom_home"
-        tools:layout="@layout/fragment_home">
-    </fragment>
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_popular"
