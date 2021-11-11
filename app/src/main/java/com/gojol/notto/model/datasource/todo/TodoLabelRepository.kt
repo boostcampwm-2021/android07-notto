@@ -1,7 +1,10 @@
 package com.gojol.notto.model.datasource.todo
 
+import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
+import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.database.todo.TodoWithDailyTodo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
 import javax.inject.Inject
@@ -14,6 +17,14 @@ class TodoLabelRepository @Inject constructor(
 
     override suspend fun getTodosWithLabels(): List<TodoWithLabel> {
         return localDataSource.getTodosWithLabels()
+    }
+
+    override suspend fun getTodosWithDailyTodos(): List<TodoWithDailyTodo> {
+        return localDataSource.getTodosWithDailyTodos()
+    }
+
+    override suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo> {
+        return localDataSource.getTodosWithTodayDailyTodos(selectedDate)
     }
 
     override suspend fun getLabelsWithTodos(): List<LabelWithTodo> {
@@ -40,6 +51,10 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.insertLabel(label)
     }
 
+    override suspend fun insertDailyTodo(dailyTodo: DailyTodo) {
+        localDataSource.insertDailyTodo(dailyTodo)
+    }
+
     override suspend fun updateTodo(todo: Todo) {
         localDataSource.updateTodo(todo)
     }
@@ -50,6 +65,10 @@ class TodoLabelRepository @Inject constructor(
 
     override suspend fun updateLabel(label: Label) {
         localDataSource.updateLabel(label)
+    }
+
+    override suspend fun updateDailyTodo(dailyTodo: DailyTodo) {
+        localDataSource.updateDailyTodo(dailyTodo)
     }
 
     override suspend fun deleteTodo(todo: Todo) {

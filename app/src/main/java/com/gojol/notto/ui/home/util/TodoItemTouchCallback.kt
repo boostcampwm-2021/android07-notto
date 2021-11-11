@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
-import com.gojol.notto.common.TodoSuccessType
+import com.gojol.notto.common.TodoState
 import com.gojol.notto.ui.home.adapter.TodoAdapter
 import android.view.View
 import android.os.Build
@@ -18,8 +18,8 @@ import android.os.Build
 class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) :
     ItemTouchHelper.Callback() {
 
-    private lateinit var successType: TodoSuccessType
-    private lateinit var currentSuccessType: TodoSuccessType
+    private lateinit var state: TodoState
+    private lateinit var currentState: TodoState
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
@@ -41,8 +41,8 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) :
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        successType = currentSuccessType
-        listener.onItemSwipe(viewHolder.bindingAdapterPosition, successType)
+        state = currentState
+        listener.onItemSwipe(viewHolder.bindingAdapterPosition, state)
     }
 
     override fun onChildDraw(
@@ -54,7 +54,7 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) :
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        successType = (viewHolder as TodoAdapter.TodoViewHolder).successType
+        state = (viewHolder as TodoAdapter.TodoViewHolder).state
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             val itemView = viewHolder.itemView
@@ -65,10 +65,10 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) :
                 dX < 0 -> {
                     swipeDirection = TODO_FAIL
 
-                    if (successType == TodoSuccessType.FAIL) {
-                        currentSuccessType = TodoSuccessType.NOTHING
+                    if (state == TodoState.FAIL) {
+                        currentState = TodoState.NOTHING
                     } else {
-                        currentSuccessType = TodoSuccessType.FAIL
+                        currentState = TodoState.FAIL
                         text = TODO_FAIL
                         backgroundColor = R.color.blue_normal
                     }
@@ -76,10 +76,10 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) :
                 dX > 0 -> {
                     swipeDirection = TODO_SUCCESS
 
-                    if (successType == TodoSuccessType.SUCCESS) {
-                        currentSuccessType = TodoSuccessType.NOTHING
+                    if (state == TodoState.SUCCESS) {
+                        currentState = TodoState.NOTHING
                     } else {
-                        currentSuccessType = TodoSuccessType.SUCCESS
+                        currentState = TodoState.SUCCESS
                         text = TODO_SUCCESS
                         backgroundColor = R.color.yellow_normal
                     }
