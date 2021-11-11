@@ -7,7 +7,7 @@ fun Calendar.toYearMonth(): String {
 }
 
 fun Calendar.toYearMonthDate(): String {
-    return "${this.get(Calendar.YEAR)}${this.get(Calendar.MONTH)}${this.get(Calendar.DATE)}"
+    return "${this.get(Calendar.YEAR)}${this.get(Calendar.MONTH) + 1}${this.get(Calendar.DATE)}"
 }
 
 fun Calendar.getYear(): Int {
