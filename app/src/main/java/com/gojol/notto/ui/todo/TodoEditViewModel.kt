@@ -11,7 +11,7 @@ import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.FakeTodoLabelRepository
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import com.gojol.notto.util.get12Time
+import com.gojol.notto.util.get12Hour
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -194,7 +194,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun updateTimeStart(value: String) {
-        _timeStart.value = value.get12Time()
+        _timeStart.value = value.get12Hour()
     }
 
     fun restoreOnTimeStartState(bool: Boolean) {
@@ -206,7 +206,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun updateTimeFinish(value: String) {
-        _timeFinish.value = value.get12Time()
+        _timeFinish.value = value.get12Hour()
     }
 
     fun restoreOnTimeFinishState(bool: Boolean) {

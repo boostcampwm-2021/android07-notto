@@ -1,7 +1,9 @@
 package com.gojol.notto.util
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 fun Calendar.toYearMonth(): String {
     return "${this.get(Calendar.YEAR)}년 ${this.get(Calendar.MONTH) + 1}월"
@@ -55,7 +57,7 @@ fun String.getTime(): Date? {
     return simpleDateFormatTime.parse(this)
 }
 
-fun String.get12Time(): String {
+fun String.get12Hour(): String {
     val simpleDateFormatTime = SimpleDateFormat("kk:mm", Locale.KOREA)
      simpleDateFormatTime.parse(this)?.let {
         return SimpleDateFormat("a hh:mm", Locale.KOREA).format(it)
@@ -64,7 +66,7 @@ fun String.get12Time(): String {
      }
 }
 
-fun String.get24Time(): String {
+fun String.get24Hour(): String {
     val simpleDateFormatTime = SimpleDateFormat("a hh:mm", Locale.KOREA)
     simpleDateFormatTime.parse(this)?.let {
         return SimpleDateFormat("kk:mm", Locale.KOREA).format(it)

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.DialogTodoSetTimeBinding
-import com.gojol.notto.util.get24Time
+import com.gojol.notto.util.get24Hour
 
 class TodoSetTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
     private val binding: DialogTodoSetTimeBinding =
@@ -18,7 +18,7 @@ class TodoSetTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
     var data: String? = null
         set(value) {
             value?.let {
-                it.get24Time().split(":").apply {
+                it.get24Hour().split(":").apply {
                     if (Build.VERSION.SDK_INT >= 23) {
                         binding.tpSetTime.hour = get(0).toInt()
                         binding.tpSetTime.minute = get(1).toInt()
