@@ -21,8 +21,8 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
     private val fakeRepository = FakeTodoLabelRepository.getInstance()
 
-    private val _navigateToTodoEdit = MutableLiveData<Event<Boolean>>()
-    val navigateToTodoEdit: LiveData<Event<Boolean>> = _navigateToTodoEdit
+    private val _isTodoCreateButtonClicked = MutableLiveData<Event<Boolean>>()
+    val isTodoCreateButtonClicked: LiveData<Event<Boolean>> = _isTodoCreateButtonClicked
 
     private val _date = MutableLiveData(Calendar.getInstance())
     val date: LiveData<Calendar> = _date
@@ -42,7 +42,8 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     private suspend fun insertDummyTodoAndLabel() {
         _todoList.value = fakeRepository.getAllTodo().toMutableList()
         val labelWithTodos = fakeRepository.getLabelsWithTodos()
-        val newLabelList = labelWithTodos.map { label -> LabelWithCheck(label, false) }.toMutableList()
+        val newLabelList =
+            labelWithTodos.map { label -> LabelWithCheck(label, false) }.toMutableList()
 
         val totalLabel = LabelWithTodo(
             Label(0, LABEL_NAME_ALL), _todoList.value!!
@@ -163,7 +164,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     }
 
     fun updateNavigateToTodoEdit() {
-        _navigateToTodoEdit.value = Event(true)
+        _isTodoCreateButtonClicked.value = Event(true)
     }
 
     companion object {

@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
 
         initRecyclerView()
         initObserver()
-       //initData()
+        //initData()
         initTodoListItemTouchListener()
     }
 
@@ -100,7 +100,7 @@ class HomeFragment : Fragment() {
             calendarAdapter.setDate(it)
         })
 
-        homeViewModel.navigateToTodoEdit.observe(viewLifecycleOwner, {
+        homeViewModel.isTodoCreateButtonClicked.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let {
                 startTodoEditActivity()
             }
