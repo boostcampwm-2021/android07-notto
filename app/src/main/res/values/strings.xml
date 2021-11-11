@@ -5,12 +5,13 @@
     <string name="bottom_option">옵션</string>
     <string name="home_label_all">전체</string>
     <string name="close">닫기</string>
+    <string name="cancel">취소</string>
+    <string name="okay">확인</string>
+
     <string name="edit_label">라벨 편집</string>
     <string name="edit_label_create">라벨 추가</string>
     <string name="edit_label_delete">라벨 삭제</string>
     <string name="edit_label_order">라벨 순서 이동</string>
-    <string name="cancel">취소</string>
-    <string name="okay">확인</string>
     <string name="edit_label_edit_text_hint">라벨 이름을 입력해주세요.</string>
     <string name="edit_label_delete_alert">Not-todo에 더이상 이 라벨이 표시되지 않습니다.\n정말 삭제하시겠습니까?</string>
 
