@@ -6,14 +6,32 @@ import android.view.LayoutInflater
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.DialogTodoSetTimeBinding
+import com.gojol.notto.util.get24Time
 
 class TodoSetTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
     private val binding: DialogTodoSetTimeBinding =
         DataBindingUtil.inflate(
-        LayoutInflater.from(context), R.layout.dialog_todo_set_time,
-        null,
-        false
-    )
+            LayoutInflater.from(context), R.layout.dialog_todo_set_time,
+            null,
+            false
+        )
+    var data: String? = null
+        set(value) {
+            value?.let {
+                it.get24Time().split(":").apply {
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        binding.tpSetTime.hour = get(0).toInt()
+                        binding.tpSetTime.minute = get(1).toInt()
+                    } else {
+                        binding.tpSetTime.currentHour = get(0).toInt()
+                        binding.tpSetTime.currentMinute = get(1).toInt()
+                    }
+                }
+            }
+            field = value
+        }
+    var callback: ((String) -> Unit?)? = null
+
 
     init {
         setBinding(binding)
@@ -36,13 +54,14 @@ class TodoSetTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
     }
 
     override fun confirm() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            val hour = binding.tpSetTime.hour
-            val minute = binding.tpSetTime.minute
-        } else {
-            val hour = binding.tpSetTime.currentHour
-            val minute = binding.tpSetTime.currentMinute
+        callback?.let {
+            if (Build.VERSION.SDK_INT >= 23) {
+                it("${binding.tpSetTime.hour}:${binding.tpSetTime.minute}")
+            } else {
+                it("${binding.tpSetTime.currentHour}:${binding.tpSetTime.currentMinute}")
+            }
         }
+
         // TODO : 얻은 정보 Todo 편집 화면으로 보내기
         super.confirm()
     }

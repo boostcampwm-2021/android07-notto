@@ -45,7 +45,7 @@ open class TodoBaseDialogImpl(context: Context) : View(context), TodoBaseDialog 
         }
     }
 
-    final override fun show() {
+     override fun show() {
         dialog.show()
     }
 

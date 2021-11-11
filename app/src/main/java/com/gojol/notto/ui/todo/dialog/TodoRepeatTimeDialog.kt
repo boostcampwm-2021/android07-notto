@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.DialogTodoRepeatTimeBinding
+import com.gojol.notto.util.getDate
+import com.gojol.notto.util.getDateString
 import java.util.*
 
 
@@ -15,6 +17,11 @@ class TodoRepeatTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
             null,
             false
         )
+    var data: String? = null
+        set(value) {
+            value?.let { binding.cvRepeatTime.setSelectedDate(it.getDate()) }
+            field = value
+        }
 
     init {
         setBinding(binding)
@@ -22,6 +29,7 @@ class TodoRepeatTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
         initClickListener()
         initCalendar()
     }
+    var callback: ((String) -> Unit?)? = null
 
     private fun initClickListener() {
         binding.bvDialogDeletion.btnDialogBaseConfirm.setOnClickListener {
@@ -37,8 +45,8 @@ class TodoRepeatTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
     }
 
     override fun confirm() {
-        val selectedDate = binding.cvRepeatTime.selectedDate
-        // TODO : 데이트를 Todo 편집 화면으로 보내기
+        val selectedDate: Date = binding.cvRepeatTime.selectedDate.date
+        callback?.let { it(selectedDate.getDateString()) }
         super.confirm()
     }
 }
