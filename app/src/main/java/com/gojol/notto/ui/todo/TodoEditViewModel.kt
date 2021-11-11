@@ -165,24 +165,24 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _repeatTypeClick.value = true
     }
 
-    fun updateRepeatType(value: RepeatType) {
-        _repeatType.value = value
+    fun updateRepeatType(repeatType: RepeatType) {
+        _repeatType.value = repeatType
     }
 
-    fun restoreOnRepeatTypeState(bool: Boolean) {
-        _repeatTypeClick.value = bool
+    fun restoreOnRepeatTypeState(isSaved: Boolean) {
+        _repeatTypeClick.value = isSaved
     }
 
     fun onRepeatStartClick() {
         _repeatStartClick.value = true
     }
 
-    fun updateRepeatTime(value: String) {
-        _repeatStart.value = value
+    fun updateRepeatTime(repeatTime: String) {
+        _repeatStart.value = repeatTime
     }
 
-    fun restoreOnRepeatStartState(bool: Boolean) {
-        _repeatStartClick.value = bool
+    fun restoreOnRepeatStartState(isSaved: Boolean) {
+        _repeatStartClick.value = isSaved
     }
 
     fun updateIsTimeChecked(isChecked: Boolean) {
@@ -193,44 +193,44 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _timeStartClick.value = true
     }
 
-    fun updateTimeStart(value: String) {
-        _timeStart.value = value.get12Hour()
+    fun updateTimeStart(timeStart: String) {
+        _timeStart.value = timeStart.get12Hour()
     }
 
-    fun restoreOnTimeStartState(bool: Boolean) {
-        _timeStartClick.value = bool
+    fun restoreOnTimeStartState(isSaved: Boolean) {
+        _timeStartClick.value = isSaved
     }
 
     fun onTimeFinishClick() {
         _timeFinishClick.value = true
     }
 
-    fun updateTimeFinish(value: String) {
-        _timeFinish.value = value.get12Hour()
+    fun updateTimeFinish(timeFinish: String) {
+        _timeFinish.value = timeFinish.get12Hour()
     }
 
-    fun restoreOnTimeFinishState(bool: Boolean) {
-        _timeFinishClick.value = bool
+    fun restoreOnTimeFinishState(isSaved: Boolean) {
+        _timeFinishClick.value = isSaved
     }
 
     fun onTimeRepeatClick() {
         _timeRepeatClick.value = true
     }
 
-    fun updateTimeRepeat(value: TimeRepeatType) {
-        _timeRepeat.value = value
+    fun updateTimeRepeat(timeRepeat: TimeRepeatType) {
+        _timeRepeat.value = timeRepeat
     }
 
-    fun restoreOnTimeRepeatState(bool: Boolean) {
-        _timeRepeatClick.value = bool
+    fun restoreOnTimeRepeatState(isSaved: Boolean) {
+        _timeRepeatClick.value = isSaved
     }
 
     fun updateIsKeywordChecked(isChecked: Boolean) {
         _isKeywordChecked.value = isChecked
     }
 
-    fun updateIsSaveButtonEnabled(bool: Boolean) {
-        _isSaveButtonEnabled.value = bool
+    fun updateIsSaveButtonEnabled(isSaved: Boolean) {
+        _isSaveButtonEnabled.value = isSaved
     }
 
     fun updatePopLabelAddDialog() {
