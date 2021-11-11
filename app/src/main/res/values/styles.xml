@@ -25,5 +25,6 @@
         <item name="android:paddingEnd">@dimen/space_small</item>
         <item name="android:paddingTop">@dimen/space_median</item>
         <item name="android:paddingBottom">@dimen/space_median</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
 </resources>
