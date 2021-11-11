@@ -38,10 +38,10 @@ class TodoAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onItemSwipe(position: Int, successType: TodoSuccessType) {
-        if (position < 0) return
         val todo = currentList[position].copy(isSuccess = successType)
         swipeCallback(todo)
-        notifyDataSetChanged()
+        notifyItemRemoved(position)
+        notifyItemInserted(position)
     }
 
     class TodoViewHolder(private val binding: ItemTodoBinding) :

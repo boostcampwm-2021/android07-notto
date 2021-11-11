@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="dialog"
+            type="com.gojol.notto.ui.home.dialog.TodoAlarmPeriodDialog" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="@dimen/dialog_radiogroup_width"
+            android:layout_height="@dimen/dialog_radiogroup_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RadioGroup
+                android:id="@+id/rg_dialog_alarm_period"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dialog_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_alarm_period_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:checked="true"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:tag="@string/dialog_alarm_period_tag_5"
+                    android:text="@string/dialog_alarm_period_5"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_alarm_period_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:tag="@string/dialog_alarm_period_tag_10"
+                    android:text="@string/dialog_alarm_period_10"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_alarm_period_15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:tag="@string/dialog_alarm_period_tag_15"
+                    android:text="@string/dialog_alarm_period_15"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_alarm_period_30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:tag="@string/dialog_alarm_period_tag_30"
+                    android:text="@string/dialog_alarm_period_30"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_alarm_period_60"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:tag="@string/dialog_alarm_period_tag_60"
+                    android:text="@string/dialog_alarm_period_60"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_alarm_period_1440"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:tag="@string/dialog_alarm_period_tag_1440"
+                    android:text="@string/dialog_alarm_period_1440"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+            </RadioGroup>
+        </androidx.core.widget.NestedScrollView>
+
+        <include
+            android:id="@+id/bv_dialog_deletion"
+            layout="@layout/item_dialog_bottom_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bottom="@{1}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

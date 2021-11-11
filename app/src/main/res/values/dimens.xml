@@ -16,4 +16,11 @@
     <dimen name="space_x_large">24dp</dimen>
     <dimen name="edit_label_bg_radius">8dp</dimen>
     <dimen name="home_recyclerview_padding">100dp</dimen>
+    <dimen name="calendar_day_size">40dp</dimen>
+    <dimen name="dialog_radiogroup_height">300dp</dimen>
+    <dimen name="dialog_radiogroup_width">250dp</dimen>
+    <dimen name="dialog_padding">20dp</dimen>
+    <dimen name="dialog_margin">20dp</dimen>
+    <dimen name="dialog_deletion_description_margin_end">100dp</dimen>
+    <dimen name="dialog_line_spacing">10sp</dimen>
 </resources>

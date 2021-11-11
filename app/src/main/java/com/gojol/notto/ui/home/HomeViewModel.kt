@@ -87,13 +87,19 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
             if (labelWithCheck.isChecked) {
                 moveItem(1, true, labelWithCheck)
             } else {
-                val checkedList = list.filter { it.isChecked && it != labelWithCheck }
+                val checkedList = list.filter {
+                    it.isChecked &&
+                            it.labelWithTodo.label.labelId != labelWithCheck.labelWithTodo.label.labelId &&
+                            it.labelWithTodo.label.order != 0
+                }
+
                 val uncheckedList = list
                     .asSequence()
-                    .filter { !it.isChecked }
+                    .filter { !it.isChecked && it.labelWithTodo.label.order != 0 }
                     .toMutableList()
                     .apply { add(labelWithCheck) }
                     .sortedBy { it.labelWithTodo.label.order }
+
                 if (checkedList.isEmpty()) {
                     allChipChecked()
                 } else {
@@ -107,7 +113,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         }
     }
 
-    suspend fun addTodoListByLabels(labels: List<LabelWithCheck>) {
+    private suspend fun addTodoListByLabels(labels: List<LabelWithCheck>) {
         val newTodoList = mutableListOf<Todo>()
 
         val todoSet = mutableSetOf<Todo>()
