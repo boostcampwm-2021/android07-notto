@@ -38,7 +38,7 @@ fun Calendar.getLastDayOfMonth(): Int {
 }
 
 fun Date.getDateString(): String {
-    val simpleDateFormatDate = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA)
+    val simpleDateFormatDate = SimpleDateFormat("yyyyMMdd", Locale.KOREA)
     return simpleDateFormatDate.format(this)
 }
 
