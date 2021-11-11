@@ -1,5 +1,6 @@
 package com.gojol.notto.model.datasource.todo
 
+import com.gojol.notto.common.TimeRepeatType
 import java.util.Calendar
 import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.RepeatType
@@ -24,13 +25,13 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         today.getYear().toString() + today.getMonth().toString() + today.getDate().toString()
 
     private var todos = mutableListOf(
-        Todo("밥 굶지 않기", false, RepeatType.DAY, "", false, "", "", "", false, false, "", 1),
-        Todo("과제 미루지 않기", false, RepeatType.DAY, "", false, "", "", "", false, false, "", 2),
-        Todo("지각하지 않기", false, RepeatType.DAY, "", false, "", "", "", false, false, "", 3),
-        Todo("밥 먹을 때 물 먹지 않기", false, RepeatType.DAY, "", false, "", "", "", false, false, "", 4),
-        Todo("회의 지각 안하기", false, RepeatType.DAY, "", false, "", "", "", false, false, "", 5),
-        Todo("핸드폰 보지 않기", false, RepeatType.DAY, "", false, "", "", "", false, false, "", 6),
-        Todo("누워있지 않기", false, RepeatType.DAY, "", false, "", "", "", false, false, "", 7),
+        Todo("밥 굶지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 1),
+        Todo("과제 미루지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 2),
+        Todo("지각하지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 3),
+        Todo("밥 먹을 때 물 먹지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 4),
+        Todo("회의 지각 안하기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 5),
+        Todo("핸드폰 보지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 6),
+        Todo("누워있지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 7),
     )
 
     private var labels = mutableListOf(

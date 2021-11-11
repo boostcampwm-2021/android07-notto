@@ -6,7 +6,7 @@
 
         <variable
             name="dialog"
-            type="com.gojol.notto.ui.home.dialog.TodoSetTimeDialog" />
+            type="com.gojol.notto.ui.todo.dialog.TodoSetTimeDialog" />
     </data>
 
     <androidx.core.widget.NestedScrollView

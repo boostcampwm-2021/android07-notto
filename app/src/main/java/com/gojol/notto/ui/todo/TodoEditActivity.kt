@@ -14,6 +14,11 @@ import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
+import com.gojol.notto.ui.todo.dialog.TodoAlarmPeriodDialog
+import com.gojol.notto.ui.todo.dialog.TodoDeletionDialog
+import com.gojol.notto.ui.todo.dialog.TodoRepeatTimeDialog
+import com.gojol.notto.ui.todo.dialog.TodoRepeatTypeDialog
+import com.gojol.notto.ui.todo.dialog.TodoSetTimeDialog
 import com.gojol.notto.model.database.todo.Todo
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,7 +28,21 @@ class TodoEditActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTodoEditBinding
     private val todoEditViewModel: TodoEditViewModel by viewModels()
     private lateinit var selectedLabelAdapter: SelectedLabelAdapter
+
     private lateinit var labelAddDialog: AlertDialog.Builder
+    private lateinit var todoDeletionDialog: TodoDeletionDialog
+    private lateinit var todoRepeatTypeDialog: TodoRepeatTypeDialog
+    private lateinit var todoRepeatTimeDialog: TodoRepeatTimeDialog
+    private lateinit var todoSetTimeDialog: TodoSetTimeDialog
+    private lateinit var todoAlarmPeriodDialog: TodoAlarmPeriodDialog
+
+    companion object {
+        const val TIME_START = "timeStart"
+        const val TIME_FINISH = "timeFinish"
+        const val TIME_REPEAT = "timeRepeat"
+        const val REPEAT_TYPE = "repeatType"
+        const val REPEAT_TIME = "repeatTime"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +50,11 @@ class TodoEditActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_todo_edit)
         binding.lifecycleOwner = this
         binding.viewmodel = todoEditViewModel
+//        savedInstanceState?.getBoolean(TIME_START)?.let { todoEditViewModel.restoreOnTimeStartState(it) }
+//        savedInstanceState?.getBoolean(TIME_FINISH)?.let { todoEditViewModel.restoreOnTimeFinishState(it) }
+//        savedInstanceState?.getBoolean(TIME_REPEAT)?.let { todoEditViewModel.restoreOnTimeRepeatState(it) }
+//        savedInstanceState?.getBoolean(REPEAT_TIME)?.let { todoEditViewModel.restoreOnRepeatStartState(it) }
+//        savedInstanceState?.getBoolean(REPEAT_TYPE)?.let { todoEditViewModel.restoreOnRepeatTypeState(it) }
 
         initIntentExtra()
         initAppbar()
@@ -94,7 +118,7 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.labelList.observe(this) {
             val newList = it.filterNot { label -> label.order == 0 }
                 .map { label -> label.name }.toTypedArray()
-            initLabelAddDialog(newList)
+            initDialog(newList)
         }
         todoEditViewModel.selectedLabelList.observe(this) {
             val newList = it.filterNot { label -> label.order == 0}
@@ -107,14 +131,96 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.popLabelAddDialog.observe(this) {
             if (it) showLabelAddDialog()
         }
+        todoEditViewModel.repeatTypeClick.observe(this) {
+            if (it) {
+                todoRepeatTypeDialog.data = todoEditViewModel.repeatType.value
+                todoRepeatTypeDialog.callback = todoEditViewModel::updateRepeatType
+                todoRepeatTypeDialog.show()
+            }
+        }
+        todoEditViewModel.repeatStartClick.observe(this) {
+            if (it) {
+                todoRepeatTimeDialog.data = todoEditViewModel.repeatStart.value
+                todoRepeatTimeDialog.callback = todoEditViewModel::updateRepeatTime
+                todoRepeatTimeDialog.show()
+            }
+        }
+        todoEditViewModel.timeStartClick.observe(this) {
+            if (it) {
+                todoSetTimeDialog.data = todoEditViewModel.timeStart.value
+                todoSetTimeDialog.callback = todoEditViewModel::updateTimeStart
+                todoSetTimeDialog.show()
+            }
+        }
+        todoEditViewModel.timeFinishClick.observe(this) {
+            if (it) {
+                todoSetTimeDialog.data = todoEditViewModel.timeFinish.value
+                todoSetTimeDialog.callback = todoEditViewModel::updateTimeFinish
+                todoSetTimeDialog.show()
+            }
+        }
+        todoEditViewModel.timeRepeatClick.observe(this) {
+            if (it) {
+                todoAlarmPeriodDialog.data = todoEditViewModel.timeRepeat.value
+                todoAlarmPeriodDialog.callback = todoEditViewModel::updateTimeRepeat
+                todoAlarmPeriodDialog.show()
+            }
+        }
     }
 
-    private fun initLabelAddDialog(items: Array<String>) {
+
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//
+//        todoEditViewModel.timeStartClick.value?.let { bool ->
+//            outState.putBoolean(TIME_START, bool)
+//        }
+//        todoEditViewModel.timeFinishClick.value?.let { bool ->
+//            outState.putBoolean(TIME_FINISH, bool)
+//        }
+//        todoEditViewModel.timeRepeatClick.value?.let { bool ->
+//            outState.putBoolean(TIME_REPEAT, bool)
+//        }
+//        todoEditViewModel.repeatTypeClick.value?.let { bool ->
+//            outState.putBoolean(REPEAT_TYPE, bool)
+//        }
+//        todoEditViewModel.repeatStartClick.value?.let { bool ->
+//            outState.putBoolean(REPEAT_TIME, bool)
+//        }
+//    }
+
+    private fun initSwitchListener() {
+        binding.switchTodoEditRepeat.setOnCheckedChangeListener { _, isChecked ->
+            todoEditViewModel.updateIsRepeatChecked(isChecked)
+        }
+        binding.switchTodoEditTime.setOnCheckedChangeListener { _, isChecked ->
+            todoEditViewModel.updateIsTimeChecked(isChecked)
+        }
+        binding.switchTodoEditKeyword.setOnCheckedChangeListener { _, isChecked ->
+            todoEditViewModel.updateIsKeywordChecked(isChecked)
+        }
+    }
+
+    private fun initButtonListener() {
+        binding.btnTodoEditLabel.setOnClickListener {
+            labelAddDialog.show()
+        }
+        binding.btnTodoEditSave.setOnClickListener {
+            todoEditViewModel.saveTodo()
+        }
+    }
+
+    private fun initDialog(items: Array<String>) {
         labelAddDialog =
             AlertDialog.Builder(this).setTitle(getString(R.string.todo_edit_label_select_sentence))
                 .setItems(items) { _, which ->
                     todoEditViewModel.addLabelToSelectedLabelList(items[which])
                 }
+        todoDeletionDialog = TodoDeletionDialog(this)
+        todoRepeatTypeDialog = TodoRepeatTypeDialog(this)
+        todoRepeatTimeDialog = TodoRepeatTimeDialog(this)
+        todoAlarmPeriodDialog = TodoAlarmPeriodDialog(this)
+        todoSetTimeDialog = TodoSetTimeDialog(this)
     }
 
     private fun initEditTextListener() {

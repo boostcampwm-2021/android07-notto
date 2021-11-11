@@ -5,16 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gojol.notto.common.Event
+import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
+import com.gojol.notto.util.get12Hour
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,8 +52,14 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _repeatType = MutableLiveData(RepeatType.YEAR)
     val repeatType: LiveData<RepeatType> = _repeatType
 
+    private val _repeatTypeClick = MutableLiveData(false)
+    val repeatTypeClick: LiveData<Boolean> = _repeatTypeClick
+
     private val _repeatStart = MutableLiveData<String>()
     val repeatStart: LiveData<String> = _repeatStart
+
+    private val _repeatStartClick = MutableLiveData(false)
+    val repeatStartClick: LiveData<Boolean> = _repeatStartClick
 
     private val _isTimeChecked = MutableLiveData(false)
     val isTimeChecked: LiveData<Boolean> = _isTimeChecked
@@ -57,11 +67,20 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _timeStart = MutableLiveData<String>()
     val timeStart: LiveData<String> = _timeStart
 
+    private val _timeStartClick = MutableLiveData(false)
+    val timeStartClick: LiveData<Boolean> = _timeStartClick
+
     private val _timeFinish = MutableLiveData<String>()
     val timeFinish: LiveData<String> = _timeFinish
 
-    private val _timeRepeat = MutableLiveData("5")
-    val timeRepeat: LiveData<String> = _timeRepeat
+    private val _timeFinishClick = MutableLiveData(false)
+    val timeFinishClick: LiveData<Boolean> = _timeFinishClick
+
+    private val _timeRepeat = MutableLiveData(TimeRepeatType.MINUTE_5)
+    val timeRepeat: LiveData<TimeRepeatType> = _timeRepeat
+
+    private val _timeRepeatClick = MutableLiveData(false)
+    val timeRepeatClick: LiveData<Boolean> = _timeRepeatClick
 
     private val _isKeywordChecked = MutableLiveData(false)
     val isKeywordChecked: LiveData<Boolean> = _isKeywordChecked
@@ -71,6 +90,8 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
     init {
         val date = Date(Calendar.getInstance().timeInMillis)
+        _repeatType.value = RepeatType.DAY
+        _timeRepeat.value = TimeRepeatType.MINUTE_5
         _repeatStart.value = getFormattedCurrentDate(date)
         _timeStart.value = getFormattedCurrentTime(date)
         _timeFinish.value = getFormattedCurrentTime(date)
@@ -139,16 +160,76 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _isRepeatChecked.value = isChecked
     }
 
+    fun onRepeatTypeClick() {
+        _repeatTypeClick.value = true
+    }
+
+    fun updateRepeatType(repeatType: RepeatType) {
+        _repeatType.value = repeatType
+    }
+
+    fun restoreOnRepeatTypeState(isSaved: Boolean) {
+        _repeatTypeClick.value = isSaved
+    }
+
+    fun onRepeatStartClick() {
+        _repeatStartClick.value = true
+    }
+
+    fun updateRepeatTime(repeatTime: String) {
+        _repeatStart.value = repeatTime
+    }
+
+    fun restoreOnRepeatStartState(isSaved: Boolean) {
+        _repeatStartClick.value = isSaved
+    }
+
     fun updateIsTimeChecked(isChecked: Boolean) {
         _isTimeChecked.value = isChecked
+    }
+
+    fun onTimeStartClick() {
+        _timeStartClick.value = true
+    }
+
+    fun updateTimeStart(timeStart: String) {
+        _timeStart.value = timeStart.get12Hour()
+    }
+
+    fun restoreOnTimeStartState(isSaved: Boolean) {
+        _timeStartClick.value = isSaved
+    }
+
+    fun onTimeFinishClick() {
+        _timeFinishClick.value = true
+    }
+
+    fun updateTimeFinish(timeFinish: String) {
+        _timeFinish.value = timeFinish.get12Hour()
+    }
+
+    fun restoreOnTimeFinishState(isSaved: Boolean) {
+        _timeFinishClick.value = isSaved
+    }
+
+    fun onTimeRepeatClick() {
+        _timeRepeatClick.value = true
+    }
+
+    fun updateTimeRepeat(timeRepeat: TimeRepeatType) {
+        _timeRepeat.value = timeRepeat
+    }
+
+    fun restoreOnTimeRepeatState(isSaved: Boolean) {
+        _timeRepeatClick.value = isSaved
     }
 
     fun updateIsKeywordChecked(isChecked: Boolean) {
         _isKeywordChecked.value = isChecked
     }
 
-    fun updateIsSaveButtonEnabled(bool: Boolean) {
-        _isSaveButtonEnabled.value = bool
+    fun updateIsSaveButtonEnabled(isSaved: Boolean) {
+        _isSaveButtonEnabled.value = isSaved
     }
 
     fun updatePopLabelAddDialog() {
@@ -184,7 +265,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         )
 
         viewModelScope.launch {
-            val job = launch { repository.insertTodo(newTodo) }.join()
+            launch { repository.insertTodo(newTodo) }.join()
 
             val saveTodo = withContext(Dispatchers.Default) {
                 repository.getTodosWithLabels().find { it.labels.isEmpty() }?.todo

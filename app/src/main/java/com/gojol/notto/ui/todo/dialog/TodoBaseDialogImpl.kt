@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home.dialog
+package com.gojol.notto.ui.todo.dialog
 
 import android.app.Dialog
 import android.content.Context
@@ -30,8 +30,6 @@ open class TodoBaseDialogImpl(context: Context) : View(context), TodoBaseDialog 
             dialog.window?.attributes?.width = (resources.displayMetrics.widthPixels * widthRate).toInt()
             dialog.window?.attributes?.height = (resources.displayMetrics.heightPixels * heightRate).toInt()
         }
-
-        show()
     }
 
     fun setDialog() {
@@ -45,11 +43,9 @@ open class TodoBaseDialogImpl(context: Context) : View(context), TodoBaseDialog 
         if (deviceWidth > deviceHeight) {
             dialog.window?.attributes?.height = (resources.displayMetrics.heightPixels * 0.8).toInt()
         }
-
-        show()
     }
 
-    final override fun show() {
+     override fun show() {
         dialog.show()
     }
 

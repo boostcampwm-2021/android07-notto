@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.gojol.notto.common.TimeRepeatType"/>
 
         <variable
             name="dialog"
-            type="com.gojol.notto.ui.home.dialog.TodoAlarmPeriodDialog" />
+            type="com.gojol.notto.ui.todo.dialog.TodoAlarmPeriodDialog" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,10 +36,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/bg_radio_button_normal"
-                    android:checked="true"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@string/dialog_alarm_period_tag_5"
+                    android:checked="true"
+                    android:tag="@{TimeRepeatType.MINUTE_5}"
                     android:text="@string/dialog_alarm_period_5"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -51,7 +52,7 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@string/dialog_alarm_period_tag_10"
+                    android:tag="@{TimeRepeatType.MINUTE_10}"
                     android:text="@string/dialog_alarm_period_10"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -64,7 +65,7 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@string/dialog_alarm_period_tag_15"
+                    android:tag="@{TimeRepeatType.MINUTE_15}"
                     android:text="@string/dialog_alarm_period_15"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -77,7 +78,7 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@string/dialog_alarm_period_tag_30"
+                    android:tag="@{TimeRepeatType.MINUTE_30}"
                     android:text="@string/dialog_alarm_period_30"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -90,7 +91,7 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@string/dialog_alarm_period_tag_60"
+                    android:tag="@{TimeRepeatType.MINUTE_60}"
                     android:text="@string/dialog_alarm_period_60"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -103,7 +104,7 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@string/dialog_alarm_period_tag_1440"
+                    android:tag="@{TimeRepeatType.MINUTE_1440}"
                     android:text="@string/dialog_alarm_period_1440"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"

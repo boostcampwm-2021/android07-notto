@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home.dialog
+package com.gojol.notto.ui.todo.dialog
 
 interface TodoBaseDialog {
     fun show()
