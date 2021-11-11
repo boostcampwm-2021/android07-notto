@@ -2,10 +2,10 @@ package com.gojol.notto.model.database.todolabel
 
 import androidx.room.*
 import com.gojol.notto.model.database.label.Label
-import com.gojol.notto.model.database.todo.DateState
+import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Keyword
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.database.todo.TodoWithDateState
+import com.gojol.notto.model.database.todo.TodoWithDailyTodo
 import com.gojol.notto.model.database.todo.TodoWithKeyword
 
 @Dao
@@ -16,7 +16,7 @@ interface TodoLabelDao {
 
     @Transaction
     @Query("SELECT * FROM Todo")
-    suspend fun getTodosWithDateStates(): List<TodoWithDateState>
+    suspend fun getTodosWithDailyTodos(): List<TodoWithDailyTodo>
 
     @Transaction
     @Query("SELECT * FROM Todo")
@@ -27,8 +27,8 @@ interface TodoLabelDao {
     suspend fun getLabelsWithTodos(): List<LabelWithTodo>
 
     @Transaction
-    @Query("SELECT * FROM DateState")
-    suspend fun getDateStatesWithTodoAndLabel(): List<DateStateWithTodoAndLabel>
+    @Query("SELECT * FROM DailyTodo")
+    suspend fun getDailyTodosWithTodoAndLabel(): List<DailyTodoWithTodoAndLabel>
 
     @Transaction
     @Query("SELECT * FROM Todo")
@@ -45,7 +45,7 @@ interface TodoLabelDao {
     suspend fun insertLabel(label: Label)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertDateState(dateState: DateState)
+    suspend fun insertDailyTodo(dailyTodo: DailyTodo)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertKeyword(keyword: Keyword)
@@ -60,7 +60,7 @@ interface TodoLabelDao {
     suspend fun updateLabel(label: Label)
 
     @Update
-    suspend fun updateDateState(dateState: DateState)
+    suspend fun updateDailyTodo(dailyTodo: DailyTodo)
 
     @Update
     suspend fun update(todoLabelCrossRef: TodoLabelCrossRef)
@@ -72,7 +72,7 @@ interface TodoLabelDao {
     suspend fun deleteLabel(label: Label)
 
     @Delete
-    suspend fun deleteDateState(dateState: DateState)
+    suspend fun deleteDailyTodo(dailyTodo: DailyTodo)
 
     @Delete
     suspend fun deleteKeyword(keyword: Keyword)

@@ -1,10 +1,10 @@
 package com.gojol.notto.model.datasource.todo
 
-import com.gojol.notto.model.data.TodoWithTodayDateState
+import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
-import com.gojol.notto.model.database.todo.DateState
+import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.database.todo.TodoWithDateState
+import com.gojol.notto.model.database.todo.TodoWithDailyTodo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
 import javax.inject.Inject
@@ -19,12 +19,12 @@ class TodoLabelRepository @Inject constructor(
         return localDataSource.getTodosWithLabels()
     }
 
-    override suspend fun getTodosWithDateStates(): List<TodoWithDateState> {
-        return localDataSource.getTodosWithDateStates()
+    override suspend fun getTodosWithDailyTodos(): List<TodoWithDailyTodo> {
+        return localDataSource.getTodosWithDailyTodos()
     }
 
-    override suspend fun getTodosWithTodayDateState(selectedDate: String): List<TodoWithTodayDateState> {
-        return localDataSource.getTodosWithTodayDateState(selectedDate)
+    override suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo> {
+        return localDataSource.getTodosWithTodayDailyTodos(selectedDate)
     }
 
     override suspend fun getLabelsWithTodos(): List<LabelWithTodo> {
@@ -51,8 +51,8 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.insertLabel(label)
     }
 
-    override suspend fun insertDateState(dateState: DateState) {
-        localDataSource.insertDateState(dateState)
+    override suspend fun insertDailyTodo(dailyTodo: DailyTodo) {
+        localDataSource.insertDailyTodo(dailyTodo)
     }
 
     override suspend fun updateTodo(todo: Todo) {
@@ -67,8 +67,8 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.updateLabel(label)
     }
 
-    override suspend fun updateDateState(dateState: DateState) {
-        localDataSource.updateDateState(dateState)
+    override suspend fun updateDailyTodo(dailyTodo: DailyTodo) {
+        localDataSource.updateDailyTodo(dailyTodo)
     }
 
     override suspend fun deleteTodo(todo: Todo) {

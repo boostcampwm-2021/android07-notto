@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gojol.notto.model.data.LabelWithCheck
-import com.gojol.notto.model.data.TodoWithTodayDateState
+import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
-import com.gojol.notto.model.database.todo.DateState
+import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.datasource.todo.FakeTodoLabelRepository
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
@@ -25,8 +25,8 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     private val _date = MutableLiveData(Calendar.getInstance())
     val date: LiveData<Calendar> = _date
 
-    private val _todoList = MutableLiveData<List<TodoWithTodayDateState>>()
-    val todoList: LiveData<List<TodoWithTodayDateState>> = _todoList
+    private val _todoList = MutableLiveData<List<TodoWithTodayDailyTodo>>()
+    val todoList: LiveData<List<TodoWithTodayDailyTodo>> = _todoList
 
     private val _labelList = MutableLiveData<List<LabelWithCheck>>()
     val labelList: LiveData<List<LabelWithCheck>> = _labelList
@@ -57,7 +57,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
             _labelList.value =
                 repository.getLabelsWithTodos().map { LabelWithCheck(it, it.label.order == 0) }
             _todoList.value =
-                _date.value?.let { repository.getTodosWithTodayDateState(it.toYearMonthDate()) }
+                _date.value?.let { repository.getTodosWithTodayDailyTodos(it.toYearMonthDate()) }
             _date.value = Calendar.getInstance()
         }
     }
@@ -69,9 +69,9 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         _date.value = calendar
     }
 
-    fun updateDateState(dateState: DateState) {
+    fun updateDailyTodo(dailyTodo: DailyTodo) {
         viewModelScope.launch {
-            val job = launch { repository.updateDateState(dateState) }.join()
+            val job = launch { repository.updateDailyTodo(dailyTodo) }.join()
             val currentShowTodoList = _labelList.value
                 ?.asSequence()
                 ?.filter { it.isChecked }
@@ -79,7 +79,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
             if (currentShowTodoList != null) {
                 _todoList.value = _date.value?.let { date ->
-                    repository.getTodosWithTodayDateState(date.toYearMonthDate())
+                    repository.getTodosWithTodayDailyTodos(date.toYearMonthDate())
                 }?.filter { currentShowTodoList.contains(it.todo) }
             }
         }
@@ -98,7 +98,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
         _date.value?.let { date ->
             _todoList.value =
-                repository.getTodosWithTodayDateState(date.toYearMonthDate())
+                repository.getTodosWithTodayDailyTodos(date.toYearMonthDate())
                     .filter { it.todo.todoId in todoIdList }
         }
     }

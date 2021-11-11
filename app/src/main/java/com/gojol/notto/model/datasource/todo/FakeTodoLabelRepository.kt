@@ -3,11 +3,11 @@ package com.gojol.notto.model.datasource.todo
 import java.util.Calendar
 import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.RepeatType
-import com.gojol.notto.model.data.TodoWithTodayDateState
+import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
-import com.gojol.notto.model.database.todo.DateState
+import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.database.todo.TodoWithDateState
+import com.gojol.notto.model.database.todo.TodoWithDailyTodo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
 import com.gojol.notto.util.getDate
@@ -38,7 +38,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         Label(4, "과제", 5)
     )
 
-    private var dateStates = mutableListOf<DateState>()
+    private var dailyTodos = mutableListOf<DailyTodo>()
 
     private var todosWithLabels = mutableListOf(
         TodoWithLabel(todos[0], listOf(labels[1])),
@@ -60,23 +60,23 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         return todosWithLabels
     }
 
-    override suspend fun getTodosWithDateStates(): List<TodoWithDateState> {
+    override suspend fun getTodosWithDailyTodos(): List<TodoWithDailyTodo> {
         return todos.map { todo ->
-            TodoWithDateState(todo, dateStates.filter { it.parentTodoId == todo.todoId })
+            TodoWithDailyTodo(todo, dailyTodos.filter { it.parentTodoId == todo.todoId })
         }
     }
 
-    override suspend fun getTodosWithTodayDateState(selectedDate: String): List<TodoWithTodayDateState> {
+    override suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo> {
         return todos.map { todo ->
-            var todayDateState =
-                dateStates.find { it.parentTodoId == todo.todoId && it.date == this.selectedDate }
+            var todayDailyTodo =
+                dailyTodos.find { it.parentTodoId == todo.todoId && it.date == this.selectedDate }
 
-            if (todayDateState == null) {
-                todayDateState = DateState(TodoState.NOTHING, todo.todoId, this.selectedDate)
-                dateStates.add(todayDateState)
+            if (todayDailyTodo == null) {
+                todayDailyTodo = DailyTodo(TodoState.NOTHING, todo.todoId, this.selectedDate)
+                dailyTodos.add(todayDailyTodo)
             }
 
-            TodoWithTodayDateState(todo, todayDateState)
+            TodoWithTodayDailyTodo(todo, todayDailyTodo)
 
         }
     }
@@ -121,8 +121,8 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         labels.add(label)
     }
 
-    override suspend fun insertDateState(dateState: DateState) {
-        dateStates.add(dateState)
+    override suspend fun insertDailyTodo(dailyTodo: DailyTodo) {
+        dailyTodos.add(dailyTodo)
     }
 
     override suspend fun updateTodo(todo: Todo) {
@@ -193,12 +193,12 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         }
     }
 
-    override suspend fun updateDateState(dateState: DateState) {
-        val selectedDateState =
-            dateStates.find { it.date == dateState.date && it.parentTodoId == dateState.parentTodoId }
-        val selectedIndex = dateStates.indexOf(selectedDateState)
+    override suspend fun updateDailyTodo(dailyTodo: DailyTodo) {
+        val selectedDailyTodo =
+            dailyTodos.find { it.date == dailyTodo.date && it.parentTodoId == dailyTodo.parentTodoId }
+        val selectedIndex = dailyTodos.indexOf(selectedDailyTodo)
 
-        dateStates[selectedIndex] = dateState
+        dailyTodos[selectedIndex] = dailyTodo
     }
 
     override suspend fun deleteTodo(todo: Todo) {

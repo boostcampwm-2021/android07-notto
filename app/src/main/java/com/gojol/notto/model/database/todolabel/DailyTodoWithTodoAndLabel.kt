@@ -2,11 +2,11 @@ package com.gojol.notto.model.database.todolabel
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.gojol.notto.model.database.todo.DateState
+import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
 
-data class DateStateWithTodoAndLabel(
-    @Embedded val dateState: DateState,
+data class DailyTodoWithTodoAndLabel(
+    @Embedded val dailyTodo: DailyTodo,
     @Relation(
         entity = Todo::class,
         parentColumn = "parent_todo_id",

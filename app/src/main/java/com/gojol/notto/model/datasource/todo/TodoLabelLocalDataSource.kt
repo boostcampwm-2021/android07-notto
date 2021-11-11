@@ -1,11 +1,11 @@
 package com.gojol.notto.model.datasource.todo
 
 import com.gojol.notto.common.TodoState
-import com.gojol.notto.model.data.TodoWithTodayDateState
+import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
-import com.gojol.notto.model.database.todo.DateState
+import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.database.todo.TodoWithDateState
+import com.gojol.notto.model.database.todo.TodoWithDailyTodo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoLabelCrossRef
 import com.gojol.notto.model.database.todolabel.TodoLabelDao
@@ -18,24 +18,24 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         return todoLabelDao.getTodosWithLabels()
     }
 
-    override suspend fun getTodosWithDateStates(): List<TodoWithDateState> {
-        return todoLabelDao.getTodosWithDateStates()
+    override suspend fun getTodosWithDailyTodos(): List<TodoWithDailyTodo> {
+        return todoLabelDao.getTodosWithDailyTodos()
     }
 
-    override suspend fun getTodosWithTodayDateState(selectedDate: String): List<TodoWithTodayDateState> {
-        return todoLabelDao.getTodosWithDateStates().map { todoWithDateState ->
-            val todo = todoWithDateState.todo
-            val dateStates = todoWithDateState.dateStates
+    override suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo> {
+        return todoLabelDao.getTodosWithDailyTodos().map { todoWithDailyTodo ->
+            val todo = todoWithDailyTodo.todo
+            val dailyTodos = todoWithDailyTodo.dailyTodos
 
-            var todayDateState =
-                dateStates.find { it.parentTodoId == todo.todoId && it.date == selectedDate }
+            var todayDailyTodo =
+                dailyTodos.find { it.parentTodoId == todo.todoId && it.date == selectedDate }
 
-            if (todayDateState == null) {
-                todayDateState = DateState(TodoState.NOTHING, todo.todoId, selectedDate)
-                todoLabelDao.insertDateState(todayDateState)
+            if (todayDailyTodo == null) {
+                todayDailyTodo = DailyTodo(TodoState.NOTHING, todo.todoId, selectedDate)
+                todoLabelDao.insertDailyTodo(todayDailyTodo)
             }
 
-            TodoWithTodayDateState(todo, todayDateState)
+            TodoWithTodayDailyTodo(todo, todayDailyTodo)
         }
     }
 
@@ -63,8 +63,8 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         todoLabelDao.insertLabel(label)
     }
 
-    override suspend fun insertDateState(dateState: DateState) {
-        todoLabelDao.insertDateState(dateState)
+    override suspend fun insertDailyTodo(dailyTodo: DailyTodo) {
+        todoLabelDao.insertDailyTodo(dailyTodo)
     }
 
     override suspend fun updateTodo(todo: Todo) {
@@ -81,8 +81,8 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         todoLabelDao.updateLabel(label)
     }
 
-    override suspend fun updateDateState(dateState: DateState) {
-        todoLabelDao.updateDateState(dateState)
+    override suspend fun updateDailyTodo(dailyTodo: DailyTodo) {
+        todoLabelDao.updateDailyTodo(dailyTodo)
     }
 
     override suspend fun deleteTodo(todo: Todo) {
