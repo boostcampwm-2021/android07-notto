@@ -25,4 +25,6 @@
     <dimen name="dialog_margin">20dp</dimen>
     <dimen name="dialog_deletion_description_margin_end">100dp</dimen>
     <dimen name="dialog_line_spacing">10sp</dimen>
+    <dimen name="todo_edit_btn_size">30dp</dimen>
+    <dimen name="todo_edit_btn_corner_radius">30dp</dimen>
 </resources>
