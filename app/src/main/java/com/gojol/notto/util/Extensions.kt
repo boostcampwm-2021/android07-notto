@@ -7,6 +7,10 @@ fun Calendar.toYearMonth(): String {
     return "${this.get(Calendar.YEAR)}년 ${this.get(Calendar.MONTH) + 1}월"
 }
 
+fun Calendar.toYearMonthDate(): String {
+    return "${this.get(Calendar.YEAR)}${this.get(Calendar.MONTH) + 1}${this.get(Calendar.DATE)}"
+}
+
 fun Calendar.getYear(): Int {
     return this.get(Calendar.YEAR)
 }
@@ -15,7 +19,11 @@ fun Calendar.getMonth(): Int {
     return this.get(Calendar.MONTH)
 }
 
-fun Calendar.getDayOfWeek(): Int{
+fun Calendar.getDate(): Int {
+    return this.get(Calendar.DATE)
+}
+
+fun Calendar.getDayOfWeek(): Int {
     return this.get(Calendar.DAY_OF_WEEK)
 }
 
@@ -38,7 +46,7 @@ fun Date.getTimeString(): String {
 }
 
 fun String.getDate(): Date? {
-    val simpleDateFormatDate = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA)
+    val simpleDateFormatDate = SimpleDateFormat("yyyyMMdd", Locale.KOREA)
     return simpleDateFormatDate.parse(this)
 }
 

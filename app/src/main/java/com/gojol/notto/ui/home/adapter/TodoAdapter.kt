@@ -1,6 +1,5 @@
 package com.gojol.notto.ui.home.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -9,18 +8,22 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.R
-import com.gojol.notto.common.TodoSuccessType
+import com.gojol.notto.common.TodoState
 import com.gojol.notto.databinding.ItemTodoBinding
+import com.gojol.notto.model.data.TodoWithTodayDailyTodo
+import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.ui.home.util.ItemTouchHelperListener
 
 class TodoAdapter(
-    private val swipeCallback: (Todo) -> (Unit)
-) : ListAdapter<Todo, TodoAdapter.TodoViewHolder>(TodoDiff()), ItemTouchHelperListener {
+    private val swipeCallback: (DailyTodo) -> (Unit),
+    private val editButtonCallback: (Todo) -> (Unit)
+) : ListAdapter<TodoWithTodayDailyTodo, TodoAdapter.TodoViewHolder>(TodoDiff()), ItemTouchHelperListener {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         return TodoViewHolder(
-            ItemTodoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemTodoBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            editButtonCallback
         )
     }
 
@@ -36,25 +39,34 @@ class TodoAdapter(
         return false
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onItemSwipe(position: Int, successType: TodoSuccessType) {
-        val todo = currentList[position].copy(isSuccess = successType)
-        swipeCallback(todo)
+    override fun onItemSwipe(position: Int, state: TodoState) {
+        val todoDailyTodo = currentList[position].todayDailyTodo.copy(todoState = state)
+        swipeCallback(todoDailyTodo)
+
         notifyItemRemoved(position)
         notifyItemInserted(position)
     }
 
-    class TodoViewHolder(private val binding: ItemTodoBinding) :
+    class TodoViewHolder(private val binding: ItemTodoBinding,
+                         private val editButtonCallback: (Todo) -> (Unit)) :
         RecyclerView.ViewHolder(binding.root) {
 
-        lateinit var successType: TodoSuccessType
+        lateinit var state: TodoState
 
-        fun bind(item: Todo) {
+        init {
+            binding.btnHomeTodoEdit.setOnClickListener {
+                binding.item?.let { todoWithTodayDailyTodo ->
+                    editButtonCallback(todoWithTodayDailyTodo.todo)
+                }
+            }
+        }
+
+        fun bind(item: TodoWithTodayDailyTodo) {
             binding.item = item
-            successType = item.isSuccess
+            state = item.todayDailyTodo.todoState
 
-            val color = when (successType) {
-                TodoSuccessType.NOTHING -> R.color.black
+            val color = when (state) {
+                TodoState.NOTHING -> R.color.black
                 else -> R.color.white
             }
 
@@ -63,12 +75,12 @@ class TodoAdapter(
         }
     }
 
-    class TodoDiff : DiffUtil.ItemCallback<Todo>() {
-        override fun areItemsTheSame(oldItem: Todo, newItem: Todo): Boolean {
-            return oldItem.todoId == newItem.todoId
+    class TodoDiff : DiffUtil.ItemCallback<TodoWithTodayDailyTodo>() {
+        override fun areItemsTheSame(oldItem: TodoWithTodayDailyTodo, newItem: TodoWithTodayDailyTodo): Boolean {
+            return oldItem.todo.todoId == newItem.todo.todoId
         }
 
-        override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {
+        override fun areContentsTheSame(oldItem: TodoWithTodayDailyTodo, newItem: TodoWithTodayDailyTodo): Boolean {
             return oldItem == newItem
         }
     }

@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +8,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -16,12 +16,14 @@ import com.gojol.notto.R
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.model.data.LabelWithCheck
+import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.ui.home.adapter.CalendarAdapter
 import com.gojol.notto.ui.home.adapter.LabelAdapter
 import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
 import com.gojol.notto.ui.home.adapter.TodoAdapter
 import com.gojol.notto.ui.home.util.TodoItemTouchCallback
+import com.gojol.notto.ui.todo.TodoEditActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,16 +55,20 @@ class HomeFragment : Fragment() {
 
         initRecyclerView()
         initObserver()
-        initData()
         initTodoListItemTouchListener()
-        initClickListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        initData()
     }
 
     private fun initRecyclerView() {
         calendarAdapter = CalendarAdapter(requireActivity())
         labelAdapter = LabelAdapter(::labelTouchCallback)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
-        todoAdapter = TodoAdapter(::todoTouchCallback)
+        todoAdapter = TodoAdapter(::todoTouchCallback, ::todoEditButtonCallback)
 
         val concatAdapter: ConcatAdapter by lazy {
             val config = ConcatAdapter.Config.Builder().apply {
@@ -93,6 +99,18 @@ class HomeFragment : Fragment() {
         homeViewModel.date.observe(viewLifecycleOwner, {
             calendarAdapter.setDate(it)
         })
+
+        homeViewModel.isTodoCreateButtonClicked.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let {
+                startTodoEditActivity()
+            }
+        })
+
+        homeViewModel.todoEditButtonClicked.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let { todo ->
+                startTodoCreateActivity(todo)
+            }
+        })
     }
 
     private fun initData() {
@@ -120,17 +138,26 @@ class HomeFragment : Fragment() {
         return layoutManager
     }
 
-    private fun todoTouchCallback(todo: Todo) {
-        homeViewModel.fetchTodoSuccessState(todo)
+    private fun todoTouchCallback(dailyTodo: DailyTodo) {
+        homeViewModel.updateDailyTodo(dailyTodo)
+    }
+
+    private fun todoEditButtonCallback(todo: Todo) {
+        homeViewModel.updateIsTodoEditButtonClicked(todo)
     }
 
     private fun labelTouchCallback(labelWithCheck: LabelWithCheck) {
         homeViewModel.setLabelClickListener(labelWithCheck)
     }
 
-    private fun initClickListener() {
-        binding.fabHome.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_home_to_todoEditActivity)
-        }
+    private fun startTodoEditActivity() {
+        val intent = Intent(activity, TodoEditActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun startTodoCreateActivity(todo: Todo) {
+        val intent = Intent(activity, TodoEditActivity::class.java)
+        intent.putExtra("todo", todo)
+        startActivity(intent)
     }
 }

@@ -1,29 +1,48 @@
 package com.gojol.notto.model.datasource.todo
 
-import com.gojol.notto.common.TodoSuccessType
+import com.gojol.notto.common.TimeRepeatType
+import java.util.Calendar
+import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.RepeatType
+import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
+import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.database.todo.TodoWithDailyTodo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
+import com.gojol.notto.util.getDate
+import com.gojol.notto.util.getMonth
+import com.gojol.notto.util.getYear
 
 class FakeTodoLabelRepository : TodoLabelDataSource {
 
+    var todoId = 10
+
+    private val today = Calendar.getInstance()
+
+    private var selectedDate =
+        today.getYear().toString() + today.getMonth().toString() + today.getDate().toString()
+
     private var todos = mutableListOf(
-        Todo(TodoSuccessType.NOTHING, "밥 굶지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 0),
-        Todo(TodoSuccessType.NOTHING, "과제 미루지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 1),
-        Todo(TodoSuccessType.NOTHING, "지각하지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 2),
-        Todo(TodoSuccessType.NOTHING, "밥 먹을 때 물 먹지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 3),
-        Todo(TodoSuccessType.NOTHING, "회의 지각 안하기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 4),
-        Todo(TodoSuccessType.NOTHING, "핸드폰 보지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 5),
-        Todo(TodoSuccessType.NOTHING, "누워있지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false, 6),
+        Todo("밥 굶지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 1),
+        Todo("과제 미루지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 2),
+        Todo("지각하지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 3),
+        Todo("밥 먹을 때 물 먹지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 4),
+        Todo("회의 지각 안하기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 5),
+        Todo("핸드폰 보지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 6),
+        Todo("누워있지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 7),
     )
+
     private var labels = mutableListOf(
-        Label(1, "학교", 1),
-        Label(2, "건강", 2),
-        Label(3, "집", 3),
-        Label(4, "과제", 4)
+        Label(1, "학교", 2),
+        Label(2, "건강", 3),
+        Label(3, "집", 4),
+        Label(4, "과제", 5)
     )
+
+    private var dailyTodos = mutableListOf<DailyTodo>()
+
     private var todosWithLabels = mutableListOf(
         TodoWithLabel(todos[0], listOf(labels[1])),
         TodoWithLabel(todos[1], listOf(labels[1], labels[3])),
@@ -32,6 +51,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         TodoWithLabel(todos[4], listOf(labels[0], labels[2])),
         TodoWithLabel(todos[5], listOf(labels[2]))
     )
+
     private var labelsWithTodos = mutableListOf(
         LabelWithTodo(labels[0], listOf(todos[2], todos[3], todos[4])),
         LabelWithTodo(labels[1], listOf(todos[0], todos[1], todos[2])),
@@ -41,6 +61,27 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
 
     override suspend fun getTodosWithLabels(): List<TodoWithLabel> {
         return todosWithLabels
+    }
+
+    override suspend fun getTodosWithDailyTodos(): List<TodoWithDailyTodo> {
+        return todos.map { todo ->
+            TodoWithDailyTodo(todo, dailyTodos.filter { it.parentTodoId == todo.todoId })
+        }
+    }
+
+    override suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo> {
+        return todos.map { todo ->
+            var todayDailyTodo =
+                dailyTodos.find { it.parentTodoId == todo.todoId && it.date == this.selectedDate }
+
+            if (todayDailyTodo == null) {
+                todayDailyTodo = DailyTodo(TodoState.NOTHING, todo.todoId, this.selectedDate)
+                dailyTodos.add(todayDailyTodo)
+            }
+
+            TodoWithTodayDailyTodo(todo, todayDailyTodo)
+
+        }
     }
 
     override suspend fun getLabelsWithTodos(): List<LabelWithTodo> {
@@ -60,27 +101,33 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     }
 
     override suspend fun insertTodo(todo: Todo, label: Label) {
-        labelsWithTodos.forEach {
-            if (it.label == label && it.todo.contains(todo).not()) {
-                labelsWithTodos.add(it.copy(todo = it.todo + todo))
-                labelsWithTodos.remove(it)
-
-                return@forEach
+        val labelsWithTodosIterator = labelsWithTodos.iterator()
+        while (labelsWithTodosIterator.hasNext()) {
+            val labelWithTodo = labelsWithTodosIterator.next()
+            if (labelWithTodo.label == label && labelWithTodo.todo.contains(todo).not()) {
+                labelsWithTodos.add(labelWithTodo.copy(todo = labelWithTodo.todo + todo))
+                labelsWithTodos.remove(labelWithTodo)
+                break
             }
         }
 
-        todosWithLabels.forEach {
-            if (it.todo == todo && it.labels.contains(label).not()) {
-                todosWithLabels.add(it.copy(labels = it.labels + label))
-                todosWithLabels.remove(it)
-
-                return@forEach
+        val todosWithLabelsIterator = todosWithLabels.iterator()
+        while (todosWithLabelsIterator.hasNext()) {
+            val todoWithLabel = todosWithLabelsIterator.next()
+            if (todoWithLabel.todo == todo && todoWithLabel.labels.contains(label).not()) {
+                todosWithLabels.add(todoWithLabel.copy(labels = todoWithLabel.labels + label))
+                todosWithLabels.remove(todoWithLabel)
+                break
             }
         }
     }
 
     override suspend fun insertLabel(label: Label) {
         labels.add(label)
+    }
+
+    override suspend fun insertDailyTodo(dailyTodo: DailyTodo) {
+        dailyTodos.add(dailyTodo)
     }
 
     override suspend fun updateTodo(todo: Todo) {
@@ -151,6 +198,14 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         }
     }
 
+    override suspend fun updateDailyTodo(dailyTodo: DailyTodo) {
+        val selectedDailyTodo =
+            dailyTodos.find { it.date == dailyTodo.date && it.parentTodoId == dailyTodo.parentTodoId }
+        val selectedIndex = dailyTodos.indexOf(selectedDailyTodo)
+
+        dailyTodos[selectedIndex] = dailyTodo
+    }
+
     override suspend fun deleteTodo(todo: Todo) {
         todos.remove(todo)
 
@@ -179,5 +234,14 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
                     TodoWithLabel(todosWithLabels[i].todo, todosWithLabels[i].labels - label)
             }
         }
+    }
+
+    companion object {
+        private var INSTANCE: FakeTodoLabelRepository? = null
+
+        fun getInstance(): FakeTodoLabelRepository =
+            INSTANCE ?: FakeTodoLabelRepository().apply {
+                INSTANCE = this
+            }
     }
 }
