@@ -10,19 +10,15 @@ import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.database.todolabel.LabelWithTodo
-import com.gojol.notto.model.datasource.todo.FakeTodoLabelRepository
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.util.toYearMonthDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.Calendar
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val repository: TodoLabelRepository) : ViewModel() {
-
-    private val fakeRepository = FakeTodoLabelRepository.getInstance()
 
     private val _isTodoCreateButtonClicked = MutableLiveData<Event<Boolean>>()
     val isTodoCreateButtonClicked: LiveData<Event<Boolean>> = _isTodoCreateButtonClicked
@@ -41,29 +37,18 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
     fun setDummyData() {
         viewModelScope.launch {
-            insertDummyTodoAndLabel()
+            initLabelAndTodo()
         }
     }
 
-    private suspend fun insertDummyTodoAndLabel() {
+    private suspend fun initLabelAndTodo() {
         viewModelScope.launch {
-            val totalLabel = LabelWithTodo(Label(0, LABEL_NAME_ALL, 1), repository.getAllTodo())
-            val fakeList = fakeRepository.getAllLabel()
+            launch { repository.insertLabel(totalLabel) }.join()
+            _labelList.value = repository.getLabelsWithTodos()
                 .asSequence()
-                .map { label -> LabelWithCheck(LabelWithTodo(label, emptyList()), false) }
-                .toMutableList()
-                .apply { add(0, LabelWithCheck(totalLabel, true)) }
-
-
-            // dummy data insert to db
-            val job = launch {
-                fakeList.forEach {
-                    repository.insertLabel(it.labelWithTodo.label)
-                }
-            }.join()
-
-            _labelList.value =
-                repository.getLabelsWithTodos().map { LabelWithCheck(it, it.label.order == 0) }
+                .map { LabelWithCheck(it, it.label.order == 0) }
+                .sortedBy { it.labelWithTodo.label.order }
+                .toList()
             _todoList.value =
                 _date.value?.let { repository.getTodosWithTodayDailyTodos(it.toYearMonthDate()) }
             _date.value = Calendar.getInstance()
@@ -185,7 +170,6 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     }
 
     companion object {
-        const val LABEL_NAME_ALL = "전체"
+        val totalLabel = Label(0, "전체", 1)
     }
 }
-
