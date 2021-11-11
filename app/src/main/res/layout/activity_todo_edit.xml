@@ -138,6 +138,7 @@
                     android:layout_height="wrap_content"
                     android:text="@{viewmodel.repeatType.text}"
                     android:textColor="@{viewmodel.isRepeatChecked ? @color/black : @color/gray_normal}"
+                    android:enabled="@{viewmodel.isRepeatChecked ? true : false}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_type"
                     app:layout_constraintEnd_toEndOf="@id/switch_todo_edit_repeat"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_type" />
@@ -157,6 +158,7 @@
                     android:layout_height="wrap_content"
                     android:text="@{viewmodel.repeatStart}"
                     android:textColor="@{viewmodel.isRepeatChecked ? @color/black : @color/gray_normal}"
+                    android:enabled="@{viewmodel.isRepeatChecked ? true : false}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_start"
                     app:layout_constraintEnd_toEndOf="@id/switch_todo_edit_repeat"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_start" />
@@ -222,6 +224,7 @@
                     android:layout_height="wrap_content"
                     android:text="@{viewmodel.timeStart}"
                     android:textColor="@{viewmodel.isTimeChecked ? @color/black : @color/gray_normal}"
+                    android:enabled="@{viewmodel.isTimeChecked ? true : false}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_start"
                     app:layout_constraintEnd_toEndOf="@id/switch_todo_edit_time"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_start" />
@@ -241,6 +244,7 @@
                     android:layout_height="wrap_content"
                     android:text="@{viewmodel.timeFinish}"
                     android:textColor="@{viewmodel.isTimeChecked ? @color/black : @color/gray_normal}"
+                    android:enabled="@{viewmodel.isTimeChecked ? true : false}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_finish"
                     app:layout_constraintEnd_toEndOf="@id/switch_todo_edit_time"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_finish" />
@@ -260,6 +264,7 @@
                     android:layout_height="wrap_content"
                     android:text="@{viewmodel.timeRepeat}"
                     android:textColor="@{viewmodel.isTimeChecked ? @color/black : @color/gray_normal}"
+                    android:enabled="@{viewmodel.isTimeChecked ? true : false}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_repeat"
                     app:layout_constraintEnd_toEndOf="@id/switch_todo_edit_time"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_repeat" />
