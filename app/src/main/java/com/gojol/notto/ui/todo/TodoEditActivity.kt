@@ -14,6 +14,11 @@ import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
+import com.gojol.notto.ui.todo.dialog.TodoAlarmPeriodDialog
+import com.gojol.notto.ui.todo.dialog.TodoDeletionDialog
+import com.gojol.notto.ui.todo.dialog.TodoRepeatTimeDialog
+import com.gojol.notto.ui.todo.dialog.TodoRepeatTypeDialog
+import com.gojol.notto.ui.todo.dialog.TodoSetTimeDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,7 +27,13 @@ class TodoEditActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTodoEditBinding
     private val todoEditViewModel: TodoEditViewModel by viewModels()
     private lateinit var selectedLabelAdapter: SelectedLabelAdapter
+
     private lateinit var labelAddDialog: AlertDialog.Builder
+    private lateinit var todoDeletionDialog: TodoDeletionDialog
+    private lateinit var todoRepeatTypeDialog: TodoRepeatTypeDialog
+    private lateinit var todoRepeatTimeDialog: TodoRepeatTimeDialog
+    private lateinit var todoSetTimeDialog: TodoSetTimeDialog
+    private lateinit var todoAlarmPeriodDialog: TodoAlarmPeriodDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +95,7 @@ class TodoEditActivity : AppCompatActivity() {
     private fun initObserver() {
         todoEditViewModel.labelList.observe(this) {
             val newList = it.map { label -> label.name }.toTypedArray()
-            initLabelAddDialog(newList)
+            initDialog(newList)
         }
         todoEditViewModel.selectedLabelList.observe(this) {
             selectedLabelAdapter.submitList(it)
@@ -116,12 +127,17 @@ class TodoEditActivity : AppCompatActivity() {
         }
     }
 
-    private fun initLabelAddDialog(items: Array<String>) {
+    private fun initDialog(items: Array<String>) {
         labelAddDialog =
             AlertDialog.Builder(this).setTitle(getString(R.string.todo_edit_label_select_sentence))
                 .setItems(items) { _, which ->
                     todoEditViewModel.addLabelToSelectedLabelList(items[which])
                 }
+        todoDeletionDialog = TodoDeletionDialog(this)
+        todoRepeatTypeDialog = TodoRepeatTypeDialog(this)
+        todoRepeatTimeDialog = TodoRepeatTimeDialog(this)
+        todoAlarmPeriodDialog = TodoAlarmPeriodDialog(this)
+        todoSetTimeDialog = TodoSetTimeDialog(this)
     }
 
     private fun initEditTextListener() {
