@@ -4,6 +4,21 @@
     <string name="bottom_popular">인기</string>
     <string name="bottom_option">옵션</string>
     <string name="home_label_all">전체</string>
+    <string name="all_delete">삭제</string>
+    <string name="all_save">저장</string>
+    <string name="todo_edit_repeat_setting">반복 설정</string>
+    <string name="todo_edit_repeat_type">반복 유형</string>
+    <string name="todo_edit_repeat_start">반복 시작</string>
+    <string name="todo_edit_time_setting">시간 설정</string>
+    <string name="todo_edit_time_start">시작 시간</string>
+    <string name="todo_edit_time_finish">종료 시간</string>
+    <string name="todo_edit_time_repeat">알림 주기</string>
+    <string name="todo_edit_keyword_setting">키워드 공개 여부 설정</string>
+    <string name="todo_edit_title">Not Todo 편집</string>
+    <string name="todo_edit_edit_text_hint">Not Todo를 입력하세요</string>
+    <string name="todo_edit_label_select">라벨 선택</string>
+    <string name="todo_edit_label_select_sentence">라벨을 선택하세요</string>
+    <string name="todo_edit_button_disabled_message">부족한 항목을 채워주세요!</string>
 
     <string name="dialog_deletion_title">Not Todo 삭제하기</string>
     <string name="dialog_deletion_description">삭제하면 다시 복구할 수 없습니다. \n정말 삭제하시겠습니까?</string>
