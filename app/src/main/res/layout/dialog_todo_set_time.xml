@@ -3,19 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
-            name="dialog"
-            type="com.gojol.notto.ui.todo.dialog.TodoSetTimeDialog" />
+            name="viewmodel"
+            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
     </data>
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <TimePicker
                 android:id="@+id/tp_set_time"
@@ -27,15 +26,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <include
-                android:id="@+id/bv_dialog_deletion"
-                layout="@layout/item_dialog_bottom_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:bottom="@{1}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tp_set_time" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
