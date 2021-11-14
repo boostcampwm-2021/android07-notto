@@ -47,6 +47,11 @@ fun Date.getTimeString(): String {
     return simpleDateFormatTime.format(this)
 }
 
+fun Long.getTimeString(): String {
+    val simpleDateFormatTime = SimpleDateFormat("hh:mm", Locale.KOREA)
+    return simpleDateFormatTime.format(this)
+}
+
 fun String.getDate(): Date? {
     val simpleDateFormatDate = SimpleDateFormat("yyyyMMdd", Locale.KOREA)
     return simpleDateFormatDate.parse(this)
