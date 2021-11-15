@@ -64,6 +64,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/space_median"
+                    android:checked="@{viewmodel.isPushChecked}"
+                    android:onCheckedChanged="@{(view, isChecked) -> viewmodel.updateIsPushChecked(isChecked)}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_option_push_day"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_option_push_day"

@@ -8,4 +8,11 @@ class OptionRepository @Inject constructor(
     private val optionLocalDataSource: OptionDataSource
 ) : OptionDataSource {
 
+    override fun loadIsPushNotificationChecked(key: String): Boolean {
+        return optionLocalDataSource.loadIsPushNotificationChecked(key)
+    }
+
+    override fun saveIsPushNotificationChecked(key: String, isPushChecked: Boolean) {
+        optionLocalDataSource.saveIsPushNotificationChecked(key, isPushChecked)
+    }
 }

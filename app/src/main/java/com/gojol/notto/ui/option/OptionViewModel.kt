@@ -13,6 +13,9 @@ class OptionViewModel @Inject constructor(
     private val optionRepository: OptionRepository
 ) : ViewModel() {
 
+    private val _isPushChecked = MutableLiveData<Boolean>()
+    val isPushChecked: LiveData<Boolean> = _isPushChecked
+
     private val _licenseList = MutableLiveData<List<License>>()
     val licenseList: LiveData<List<License>> = _licenseList
 
@@ -44,5 +47,20 @@ class OptionViewModel @Inject constructor(
                 "Copyright 2000-2020 JetBrains s.r.o. and Kotlin Programming Language contributors."
             )
         )
+
+        loadIsPushChecked()
+    }
+
+    private fun loadIsPushChecked() {
+        _isPushChecked.value = optionRepository.loadIsPushNotificationChecked(pushNotificationKey)
+    }
+
+    fun updateIsPushChecked(isPushChecked: Boolean) {
+        _isPushChecked.value = isPushChecked
+        optionRepository.saveIsPushNotificationChecked(pushNotificationKey, isPushChecked)
+    }
+
+    companion object {
+        const val pushNotificationKey = "pushDay"
     }
 }
