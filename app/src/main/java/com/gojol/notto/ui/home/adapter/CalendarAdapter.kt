@@ -1,5 +1,7 @@
 package com.gojol.notto.ui.home.adapter
 
+import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
@@ -34,6 +36,14 @@ class CalendarAdapter(private val requireActivity: FragmentActivity) :
 
     fun setDate(newDate: Calendar) {
         date = newDate
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun refreshAdapter() {
+//        TODO 애니메이션 문제 해결 필요
+//        notifyItemRemoved(0)
+//        notifyItemInserted(0)
+        notifyDataSetChanged()
     }
 
     class CustomCalendarViewHolder(private val binding: ItemCalendarBinding) :

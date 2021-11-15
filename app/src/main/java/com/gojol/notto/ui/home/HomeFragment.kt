@@ -140,6 +140,7 @@ class HomeFragment : Fragment() {
 
     private fun todoTouchCallback(dailyTodo: DailyTodo) {
         homeViewModel.updateDailyTodo(dailyTodo)
+        calendarAdapter.refreshAdapter()
     }
 
     private fun todoEditButtonCallback(todo: Todo) {

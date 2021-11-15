@@ -1,9 +1,11 @@
 package com.gojol.notto.ui.home.adapter
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.adapter.FragmentViewHolder
 import com.gojol.notto.ui.home.CalendarFragment
 import com.gojol.notto.ui.home.TIME
 import java.util.Calendar
