@@ -91,6 +91,5 @@ class CalendarViewModel @Inject constructor(
                 select
             )
         }
-        Log.i("daily", _monthlyAchievement.value.toString())
     }
 }
