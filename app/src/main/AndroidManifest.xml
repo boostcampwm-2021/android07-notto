@@ -10,6 +10,11 @@
         android:roundIcon="@mipmap/ic_notto_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Notto">
+        <receiver
+            android:name=".util.TodoPushBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
