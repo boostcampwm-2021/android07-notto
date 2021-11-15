@@ -16,6 +16,7 @@ class OptionFragment : Fragment() {
 
     private lateinit var binding: FragmentOptionBinding
     private val optionViewModel: OptionViewModel by viewModels()
+    private lateinit var licenseAdapter: LicenseAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,5 +33,32 @@ class OptionFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = optionViewModel
+
+        initRecyclerView()
+        initObserver()
+        initListener()
+    }
+
+    private fun initRecyclerView() {
+        licenseAdapter = LicenseAdapter()
+        binding.rvOptionOpenSourceLicense.adapter = licenseAdapter
+    }
+
+    private fun initObserver() {
+        optionViewModel.licenseList.observe(viewLifecycleOwner) {
+            licenseAdapter.setLicenseList(it)
+        }
+    }
+
+    private fun initListener() {
+        binding.btnOptionExpand.setOnClickListener {
+            if (binding.rvOptionOpenSourceLicense.visibility == View.VISIBLE) {
+                binding.rvOptionOpenSourceLicense.visibility = View.GONE
+                it.animate().setDuration(200).rotation(0f)
+            } else {
+                binding.rvOptionOpenSourceLicense.visibility = View.VISIBLE
+                it.animate().setDuration(200).rotation(180f)
+            }
+        }
     }
 }
