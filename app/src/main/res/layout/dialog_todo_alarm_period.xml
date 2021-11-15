@@ -7,8 +7,8 @@
         <import type="com.gojol.notto.common.TimeRepeatType"/>
 
         <variable
-            name="dialog"
-            type="com.gojol.notto.ui.todo.dialog.TodoAlarmPeriodDialog" />
+            name="viewmodel"
+            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,8 +38,9 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:checked="true"
-                    android:tag="@{TimeRepeatType.MINUTE_5}"
+                    android:onClick="@{()->viewmodel.setTimeRepeat(TimeRepeatType.MINUTE_5)}"
+                    android:checked="@{viewmodel.timeRepeat.text.equals(@string/dialog_alarm_period_5)}"
+                    android:tag="@{@string/dialog_alarm_period_5}"
                     android:text="@string/dialog_alarm_period_5"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -52,7 +53,9 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@{TimeRepeatType.MINUTE_10}"
+                    android:onClick="@{()->viewmodel.setTimeRepeat(TimeRepeatType.MINUTE_10)}"
+                    android:checked="@{viewmodel.timeRepeat.text.equals(@string/dialog_alarm_period_10)}"
+                    android:tag="@{@string/dialog_alarm_period_10}"
                     android:text="@string/dialog_alarm_period_10"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -65,7 +68,9 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@{TimeRepeatType.MINUTE_15}"
+                    android:onClick="@{()->viewmodel.setTimeRepeat(TimeRepeatType.MINUTE_15)}"
+                    android:checked="@{viewmodel.timeRepeat.text.equals(@string/dialog_alarm_period_15)}"
+                    android:tag="@{@string/dialog_alarm_period_15}"
                     android:text="@string/dialog_alarm_period_15"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -78,7 +83,9 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@{TimeRepeatType.MINUTE_30}"
+                    android:onClick="@{()->viewmodel.setTimeRepeat(TimeRepeatType.MINUTE_30)}"
+                    android:checked="@{viewmodel.timeRepeat.text.equals(@string/dialog_alarm_period_30)}"
+                    android:tag="@{@string/dialog_alarm_period_30}"
                     android:text="@string/dialog_alarm_period_30"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -91,7 +98,9 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@{TimeRepeatType.MINUTE_60}"
+                    android:onClick="@{()->viewmodel.setTimeRepeat(TimeRepeatType.MINUTE_60)}"
+                    android:checked="@{viewmodel.timeRepeat.text.equals(@string/dialog_alarm_period_60)}"
+                    android:tag="@{@string/dialog_alarm_period_60}"
                     android:text="@string/dialog_alarm_period_60"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -104,24 +113,15 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@{TimeRepeatType.MINUTE_1440}"
+                    android:onClick="@{()->viewmodel.setTimeRepeat(TimeRepeatType.MINUTE_1440)}"
+                    android:checked="@{viewmodel.timeRepeat.text.equals(@string/dialog_alarm_period_1440)}"
+                    android:tag="@{@string/dialog_alarm_period_1440}"
                     android:text="@string/dialog_alarm_period_1440"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
             </RadioGroup>
         </androidx.core.widget.NestedScrollView>
-
-        <include
-            android:id="@+id/bv_dialog_deletion"
-            layout="@layout/item_dialog_bottom_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:bottom="@{1}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

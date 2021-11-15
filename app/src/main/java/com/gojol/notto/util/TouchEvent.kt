@@ -2,7 +2,7 @@ package com.gojol.notto.util
 
 import androidx.lifecycle.Observer
 
-open class Event<out T>(private val content: T) {
+open class TouchEvent<out T>(private val content: T) {
     @Suppress("MemberVisibilityCanBePrivate")
     var hasBeenHandled = false
         private set
@@ -17,9 +17,9 @@ open class Event<out T>(private val content: T) {
     }
 }
 
-class EventObserver<T>(private val onEventUnhandledContent: (T) -> Unit) : Observer<Event<T>> {
-    override fun onChanged(event: Event<T>?) {
-        event?.getContentIfNotHandled()?.let {
+class EventObserver<T>(private val onEventUnhandledContent: (T) -> Unit) : Observer<TouchEvent<T>> {
+    override fun onChanged(touchEvent: TouchEvent<T>?) {
+        touchEvent?.getContentIfNotHandled()?.let {
             onEventUnhandledContent(it)
         }
     }

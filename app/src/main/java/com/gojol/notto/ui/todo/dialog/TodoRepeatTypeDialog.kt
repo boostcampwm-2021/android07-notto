@@ -1,51 +1,54 @@
 package com.gojol.notto.ui.todo.dialog
 
-import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.DialogTodoRepeatTypeBinding
 import com.gojol.notto.model.data.RepeatType
+import dagger.hilt.android.AndroidEntryPoint
 
+const val REPEAT_TYPE_DATA = "repeatTypeValue"
+const val REPEAT_TYPE = "repeatType"
 
-class TodoRepeatTypeDialog(context: Context) : TodoBaseDialogImpl(context) {
-    private val binding: DialogTodoRepeatTypeBinding =
-        DataBindingUtil.inflate(
-            LayoutInflater.from(context), R.layout.dialog_todo_repeat_type,
-            null,
-            false
-        )
-    var data: RepeatType? = null
-        get() = binding
-            .rgRepeatType
-            .findViewById<RadioButton>(binding.rgRepeatType.checkedRadioButtonId)
-            .tag as RepeatType?
-        set(value) {
-            binding.rgRepeatType.children.forEach {
-                if (it.tag == value) {
-                    (it as RadioButton).isChecked = true
-                }
-            }
-            field = value
-        }
-    var callback: ((RepeatType) -> Unit?)? = null
+@AndroidEntryPoint
+class TodoRepeatTypeDialog : TodoBaseDialogImpl() {
+    private lateinit var contentBinding: DialogTodoRepeatTypeBinding
 
-
-    init {
-        setBinding(binding)
-        setDialog()
-        initClickListener()
+    companion object {
+        var callback: ((RepeatType) -> Unit?)? = null
     }
 
-    private fun initClickListener() {
-        binding.bvDialogDeletion.btnDialogBaseConfirm.setOnClickListener {
-            callback?.let { data?.let { d -> it(d) } }
-            confirm()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        contentBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_todo_repeat_type, container, false)
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        contentBinding.lifecycleOwner = viewLifecycleOwner
+        contentBinding.viewmodel = viewModel
+        initRepeatType()
+        binding.clDialogContent.addView(contentBinding.root)
+    }
+
+    private fun initRepeatType() {
+        arguments?.let { arg ->
+            arg.getSerializable(REPEAT_TYPE_DATA)?.let {
+                viewModel.setRepeatType(it as RepeatType)
+                arg.remove(REPEAT_TYPE_DATA)
+            }
         }
-        binding.bvDialogDeletion.btnDialogBaseReject.setOnClickListener {
-            dismiss()
+    }
+
+    override fun confirmClick() {
+        super.confirmClick()
+        callback?.let {
+            viewModel.repeatType.value?.let(it)
         }
     }
 }
