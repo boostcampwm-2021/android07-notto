@@ -20,7 +20,7 @@ class CalendarFragment : Fragment() {
 
     private lateinit var binding: FragmentCalendarBinding
     private val calendarViewModel: CalendarViewModel by viewModels()
-    private val calendarDayAdapter = CalendarDayAdapter()
+    private val calendarDayAdapter = CalendarDayAdapter(::dayClickCallback)
     private var time: Long? = null
 
     override fun onCreateView(
@@ -73,5 +73,9 @@ class CalendarFragment : Fragment() {
                 addItemDecoration(GridSpacingDecoration(it, 7))
             }
         }
+    }
+
+    private fun dayClickCallback(date: Int){
+        calendarViewModel.setMonthlyAchievement(date)
     }
 }
