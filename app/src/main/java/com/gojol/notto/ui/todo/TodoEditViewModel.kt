@@ -242,7 +242,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         )
 
         viewModelScope.launch {
-            launch { repository.insertTodo(newTodo) }.join()
+            launch {
+                repository.insertTodo(newTodo)
+                repository.addAlarm(repository.getAllTodo().last())
+            }.join()
 
             val saveTodo = withContext(Dispatchers.Default) {
                 repository.getTodosWithLabels().find { it.labels.isEmpty() }?.todo
@@ -284,6 +287,8 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
         viewModelScope.launch {
             repository.updateTodo(newTodo)
+            repository.addAlarm(repository.getAllTodo().last())
+
             selectedLabelList.value?.let { list ->
                 val newList = list.filterNot { it.order == 0 }
                 repository.updateTodo(newTodo, newList)
