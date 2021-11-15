@@ -48,10 +48,6 @@ class OptionViewModel @Inject constructor(
             )
         )
 
-        loadIsPushChecked()
-    }
-
-    private fun loadIsPushChecked() {
         _isPushChecked.value = optionRepository.loadIsPushNotificationChecked(pushNotificationKey)
     }
 

@@ -26,6 +26,8 @@
         <activity
             android:name=".ui.todo.TodoEditActivity"
             android:exported="true" />
+        <receiver android:name=".ui.option.DayNotificationReceiver"
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.option
 
+import android.app.AlarmManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ class OptionFragment : Fragment() {
     private lateinit var binding: FragmentOptionBinding
     private val optionViewModel: OptionViewModel by viewModels()
     private lateinit var licenseAdapter: LicenseAdapter
+    private lateinit var alarmManager: AlarmManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +49,10 @@ class OptionFragment : Fragment() {
     private fun initObserver() {
         optionViewModel.licenseList.observe(viewLifecycleOwner) {
             licenseAdapter.setLicenseList(it)
+        }
+        optionViewModel.isPushChecked.observe(viewLifecycleOwner) {
+            if (it) DayNotificationManager.setAlarm(requireContext())
+            else DayNotificationManager.cancelAlarm(requireContext())
         }
     }
 
