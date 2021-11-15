@@ -64,11 +64,11 @@ fun String.getTime(): Date? {
 
 fun String.get12Hour(): String {
     val simpleDateFormatTime = SimpleDateFormat("kk:mm", Locale.KOREA)
-     simpleDateFormatTime.parse(this)?.let {
+    simpleDateFormatTime.parse(this)?.let {
         return SimpleDateFormat("a hh:mm", Locale.KOREA).format(it)
     } ?: run {
         return SimpleDateFormat("a hh:mm", Locale.KOREA).format(System.currentTimeMillis())
-     }
+    }
 }
 
 fun String.get24Hour(): String {
@@ -78,4 +78,8 @@ fun String.get24Hour(): String {
     } ?: run {
         return SimpleDateFormat("kk:mm", Locale.KOREA).format(System.currentTimeMillis())
     }
+}
+
+fun String.timeSplitFormatter(): List<String> {
+    return this.split(":")
 }

@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.DialogTodoSetTimeBinding
 import com.gojol.notto.util.get24Hour
+import com.gojol.notto.util.timeSplitFormatter
 import dagger.hilt.android.AndroidEntryPoint
 
 const val TIME_START = "timeStart"
@@ -57,17 +58,13 @@ class TodoSetTimeDialog : TodoBaseDialogImpl() {
         super.initObserver()
         viewModel.timeStart.observe(this) {
             if (currentState == TIME_START) {
-                viewModel.timeStartFormatter()?.let { list ->
-                    setTime(list)
-                }
+                setTime(it.timeSplitFormatter())
             }
         }
 
         viewModel.timeFinish.observe(this) {
             if (currentState == TIME_FINISH) {
-                viewModel.timeFinishFormatter()?.let { list ->
-                    setTime(list)
-                }
+                setTime(it.timeSplitFormatter())
             }
         }
     }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.DialogTodoRepeatTimeBinding
+import com.gojol.notto.util.getDateString
 import dagger.hilt.android.AndroidEntryPoint
 
 const val REPEAT_TIME_DATA = "repeatTimeData"
@@ -52,14 +53,16 @@ class TodoRepeatTimeDialog : TodoBaseDialogImpl() {
     override fun initObserver() {
         super.initObserver()
         viewModel.repeatTime.observe(this) {
-            contentBinding.cvRepeatTime.setSelectedDate(viewModel.repeatTimeFormatter())
+            contentBinding.cvRepeatTime.setSelectedDate(it)
         }
     }
 
     override fun confirmClick() {
         super.confirmClick()
         callback?.let {
-            viewModel.repeatTime.value?.let(it)
+            viewModel.repeatTime.value?.let { date ->
+                it(date.getDateString())
+            }
         }
     }
 }

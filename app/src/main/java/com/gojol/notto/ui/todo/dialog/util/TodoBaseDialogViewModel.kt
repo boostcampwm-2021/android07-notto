@@ -7,7 +7,6 @@ import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.util.TouchEvent
 import com.gojol.notto.util.getDate
-import com.gojol.notto.util.getDateString
 import java.util.*
 
 class TodoBaseDialogViewModel : ViewModel() {
@@ -21,8 +20,8 @@ class TodoBaseDialogViewModel : ViewModel() {
     private val _repeatType = MutableLiveData<RepeatType>()
     val repeatType: LiveData<RepeatType> = _repeatType
 
-    private val _repeatTime = MutableLiveData<String>()
-    val repeatTime: LiveData<String> = _repeatTime
+    private val _repeatTime = MutableLiveData<Date>()
+    val repeatTime: LiveData<Date> = _repeatTime
 
     private val _timeStart = MutableLiveData<String>()
     val timeStart: LiveData<String> = _timeStart
@@ -46,11 +45,11 @@ class TodoBaseDialogViewModel : ViewModel() {
     }
 
     fun setRepeatTime(time: Date) {
-        _repeatTime.value = time.getDateString()
+        _repeatTime.value = time
     }
 
     fun setRepeatTime(time: String) {
-        _repeatTime.value = time
+        _repeatTime.value = time.getDate()
     }
 
     fun setTimeStart(date: String) {
@@ -63,17 +62,5 @@ class TodoBaseDialogViewModel : ViewModel() {
 
     fun setTimeRepeat(time: TimeRepeatType) {
         _timeRepeat.value = time
-    }
-
-    fun repeatTimeFormatter(): Date? {
-        return _repeatTime.value?.getDate()
-    }
-
-    fun timeStartFormatter(): List<String>? {
-        return _timeStart.value?.split(":")
-    }
-
-    fun timeFinishFormatter(): List<String>? {
-        return _timeFinish.value?.split(":")
     }
 }
