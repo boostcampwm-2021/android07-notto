@@ -4,9 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewmodel"
             type="com.gojol.notto.ui.home.HomeViewModel" />
+
+        <variable
+            name="editClickListener"
+            type="android.view.View.OnClickListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,18 +24,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:splitMotionEvents="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_home_label_edit"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/item_label" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_home_label_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:src="@drawable/ic_more_vert"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/edit_label"
+            android:onClick="@{editClickListener}"
             app:layout_constraintBottom_toBottomOf="@+id/rv_home_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/rv_home_label" />

@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,15 +13,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
+import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.FragmentHomeBinding
+import com.gojol.notto.model.data.LabelWithCheck
+import com.gojol.notto.model.database.todo.DailyTodo
+import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.ui.home.adapter.CalendarAdapter
 import com.gojol.notto.ui.home.adapter.LabelAdapter
 import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
 import com.gojol.notto.ui.home.adapter.TodoAdapter
 import com.gojol.notto.ui.home.util.TodoItemTouchCallback
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.gojol.notto.ui.todo.TodoEditActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -52,36 +55,20 @@ class HomeFragment : Fragment() {
 
         initRecyclerView()
         initObserver()
-        initData()
         initTodoListItemTouchListener()
     }
 
-    private fun initObserver() {
-//        homeViewModel.todoList.observe(viewLifecycleOwner, {
-//            todoAdapter.submitList(it)
-//        })
-//
-//        homeViewModel.labelList.observe(viewLifecycleOwner, {
-//            labelAdapter.submitList(it)
-//        })
-    }
+    override fun onResume() {
+        super.onResume()
 
-    private fun initData() {
-        CoroutineScope(Dispatchers.IO).launch {
-            homeViewModel.setDummyData()
-        }
-    }
-
-    private fun initTodoListItemTouchListener() {
-        val itemTouchHelper = ItemTouchHelper(TodoItemTouchCallback(todoAdapter))
-        itemTouchHelper.attachToRecyclerView(binding.rvHome)
+        initData()
     }
 
     private fun initRecyclerView() {
-        calendarAdapter = CalendarAdapter(homeViewModel)
-        labelAdapter = LabelAdapter(homeViewModel)
+        calendarAdapter = CalendarAdapter(requireActivity())
+        labelAdapter = LabelAdapter(::labelTouchCallback)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
-        todoAdapter = TodoAdapter(homeViewModel)
+        todoAdapter = TodoAdapter(::todoTouchCallback, ::todoEditButtonCallback)
 
         val concatAdapter: ConcatAdapter by lazy {
             val config = ConcatAdapter.Config.Builder().apply {
@@ -93,23 +80,84 @@ class HomeFragment : Fragment() {
         binding.rvHome.apply {
             adapter = concatAdapter
             layoutManager = getLayoutManager(concatAdapter)
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+            itemAnimator?.removeDuration = 0
+            itemAnimator?.addDuration = 0
+            itemAnimator?.changeDuration = 0
         }
     }
 
-    private fun getLayoutManager(adapter: ConcatAdapter) : RecyclerView.LayoutManager{
+    private fun initObserver() {
+        homeViewModel.todoList.observe(viewLifecycleOwner, {
+            todoAdapter.submitList(it)
+        })
+
+        homeViewModel.labelList.observe(viewLifecycleOwner, {
+            homeViewModel.updateTodoList(it)
+            labelAdapter.submitList(it)
+        })
+
+        homeViewModel.date.observe(viewLifecycleOwner, {
+            calendarAdapter.setDate(it)
+        })
+
+        homeViewModel.isTodoCreateButtonClicked.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let {
+                startTodoEditActivity()
+            }
+        })
+
+        homeViewModel.todoEditButtonClicked.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let { todo ->
+                startTodoCreateActivity(todo)
+            }
+        })
+    }
+
+    private fun initData() {
+        homeViewModel.setDummyData()
+    }
+
+    private fun initTodoListItemTouchListener() {
+        val itemTouchHelper = ItemTouchHelper(TodoItemTouchCallback(todoAdapter))
+        itemTouchHelper.attachToRecyclerView(binding.rvHome)
+    }
+
+    private fun getLayoutManager(adapter: ConcatAdapter): RecyclerView.LayoutManager {
         val layoutManager = GridLayoutManager(context, 7)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when (adapter.getItemViewType(position)) {
-                    CalendarAdapter.VIEW_TYPE -> 7
-                    LabelAdapter.VIEW_TYPE -> 1
-                    TodoAdapter.VIEW_TYPE -> 7
+                    AdapterViewType.CALENDAR.viewType -> 7
+                    AdapterViewType.LABEL.viewType -> 1
+                    AdapterViewType.TODO.viewType -> 7
                     else -> 7
                 }
             }
         }
 
         return layoutManager
+    }
+
+    private fun todoTouchCallback(dailyTodo: DailyTodo) {
+        homeViewModel.updateDailyTodo(dailyTodo)
+    }
+
+    private fun todoEditButtonCallback(todo: Todo) {
+        homeViewModel.updateIsTodoEditButtonClicked(todo)
+    }
+
+    private fun labelTouchCallback(labelWithCheck: LabelWithCheck) {
+        homeViewModel.setLabelClickListener(labelWithCheck)
+    }
+
+    private fun startTodoEditActivity() {
+        val intent = Intent(activity, TodoEditActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun startTodoCreateActivity(todo: Todo) {
+        val intent = Intent(activity, TodoEditActivity::class.java)
+        intent.putExtra("todo", todo)
+        startActivity(intent)
     }
 }

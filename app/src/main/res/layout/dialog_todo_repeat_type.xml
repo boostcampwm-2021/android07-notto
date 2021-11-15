@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.gojol.notto.model.data.RepeatType"/>
+
+        <variable
+            name="viewmodel"
+            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView3"
+            android:layout_width="@dimen/dialog_radiogroup_width"
+            android:layout_height="@dimen/dialog_radiogroup_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RadioGroup
+                android:id="@+id/rg_repeat_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dialog_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_repeat_Type_everyday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:checked="@{viewmodel.repeatType.text.equals(@string/dialog_repeat_type_everyday)}"
+                    android:onClick="@{()->viewmodel.setRepeatType(RepeatType.DAY)}"
+                    android:tag="string/dialog_repeat_type_everyday"
+                    android:text="@string/dialog_repeat_type_everyday"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_repeat_Type_everyweek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:checked="@{viewmodel.repeatType.text.equals(@string/dialog_repeat_type_everyweek)}"
+                    android:onClick="@{()->viewmodel.setRepeatType(RepeatType.WEEK)}"
+                    android:tag="@string/dialog_repeat_type_everyweek"
+                    android:text="@string/dialog_repeat_type_everyweek"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_repeat_Type_everymonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:checked="@{viewmodel.repeatType.text.equals(@string/dialog_repeat_type_everymonth)}"
+                    android:onClick="@{()->viewmodel.setRepeatType(RepeatType.MONTH)}"
+                    android:tag="@string/dialog_repeat_type_everymonth"
+                    android:text="@string/dialog_repeat_type_everymonth"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_repeat_Type_everyyear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:checked="@{viewmodel.repeatType.text.equals(@string/dialog_repeat_type_everyyear)}"
+                    android:onClick="@{()->viewmodel.setRepeatType(RepeatType.YEAR)}"
+                    android:tag="@string/dialog_repeat_type_everyyear"
+                    android:text="@string/dialog_repeat_type_everyyear"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+            </RadioGroup>
+
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

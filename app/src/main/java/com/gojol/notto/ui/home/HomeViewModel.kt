@@ -1,168 +1,175 @@
 package com.gojol.notto.ui.home
 
-import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gojol.notto.common.TodoSuccessType
-import com.gojol.notto.model.data.BindingData
+import com.gojol.notto.common.Event
 import com.gojol.notto.model.data.LabelWithCheck
+import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
-import com.gojol.notto.model.data.RepeatType
+import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
+import com.gojol.notto.util.toYearMonthDate
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.*
-import java.util.Calendar.Builder
-import java.util.Calendar.getInstance
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val repository: TodoLabelRepository) : ViewModel() {
 
-    private val dummyLabels = mutableListOf(
-        Label(1, "학교"),
-        Label(2, "건강"),
-        Label(3, "집"),
-        Label(4, "과제")
-    )
+    private val _isTodoCreateButtonClicked = MutableLiveData<Event<Boolean>>()
+    val isTodoCreateButtonClicked: LiveData<Event<Boolean>> = _isTodoCreateButtonClicked
 
-    private val dummyTodos = mutableListOf(
-        Todo(TodoSuccessType.NOTHING, "밥 굶지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "과제 미루지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "지각하지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "밥 먹을 때 물 먹지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "회의 지각 안하기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "핸드폰 보지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-        Todo(TodoSuccessType.NOTHING, "누워있지 않기", "1", false, RepeatType.DAY, false, "1:00", "2:00", "1:00", false),
-    )
+    private val _todoEditButtonClicked = MutableLiveData<Event<Todo>>()
+    val todoEditButtonClicked: LiveData<Event<Todo>> = _todoEditButtonClicked
 
-    private val _date = MutableLiveData(getInstance())
+    private val _date = MutableLiveData(Calendar.getInstance())
     val date: LiveData<Calendar> = _date
 
-    private val _labelList = MutableLiveData<MutableList<LabelWithCheck>>()
-    val labelList: LiveData<MutableList<LabelWithCheck>> = _labelList
+    private val _todoList = MutableLiveData<List<TodoWithTodayDailyTodo>>()
+    val todoList: LiveData<List<TodoWithTodayDailyTodo>> = _todoList
 
-    private val _todoList = MutableLiveData<MutableList<Todo>>()
-    val todoList: LiveData<MutableList<Todo>> = _todoList
-
-    private val _concatList = MutableLiveData<BindingData?>()
-    val concatList: LiveData<BindingData?> = _concatList
+    private val _labelList = MutableLiveData<List<LabelWithCheck>>()
+    val labelList: LiveData<List<LabelWithCheck>> = _labelList
 
     fun setDummyData() {
         viewModelScope.launch {
-            insertDummyTodoAndLabel()
+            initLabelAndTodo()
         }
     }
 
-    private suspend fun insertDummyTodoAndLabel() {
-        dummyTodos.forEach {
-            repository.insertTodo(it)
+    private suspend fun initLabelAndTodo() {
+        viewModelScope.launch {
+            launch { repository.insertLabel(totalLabel) }.join()
+            _labelList.value = repository.getLabelsWithTodos()
+                .asSequence()
+                .map { LabelWithCheck(it, it.label.order == 0) }
+                .sortedBy { it.labelWithTodo.label.order }
+                .toList()
+            _todoList.value =
+                _date.value?.let { repository.getTodosWithTodayDailyTodos(it.toYearMonthDate()) }
+            _date.value = Calendar.getInstance()
         }
-
-        dummyLabels.forEach {
-            repository.insertLabel(it)
-        }
-
-        insertTodoLabel()
-
-        _todoList.value = repository.getAllTodo().toMutableList()
-        val labelWithTodos = repository.getLabelWithTodo()
-        val newLabelList = labelWithTodos.map { label -> LabelWithCheck(label, false) }.toMutableList()
-
-        val totalLabel = LabelWithTodo(
-            Label(0, LABEL_NAME_ALL), _todoList.value!!
-        )
-        newLabelList.add(0, LabelWithCheck(totalLabel, true))
-        _labelList.value = newLabelList
-
-        _concatList.value = BindingData(todoList.value, labelList.value)
     }
-
-    private suspend fun insertTodoLabel() {
-        val labels = repository.getAllLabel()
-        val todos = repository.getAllTodo()
-
-        repository.insertTodo(todos[0], labels[0])
-        repository.insertTodo(todos[0], labels[1])
-        repository.insertTodo(todos[0], labels[2])
-
-        repository.insertTodo(todos[1], labels[3])
-
-        repository.insertTodo(todos[2], labels[0])
-
-        repository.insertTodo(todos[3], labels[1])
-
-        repository.insertTodo(todos[4], labels[0])
-        repository.insertTodo(todos[4], labels[3])
-
-        repository.insertTodo(todos[5], labels[0])
-        repository.insertTodo(todos[5], labels[1])
-        repository.insertTodo(todos[5], labels[2])
-        repository.insertTodo(todos[5], labels[3])
-
-        repository.insertTodo(todos[6], labels[0])
-        repository.insertTodo(todos[6], labels[2])
-    }
-
 
     fun updateDate(year: Int, month: Int, day: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            _date.value = Builder().setDate(year, month, day).build()
-        } else {
-            val calendar: Calendar = getInstance()
-            calendar.set(year, month, day)
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.set(year, month, day)
 
-            _date.value = calendar
-        }
+        _date.value = calendar
     }
 
-    fun fetchTodoSuccessState(todo: Todo) {
-        val newTodoList = mutableListOf<Todo>()
+    fun updateDailyTodo(dailyTodo: DailyTodo) {
         viewModelScope.launch {
-            repository.updateTodo(todo)
-            repository.getAllTodo().forEach { databaseTodo ->
-                _todoList.value?.forEach { currentTodo ->
-                    if (databaseTodo.todoId == currentTodo.todoId) {
-                        newTodoList.add(databaseTodo)
-                    }
-                }
+            launch { repository.updateDailyTodo(dailyTodo) }.join()
+            val currentShowTodoList = _labelList.value
+                ?.asSequence()
+                ?.filter { it.isChecked }
+                ?.flatMap { it.labelWithTodo.todo }
+
+            if (currentShowTodoList != null) {
+                _todoList.value = _date.value?.let { date ->
+                    repository.getTodosWithTodayDailyTodos(date.toYearMonthDate())
+                }?.filter { currentShowTodoList.contains(it.todo) }
             }
-            _todoList.value = newTodoList
-            _concatList.value = BindingData(todoList.value, labelList.value)
         }
     }
 
-    suspend fun addTodoListByLabels(labels: List<LabelWithCheck>) {
-        val newTodoList = mutableListOf<Todo>()
+    fun updateTodoList(list: List<LabelWithCheck>) {
+        val checkList = list.filter { it.isChecked }
+        viewModelScope.launch { addTodoListByLabels(checkList) }
+    }
 
-        val todoSet = mutableSetOf<Todo>()
-        labels.forEach {
-            todoSet.addAll(it.labelWithTodo.todo)
+    private suspend fun addTodoListByLabels(labels: List<LabelWithCheck>) {
+        val todoIdList = labels
+            .asSequence()
+            .flatMap { it.labelWithTodo.todo }
+            .map { it.todoId }
+
+        _date.value?.let { date ->
+            _todoList.value =
+                repository.getTodosWithTodayDailyTodos(date.toYearMonthDate())
+                    .filter { it.todo.todoId in todoIdList }
         }
+    }
 
-        repository.getAllTodo().forEach {
-            todoSet.forEach { setTodo ->
-                if (it.todoId == setTodo.todoId) {
-                    newTodoList.add(it)
+    fun setLabelClickListener(labelWithCheck: LabelWithCheck) {
+        if (labelWithCheck.labelWithTodo.label.order == 0) {
+            allChipChecked()
+        } else {
+            itemLabelClick(labelWithCheck)
+        }
+    }
+
+    private fun itemLabelClick(labelWithCheck: LabelWithCheck) {
+        _labelList.value?.let { list ->
+            if (labelWithCheck.isChecked) {
+                moveItem(1, true, labelWithCheck)
+            } else {
+                val checkedList = list.filter {
+                    it.isChecked &&
+                            it.labelWithTodo.label.labelId != labelWithCheck.labelWithTodo.label.labelId &&
+                            it.labelWithTodo.label.order != 0
+                }
+
+                val uncheckedList = list
+                    .asSequence()
+                    .filter { !it.isChecked && it.labelWithTodo.label.order != 0 }
+                    .toMutableList()
+                    .apply { add(labelWithCheck) }
+                    .sortedBy { it.labelWithTodo.label.order }
+
+                if (checkedList.isEmpty()) {
+                    allChipChecked()
+                } else {
+                    moveItem(
+                        checkedList.size + uncheckedList.indexOf(labelWithCheck) + 1,
+                        false,
+                        labelWithCheck
+                    )
                 }
             }
         }
-
-        _todoList.value = newTodoList
-        _concatList.value = BindingData(todoList.value, labelList.value)
     }
 
-    fun updateLabelList(list: MutableList<LabelWithCheck>) {
-        _labelList.value = list
-        _concatList.value = BindingData(todoList.value, labelList.value)
+    private fun moveItem(to: Int, isChecked: Boolean, labelWithCheck: LabelWithCheck) {
+        _labelList.value?.let { list ->
+            val newList = list.toMutableList().filter {
+                it.labelWithTodo.label.labelId != labelWithCheck.labelWithTodo.label.labelId
+            }.toMutableList()
+            newList[0] = newList[0].copy(isChecked = false)
+            newList.add(to, labelWithCheck.copy(isChecked = isChecked))
+
+            _labelList.value = newList
+        }
+    }
+
+    private fun allChipChecked() {
+        _labelList.value?.let { list ->
+            val header = list[0].copy(isChecked = true)
+            val newList = list
+                .asSequence()
+                .filter { it.labelWithTodo.label.order != 0 }
+                .map { it.copy(isChecked = false) }
+                .sortedBy { it.labelWithTodo.label.order }
+                .toMutableList()
+            newList.add(0, header)
+            _labelList.value = newList
+        }
+    }
+
+    fun updateNavigateToTodoEdit() {
+        _isTodoCreateButtonClicked.value = Event(true)
+    }
+
+    fun updateIsTodoEditButtonClicked(todo: Todo) {
+        _todoEditButtonClicked.value = Event(todo)
     }
 
     companion object {
-        const val LABEL_NAME_ALL = "전체"
+        val totalLabel = Label(0, "전체", 1)
     }
 }
-

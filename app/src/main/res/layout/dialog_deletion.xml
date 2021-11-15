@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_dialog_deletion_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dialog_margin"
+            android:fontFamily="@font/font_nanumsquare"
+            android:text="@string/dialog_deletion_title"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_large"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.165"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_dialog_deletion_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dialog_margin"
+            android:layout_marginEnd="@dimen/dialog_deletion_description_margin_end"
+            android:fontFamily="@font/font_nanumsquare"
+            android:lineSpacingExtra="@dimen/dialog_line_spacing"
+            android:text="@string/dialog_deletion_description"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/tv_dialog_deletion_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dialog_deletion_title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+

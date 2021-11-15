@@ -20,6 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.label.EditLabelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.todo.TodoEditActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

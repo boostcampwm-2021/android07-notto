@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.gojol.notto.common.TimeRepeatType"/>
+
+        <variable
+            name="viewmodel"
+            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="@dimen/dialog_radiogroup_width"
+            android:layout_height="@dimen/dialog_radiogroup_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RadioGroup
+                android:id="@+id/rg_dialog_alarm_period"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dialog_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_alarm_period_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:onClick="@{()->viewmodel.setTimeRepeat(TimeRepeatType.MINUTE_5)}"
+                    android:checked="@{viewmodel.timeRepeat.text.equals(@string/dialog_alarm_period_5)}"
+                    android:tag="@{@string/dialog_alarm_period_5}"
+                    android:text="@string/dialog_alarm_period_5"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_alarm_period_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:onClick="@{()->viewmodel.setTimeRepeat(TimeRepeatType.MINUTE_10)}"
+                    android:checked="@{viewmodel.timeRepeat.text.equals(@string/dialog_alarm_period_10)}"
+                    android:tag="@{@string/dialog_alarm_period_10}"
+                    android:text="@string/dialog_alarm_period_10"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_alarm_period_15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:onClick="@{()->viewmodel.setTimeRepeat(TimeRepeatType.MINUTE_15)}"
+                    android:checked="@{viewmodel.timeRepeat.text.equals(@string/dialog_alarm_period_15)}"
+                    android:tag="@{@string/dialog_alarm_period_15}"
+                    android:text="@string/dialog_alarm_period_15"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_alarm_period_30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:onClick="@{()->viewmodel.setTimeRepeat(TimeRepeatType.MINUTE_30)}"
+                    android:checked="@{viewmodel.timeRepeat.text.equals(@string/dialog_alarm_period_30)}"
+                    android:tag="@{@string/dialog_alarm_period_30}"
+                    android:text="@string/dialog_alarm_period_30"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_alarm_period_60"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:onClick="@{()->viewmodel.setTimeRepeat(TimeRepeatType.MINUTE_60)}"
+                    android:checked="@{viewmodel.timeRepeat.text.equals(@string/dialog_alarm_period_60)}"
+                    android:tag="@{@string/dialog_alarm_period_60}"
+                    android:text="@string/dialog_alarm_period_60"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_dialog_alarm_period_1440"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/bg_radio_button_normal"
+                    android:fontFamily="@font/font_nanumsquare"
+                    android:maxLines="1"
+                    android:onClick="@{()->viewmodel.setTimeRepeat(TimeRepeatType.MINUTE_1440)}"
+                    android:checked="@{viewmodel.timeRepeat.text.equals(@string/dialog_alarm_period_1440)}"
+                    android:tag="@{@string/dialog_alarm_period_1440}"
+                    android:text="@string/dialog_alarm_period_1440"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+            </RadioGroup>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

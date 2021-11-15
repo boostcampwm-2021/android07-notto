@@ -6,12 +6,15 @@
 
 package com.gojol.notto.ui.home.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.ItemLabelListBinding
+import com.gojol.notto.ui.label.EditLabelActivity
 
 class LabelWrapperAdapter(private val adapter: LabelAdapter) :
     RecyclerView.Adapter<LabelWrapperAdapter.LabelWrapperViewHolder>() {
@@ -25,7 +28,7 @@ class LabelWrapperAdapter(private val adapter: LabelAdapter) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return VIEW_TYPE
+        return AdapterViewType.LABELWRAPPER.viewType
     }
 
     override fun onBindViewHolder(holder: LabelWrapperViewHolder, position: Int) {
@@ -36,12 +39,14 @@ class LabelWrapperAdapter(private val adapter: LabelAdapter) :
 
     override fun getItemCount(): Int = 1
 
-    companion object {
-        const val VIEW_TYPE = 2
-    }
-
     class LabelWrapperViewHolder(private val binding: ItemLabelListBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.setEditClickListener {
+                it.context.startActivity(Intent(it.context, EditLabelActivity::class.java))
+            }
+        }
 
         fun bind(adapter: LabelAdapter, lastScrollX: Int, onScrolled: (Int) -> Unit) {
             val context = binding.root.context
@@ -61,6 +66,4 @@ class LabelWrapperAdapter(private val adapter: LabelAdapter) :
             }
         }
     }
-
-    fun getLabelAdapter() = adapter
 }

@@ -1,8 +1,8 @@
 package com.gojol.notto.ui.home.util
 
-import com.gojol.notto.common.TodoSuccessType
+import com.gojol.notto.common.TodoState
 
 interface ItemTouchHelperListener {
-    fun onItemMove(from_position: Int, to_position: Int): Boolean
-    fun onItemSwipe(position: Int, successType: TodoSuccessType)
+    fun onItemMove(from: Int, to: Int): Boolean
+    fun onItemSwipe(position: Int, state: TodoState)
 }

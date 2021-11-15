@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="successType"
-            type="com.gojol.notto.common.TodoSuccessType" />
+            type="com.gojol.notto.common.TodoState" />
+
         <variable
             name="item"
-            type="com.gojol.notto.model.database.todo.Todo" />
+            type="com.gojol.notto.model.data.TodoWithTodayDailyTodo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,19 +19,19 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="3dp"
         android:background="@drawable/bg_todo_normal"
-        android:backgroundTint="@{item.isSuccess==successType.SUCCESS ? @color/yellow_normal : item.isSuccess==successType.FAIL ? @color/blue_normal :  @color/gray_light}">
+        android:backgroundTint="@{item.todayDailyTodo.todoState==successType.SUCCESS ? @color/yellow_normal : item.todayDailyTodo.todoState==successType.FAIL ? @color/blue_normal :  @color/gray_light}">
 
         <TextView
             android:id="@+id/tv_home_todo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{item.content}"
+            android:text="@{item.todo.content}"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_median"
+            android:textSize="@dimen/text_x_small"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_home_todo_edit"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="todotodotodotodotasfsafsfsafsafsafsfsafsfodotodo" />
 
         <ImageButton
