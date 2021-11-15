@@ -1,68 +1,106 @@
 package com.gojol.notto.ui.todo.dialog
 
-import android.content.Context
 import android.os.Build
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.DialogTodoSetTimeBinding
 import com.gojol.notto.util.get24Hour
+import com.gojol.notto.util.timeSplitFormatter
+import dagger.hilt.android.AndroidEntryPoint
 
-class TodoSetTimeDialog(context: Context) : TodoBaseDialogImpl(context) {
-    private val binding: DialogTodoSetTimeBinding =
-        DataBindingUtil.inflate(
-            LayoutInflater.from(context), R.layout.dialog_todo_set_time,
-            null,
-            false
-        )
-    var data: String? = null
-        set(value) {
-            value?.let {
-                it.get24Hour().split(":").apply {
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        binding.tpSetTime.hour = get(0).toInt()
-                        binding.tpSetTime.minute = get(1).toInt()
-                    } else {
-                        binding.tpSetTime.currentHour = get(0).toInt()
-                        binding.tpSetTime.currentMinute = get(1).toInt()
-                    }
-                }
-            }
-            field = value
-        }
-    var callback: ((String) -> Unit?)? = null
+const val TIME_START = "timeStart"
+const val TIME_START_DATE = "timeStartDate"
 
+const val TIME_FINISH = "timeFinish"
+const val TIME_FINISH_DATE = "timeFinishDate"
+const val CURRENT = ""
 
-    init {
-        setBinding(binding)
-        setDialog(WIDTH, HEIGHT)
-        initClickListener()
-    }
+@AndroidEntryPoint
+class TodoSetTimeDialog : TodoBaseDialogImpl() {
+    private lateinit var contentBinding: DialogTodoSetTimeBinding
 
     companion object {
-        const val WIDTH = 0.8f
-        const val HEIGHT = 0.8f
+        var callback: ((String) -> Unit?)? = null
+        var currentState: String? = null
     }
 
-    private fun initClickListener() {
-        binding.bvDialogDeletion.btnDialogBaseConfirm.setOnClickListener {
-            confirm()
-        }
-        binding.bvDialogDeletion.btnDialogBaseReject.setOnClickListener {
-            dismiss()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        contentBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_todo_set_time, container, false)
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initDate()
+        setClickListener()
+        binding.clDialogContent.addView(contentBinding.root)
+    }
+
+    private fun initDate() {
+        arguments?.let { arg ->
+            arg.getString(TIME_START_DATE)?.let {
+                viewModel.setTimeStart(it.get24Hour())
+                arg.remove(TIME_START_DATE)
+            }
+            arg.getString(TIME_FINISH_DATE)?.let {
+                viewModel.setTimeFinish(it.get24Hour())
+                arg.remove(TIME_FINISH_DATE)
+            }
         }
     }
 
-    override fun confirm() {
-        callback?.let {
-            if (Build.VERSION.SDK_INT >= 23) {
-                it("${binding.tpSetTime.hour}:${binding.tpSetTime.minute}")
-            } else {
-                it("${binding.tpSetTime.currentHour}:${binding.tpSetTime.currentMinute}")
+    override fun initObserver() {
+        super.initObserver()
+        viewModel.timeStart.observe(this) {
+            if (currentState == TIME_START) {
+                setTime(it.timeSplitFormatter())
             }
         }
 
-        // TODO : 얻은 정보 Todo 편집 화면으로 보내기
-        super.confirm()
+        viewModel.timeFinish.observe(this) {
+            if (currentState == TIME_FINISH) {
+                setTime(it.timeSplitFormatter())
+            }
+        }
+    }
+
+    private fun setTime(list: List<String>) {
+        with(contentBinding.tpSetTime) {
+            if (Build.VERSION.SDK_INT >= 23) {
+                hour = list[0].toInt()
+                minute = list[1].toInt()
+            } else {
+                currentHour = list[0].toInt()
+                currentMinute = list[1].toInt()
+            }
+        }
+    }
+
+    private fun setClickListener() {
+        contentBinding.tpSetTime.setOnTimeChangedListener { timePicker, hour, minute ->
+            if (currentState == TIME_START) {
+                viewModel.setTimeStart("$hour:$minute")
+            } else if (currentState == TIME_FINISH) {
+                viewModel.setTimeFinish("$hour:$minute")
+            }
+        }
+    }
+
+    override fun confirmClick() {
+        super.confirmClick()
+        callback?.let {
+            with(contentBinding.tpSetTime) {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    it("${hour}:${minute}")
+                } else {
+                    it("${currentHour}:${currentMinute}")
+                }
+            }
+        }
     }
 }

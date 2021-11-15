@@ -6,8 +6,8 @@
         <import type="com.gojol.notto.model.data.RepeatType"/>
 
         <variable
-            name="dialog"
-            type="com.gojol.notto.ui.todo.dialog.TodoRepeatTypeDialog" />
+            name="viewmodel"
+            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,8 +37,9 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:checked="true"
-                    android:tag="@{RepeatType.DAY}"
+                    android:checked="@{viewmodel.repeatType.text.equals(@string/dialog_repeat_type_everyday)}"
+                    android:onClick="@{()->viewmodel.setRepeatType(RepeatType.DAY)}"
+                    android:tag="string/dialog_repeat_type_everyday"
                     android:text="@string/dialog_repeat_type_everyday"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -51,7 +52,9 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@{RepeatType.WEEK}"
+                    android:checked="@{viewmodel.repeatType.text.equals(@string/dialog_repeat_type_everyweek)}"
+                    android:onClick="@{()->viewmodel.setRepeatType(RepeatType.WEEK)}"
+                    android:tag="@string/dialog_repeat_type_everyweek"
                     android:text="@string/dialog_repeat_type_everyweek"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -64,7 +67,9 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@{RepeatType.MONTH}"
+                    android:checked="@{viewmodel.repeatType.text.equals(@string/dialog_repeat_type_everymonth)}"
+                    android:onClick="@{()->viewmodel.setRepeatType(RepeatType.MONTH)}"
+                    android:tag="@string/dialog_repeat_type_everymonth"
                     android:text="@string/dialog_repeat_type_everymonth"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -77,7 +82,9 @@
                     android:buttonTint="@color/bg_radio_button_normal"
                     android:fontFamily="@font/font_nanumsquare"
                     android:maxLines="1"
-                    android:tag="@{RepeatType.YEAR}"
+                    android:checked="@{viewmodel.repeatType.text.equals(@string/dialog_repeat_type_everyyear)}"
+                    android:onClick="@{()->viewmodel.setRepeatType(RepeatType.YEAR)}"
+                    android:tag="@string/dialog_repeat_type_everyyear"
                     android:text="@string/dialog_repeat_type_everyyear"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -86,15 +93,5 @@
             </RadioGroup>
 
         </androidx.core.widget.NestedScrollView>
-
-        <include
-            android:id="@+id/bv_dialog_deletion"
-            layout="@layout/item_dialog_bottom_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:bottom="@{1}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nestedScrollView3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

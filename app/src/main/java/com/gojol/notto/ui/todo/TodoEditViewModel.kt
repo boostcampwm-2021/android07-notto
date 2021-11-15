@@ -10,6 +10,7 @@ import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
+import com.gojol.notto.util.TouchEvent
 import com.gojol.notto.util.get12Hour
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -52,14 +53,14 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _repeatType = MutableLiveData(RepeatType.YEAR)
     val repeatType: LiveData<RepeatType> = _repeatType
 
-    private val _repeatTypeClick = MutableLiveData(false)
-    val repeatTypeClick: LiveData<Boolean> = _repeatTypeClick
+    private val _repeatTypeClick = MutableLiveData<TouchEvent<Boolean>>()
+    val repeatTypeClick: LiveData<TouchEvent<Boolean>> = _repeatTypeClick
 
     private val _repeatStart = MutableLiveData<String>()
     val repeatStart: LiveData<String> = _repeatStart
 
-    private val _repeatStartClick = MutableLiveData(false)
-    val repeatStartClick: LiveData<Boolean> = _repeatStartClick
+    private val _repeatStartClick = MutableLiveData<TouchEvent<Boolean>>()
+    val repeatStartClick: LiveData<TouchEvent<Boolean>> = _repeatStartClick
 
     private val _isTimeChecked = MutableLiveData(false)
     val isTimeChecked: LiveData<Boolean> = _isTimeChecked
@@ -67,20 +68,20 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _timeStart = MutableLiveData<String>()
     val timeStart: LiveData<String> = _timeStart
 
-    private val _timeStartClick = MutableLiveData(false)
-    val timeStartClick: LiveData<Boolean> = _timeStartClick
+    private val _timeStartClick = MutableLiveData<TouchEvent<Boolean>>()
+    val timeStartClick: LiveData<TouchEvent<Boolean>> = _timeStartClick
 
     private val _timeFinish = MutableLiveData<String>()
     val timeFinish: LiveData<String> = _timeFinish
 
-    private val _timeFinishClick = MutableLiveData(false)
-    val timeFinishClick: LiveData<Boolean> = _timeFinishClick
+    private val _timeFinishClick = MutableLiveData<TouchEvent<Boolean>>()
+    val timeFinishClick: LiveData<TouchEvent<Boolean>> = _timeFinishClick
 
     private val _timeRepeat = MutableLiveData(TimeRepeatType.MINUTE_5)
     val timeRepeat: LiveData<TimeRepeatType> = _timeRepeat
 
-    private val _timeRepeatClick = MutableLiveData(false)
-    val timeRepeatClick: LiveData<Boolean> = _timeRepeatClick
+    private val _timeRepeatClick = MutableLiveData<TouchEvent<Boolean>>()
+    val timeRepeatClick: LiveData<TouchEvent<Boolean>> = _timeRepeatClick
 
     private val _isKeywordChecked = MutableLiveData(false)
     val isKeywordChecked: LiveData<Boolean> = _isKeywordChecked
@@ -161,27 +162,19 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onRepeatTypeClick() {
-        _repeatTypeClick.value = true
+        _repeatTypeClick.value = TouchEvent(true)
     }
 
     fun updateRepeatType(repeatType: RepeatType) {
         _repeatType.value = repeatType
     }
 
-    fun restoreOnRepeatTypeState(isSaved: Boolean) {
-        _repeatTypeClick.value = isSaved
-    }
-
     fun onRepeatStartClick() {
-        _repeatStartClick.value = true
+        _repeatStartClick.value = TouchEvent(true)
     }
 
     fun updateRepeatTime(repeatTime: String) {
         _repeatStart.value = repeatTime
-    }
-
-    fun restoreOnRepeatStartState(isSaved: Boolean) {
-        _repeatStartClick.value = isSaved
     }
 
     fun updateIsTimeChecked(isChecked: Boolean) {
@@ -189,47 +182,31 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onTimeStartClick() {
-        _timeStartClick.value = true
+        _timeStartClick.value = TouchEvent(true)
     }
 
     fun updateTimeStart(timeStart: String) {
         _timeStart.value = timeStart.get12Hour()
     }
 
-    fun restoreOnTimeStartState(isSaved: Boolean) {
-        _timeStartClick.value = isSaved
-    }
-
     fun onTimeFinishClick() {
-        _timeFinishClick.value = true
+        _timeFinishClick.value = TouchEvent(true)
     }
 
     fun updateTimeFinish(timeFinish: String) {
         _timeFinish.value = timeFinish.get12Hour()
     }
 
-    fun restoreOnTimeFinishState(isSaved: Boolean) {
-        _timeFinishClick.value = isSaved
-    }
-
     fun onTimeRepeatClick() {
-        _timeRepeatClick.value = true
+        _timeRepeatClick.value = TouchEvent(true)
     }
 
     fun updateTimeRepeat(timeRepeat: TimeRepeatType) {
         _timeRepeat.value = timeRepeat
     }
 
-    fun restoreOnTimeRepeatState(isSaved: Boolean) {
-        _timeRepeatClick.value = isSaved
-    }
-
     fun updateIsKeywordChecked(isChecked: Boolean) {
         _isKeywordChecked.value = isChecked
-    }
-
-    fun updateIsSaveButtonEnabled(isSaved: Boolean) {
-        _isSaveButtonEnabled.value = isSaved
     }
 
     fun updatePopLabelAddDialog() {
