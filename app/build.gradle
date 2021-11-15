@@ -77,4 +77,7 @@ dependencies {
 
     // material calendar for dialog
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
+
+    // stetho
+    implementation 'com.facebook.stetho:stetho:1.5.1'
 }
