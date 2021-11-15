@@ -42,6 +42,7 @@ class CalendarFragment : Fragment() {
 
         initObserver()
         initRecyclerView()
+        initViewModelData()
     }
 
     override fun onResume() {

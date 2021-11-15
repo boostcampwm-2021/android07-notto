@@ -12,6 +12,8 @@ import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.util.getDate
 import com.gojol.notto.util.getDayOfWeek
 import com.gojol.notto.util.getLastDayOfMonth
+import com.gojol.notto.util.getMonth
+import com.gojol.notto.util.getYear
 import com.gojol.notto.util.toYearMonthDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,9 +25,11 @@ class CalendarViewModel @Inject constructor(
     private val repository: TodoLabelRepository
 ) : ViewModel() {
 
-    private var _monthStartDate = MutableLiveData<String>()
-    private var _monthLastDate = MutableLiveData<String>()
-    private var _monthDateList = MutableLiveData<List<Int>>()
+    private var _year = 0
+    private var _month = 0
+    private val _monthStartDate = MutableLiveData<String>()
+    private val _monthLastDate = MutableLiveData<String>()
+    private val _monthDateList = MutableLiveData<List<Int>>()
     private val _monthlyDailyTodos = MutableLiveData<List<DailyTodo>>()
 
     private val _monthlyAchievement = MutableLiveData<List<DateWithCountAndSelect>>()
@@ -35,6 +39,9 @@ class CalendarViewModel @Inject constructor(
     val selectedDate: LiveData<Int> = _selectedDate
 
     fun setMonthDate(year: Int, month: Int) {
+        _year = year
+        _month = month
+
         val monthStartDate = Calendar.getInstance().apply {
             set(year, month, 1)
         }
@@ -68,13 +75,21 @@ class CalendarViewModel @Inject constructor(
     }
 
     fun setMonthlyAchievement(selectedDate: Int? = null) {
+        val today = Calendar.getInstance()
         _monthlyAchievement.value = _monthDateList.value?.map { date ->
+            val select = if (_year == today.getYear() && _month == today.getMonth()) {
+                date == selectedDate ?: today.getDate()
+            } else {
+                date == selectedDate ?: 1
+            }
+
             DateWithCountAndSelect(
                 date,
                 _monthlyDailyTodos.value
                     ?.filter { it.date.takeLast(2).toInt() == date }
                     ?.count { it.todoState == TodoState.SUCCESS } ?: 0,
-                date == selectedDate ?: Calendar.getInstance().getDate())
+                select
+            )
         }
         Log.i("daily", _monthlyAchievement.value.toString())
     }
