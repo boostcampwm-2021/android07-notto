@@ -39,6 +39,10 @@ class TodoLabelRepository @Inject constructor(
         return localDataSource.getAllLabel()
     }
 
+    override suspend fun getAllDailyTodos(): List<DailyTodo> {
+        return localDataSource.getAllDailyTodos()
+    }
+
     override suspend fun insertTodo(todo: Todo) {
         localDataSource.insertTodo(todo)
     }

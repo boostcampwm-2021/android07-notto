@@ -22,6 +22,8 @@ interface TodoLabelDataSource {
 
     suspend fun getAllLabel(): List<Label>
 
+    suspend fun getAllDailyTodos(): List<DailyTodo>
+
     suspend fun insertTodo(todo: Todo)
 
     suspend fun insertTodo(todo: Todo, label: Label)

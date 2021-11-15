@@ -47,6 +47,10 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         return todoLabelDao.getAllTodo()
     }
 
+    override suspend fun getAllDailyTodos(): List<DailyTodo> {
+        return todoLabelDao.getAllDailyTodo()
+    }
+
     override suspend fun getAllLabel(): List<Label> {
         return todoLabelDao.getAllLabel()
     }
