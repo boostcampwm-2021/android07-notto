@@ -6,20 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentCalendarBinding
 import com.gojol.notto.ui.home.adapter.CalendarDayAdapter
 import com.gojol.notto.ui.home.util.GridSpacingDecoration
-import java.util.Calendar
-import com.gojol.notto.util.getDayOfWeek
-import com.gojol.notto.util.getFirstDayOfMonth
-import com.gojol.notto.util.getLastDayOfMonth
+import dagger.hilt.android.AndroidEntryPoint
 
 const val TIME = "time"
 
+@AndroidEntryPoint
 class CalendarFragment : Fragment() {
 
     private lateinit var binding: FragmentCalendarBinding
+    private val calendarViewModel: CalendarViewModel by viewModels()
+    private val calendarDayAdapter = CalendarDayAdapter()
     private var time: Long? = null
 
     override fun onCreateView(
@@ -39,33 +40,33 @@ class CalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initViewModelData()
+        initObserver()
         initRecyclerView()
     }
 
-    private fun initRecyclerView() {
-        val dateList = setCalendarDateList()
-        binding.rvCalendar.apply {
-            adapter = CalendarDayAdapter().apply { submitList(dateList) }
-            context?.resources?.displayMetrics?.widthPixels?.let {
-                addItemDecoration(GridSpacingDecoration(it, 7))
-            }
-        }
-    }
-
-    private fun setCalendarDateList(): List<Int> {
+    private fun initViewModelData() {
         time?.let {
             val year = (it / 100).toInt()
             val month = (it % 100).toInt()
 
-            val calendar = Calendar.getInstance().apply { set(year, month, 1) }
-            val dateList = (calendar.getFirstDayOfMonth()..calendar.getLastDayOfMonth()).toList()
+            calendarViewModel.setMonthDate(year, month)
+            calendarViewModel.setMonthlyDailyTodos()
+        }
+    }
 
-            val dayOfWeek = calendar.getDayOfWeek() - 1
-            val prefixDateList = (0 until dayOfWeek).map { 0 }
+    private fun initObserver() {
+        calendarViewModel.monthlyAchievement.observe(viewLifecycleOwner, {
+            calendarDayAdapter.submitList(it)
+        })
+    }
 
-            return prefixDateList + dateList
-        } ?: kotlin.run {
-            return emptyList()
+    private fun initRecyclerView() {
+        binding.rvCalendar.apply {
+            adapter = calendarDayAdapter
+            context?.resources?.displayMetrics?.widthPixels?.let {
+                addItemDecoration(GridSpacingDecoration(it, 7))
+            }
         }
     }
 }
