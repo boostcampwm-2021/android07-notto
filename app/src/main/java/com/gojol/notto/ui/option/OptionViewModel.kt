@@ -1,13 +1,13 @@
 package com.gojol.notto.ui.option
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.gojol.notto.model.datasource.option.OptionRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class OptionViewModel : ViewModel() {
+@HiltViewModel
+class OptionViewModel @Inject constructor(
+    private val optionRepository: OptionRepository
+) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is notifications Fragment"
-    }
-    val text: LiveData<String> = _text
 }

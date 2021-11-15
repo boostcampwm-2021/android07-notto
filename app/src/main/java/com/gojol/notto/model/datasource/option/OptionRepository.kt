@@ -1,4 +1,11 @@
 package com.gojol.notto.model.datasource.option
 
-class OptionRepository {
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class OptionRepository @Inject constructor(
+    private val optionLocalDataSource: OptionDataSource
+) : OptionDataSource {
+
 }
