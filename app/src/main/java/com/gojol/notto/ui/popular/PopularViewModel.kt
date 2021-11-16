@@ -1,8 +1,10 @@
 package com.gojol.notto.ui.popular
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.gojol.notto.util.database
 
 class PopularViewModel : ViewModel() {
 
@@ -10,20 +12,26 @@ class PopularViewModel : ViewModel() {
     val items: LiveData<List<PopularKeyword>> = _items
 
     fun fetchKeywords() {
-        _items.value = listOf(
-            PopularKeyword("늦잠", 1, 1000),
-            PopularKeyword("스마트폰", 2, 1000),
-            PopularKeyword("습관", 3, 1000),
-            PopularKeyword("야식", 4, 1000),
-            PopularKeyword("편식", 5, 1000),
-            PopularKeyword("지각", 6, 1000),
-            PopularKeyword("간식", 7, 1000),
-            PopularKeyword("과일", 8, 1000),
-            PopularKeyword("채소", 9, 1000),
-            PopularKeyword("인스타그램", 10, 1000),
-            PopularKeyword("유튜브", 11, 1000),
-            PopularKeyword("게임", 12, 1000),
-            PopularKeyword("침대", 13, 1000)
-        )
+        val list = mutableListOf<PopularKeyword>()
+
+        database.get().addOnSuccessListener {
+            Log.i("firebase", "Got value ${it.value}")
+            it.children.forEach { child ->
+                if (child.key != null && child.value != null) {
+                    list.add(PopularKeyword(0, child.key!!, (child.value!! as Long).toInt()))
+                }
+            }
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }.addOnCompleteListener {
+            val orderedList = mutableListOf<PopularKeyword>()
+
+            list.sortByDescending { it.count }
+            list.forEachIndexed { index, item ->
+                orderedList.add(item.copy(place = index + 1))
+            }
+
+            _items.value = orderedList
+        }
     }
 }

@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.databinding.ItemPopularKeywordBinding
 
-class PopularAdapter : ListAdapter<PopularKeyword, PopularAdapter.PopularViewHolder>(PopularDiffUtil()) {
+class PopularAdapter :
+    ListAdapter<PopularKeyword, PopularAdapter.PopularViewHolder>(PopularDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularViewHolder {
         return PopularViewHolder(
