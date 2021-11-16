@@ -27,4 +27,6 @@
     <dimen name="dialog_line_spacing">10sp</dimen>
     <dimen name="todo_edit_btn_size">30dp</dimen>
     <dimen name="todo_edit_btn_corner_radius">30dp</dimen>
+    <dimen name="notification_todo_button_size">40dp</dimen>
+    <dimen name="notification_margin">10dp</dimen>
 </resources>
