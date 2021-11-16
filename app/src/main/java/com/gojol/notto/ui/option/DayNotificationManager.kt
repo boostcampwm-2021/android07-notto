@@ -73,14 +73,16 @@ object DayNotificationManager {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 23)
-        calendar.set(Calendar.MINUTE, 50)
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 50)
+        }
 
-        val triggerTime = (SystemClock.elapsedRealtime() + 10 * 1000)
-        alarmManager.set(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+        alarmManager.setInexactRepeating(
+            AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
             pendingIntent
         )
     }
