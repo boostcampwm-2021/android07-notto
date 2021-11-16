@@ -20,12 +20,13 @@ class OptionViewModel @Inject constructor(
     val isNavigateToLicenseClicked: LiveData<Event<Boolean>> = _isNavigateToLicenseClicked
 
     init {
-        _isPushChecked.value = optionRepository.loadIsPushNotificationChecked(pushNotificationKey)
+        _isPushChecked.value =
+            optionRepository.loadIsPushNotificationChecked(DAY_PUSH_NOTIFICATION_KEY)
     }
 
     fun updateIsPushChecked(isPushChecked: Boolean) {
         _isPushChecked.value = isPushChecked
-        optionRepository.saveIsPushNotificationChecked(pushNotificationKey, isPushChecked)
+        optionRepository.saveIsPushNotificationChecked(DAY_PUSH_NOTIFICATION_KEY, isPushChecked)
     }
 
     fun updateIsNavigateToLicenseClicked() {
@@ -33,6 +34,6 @@ class OptionViewModel @Inject constructor(
     }
 
     companion object {
-        const val pushNotificationKey = "pushDay"
+        const val DAY_PUSH_NOTIFICATION_KEY = "pushDay"
     }
 }
