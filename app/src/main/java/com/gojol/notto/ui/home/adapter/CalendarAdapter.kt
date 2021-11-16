@@ -1,7 +1,5 @@
 package com.gojol.notto.ui.home.adapter
 
-import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
@@ -11,12 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.ItemCalendarBinding
+import com.gojol.notto.util.getMonth
 import java.util.Calendar
 
 class CalendarAdapter(private val requireActivity: FragmentActivity) :
     RecyclerView.Adapter<CalendarAdapter.CustomCalendarViewHolder>() {
 
-    private var date: Calendar = Calendar.getInstance()
+    private val today = Calendar.getInstance()
+    private var date = today
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomCalendarViewHolder {
         return CustomCalendarViewHolder(
@@ -26,7 +26,7 @@ class CalendarAdapter(private val requireActivity: FragmentActivity) :
     }
 
     override fun onBindViewHolder(holder: CustomCalendarViewHolder, position: Int) {
-        holder.bind(date)
+        holder.bind(today, date)
     }
 
     override fun getItemCount(): Int = 1
@@ -37,9 +37,9 @@ class CalendarAdapter(private val requireActivity: FragmentActivity) :
 
     fun setDate(newDate: Calendar) {
         date = newDate
+        notifyItemChanged(0)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun refreshAdapter() {
         notifyItemChanged(0)
     }
@@ -49,12 +49,15 @@ class CalendarAdapter(private val requireActivity: FragmentActivity) :
         private val requireActivity: FragmentActivity
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(date: Calendar) {
+        fun bind(today: Calendar, date: Calendar) {
+            binding.date = date
+
+            val movePosition = date.getMonth() - today.getMonth()
             val calendarViewPagerAdapter = CalendarViewPagerAdapter(requireActivity)
             binding.vpCalendar.adapter = calendarViewPagerAdapter
-            binding.vpCalendar.setCurrentItem(calendarViewPagerAdapter.firstFragmentPosition, false)
-            binding.date = date
+            binding.vpCalendar.setCurrentItem(calendarViewPagerAdapter.firstFragmentPosition + movePosition, false)
             setViewPagerDynamicHeight()
+
             binding.executePendingBindings()
         }
 

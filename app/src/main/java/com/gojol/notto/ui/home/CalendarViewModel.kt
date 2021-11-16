@@ -74,7 +74,7 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    fun setMonthlyAchievement(selectedDate: Int? = null) {
+    fun setMonthlyAchievement() {
         val today = Calendar.getInstance()
 
         _monthlyAchievement.value = _monthDateList.value?.map { date ->
@@ -102,11 +102,14 @@ class CalendarViewModel @Inject constructor(
                 successLevel = 0
             }
 
-            val select = if (_year == today.getYear() && _month == today.getMonth()) {
-                date == selectedDate ?: today.getDate()
-            } else {
-                date == selectedDate ?: 1
-            }
+            val select =
+                if (CalendarFragment.selectedYear == _year &&
+                    CalendarFragment.selectedMonth == _month
+                ) {
+                    date == CalendarFragment.selectedDate ?: 1
+                } else {
+                    date == 1
+                }
 
             DateWithCountAndSelect(
                 date,
