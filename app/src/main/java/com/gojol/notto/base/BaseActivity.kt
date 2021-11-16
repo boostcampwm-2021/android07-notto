@@ -18,10 +18,8 @@ import javax.inject.Inject
 abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel> : AppCompatActivity() {
 
     protected abstract val layoutResId: Int
-
     protected abstract val viewModel: VM
-
-    protected lateinit var binding: B
+    protected lateinit var binding: B private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
