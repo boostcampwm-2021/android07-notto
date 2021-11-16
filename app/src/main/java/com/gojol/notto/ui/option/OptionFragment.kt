@@ -45,10 +45,9 @@ class OptionFragment : Fragment() {
             if (it) DayNotificationManager.setAlarm(requireContext())
             else DayNotificationManager.cancelAlarm(requireContext())
         }
-
         optionViewModel.isNavigateToLicenseClicked.observe(viewLifecycleOwner) {
             startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
-            OssLicensesMenuActivity.setActivityTitle(getString(R.string.license_title))
+            OssLicensesMenuActivity.setActivityTitle(getString(R.string.option_license_title))
         }
     }
 }

@@ -8,16 +8,11 @@ import android.content.Context
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.os.Build
-import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.gojol.notto.R
 import com.gojol.notto.ui.MainActivity
 import java.util.*
-
-private const val notificationDescription = "오늘의 마무리 알림입니다."
-private const val notificationTitle = "오늘의 마무리 알림"
-private const val notificationContent = "하루를 마무리하기 전에 Not Todo를 체크해주세요!"
 
 object DayNotificationManager {
 
@@ -28,7 +23,7 @@ object DayNotificationManager {
                 DayNotificationReceiver.CHANNEL_NAME,
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = notificationDescription
+                description = context.getString(R.string.option_notification_description)
             }
 
             with(NotificationManagerCompat.from(context)) {
@@ -51,8 +46,8 @@ object DayNotificationManager {
             DayNotificationReceiver.CHANNEL_ID
         )
             .setSmallIcon(R.mipmap.ic_notto_launcher_foreground)
-            .setContentTitle(notificationTitle)
-            .setContentText(notificationContent)
+            .setContentTitle(context.getString(R.string.option_notification_title))
+            .setContentText(context.getString(R.string.option_notification_content))
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
