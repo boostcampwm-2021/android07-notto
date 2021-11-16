@@ -1,30 +1,36 @@
 package com.gojol.notto.util
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.BroadcastReceiver
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
-import android.widget.Toast
-import androidx.annotation.CallSuper
+import android.os.Bundle
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.gojol.notto.R
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.ALARM_EXTRA_TODO
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import android.os.Bundle
 import com.gojol.notto.model.datasource.todo.ALARM_BUNDLE_TODO
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.*
 
+const val ACTION_TODO_DATA = "actionTodoData"
+const val ACTION_BUNDLE = "actionBundle"
 
-abstract class HiltBroadcastReceiver : BroadcastReceiver() {
-    @CallSuper
-    override fun onReceive(context: Context, intent: Intent) { }
-}
+const val ACTION_STATE = "actionState"
+const val ACTION_FAIL = "actionFail"
+const val ACTION_SUCCESS = "actionSuccess"
 
+// TODO: WorkManager 체크해보기
 @AndroidEntryPoint
 class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
 
@@ -37,7 +43,8 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
 
     companion object {
         const val CHANNEL_ID = "nottoChannel"
-        const val NOTIFICATION_ID = 1
+        const val GROUP_ID = "com.android.notto.util.TodoPushBroadcastReceiver.group"
+        const val SUMMARY_ID = 0
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -45,22 +52,37 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
         notificationManager = context.getSystemService(
             Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val bundle = intent.getBundleExtra(ALARM_BUNDLE_TODO)
-        println(bundle?.getSerializable(ALARM_EXTRA_TODO))
-        bundle?.getSerializable(ALARM_EXTRA_TODO)?.let {
+//        if(intent.action.equals(Intent.ACTION_BOOT_COMPLETED)){
+//            recreateAlarm()
+//        }
 
+        val bundle = intent.getBundleExtra(ALARM_BUNDLE_TODO)
+        println("bundle todo: " + bundle?.getSerializable(ALARM_EXTRA_TODO))
+        bundle?.getSerializable(ALARM_EXTRA_TODO)?.let {
             todo = it as Todo
             createNotificationChannel()
             deliverNotification(context)
         }
     }
 
+    private fun recreateAlarm() {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.getAllTodo().forEach {
+                if(it.hasAlarm) {
+                    repository.addAlarm(it)
+                }
+            }
+        }
+    }
+
+    // TODO : Priority 를 HIGH로 하면 상태바가 아닌 화면에 등장하는 알림이 사라지기 전까지는 전부 펼쳐졌다가
+    //  해당 알림이 끝나면 summary로 합쳐진다. 뭐가 좋을까? (잠깐동안 펼쳐지는 것도 나빠보이지는 않는다)
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
                 CHANNEL_ID, // 채널의 아이디
                 "notto",
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_DEFAULT
             )
             notificationChannel.description = "notto 푸시 알림 채널" // 채널 정보
             notificationManager.createNotificationChannel(
@@ -70,29 +92,62 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
     }
 
     private fun deliverNotification(context: Context) {
-//        val contentIntent = Intent(context, MainActivity::class.java)
-//        val contentPendingIntent = PendingIntent.getActivity(
-//            context,
-//            NOTIFICATION_ID, // requestCode
-//            contentIntent, // 알림 클릭 시 이동할 인텐트
-//            PendingIntent.FLAG_UPDATE_CURRENT
-//            /*
-//            1. FLAG_UPDATE_CURRENT : 현재 PendingIntent를 유지하고, 대신 인텐트의 extra data는 새로 전달된 Intent로 교체
-//            2. FLAG_CANCEL_CURRENT : 현재 인텐트가 이미 등록되어있다면 삭제, 다시 등록
-//            3. FLAG_NO_CREATE : 이미 등록된 인텐트가 있다면, null
-//            4. FLAG_ONE_SHOT : 한번 사용되면, 그 다음에 다시 사용하지 않음
-//             */
-//        )
+        val todo = todo ?: return
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // 아이콘
-            .setContentTitle(todo?.content) // 제목
-            .setContentText(todo?.content) // 내용
-            //   .setContentIntent(contentPendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setContentTitle(todo.content)
+            .setCustomContentView(customContentView(context))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setGroup(GROUP_ID)
+            .build()
 
-        notificationManager.notify(NOTIFICATION_ID, builder.build())
+        val summaryNotification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_foreground) // 아이콘
+            .setGroup(GROUP_ID)
+            .setStyle(NotificationCompat.InboxStyle())
+            .setGroupSummary(true)
+            .build()
+
+        NotificationManagerCompat.from(context).apply {
+            notify(todo.todoId, builder)
+
+            notify(SUMMARY_ID, summaryNotification)
+        }
+    }
+
+    // TODO : 여기 다시 갈아엎을 것 -> 공통 코드 줄이기, Bundle 빼기, bundleOf extra?, Intent Action 다르게 지정하기
+    @SuppressLint("RemoteViewLayout", "UnspecifiedImmutableFlag")
+    private fun customContentView(context: Context): RemoteViews {
+        val contentView = RemoteViews(context.packageName, R.layout.notification_todo)
+
+        todo?.let {
+            val bundle = Bundle()
+            bundle.putSerializable(ACTION_TODO_DATA, it)
+
+            val successIntent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java)
+            successIntent.putExtra(ACTION_BUNDLE, bundle)
+            successIntent.putExtra(ACTION_STATE, ACTION_SUCCESS)
+            val successPendingIntent = PendingIntent.getBroadcast(
+                context, it.todoId, successIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+
+            val failIntent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java)
+            failIntent.putExtra(ACTION_BUNDLE, bundle)
+            failIntent.putExtra(ACTION_STATE, ACTION_FAIL)
+            val failPendingIntent = PendingIntent.getBroadcast(
+                context, it.todoId, failIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+
+            val currentTime = Date(System.currentTimeMillis()).getTimeString()
+
+            contentView.setTextViewText(R.id.tv_notification_todo_title, it.content)
+            contentView.setTextViewText(R.id.tv_notification_todo_time, currentTime)
+            contentView.setOnClickPendingIntent(R.id.btn_notification_todo_success, successPendingIntent)
+            contentView.setOnClickPendingIntent(R.id.btn_notification_todo_fail, failPendingIntent)
+        }
+
+        return contentView
     }
 }
