@@ -62,8 +62,8 @@ class CalendarFragment : Fragment() {
     }
 
     private fun initObserver() {
-        calendarViewModel.monthlyAchievement.observe(viewLifecycleOwner, {
-            calendarDayAdapter.submitList(it)
+        calendarViewModel.monthlyAchievement.observe(viewLifecycleOwner, { itemList ->
+            calendarDayAdapter.submitList(itemList)
         })
     }
 
@@ -73,10 +73,11 @@ class CalendarFragment : Fragment() {
             context?.resources?.displayMetrics?.widthPixels?.let {
                 addItemDecoration(GridSpacingDecoration(it, 7))
             }
+            itemAnimator = null
         }
     }
 
-    private fun dayClickCallback(date: Int){
+    private fun dayClickCallback(date: Int) {
         calendarViewModel.setMonthlyAchievement(date)
     }
 }

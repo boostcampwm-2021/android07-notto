@@ -142,7 +142,7 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_calendar"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:layout_marginTop="@dimen/space_median"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"

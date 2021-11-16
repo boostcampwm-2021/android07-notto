@@ -20,12 +20,13 @@ class CalendarAdapter(private val requireActivity: FragmentActivity) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomCalendarViewHolder {
         return CustomCalendarViewHolder(
-            ItemCalendarBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemCalendarBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            requireActivity
         )
     }
 
     override fun onBindViewHolder(holder: CustomCalendarViewHolder, position: Int) {
-        holder.bind(requireActivity, date)
+        holder.bind(date)
     }
 
     override fun getItemCount(): Int = 1
@@ -40,20 +41,22 @@ class CalendarAdapter(private val requireActivity: FragmentActivity) :
 
     @SuppressLint("NotifyDataSetChanged")
     fun refreshAdapter() {
-//        TODO 애니메이션 문제 해결 필요
-//        notifyItemRemoved(0)
-//        notifyItemInserted(0)
-        notifyDataSetChanged()
+        notifyItemChanged(0)
     }
 
-    class CustomCalendarViewHolder(private val binding: ItemCalendarBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class CustomCalendarViewHolder(
+        private val binding: ItemCalendarBinding,
+        private val requireActivity: FragmentActivity
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(requireActivity: FragmentActivity, date: Calendar) {
-            binding.date = date
+        init {
             val calendarViewPagerAdapter = CalendarViewPagerAdapter(requireActivity)
             binding.vpCalendar.adapter = calendarViewPagerAdapter
             binding.vpCalendar.setCurrentItem(calendarViewPagerAdapter.firstFragmentPosition, false)
+        }
+
+        fun bind(date: Calendar) {
+            binding.date = date
             setViewPagerDynamicHeight()
             binding.executePendingBindings()
         }
