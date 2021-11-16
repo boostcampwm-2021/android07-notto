@@ -76,7 +76,32 @@ class CalendarViewModel @Inject constructor(
 
     fun setMonthlyAchievement(selectedDate: Int? = null) {
         val today = Calendar.getInstance()
+
         _monthlyAchievement.value = _monthDateList.value?.map { date ->
+            val todayDailyTodos = _monthlyDailyTodos.value
+                ?.filter { it.date.takeLast(2).toInt() == date }
+
+            val successCount = todayDailyTodos?.count { it.todoState == TodoState.SUCCESS } ?: 0
+
+            val totalCount = todayDailyTodos?.size ?: 0
+
+            val successRate = if (totalCount == 0) {
+                0.toFloat()
+            } else {
+                successCount.toFloat() / totalCount.toFloat()
+            }
+
+            var successLevel = when {
+                successRate <= 0.25 -> 1
+                successRate <= 0.5 -> 2
+                successRate <= 0.75 -> 3
+                successRate < 1 -> 4
+                else -> 5
+            }
+            if (totalCount == 0 || successCount == 0) {
+                successLevel = 0
+            }
+
             val select = if (_year == today.getYear() && _month == today.getMonth()) {
                 date == selectedDate ?: today.getDate()
             } else {
@@ -85,9 +110,7 @@ class CalendarViewModel @Inject constructor(
 
             DateWithCountAndSelect(
                 date,
-                _monthlyDailyTodos.value
-                    ?.filter { it.date.takeLast(2).toInt() == date }
-                    ?.count { it.todoState == TodoState.SUCCESS } ?: 0,
+                successLevel,
                 select
             )
         }

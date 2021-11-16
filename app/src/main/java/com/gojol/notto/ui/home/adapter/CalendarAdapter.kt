@@ -49,13 +49,10 @@ class CalendarAdapter(private val requireActivity: FragmentActivity) :
         private val requireActivity: FragmentActivity
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        init {
+        fun bind(date: Calendar) {
             val calendarViewPagerAdapter = CalendarViewPagerAdapter(requireActivity)
             binding.vpCalendar.adapter = calendarViewPagerAdapter
             binding.vpCalendar.setCurrentItem(calendarViewPagerAdapter.firstFragmentPosition, false)
-        }
-
-        fun bind(date: Calendar) {
             binding.date = date
             setViewPagerDynamicHeight()
             binding.executePendingBindings()

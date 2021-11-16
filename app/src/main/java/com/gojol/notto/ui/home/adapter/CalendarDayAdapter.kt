@@ -39,7 +39,7 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
 
         fun bind(item: DateWithCountAndSelect) {
             val date = item.date
-            val achievement = item.count
+            val achievement = item.successLevel
 
             if (date != 0) {
                 binding.tvCalendarDay.text = date.toString()
