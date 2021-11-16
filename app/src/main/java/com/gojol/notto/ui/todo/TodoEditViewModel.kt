@@ -287,7 +287,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
         viewModelScope.launch {
             repository.updateTodo(newTodo)
-            repository.addAlarm(repository.getAllTodo().last())
+            repository.addAlarm(newTodo)
 
             selectedLabelList.value?.let { list ->
                 val newList = list.filterNot { it.order == 0 }
