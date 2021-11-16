@@ -1,15 +1,18 @@
 package com.gojol.notto.ui.label
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.gojol.notto.common.DIALOG_LABEL_ITEM_KEY
 import com.gojol.notto.databinding.ItemEditLabelBinding
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.ui.label.dialog.delete.DeleteLabelDialogFragment
 import com.gojol.notto.ui.label.dialog.edit.EditLabelDialogFragment
+import com.google.gson.Gson
 
 class EditLabelAdapter(
     private val dialogCallback: (DialogFragment) -> Unit
@@ -48,21 +51,27 @@ class EditLabelAdapter(
         private val dialogCallback: (DialogFragment) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.setDeleteClickListener {
-                val dialog = DeleteLabelDialogFragment(binding.label!!)
-                dialogCallback(dialog)
-            }
-
-            binding.setUpdateClickListener {
-                val dialog = EditLabelDialogFragment(binding.label)
-                dialogCallback(dialog)
-            }
-        }
-
         fun bind(item: Label) {
+            val bundle = Bundle().apply {
+                putString(DIALOG_LABEL_ITEM_KEY, Gson().toJson(item))
+            }
+
             binding.apply {
                 label = item
+
+                setDeleteClickListener {
+                    val dialog = DeleteLabelDialogFragment().apply {
+                        arguments = bundle
+                    }
+                    dialogCallback(dialog)
+                }
+
+                setUpdateClickListener {
+                    val dialog = EditLabelDialogFragment().apply {
+                        arguments = bundle
+                    }
+                    dialogCallback(dialog)
+                }
 
                 executePendingBindings()
             }
