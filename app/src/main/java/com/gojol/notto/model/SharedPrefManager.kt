@@ -19,8 +19,7 @@ class SharedPrefManager @Inject constructor(@ApplicationContext context: Context
     }
 
     fun getBoolean(key: String): Boolean {
-        val defaultValue = false
-        return prefs.getBoolean(key, defaultValue)
+        return prefs.getBoolean(key, false)
     }
 
     companion object {
