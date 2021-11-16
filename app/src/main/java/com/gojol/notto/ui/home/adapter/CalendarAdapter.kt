@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.home.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
@@ -9,7 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.ItemCalendarBinding
+import com.gojol.notto.ui.home.CalendarFragment
 import com.gojol.notto.util.getMonth
+import com.gojol.notto.util.getYear
+import com.gojol.notto.util.toYearMonthDate
 import java.util.Calendar
 
 class CalendarAdapter(private val requireActivity: FragmentActivity) :
@@ -52,10 +56,15 @@ class CalendarAdapter(private val requireActivity: FragmentActivity) :
         fun bind(today: Calendar, date: Calendar) {
             binding.date = date
 
-            val movePosition = date.getMonth() - today.getMonth()
+            val movePosition =
+                date.getMonth() - today.getMonth() + (date.getYear() - today.getYear()) * 12
+
             val calendarViewPagerAdapter = CalendarViewPagerAdapter(requireActivity)
             binding.vpCalendar.adapter = calendarViewPagerAdapter
-            binding.vpCalendar.setCurrentItem(calendarViewPagerAdapter.firstFragmentPosition + movePosition, false)
+            binding.vpCalendar.setCurrentItem(
+                calendarViewPagerAdapter.firstFragmentPosition + movePosition,
+                false
+            )
             setViewPagerDynamicHeight()
 
             binding.executePendingBindings()
