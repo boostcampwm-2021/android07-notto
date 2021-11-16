@@ -75,8 +75,6 @@ class CalendarViewModel @Inject constructor(
     }
 
     fun setMonthlyAchievement() {
-        val today = Calendar.getInstance()
-
         _monthlyAchievement.value = _monthDateList.value?.map { date ->
             val todayDailyTodos = _monthlyDailyTodos.value
                 ?.filter { it.date.takeLast(2).toInt() == date }
@@ -108,7 +106,7 @@ class CalendarViewModel @Inject constructor(
                 ) {
                     date == CalendarFragment.selectedDate ?: 1
                 } else {
-                    date == 1
+                    false
                 }
 
             DateWithCountAndSelect(
