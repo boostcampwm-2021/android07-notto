@@ -71,4 +71,5 @@
     <string name="option_push_notification_day">하루 마무리 알림</string>
     <string name="option_open_source_license">오픈소스 라이선스</string>
     <string name="option_team">개발팀</string>
+    <string name="license_title">오픈소스 라이선스</string>
 </resources>

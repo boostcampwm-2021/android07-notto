@@ -3,7 +3,7 @@ package com.gojol.notto.ui.option
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.gojol.notto.model.data.License
+import com.gojol.notto.common.Event
 import com.gojol.notto.model.datasource.option.OptionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -16,44 +16,20 @@ class OptionViewModel @Inject constructor(
     private val _isPushChecked = MutableLiveData<Boolean>()
     val isPushChecked: LiveData<Boolean> = _isPushChecked
 
-    private val _licenseList = MutableLiveData<List<License>>()
-    val licenseList: LiveData<List<License>> = _licenseList
+    private val _isNavigateToLicenseClicked = MutableLiveData<Event<Boolean>>()
+    val isNavigateToLicenseClicked: LiveData<Event<Boolean>> = _isNavigateToLicenseClicked
 
     init {
-        _licenseList.value = listOf(
-            License(
-                "kotlinx.coroutines",
-                "https://github.com/Kotlin/kotlinx.coroutines",
-                "Copyright 2000-2020 JetBrains s.r.o. and Kotlin Programming Language contributors."
-            ),
-            License(
-                "kotlinx.coroutines",
-                "https://github.com/Kotlin/kotlinx.coroutines",
-                "Copyright 2000-2020 JetBrains s.r.o. and Kotlin Programming Language contributors."
-            ),
-            License(
-                "kotlinx.coroutines",
-                "https://github.com/Kotlin/kotlinx.coroutines",
-                "Copyright 2000-2020 JetBrains s.r.o. and Kotlin Programming Language contributors."
-            ),
-            License(
-                "kotlinx.coroutines",
-                "https://github.com/Kotlin/kotlinx.coroutines",
-                "Copyright 2000-2020 JetBrains s.r.o. and Kotlin Programming Language contributors."
-            ),
-            License(
-                "kotlinx.coroutines",
-                "https://github.com/Kotlin/kotlinx.coroutines",
-                "Copyright 2000-2020 JetBrains s.r.o. and Kotlin Programming Language contributors."
-            )
-        )
-
         _isPushChecked.value = optionRepository.loadIsPushNotificationChecked(pushNotificationKey)
     }
 
     fun updateIsPushChecked(isPushChecked: Boolean) {
         _isPushChecked.value = isPushChecked
         optionRepository.saveIsPushNotificationChecked(pushNotificationKey, isPushChecked)
+    }
+
+    fun updateIsNavigateToLicenseClicked() {
+        _isNavigateToLicenseClicked.value = Event(true)
     }
 
     companion object {

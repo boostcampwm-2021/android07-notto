@@ -26,7 +26,15 @@
         <activity
             android:name=".ui.todo.TodoEditActivity"
             android:exported="true" />
-        <receiver android:name=".ui.option.DayNotificationReceiver"
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/LicenseTheme" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/LicenseTheme" />
+
+        <receiver
+            android:name=".ui.option.DayNotificationReceiver"
             android:exported="true" />
     </application>
 
