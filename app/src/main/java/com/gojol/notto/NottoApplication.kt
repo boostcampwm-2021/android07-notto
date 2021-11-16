@@ -5,8 +5,7 @@ import com.facebook.stetho.Stetho
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class NottoApplication : Application() {
-
+class NottoApplication: Application() {
     override fun onCreate() {
         super.onCreate()
 
