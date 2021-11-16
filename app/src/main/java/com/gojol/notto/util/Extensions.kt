@@ -90,3 +90,9 @@ fun String.get24Hour(): String {
 fun String.timeSplitFormatter(): List<String> {
     return this.split(":")
 }
+
+fun String.toCalendar(): Calendar {
+    val calendar = Calendar.getInstance()
+    calendar.set(this.slice(0..3).toInt(), this.slice(4..5).toInt(), this.slice(6..7).toInt())
+    return calendar
+}
