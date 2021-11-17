@@ -3,7 +3,6 @@ package com.gojol.notto.ui.option
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.gojol.notto.common.DAY_PUSH_NOTIFICATION_KEY
 import com.gojol.notto.common.Event
 import com.gojol.notto.model.datasource.option.OptionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,12 +21,12 @@ class OptionViewModel @Inject constructor(
 
     init {
         _isPushChecked.value =
-            optionRepository.loadIsPushNotificationChecked(DAY_PUSH_NOTIFICATION_KEY)
+            optionRepository.loadIsPushNotificationChecked()
     }
 
     fun updateIsPushChecked(isPushChecked: Boolean) {
         _isPushChecked.value = isPushChecked
-        optionRepository.saveIsPushNotificationChecked(DAY_PUSH_NOTIFICATION_KEY, isPushChecked)
+        optionRepository.saveIsPushNotificationChecked(isPushChecked)
     }
 
     fun updateIsNavigateToLicenseClicked() {
