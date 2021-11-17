@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.nottokeyword.Keyword
 import com.gojol.notto.databinding.ItemPopularKeywordBinding
 
 class PopularAdapter :
-    ListAdapter<PopularKeyword, PopularAdapter.PopularViewHolder>(PopularDiffUtil()) {
+    ListAdapter<Keyword, PopularAdapter.PopularViewHolder>(PopularDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularViewHolder {
         return PopularViewHolder(
@@ -27,21 +28,22 @@ class PopularAdapter :
     class PopularViewHolder(private val binding: ItemPopularKeywordBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: PopularKeyword) {
+        fun bind(item: Keyword) {
             binding.apply {
                 keyword = item
+                place = absoluteAdapterPosition + 1
                 executePendingBindings()
             }
         }
     }
 
-    class PopularDiffUtil : DiffUtil.ItemCallback<PopularKeyword>() {
+    class PopularDiffUtil : DiffUtil.ItemCallback<Keyword>() {
 
-        override fun areItemsTheSame(oldItem: PopularKeyword, newItem: PopularKeyword): Boolean {
+        override fun areItemsTheSame(oldItem: Keyword, newItem: Keyword): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: PopularKeyword, newItem: PopularKeyword): Boolean {
+        override fun areContentsTheSame(oldItem: Keyword, newItem: Keyword): Boolean {
             return oldItem == newItem
         }
     }

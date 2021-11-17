@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.nottokeyword.FirebaseDB
+import com.gojol.notto.BuildConfig
 import com.gojol.notto.common.Event
 import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.model.data.RepeatType
@@ -12,7 +14,6 @@ import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.util.TouchEvent
 import com.gojol.notto.util.get12Hour
-import com.gojol.notto.util.insertKeyword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -323,10 +324,12 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     private fun extractKeywords(content: String) {
+        val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
+
         CoroutineScope(Dispatchers.IO).launch {
             val keywords = getKeywords(content)
             keywords.forEach {
-                insertKeyword(it)
+                firebaseDB.insertKeyword(it)
             }
         }
     }

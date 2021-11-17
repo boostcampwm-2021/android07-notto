@@ -7,7 +7,11 @@
 
         <variable
             name="keyword"
-            type="com.gojol.notto.ui.popular.PopularKeyword" />
+            type="com.example.nottokeyword.Keyword" />
+
+        <variable
+            name="place"
+            type="Integer" />
 
     </data>
 
@@ -33,7 +37,7 @@
             android:id="@+id/tv_keyword_place"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
-            android:text="@{@string/popular_place_format(keyword.place)}"
+            android:text="@{@string/popular_place_format(place)}"
             android:textColor="@color/black"
             android:textSize="@dimen/text_small"
             android:textStyle="bold"
