@@ -3,6 +3,7 @@ package com.gojol.notto.ui.option
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.gojol.notto.common.DAY_PUSH_NOTIFICATION_KEY
 import com.gojol.notto.common.Event
 import com.gojol.notto.model.datasource.option.OptionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,9 +32,5 @@ class OptionViewModel @Inject constructor(
 
     fun updateIsNavigateToLicenseClicked() {
         _isNavigateToLicenseClicked.value = Event(true)
-    }
-
-    companion object {
-        const val DAY_PUSH_NOTIFICATION_KEY = "pushDay"
     }
 }
