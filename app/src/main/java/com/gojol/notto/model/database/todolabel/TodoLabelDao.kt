@@ -38,9 +38,8 @@ interface TodoLabelDao {
     @Query("SELECT * FROM Label")
     suspend fun getAllLabel(): List<Label>
 
-    @Transaction
-    @Query("SELECT * FROM TODO WHERE todoId=:todoId")
-    suspend fun getTodosWithDailyTodosByTodoId(todoId: Int): TodoWithDailyTodo
+    @Query("SELECT * FROM DailyTodo WHERE parent_todo_id=:parentTodoId")
+    suspend fun getDailyTodosByParentTodoId(parentTodoId: Int): List<DailyTodo>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTodo(todo: Todo)
@@ -77,6 +76,9 @@ interface TodoLabelDao {
 
     @Delete
     suspend fun deleteDailyTodo(dailyTodo: DailyTodo)
+
+    @Query("DELETE FROM DailyTodo WHERE parent_todo_id=:todoId and date=:date")
+    suspend fun deleteDailyTodoByTodoIdAndDate(todoId: Int, date: String)
 
     @Delete
     suspend fun deleteKeyword(keyword: Keyword)

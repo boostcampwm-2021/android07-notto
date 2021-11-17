@@ -100,23 +100,18 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     }
 
     override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
-        val todoWithDailyTodo = todoLabelDao.getTodosWithDailyTodosByTodoId(todoId)
-        val todayTodo = todoWithDailyTodo.dailyTodos.find { dailyTodo ->
-            dailyTodo.date == selectedDate
-        } ?: return
-
-        todoLabelDao.deleteDailyTodo(todayTodo)
+        todoLabelDao.deleteDailyTodoByTodoIdAndDate(todoId, selectedDate)
     }
 
     override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
         val selectedDateToDate = selectedDate.getDate()
-        val todoWithDailyTodo = todoLabelDao.getTodosWithDailyTodosByTodoId(todoId)
-        val todayAndFutureTodo = todoWithDailyTodo.dailyTodos.filter { dailyTodo ->
-            dailyTodo.date.getDate()?.compareTo(selectedDateToDate) == 0 || dailyTodo.date.getDate()
-                ?.compareTo(selectedDateToDate) == 1
-        }
+        val todosWithDailyTodos = todoLabelDao.getDailyTodosByParentTodoId(todoId)
+            .filter { dailyTodo ->
+                dailyTodo.date.getDate()?.compareTo(selectedDateToDate) == 0 ||
+                        dailyTodo.date.getDate()?.compareTo(selectedDateToDate) == 1
+            }
 
-        todayAndFutureTodo.forEach { dailyTodo ->
+        todosWithDailyTodos.forEach { dailyTodo ->
             todoLabelDao.deleteDailyTodo(dailyTodo)
         }
     }
