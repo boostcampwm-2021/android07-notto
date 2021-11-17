@@ -17,8 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/font_nanumsquare"
-            android:textSize="@dimen/text_median"
-            android:textStyle="bold"
+            android:textSize="@dimen/notification_title"
             tools:text="밥 굵지 않기" />
 
         <TextView
@@ -26,7 +25,7 @@
             style="@style/TextAppearance.Compat.Notification.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_x_small"
+            android:textSize="@dimen/notification_time"
             tools:text="오후 6시 50분" />
     </LinearLayout>
 
