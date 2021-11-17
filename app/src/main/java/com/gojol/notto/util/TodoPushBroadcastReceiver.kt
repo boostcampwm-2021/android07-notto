@@ -1,6 +1,7 @@
 package com.gojol.notto.util
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -11,17 +12,22 @@ import android.os.Bundle
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.gojol.notto.R
+import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.ALARM_EXTRA_TODO
-import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import com.gojol.notto.model.datasource.todo.ALARM_BUNDLE_TODO
+import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 const val ACTION_TODO_DATA = "actionTodoData"
 const val ACTION_BUNDLE = "actionBundle"
@@ -38,6 +44,8 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
 
     @Inject
     lateinit var repository: TodoLabelRepository
+    @Inject
+    lateinit var alarmManager: AlarmManager
 
     var todo: Todo? = null
 
@@ -47,30 +55,35 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
         const val SUMMARY_ID = 0
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
+
         notificationManager = context.getSystemService(
             Context.NOTIFICATION_SERVICE) as NotificationManager
 
-//        if(intent.action.equals(Intent.ACTION_BOOT_COMPLETED)){
-//            recreateAlarm()
-//        }
-
         val bundle = intent.getBundleExtra(ALARM_BUNDLE_TODO)
-        println("bundle todo: " + bundle?.getSerializable(ALARM_EXTRA_TODO))
-        bundle?.getSerializable(ALARM_EXTRA_TODO)?.let {
-            todo = it as Todo
+        bundle?.getSerializable(ALARM_EXTRA_TODO)?.let { serialize ->
+            todo = (serialize as Todo)
+            todo?.let {
+                removeAlarm(context, intent)
+            }
+
             createNotificationChannel()
             deliverNotification(context)
         }
     }
 
-    private fun recreateAlarm() {
-        CoroutineScope(Dispatchers.IO).launch {
-            repository.getAllTodo().forEach {
-                if(it.hasAlarm) {
-                    repository.addAlarm(it)
-                }
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private fun removeAlarm(context: Context, intent: Intent) {
+        todo?.let {
+            val todoTime = it.endTime.getTime() ?: return
+            val endTime = todoTime.time - it.periodTime.time.toInt() * 60 * 1000
+            if (!it.isRepeated || endTime < System.currentTimeMillis()) {
+                val pendingIntent = PendingIntent.getBroadcast(
+                    context, it.todoId, intent, PendingIntent.FLAG_UPDATE_CURRENT
+                )
+                alarmManager.cancel(pendingIntent)
             }
         }
     }
@@ -130,14 +143,14 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
             successIntent.putExtra(ACTION_BUNDLE, bundle)
             successIntent.putExtra(ACTION_STATE, ACTION_SUCCESS)
             val successPendingIntent = PendingIntent.getBroadcast(
-                context, it.todoId, successIntent, PendingIntent.FLAG_UPDATE_CURRENT
+                context, SUCCESS_INTENT_ID, successIntent, PendingIntent.FLAG_UPDATE_CURRENT
             )
 
             val failIntent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java)
             failIntent.putExtra(ACTION_BUNDLE, bundle)
             failIntent.putExtra(ACTION_STATE, ACTION_FAIL)
             val failPendingIntent = PendingIntent.getBroadcast(
-                context, it.todoId, failIntent, PendingIntent.FLAG_UPDATE_CURRENT
+                context, FAIL_INTENT_ID, failIntent, PendingIntent.FLAG_UPDATE_CURRENT
             )
 
             val currentTime = Date(System.currentTimeMillis()).getTimeString()
