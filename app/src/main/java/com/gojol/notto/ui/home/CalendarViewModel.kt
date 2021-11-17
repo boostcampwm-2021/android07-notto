@@ -56,7 +56,7 @@ class CalendarViewModel @Inject constructor(
         viewModelScope.launch {
             launch {
                 monthlyDailyTodos = repository.getAllDailyTodos().filter {
-                    it.date > monthStartDate && it.date < monthLastDate
+                    it.date in monthStartDate..monthLastDate
                 }
             }.join()
 
