@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 
 class PopularViewModel : ViewModel() {
 
-    private var _items = MutableLiveData<List<Keyword>>()
-    val items: LiveData<List<Keyword>> = _items
+    private var _items = MutableLiveData<List<Keyword>?>()
+    val items: LiveData<List<Keyword>?> = _items
 
     private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
 
