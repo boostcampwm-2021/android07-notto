@@ -64,6 +64,11 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        hideKeyboardWhenOutsideTouched(ev)
+        return super.dispatchTouchEvent(ev)
+    }
+
+    private fun hideKeyboardWhenOutsideTouched(ev: MotionEvent) {
         val view = currentFocus
         if (view != null && (ev.action == MotionEvent.ACTION_UP || ev.action == MotionEvent.ACTION_MOVE) &&
             view is EditText && !view.javaClass.name.startsWith("android.webkit.")
@@ -76,7 +81,6 @@ class TodoEditActivity : AppCompatActivity() {
                 (this.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager)
                     .hideSoftInputFromWindow(this.window.decorView.applicationWindowToken, 0)
         }
-        return super.dispatchTouchEvent(ev)
     }
 
     private fun initIntentExtra() {
