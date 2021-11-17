@@ -3,6 +3,7 @@ package com.gojol.notto.ui.label
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -86,11 +87,8 @@ class EditLabelActivity : AppCompatActivity() {
     }
 
     private fun showCreateDialog() {
-        val bundle = Bundle().apply {
-            putString(DIALOG_LABEL_ITEM_KEY, null)
-        }
         val dialog = EditLabelDialogFragment().apply {
-            arguments = bundle
+            arguments = bundleOf(Pair(DIALOG_LABEL_ITEM_KEY, null))
         }
 
         showDialog(dialog)
