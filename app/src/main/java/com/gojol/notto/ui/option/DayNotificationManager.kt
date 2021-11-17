@@ -68,18 +68,25 @@ object DayNotificationManager {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
+        alarmManager.setInexactRepeating(
+            AlarmManager.RTC_WAKEUP,
+            getSelectedTime(),
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
+    }
+
+    private fun getSelectedTime(): Long {
+        val currentTime = System.currentTimeMillis()
         val calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
+            timeInMillis = currentTime
             set(Calendar.HOUR_OF_DAY, 23)
             set(Calendar.MINUTE, 50)
         }
 
-        alarmManager.setInexactRepeating(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            pendingIntent
-        )
+        var selectedTime = calendar.timeInMillis
+        if (currentTime > selectedTime) selectedTime += 24 * 60 * 60 * 1000 //하루
+        return selectedTime
     }
 
     fun cancelAlarm(context: Context) {
