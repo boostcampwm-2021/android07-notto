@@ -18,9 +18,11 @@ fun insertKeyword(keyword: String) {
                 val count = (child.value as Long).toInt() + 1
                 database.child(keyword).setValue(count)
 
-                return@addOnSuccessListener
+                return@forEach
             }
         }
+
+        database.child(keyword).setValue(1)
     }.addOnFailureListener{
         Log.e("firebase", "Error getting data", it)
 

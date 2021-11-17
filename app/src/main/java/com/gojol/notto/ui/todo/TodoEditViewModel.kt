@@ -12,14 +12,15 @@ import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.util.TouchEvent
 import com.gojol.notto.util.get12Hour
+import com.gojol.notto.util.insertKeyword
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kr.bydelta.koala.hnn.Tagger
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -227,8 +228,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     private fun saveNewTodo() {
+        val content = todoContent.value ?: return
+        val isKeywordOpen = isKeywordChecked.value ?: return
         val newTodo = Todo(
-            todoContent.value!!,
+            content,
             isRepeatChecked.value ?: return,
             repeatType.value ?: return,
             repeatStart.value ?: return,
@@ -236,10 +239,14 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             timeStart.value ?: return,
             timeFinish.value ?: return,
             timeRepeat.value ?: return,
-            isKeywordChecked.value ?: return,
+            isKeywordOpen,
             false,
             ""
         )
+
+        if (isKeywordOpen) {
+            extractKeywords(content)
+        }
 
         viewModelScope.launch {
             launch { repository.insertTodo(newTodo) }.join()
@@ -267,8 +274,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     private fun updateTodo() {
+        val content = todoContent.value ?: return
+        val isKeywordOpen = isKeywordChecked.value ?: return
         val newTodo = Todo(
-            todoContent.value!!,
+            content,
             isRepeatChecked.value ?: return,
             repeatType.value ?: return,
             repeatStart.value ?: return,
@@ -276,11 +285,15 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             timeStart.value ?: return,
             timeFinish.value ?: return,
             timeRepeat.value ?: return,
-            isKeywordChecked.value ?: return,
+            isKeywordOpen,
             false,
             "",
             existedTodo.value?.todoId ?: return
         )
+
+        if (isKeywordOpen) {
+            extractKeywords(content)
+        }
 
         viewModelScope.launch {
             repository.updateTodo(newTodo)
@@ -300,5 +313,21 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private fun getFormattedCurrentTime(date: Date): String {
         val simpleDateFormatTime = SimpleDateFormat("a hh:mm", Locale.KOREA)
         return simpleDateFormatTime.format(date)
+    }
+
+    private fun getKeywords(text: String): List<String> {
+        val tagger = Tagger().tagSentence(text)
+        val nouns = tagger.getNouns()
+
+        return nouns.map { it.surface }
+    }
+
+    private fun extractKeywords(content: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val keywords = getKeywords(content)
+            keywords.forEach {
+                insertKeyword(it)
+            }
+        }
     }
 }

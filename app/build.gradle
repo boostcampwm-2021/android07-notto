@@ -57,7 +57,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // koala nlp
-    implementation "kr.bydelta:koalanlp-kkma:2.1.4:assembly"
+    implementation "kr.bydelta:koalanlp-hnn:2.1.4:assembly"
 
     // room
     implementation "androidx.room:room-runtime:$roomVersion"
