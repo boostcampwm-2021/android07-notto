@@ -11,11 +11,9 @@ class SharedPrefManager @Inject constructor(@ApplicationContext context: Context
     private val prefs = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
 
     fun setBoolean(key: String, value: Boolean) {
-        val editor = prefs.edit()
-        editor.apply {
-            putBoolean(key, value)
-            apply()
-        }
+        prefs.edit()
+            .putBoolean(key, value)
+            .apply()
     }
 
     fun getBoolean(key: String): Boolean {
