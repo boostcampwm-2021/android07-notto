@@ -293,7 +293,11 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         )
 
         if (isKeywordOpen) {
-            firebaseDB.insertKeyword(content)
+            val oldTodo = existedTodo.value ?: return
+
+            if (oldTodo.isKeywordOpen.not() || oldTodo.content != content) {
+                firebaseDB.insertKeyword(content)
+            }
         }
 
         viewModelScope.launch {

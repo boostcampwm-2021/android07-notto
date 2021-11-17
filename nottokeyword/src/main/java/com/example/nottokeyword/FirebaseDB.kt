@@ -34,20 +34,24 @@ class FirebaseDB(firebaseDbUrl: String) {
 
     private fun insert(keyword: String) {
         database.get().addOnSuccessListener {
-            Log.i("firebase", "Got value ${it.value}")
+            Log.i(TAG, "Got value ${it.value}")
 
             it.children.forEach { child ->
                 if (child.key == keyword) {
                     val count = (child.value as Long).toInt() + 1
-                    database.child(keyword).setValue(count)
+                    database.child(keyword).setValue(count).addOnSuccessListener { 
+                        Log.i(TAG, "Successfully counted keyword $keyword")
+                    }
 
-                    return@forEach
+                    return@addOnSuccessListener
                 }
             }
 
-            database.child(keyword).setValue(1)
+            database.child(keyword).setValue(1).addOnSuccessListener {
+                Log.i(TAG, "Successfully inserted keyword $keyword")
+            }
         }.addOnFailureListener{
-            Log.e("firebase", "Error getting data", it)
+            Log.e(TAG, "Error getting data", it)
         }
     }
 
@@ -56,14 +60,14 @@ class FirebaseDB(firebaseDbUrl: String) {
         val list = mutableListOf<Keyword>()
 
         database.get().addOnSuccessListener {
-            Log.i("firebase", "Got value ${it.value}")
+            Log.i(TAG, "Got value ${it.value}")
             it.children.forEach { child ->
                 if (child.key != null && child.value != null) {
                     list.add(Keyword(child.key!!, (child.value!! as Long).toInt()))
                 }
             }
         }.addOnFailureListener{
-            Log.e("firebase", "Error getting data", it)
+            Log.e(TAG, "Error getting data", it)
         }.addOnCompleteListener {
             list.sortByDescending { it.count }
             orderedList.value = list
@@ -74,7 +78,7 @@ class FirebaseDB(firebaseDbUrl: String) {
 
     fun deleteKeyword(keyword: String) {
         database.get().addOnSuccessListener {
-            Log.i("firebase", "Got value ${it.value}")
+            Log.i(TAG, "Got value ${it.value}")
 
             it.children.forEach { child ->
                 if (child.key == keyword && child.value as Long > 0) {
@@ -90,5 +94,9 @@ class FirebaseDB(firebaseDbUrl: String) {
                 }
             }
         }
+    }
+    
+    companion object {
+        const val TAG = "FirebaseDB"
     }
 }
