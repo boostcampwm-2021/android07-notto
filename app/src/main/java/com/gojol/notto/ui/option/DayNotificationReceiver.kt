@@ -4,18 +4,16 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.core.content.getSystemService
 
 class DayNotificationReceiver : BroadcastReceiver() {
 
-    private lateinit var notificationManager: NotificationManager
+    private var notificationManager: NotificationManager? = null
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        notificationManager =
-            context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        context.let {
-            DayNotificationManager.createNotificationChannel(it)
-            DayNotificationManager.showNotification(it)
-        }
+    override fun onReceive(context: Context, intent: Intent) {
+        notificationManager = context.getSystemService()
+        DayNotificationManager.createNotificationChannel(context)
+        DayNotificationManager.showNotification(context)
     }
 
     companion object {
