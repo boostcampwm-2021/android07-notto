@@ -93,6 +93,6 @@ fun String.timeSplitFormatter(): List<String> {
 
 fun String.toCalendar(): Calendar {
     val calendar = Calendar.getInstance()
-    calendar.set(this.slice(0..3).toInt(), this.slice(4..5).toInt(), this.slice(6..7).toInt())
+    calendar.set(this.slice(0..3).toInt(), this.slice(4..5).toInt() - 1, this.slice(6..7).toInt())
     return calendar
 }

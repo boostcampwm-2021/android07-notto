@@ -1,5 +1,6 @@
 package com.gojol.notto.model.datasource.todo
 
+import java.util.Calendar
 import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
@@ -12,8 +13,10 @@ import com.gojol.notto.model.database.todolabel.TodoLabelCrossRef
 import com.gojol.notto.model.database.todolabel.TodoLabelDao
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
 import com.gojol.notto.util.getDate
+import com.gojol.notto.util.getDayOfWeek
 import com.gojol.notto.util.getMonth
 import com.gojol.notto.util.toCalendar
+import com.gojol.notto.util.toYearMonthDate
 
 class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     TodoLabelDataSource {
@@ -34,35 +37,19 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
             var todayDailyTodo =
                 dailyTodos.find { it.parentTodoId == todo.todoId && it.date == selectedDate }
 
-            // 생성일을 db에 추가해야 반복설정을 하지 않았을 때 반영가능
-            // 일단 반복시작일이 시작일이라고 가정
             if (todayDailyTodo == null) {
                 val repeatedDate = when {
-                    selectedDate == todo.startDate -> {
-                        selectedDate
-                    }
+                    // 반복설정한 경우 반복 조건에 따라 오늘의 Daily를 추가할지 결정
                     todo.isRepeated -> {
-                        val dateDiff = ((todo.startDate.toCalendar().timeInMillis -
-                                selectedDate.toCalendar().timeInMillis) / 1000 / (24 * 60 * 60))
-                            .toInt()
-                        val dateEqual = todo.startDate.toCalendar().getDate() ==
-                                selectedDate.toCalendar().getDate()
-                        val monthEqual = todo.startDate.toCalendar().getMonth() ==
-                                selectedDate.toCalendar().getMonth()
-
-                        if ((selectedDate.toInt() > todo.startDate.toInt()) &&
-                            ((todo.repeatType == RepeatType.DAY) ||
-                                    (todo.repeatType == RepeatType.WEEK && (dateDiff % 7 == 0)) ||
-                                    (todo.repeatType == RepeatType.MONTH && dateEqual) ||
-                                    (todo.repeatType == RepeatType.YEAR && dateEqual && monthEqual))
-                        ) {
+                        checkRepeatedWhenSelectedDate(todo, selectedDate)
+                    }
+                    else -> {
+                        // 반복설정을 하지 않고 투두를 생성한 경우 오늘의 Daily 추가
+                        if (selectedDate == Calendar.getInstance().toYearMonthDate()){
                             selectedDate
                         } else {
                             null
                         }
-                    }
-                    else -> {
-                        null
                     }
                 }
 
@@ -74,6 +61,26 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
             }
 
             todayDailyTodo?.let { TodoWithTodayDailyTodo(todo, it) }
+        }
+    }
+
+    private fun checkRepeatedWhenSelectedDate(todo: Todo, selectedDate: String): String? {
+        val dateEqual = todo.startDate.toCalendar().getDate() ==
+                selectedDate.toCalendar().getDate()
+        val weekEqual = todo.startDate.toCalendar().getDayOfWeek() ==
+                selectedDate.toCalendar().getDayOfWeek()
+        val monthEqual = todo.startDate.toCalendar().getMonth() ==
+                selectedDate.toCalendar().getMonth()
+
+        return if ((selectedDate.toInt() >= todo.startDate.toInt()) &&
+            ((todo.repeatType == RepeatType.DAY) ||
+                    (todo.repeatType == RepeatType.WEEK && weekEqual) ||
+                    (todo.repeatType == RepeatType.MONTH && dateEqual) ||
+                    (todo.repeatType == RepeatType.YEAR && dateEqual && monthEqual))
+        ) {
+            selectedDate
+        } else {
+            null
         }
     }
 
