@@ -4,7 +4,11 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kr.bydelta.koala.hnn.Tagger
 
 class FirebaseDB(firebaseDbUrl: String) {
 
@@ -12,7 +16,23 @@ class FirebaseDB(firebaseDbUrl: String) {
         .database(firebaseDbUrl)
         .getReference("keywords")
 
-    fun insertKeyword(keyword: String) {
+    fun insertKeyword(content: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val keywords = getKeywordsFrom(content)
+            keywords.forEach {
+                insert(it)
+            }
+        }
+    }
+
+    private fun getKeywordsFrom(text: String): List<String> {
+        val tagger = Tagger().tagSentence(text)
+        val nouns = tagger.getNouns()
+
+        return nouns.map { it.surface }
+    }
+
+    private fun insert(keyword: String) {
         database.get().addOnSuccessListener {
             Log.i("firebase", "Got value ${it.value}")
 

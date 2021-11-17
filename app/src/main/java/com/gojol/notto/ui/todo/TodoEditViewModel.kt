@@ -15,11 +15,9 @@ import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.util.TouchEvent
 import com.gojol.notto.util.get12Hour
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kr.bydelta.koala.hnn.Tagger
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -90,6 +88,8 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
     private val _isSaveButtonEnabled = MutableLiveData<Boolean>()
     val isSaveButtonEnabled: LiveData<Boolean> = _isSaveButtonEnabled
+
+    private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
 
     init {
         val date = Date(Calendar.getInstance().timeInMillis)
@@ -246,7 +246,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         )
 
         if (isKeywordOpen) {
-            extractKeywords(content)
+            firebaseDB.insertKeyword(content)
         }
 
         viewModelScope.launch {
@@ -293,7 +293,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         )
 
         if (isKeywordOpen) {
-            extractKeywords(content)
+            firebaseDB.insertKeyword(content)
         }
 
         viewModelScope.launch {
@@ -314,23 +314,5 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private fun getFormattedCurrentTime(date: Date): String {
         val simpleDateFormatTime = SimpleDateFormat("a hh:mm", Locale.KOREA)
         return simpleDateFormatTime.format(date)
-    }
-
-    private fun getKeywords(text: String): List<String> {
-        val tagger = Tagger().tagSentence(text)
-        val nouns = tagger.getNouns()
-
-        return nouns.map { it.surface }
-    }
-
-    private fun extractKeywords(content: String) {
-        val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val keywords = getKeywords(content)
-            keywords.forEach {
-                firebaseDB.insertKeyword(it)
-            }
-        }
     }
 }
