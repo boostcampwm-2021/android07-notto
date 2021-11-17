@@ -10,12 +10,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
+import com.gojol.notto.common.DIALOG_LABEL_ITEM_KEY
 import com.gojol.notto.databinding.DialogFragmentDeleteLabelBinding
 import com.gojol.notto.model.database.label.Label
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DeleteLabelDialogFragment(private val label: Label) : DialogFragment() {
+class DeleteLabelDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogFragmentDeleteLabelBinding
 
@@ -40,12 +42,14 @@ class DeleteLabelDialogFragment(private val label: Label) : DialogFragment() {
         initViewModel()
         initObservers()
 
-        viewModel.setLabel(label)
-
         return binding.root
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val label =
+            Gson().fromJson(requireArguments().getString(DIALOG_LABEL_ITEM_KEY), Label::class.java)
+        viewModel.setLabel(label)
+
         return activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.setView(binding.root)

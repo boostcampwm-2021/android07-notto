@@ -80,4 +80,7 @@ dependencies {
 
     // stetho
     implementation 'com.facebook.stetho:stetho:1.5.1'
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.9'
 }
