@@ -45,6 +45,8 @@
     <string name="dialog_repeat_type_everyweek">매주</string>
     <string name="dialog_repeat_type_everymonth">매월</string>
     <string name="dialog_repeat_type_everyyear">매년</string>
+    <string name="dialog_todo_delete_only_today">오늘만</string>
+    <string name="dialog_todo_delete_all">오늘 및 향후 Not Todo</string>
 
     <string name="calendar_sunday">일</string>
     <string name="calendar_monday">월</string>

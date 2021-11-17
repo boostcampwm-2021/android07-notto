@@ -9,6 +9,9 @@ import com.gojol.notto.R
 import com.gojol.notto.databinding.DialogDeletionBinding
 import dagger.hilt.android.AndroidEntryPoint
 
+const val DELETE_DATA = "todoDeleteData"
+const val DELETE = "todoDelete"
+
 @AndroidEntryPoint
 class TodoDeletionDialog : TodoBaseDialogImpl() {
     private lateinit var contentBinding: DialogDeletionBinding
@@ -20,6 +23,19 @@ class TodoDeletionDialog : TodoBaseDialogImpl() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        contentBinding.lifecycleOwner = viewLifecycleOwner
+        contentBinding.viewmodel = viewModel
+        initEditingTodoId()
         binding.clDialogContent.addView(contentBinding.root)
+    }
+
+    private fun initEditingTodoId() {
+        val todoId = requireArguments().getInt(DELETE_DATA)
+        viewModel.setEditingTodoId(todoId)
+    }
+
+    override fun confirmClick() {
+        super.confirmClick()
+        viewModel.deleteTodo()
     }
 }
