@@ -10,6 +10,7 @@ import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoLabelCrossRef
 import com.gojol.notto.model.database.todolabel.TodoLabelDao
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
+import com.gojol.notto.util.getDate
 
 class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     TodoLabelDataSource {
@@ -96,6 +97,28 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     override suspend fun deleteTodo(todo: Todo) {
         todoLabelDao.deleteTodo(todo)
         todoLabelDao.deleteTodoLabelCrossRefByTodo(todo.todoId)
+    }
+
+    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
+        val todoWithDailyTodo = todoLabelDao.getTodosWithDailyTodosByTodoId(todoId)
+        val todayTodo = todoWithDailyTodo.dailyTodos.find { dailyTodo ->
+            dailyTodo.date == selectedDate
+        } ?: return
+
+        todoLabelDao.deleteDailyTodo(todayTodo)
+    }
+
+    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
+        val selectedDateToDate = selectedDate.getDate()
+        val todoWithDailyTodo = todoLabelDao.getTodosWithDailyTodosByTodoId(todoId)
+        val todayAndFutureTodo = todoWithDailyTodo.dailyTodos.filter { dailyTodo ->
+            dailyTodo.date.getDate()?.compareTo(selectedDateToDate) == 0 || dailyTodo.date.getDate()
+                ?.compareTo(selectedDateToDate) == 1
+        }
+
+        todayAndFutureTodo.forEach { dailyTodo ->
+            todoLabelDao.deleteDailyTodo(dailyTodo)
+        }
     }
 
     override suspend fun deleteLabel(label: Label) {

@@ -10,14 +10,12 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.ui.todo.dialog.DELETE
-import com.gojol.notto.ui.todo.dialog.DELETE_DATA
 import com.gojol.notto.ui.todo.dialog.REPEAT_TIME
 import com.gojol.notto.ui.todo.dialog.REPEAT_TIME_DATA
 import com.gojol.notto.ui.todo.dialog.REPEAT_TYPE
@@ -92,14 +90,8 @@ class TodoEditActivity : AppCompatActivity() {
                 R.id.delete_todo -> {
                     // TODO: 새로 생성하는 경우면 ??
                     if (todoEditViewModel.isTodoEditing.value == true) {
-                        todoDeletionDialog.apply {
-                            arguments = bundleOf(
-                                Pair(
-                                    DELETE_DATA,
-                                    todoEditViewModel.existedTodo.value?.todoId
-                                )
-                            )
-                        }
+                        TodoDeletionDialog.deleteTodoCallback =
+                            todoEditViewModel::updateTodoDeleteType
                         todoDeletionDialog.show(supportFragmentManager, DELETE)
                     }
                     true
@@ -125,6 +117,21 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.isCloseButtonCLicked.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
                 finish()
+            }
+        }
+        todoEditViewModel.todoDeleteType.observe(this) {
+            todoEditViewModel.deleteTodo()
+        }
+        todoEditViewModel.isDeletionExecuted.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    finish()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.todo_edit_delete_message),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
         todoEditViewModel.labelList.observe(this) {

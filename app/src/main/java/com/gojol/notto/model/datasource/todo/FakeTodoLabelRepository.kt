@@ -15,6 +15,8 @@ import com.gojol.notto.util.getDate
 import com.gojol.notto.util.getMonth
 import com.gojol.notto.util.getYear
 
+const val ERROR_MSG = "잘못된 호출입니다."
+
 class FakeTodoLabelRepository : TodoLabelDataSource {
 
     var todoId = 10
@@ -219,6 +221,14 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
                     LabelWithTodo(labelsWithTodos[i].label, labelsWithTodos[i].todo - todo)
             }
         }
+    }
+
+    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
+        throw Exception(ERROR_MSG)
+    }
+
+    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
+        throw Exception(ERROR_MSG)
     }
 
     override suspend fun deleteLabel(label: Label) {

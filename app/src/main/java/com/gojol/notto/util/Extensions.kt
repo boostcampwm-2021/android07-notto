@@ -10,7 +10,13 @@ fun Calendar.toYearMonth(): String {
 }
 
 fun Calendar.toYearMonthDate(): String {
-    return "${this.get(Calendar.YEAR)}${this.get(Calendar.MONTH) + 1}${this.get(Calendar.DATE)}"
+    val month = this.get(Calendar.MONTH) + 1
+    val formatMonth = if (month.toString().length == 1) "0$month" else month.toString()
+
+    val date = this.get(Calendar.DATE)
+    val formatDate = if (date.toString().length == 1) "0$date" else date.toString()
+
+    return "${this.get(Calendar.YEAR)}${formatMonth}${formatDate}"
 }
 
 fun Calendar.getYear(): Int {
