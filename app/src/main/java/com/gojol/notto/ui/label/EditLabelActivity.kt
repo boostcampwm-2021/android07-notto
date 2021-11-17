@@ -3,10 +3,12 @@ package com.gojol.notto.ui.label
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.gojol.notto.R
+import com.gojol.notto.common.DIALOG_LABEL_ITEM_KEY
 import com.gojol.notto.databinding.ActivityEditLabelBinding
 import com.gojol.notto.ui.label.dialog.edit.EditLabelDialogFragment
 import com.gojol.notto.ui.label.util.ItemTouchCallback
@@ -80,13 +82,15 @@ class EditLabelActivity : AppCompatActivity() {
         editLabelViewModel.close.observe(this, {
             if (it) {
                 finish()
-                // TODO: HomeFragment 업데이트
             }
         })
     }
 
     private fun showCreateDialog() {
-        val dialog = EditLabelDialogFragment(null)
+        val dialog = EditLabelDialogFragment().apply {
+            arguments = bundleOf(Pair(DIALOG_LABEL_ITEM_KEY, null))
+        }
+
         showDialog(dialog)
     }
 
