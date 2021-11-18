@@ -1,6 +1,5 @@
 package com.gojol.notto.ui.home.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
@@ -10,10 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.ItemCalendarBinding
-import com.gojol.notto.ui.home.CalendarFragment
 import com.gojol.notto.util.getMonth
 import com.gojol.notto.util.getYear
-import com.gojol.notto.util.toYearMonthDate
 import java.util.Calendar
 
 class CalendarAdapter(private val requireActivity: FragmentActivity) :
