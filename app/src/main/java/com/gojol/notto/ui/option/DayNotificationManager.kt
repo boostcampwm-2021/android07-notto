@@ -5,11 +5,11 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.getSystemService
 import com.gojol.notto.R
 import com.gojol.notto.ui.MainActivity
 import java.util.*
@@ -59,7 +59,7 @@ object DayNotificationManager {
     }
 
     fun setAlarm(context: Context) {
-        val alarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
+        val alarmManager: AlarmManager = context.getSystemService() ?: return
         val intent = Intent(context, DayNotificationReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -90,12 +90,12 @@ object DayNotificationManager {
     }
 
     fun cancelAlarm(context: Context) {
-        val alarmManager = context.getSystemService(ALARM_SERVICE) as? AlarmManager
+        val alarmManager: AlarmManager = context.getSystemService() ?: return
         val intent = Intent(context, DayNotificationReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context, DayNotificationReceiver.NOTIFICATION_ID, intent, PendingIntent.FLAG_NO_CREATE
         )
-        if (pendingIntent != null && alarmManager != null) {
+        pendingIntent?.let {
             alarmManager.cancel(pendingIntent)
         }
     }
