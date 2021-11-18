@@ -2,13 +2,10 @@ package com.gojol.notto.util
 
 import android.content.Context
 import android.content.Intent
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.OutOfQuotaPolicy
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import javax.inject.Inject
-import androidx.work.PeriodicWorkRequestBuilder
-import java.util.concurrent.TimeUnit
 
 
 class TodoRebootBroadcastReceiver : HiltBroadcastReceiver() {
@@ -36,17 +33,13 @@ class TodoRebootBroadcastReceiver : HiltBroadcastReceiver() {
 //                }
 //            }
 
-            // TODO : WorkManager는 작업을 WorkManager DB에 저장하고 꺼내쓰기 때문에
-            //  재부팅을 해도 해당 작업이 유지가 된다. 그럼 이 로직을 어느 시점에 작성하면 될까? 앱이 실행될 때마다?
-            //  일단 분리만 하면 이 브로드캐스트 리시버는 필요가 없어진다.
+            // 디바이스가 재부팅될 때는 즉시 알람을 다시 생성해야된다. 따라서 24시간마다 바뀌는 알람과는 관계없이 진행해야할 것
             val workRequest =
-                PeriodicWorkRequestBuilder<ResetAlarmWorker>(24, TimeUnit.HOURS)
-                    .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                    .addTag(REPEAT_ALARM_WORK)
+                OneTimeWorkRequestBuilder<ResetAlarmWorker>()
                     .build()
 
             val workManager = WorkManager.getInstance(context)
-            workManager.enqueueUniquePeriodicWork(REPEAT_ALARM_WORK, ExistingPeriodicWorkPolicy.KEEP, workRequest)
+            workManager.enqueue(workRequest)
         }
     }
 }
