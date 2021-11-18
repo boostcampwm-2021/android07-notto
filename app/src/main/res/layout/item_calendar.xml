@@ -37,12 +37,13 @@
             android:layout_marginStart="@dimen/space_small"
             android:background="@drawable/ic_calendar_collapse"
             app:backgroundTint="@color/black"
-            app:layout_constraintBottom_toTopOf="@id/linearlayout"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/ll_calendar_day_of_week"
             app:layout_constraintStart_toEndOf="@id/tv_calendar_title"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/linearlayout"
+            android:id="@+id/ll_calendar_day_of_week"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_large"
@@ -130,7 +131,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linearlayout" />
+            app:layout_constraintTop_toBottomOf="@id/ll_calendar_day_of_week" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
