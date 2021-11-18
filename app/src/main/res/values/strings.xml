@@ -81,4 +81,8 @@
     <string name="option_notification_description">오늘의 마무리 알림입니다.</string>
     <string name="option_notification_title">오늘의 마무리 알림</string>
     <string name="option_notification_content">하루를 마무리하기 전에 Not Todo를 체크해주세요!</string>
+
+    <string name="popular_keyword">인기 키워드</string>
+    <string name="popular_place_format">%d</string>
+    <string name="popular_count_format">%d</string>
 </resources>
