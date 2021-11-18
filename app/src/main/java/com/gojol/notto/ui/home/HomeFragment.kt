@@ -29,9 +29,6 @@ import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
 import com.gojol.notto.ui.home.adapter.TodoAdapter
 import com.gojol.notto.ui.home.util.TodoItemTouchCallback
 import com.gojol.notto.ui.todo.TodoEditActivity
-import com.gojol.notto.util.getDate
-import com.gojol.notto.util.getMonth
-import com.gojol.notto.util.getYear
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,9 +50,7 @@ class HomeFragment : Fragment() {
             val month = CalendarFragment.selectedMonth
             val date = CalendarFragment.selectedDate
 
-            if (year != null && month != null && date != null) {
-                updateSelectedDate(year, month, date)
-            }
+            updateSelectedDate(year, month, date)
         }
     }
 
@@ -78,14 +73,6 @@ class HomeFragment : Fragment() {
         initRecyclerView()
         initObserver()
         initTodoListItemTouchListener()
-        initCalendar()
-    }
-
-    private fun initCalendar() {
-        val today = Calendar.getInstance()
-        CalendarFragment.selectedYear = today.getYear()
-        CalendarFragment.selectedMonth = today.getMonth()
-        CalendarFragment.selectedDate = today.getDate()
     }
 
     private fun updateSelectedDate(year: Int, month: Int, date: Int) {
