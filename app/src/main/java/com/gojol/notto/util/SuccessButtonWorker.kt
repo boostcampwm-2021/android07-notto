@@ -33,12 +33,7 @@ class SuccessButtonWorker @AssistedInject constructor(
         repository.getTodosWithTodayDailyTodos(currentDate).forEach {
             val dailyTodo = it.todayDailyTodo
             if (todoId == it.todo.todoId) {
-                val newDailyTodo = dailyTodo.copy(todoState = TodoState.SUCCESS)
-                println("---------------")
-                println("new: " + newDailyTodo)
-                println("---------------")
-                repository.updateDailyTodo(newDailyTodo)
-                println(repository.getTodosWithDailyTodos())
+                repository.updateDailyTodo(dailyTodo.copy(todoState = TodoState.SUCCESS))
             }
         }
     }

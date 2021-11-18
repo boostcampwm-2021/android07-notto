@@ -33,7 +33,6 @@ class FailButtonWorker @AssistedInject constructor(
         repository.getTodosWithTodayDailyTodos(currentDate).forEach {
             val dailyTodo = it.todayDailyTodo
             if (todoId == it.todo.todoId) {
-                println(dailyTodo)
                 repository.updateDailyTodo(dailyTodo.copy(todoState = TodoState.FAIL))
             }
         }
