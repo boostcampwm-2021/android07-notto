@@ -8,8 +8,6 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.facebook.stetho.Stetho
 import com.gojol.notto.util.AddDailyTodoWorker
-import com.gojol.notto.util.REPEAT_ALARM_WORK
-import com.gojol.notto.util.ResetAlarmWorker
 import com.gojol.notto.util.UPDATE_TOMORROW_DAILY_TODO
 import dagger.hilt.android.HiltAndroidApp
 import java.util.concurrent.TimeUnit
