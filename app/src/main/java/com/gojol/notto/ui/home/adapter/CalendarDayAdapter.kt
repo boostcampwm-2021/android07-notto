@@ -52,6 +52,8 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
                     binding.underline.visibility = View.INVISIBLE
                 }
             }
+
+            binding.executePendingBindings()
         }
     }
 

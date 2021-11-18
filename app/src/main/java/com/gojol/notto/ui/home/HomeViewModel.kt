@@ -57,7 +57,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     fun updateDate(year: Int? = null, month: Int? = null, day: Int? = null) {
         val calendar: Calendar = Calendar.getInstance()
         if (year != null && month != null && day != null) {
-            calendar.set(year, month, day)
+            calendar.set(year, month - 1, day)
         }
 
         _date.value = calendar
