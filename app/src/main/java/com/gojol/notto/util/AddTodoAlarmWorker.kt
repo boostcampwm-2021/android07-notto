@@ -8,7 +8,6 @@ import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.delay
 import java.lang.Exception
 import java.util.*
 
@@ -32,10 +31,9 @@ class AddTodoAlarmWorker @AssistedInject constructor(
         repository.getTodosWithTodayDailyTodos(currentDate).forEach {
             val todo = it.todo
             val dailyTodo = it.todayDailyTodo
-            if (todo.hasAlarm && dailyTodo != null && dailyTodo.todoState != TodoState.SUCCESS) {
+            if (todo.hasAlarm && dailyTodo.todoState != TodoState.SUCCESS) {
                 repository.addAlarm(todo)
             }
-            delay(1000)
         }
     }
 }

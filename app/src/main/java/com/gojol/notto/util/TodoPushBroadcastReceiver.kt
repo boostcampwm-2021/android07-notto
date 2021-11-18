@@ -86,7 +86,7 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
         val todo = todo ?: return
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.mipmap.ic_notto_launcher_foreground)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             .setContentTitle(todo.content)
             .setCustomContentView(customContentView(context))
@@ -95,7 +95,7 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
             .build()
 
         val summaryNotification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // 아이콘
+            .setSmallIcon(R.mipmap.ic_notto_launcher_foreground) // 아이콘
             .setGroup(GROUP_ID)
             .setStyle(NotificationCompat.InboxStyle())
             .setGroupSummary(true)
