@@ -83,4 +83,7 @@ dependencies {
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.9'
+
+    // KoalaNLP 한나눔
+    implementation "kr.bydelta:koalanlp-hnn:2.1.4:assembly"
 }
