@@ -9,6 +9,7 @@ fun Calendar.toYearMonth(): String {
     return "${this.get(Calendar.YEAR)}년 ${this.get(Calendar.MONTH) + 1}월"
 }
 
+//yyyyMMdd
 fun Calendar.toYearMonthDate(): String {
     val month = this.get(Calendar.MONTH) + 1
     val formatMonth = if (month.toString().length == 1) "0$month" else month.toString()
@@ -88,4 +89,10 @@ fun String.get24Hour(): String {
 
 fun String.timeSplitFormatter(): List<String> {
     return this.split(":")
+}
+
+fun String.toCalendar(): Calendar {
+    val calendar = Calendar.getInstance()
+    calendar.set(this.slice(0..3).toInt(), this.slice(4..5).toInt() - 1, this.slice(6..7).toInt())
+    return calendar
 }

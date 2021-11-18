@@ -38,6 +38,10 @@ interface TodoLabelDao {
     @Query("SELECT * FROM Label")
     suspend fun getAllLabel(): List<Label>
 
+    @Transaction
+    @Query("SELECT * FROM DailyTodo")
+    suspend fun getAllDailyTodo(): List<DailyTodo>
+
     @Query("SELECT * FROM DailyTodo WHERE parent_todo_id=:parentTodoId")
     suspend fun getDailyTodosByParentTodoId(parentTodoId: Int): List<DailyTodo>
 

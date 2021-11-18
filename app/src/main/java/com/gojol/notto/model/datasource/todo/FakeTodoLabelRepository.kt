@@ -98,6 +98,10 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         return labels
     }
 
+    override suspend fun getAllDailyTodos(): List<DailyTodo> {
+        return dailyTodos
+    }
+
     override suspend fun insertTodo(todo: Todo) {
         todos.add(todo)
     }

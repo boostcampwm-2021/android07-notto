@@ -38,4 +38,8 @@ class CalendarViewPagerAdapter(
         // yyyyMM Format
         return (today.getYear() * 100 + today.getMonth()).toLong()
     }
+
+    override fun containsItem(itemId: Long): Boolean {
+        return itemId in 20000102L..20991230L
+    }
 }

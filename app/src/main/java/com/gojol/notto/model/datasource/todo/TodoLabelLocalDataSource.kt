@@ -1,6 +1,8 @@
 package com.gojol.notto.model.datasource.todo
 
+import java.util.Calendar
 import com.gojol.notto.common.TodoState
+import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo
@@ -10,6 +12,11 @@ import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoLabelCrossRef
 import com.gojol.notto.model.database.todolabel.TodoLabelDao
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
+import com.gojol.notto.util.getDate
+import com.gojol.notto.util.getDayOfWeek
+import com.gojol.notto.util.getMonth
+import com.gojol.notto.util.toCalendar
+import com.gojol.notto.util.toYearMonthDate
 import com.gojol.notto.util.getDate
 
 class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
@@ -24,7 +31,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     }
 
     override suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo> {
-        return todoLabelDao.getTodosWithDailyTodos().map { todoWithDailyTodo ->
+        return todoLabelDao.getTodosWithDailyTodos().mapNotNull { todoWithDailyTodo ->
             val todo = todoWithDailyTodo.todo
             val dailyTodos = todoWithDailyTodo.dailyTodos
 
@@ -32,12 +39,53 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
                 dailyTodos.find { it.parentTodoId == todo.todoId && it.date == selectedDate }
 
             if (todayDailyTodo == null) {
-                todayDailyTodo = DailyTodo(TodoState.NOTHING, todo.todoId, selectedDate)
+                val repeatedDate = when {
+                    // 반복설정한 경우 반복 조건에 따라 오늘의 Daily를 추가할지 결정
+                    todo.isRepeated -> {
+                        checkRepeatedWhenSelectedDate(todo, selectedDate)
+                    }
+                    else -> {
+                        // 반복설정을 하지 않고 투두를 생성한 경우 오늘의 Daily 추가
+                        if (selectedDate == Calendar.getInstance().toYearMonthDate()) {
+                            selectedDate
+                        } else {
+                            null
+                        }
+                    }
+                }
+
+                todayDailyTodo = repeatedDate?.let { DailyTodo(TodoState.NOTHING, todo.todoId, it) }
+            }
+
+            if (todayDailyTodo != null) {
                 todoLabelDao.insertDailyTodo(todayDailyTodo)
             }
 
-            TodoWithTodayDailyTodo(todo, todayDailyTodo)
+            todayDailyTodo?.let { TodoWithTodayDailyTodo(todo, it) }
         }
+    }
+
+    private fun checkRepeatedWhenSelectedDate(todo: Todo, selectedDate: String): String? {
+        return if (isValidRepeatedTodo(todo, selectedDate)) {
+            selectedDate
+        } else {
+            null
+        }
+    }
+
+    private fun isValidRepeatedTodo(todo: Todo, selectedDate: String): Boolean {
+        val dateEqual = todo.startDate.toCalendar().getDate() ==
+                selectedDate.toCalendar().getDate()
+        val weekEqual = todo.startDate.toCalendar().getDayOfWeek() ==
+                selectedDate.toCalendar().getDayOfWeek()
+        val monthEqual = todo.startDate.toCalendar().getMonth() ==
+                selectedDate.toCalendar().getMonth()
+
+        return (selectedDate.toInt() >= todo.startDate.toInt()) &&
+                ((todo.repeatType == RepeatType.DAY) ||
+                        (todo.repeatType == RepeatType.WEEK && weekEqual) ||
+                        (todo.repeatType == RepeatType.MONTH && dateEqual) ||
+                        (todo.repeatType == RepeatType.YEAR && dateEqual && monthEqual))
     }
 
     override suspend fun getLabelsWithTodos(): List<LabelWithTodo> {
@@ -46,6 +94,10 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
 
     override suspend fun getAllTodo(): List<Todo> {
         return todoLabelDao.getAllTodo()
+    }
+
+    override suspend fun getAllDailyTodos(): List<DailyTodo> {
+        return todoLabelDao.getAllDailyTodo()
     }
 
     override suspend fun getAllLabel(): List<Label> {
