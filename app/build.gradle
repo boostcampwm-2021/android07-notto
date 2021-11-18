@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.android.gms.oss-licenses-plugin'
 }
 
 android {
@@ -87,4 +88,10 @@ dependencies {
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.9'
+
+    // KoalaNLP 한나눔
+    implementation "kr.bydelta:koalanlp-hnn:2.1.4:assembly"
+
+    // open source license
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
 }

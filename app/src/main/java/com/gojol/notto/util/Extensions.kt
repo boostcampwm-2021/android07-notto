@@ -1,9 +1,8 @@
 package com.gojol.notto.util
 
+import kr.bydelta.koala.isHangulEnding
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 fun Calendar.toYearMonth(): String {
     return "${this.get(Calendar.YEAR)}년 ${this.get(Calendar.MONTH) + 1}월"
@@ -115,4 +114,9 @@ fun String.toCalendar(): Calendar {
     val calendar = Calendar.getInstance()
     calendar.set(this.slice(0..3).toInt(), this.slice(4..5).toInt() - 1, this.slice(6..7).toInt())
     return calendar
+}
+
+fun String?.isShort(): Boolean {
+    return if (this == null) false
+    else this.isHangulEnding() && this.length < 2 || this.isHangulEnding().not() && this.length < 3
 }
