@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/space_median"
-                    android:checked="@{viewmodel.isPushChecked}"
+                    android:checked="@={viewmodel.isPushChecked}"
                     android:onCheckedChanged="@{(view, isChecked) -> viewmodel.updateIsPushChecked(isChecked)}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_option_push_day"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -97,8 +97,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:src="@drawable/ic_arrow_right"
                     android:onClick="@{() -> viewmodel.updateIsNavigateToLicenseClicked()}"
+                    android:src="@drawable/ic_arrow_right"
                     app:layout_constraintBottom_toBottomOf="@id/tv_option_open_source_license"
                     app:layout_constraintEnd_toEndOf="@id/divider_option_push"
                     app:layout_constraintTop_toTopOf="@id/tv_option_open_source_license" />

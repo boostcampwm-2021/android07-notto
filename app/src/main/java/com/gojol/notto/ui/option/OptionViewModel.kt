@@ -13,19 +13,17 @@ class OptionViewModel @Inject constructor(
     private val optionRepository: OptionRepository
 ) : ViewModel() {
 
-    private val _isPushChecked = MutableLiveData<Boolean>()
-    val isPushChecked: LiveData<Boolean> = _isPushChecked
+    val isPushChecked = MutableLiveData<Boolean>()
 
     private val _isNavigateToLicenseClicked = MutableLiveData<Event<Boolean>>()
     val isNavigateToLicenseClicked: LiveData<Event<Boolean>> = _isNavigateToLicenseClicked
 
     init {
-        _isPushChecked.value =
+        isPushChecked.value =
             optionRepository.loadIsPushNotificationChecked()
     }
 
     fun updateIsPushChecked(isPushChecked: Boolean) {
-        _isPushChecked.value = isPushChecked
         optionRepository.saveIsPushNotificationChecked(isPushChecked)
     }
 
