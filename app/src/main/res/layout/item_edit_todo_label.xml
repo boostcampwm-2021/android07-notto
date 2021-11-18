@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.gojol.notto.model.database.label.Label" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_home_label"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="2dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@{item.name}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_x_x_small"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:closeIcon="@drawable/ic_cancel"
+            app:closeIconVisible="true"
+            app:closeIconTint="@color/gray_normal"
+            app:chipStrokeWidth="1dp"
+            app:chipStrokeColor="@color/gray_normal"
+            app:chipBackgroundColor="@color/white"
+            tools:text="@string/home_label_all" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -2,13 +2,15 @@ package com.gojol.notto.ui.home
 
 import android.content.Intent
 import java.util.Calendar
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,6 +22,7 @@ import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.model.data.LabelWithCheck
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.ui.home.CalendarFragment.Companion.DATE_CLICK_KEY
 import com.gojol.notto.ui.home.adapter.CalendarAdapter
 import com.gojol.notto.ui.home.adapter.LabelAdapter
 import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
@@ -41,6 +44,20 @@ class HomeFragment : Fragment() {
     private lateinit var labelAdapter: LabelAdapter
     private lateinit var labelWrapperAdapter: LabelWrapperAdapter
     private lateinit var todoAdapter: TodoAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setFragmentResultListener(DATE_CLICK_KEY) { _, _ ->
+            val year = CalendarFragment.selectedYear
+            val month = CalendarFragment.selectedMonth
+            val date = CalendarFragment.selectedDate
+
+            if (year != null && month != null && date != null) {
+                updateSelectedDate(year, month, date)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,15 +82,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun initCalendar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val today = Calendar.getInstance()
-            CalendarFragment.selectedYear = today.getYear()
-            CalendarFragment.selectedMonth = today.getMonth()
-            CalendarFragment.selectedDate = today.getDate()
-        }
-
-        // TODO *인터페이스, sharedviewmodel, eventbus
-        CalendarFragment.callback = ::updateSelectedDate
+        val today = Calendar.getInstance()
+        CalendarFragment.selectedYear = today.getYear()
+        CalendarFragment.selectedMonth = today.getMonth()
+        CalendarFragment.selectedDate = today.getDate()
     }
 
     private fun updateSelectedDate(year: Int, month: Int, date: Int) {
@@ -88,7 +100,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        calendarAdapter = CalendarAdapter(requireActivity())
+        calendarAdapter = CalendarAdapter(parentFragmentManager, lifecycle)
         labelAdapter = LabelAdapter(::labelTouchCallback)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
         todoAdapter = TodoAdapter(::todoTouchCallback, ::todoEditButtonCallback)
@@ -130,7 +142,9 @@ class HomeFragment : Fragment() {
 
         homeViewModel.todoEditButtonClicked.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { todo ->
-                startTodoCreateActivity(todo)
+                homeViewModel.date.value?.let { date ->
+                    startTodoCreateActivity(todo, date)
+                }
             }
         })
     }
@@ -162,7 +176,7 @@ class HomeFragment : Fragment() {
 
     private fun todoTouchCallback(dailyTodo: DailyTodo) {
         homeViewModel.updateDailyTodo(dailyTodo)
-        calendarAdapter.refreshAdapter()
+        setFragmentResult(TODO_SWIPE_KEY, bundleOf())
     }
 
     private fun todoEditButtonCallback(todo: Todo) {
@@ -178,9 +192,14 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 
-    private fun startTodoCreateActivity(todo: Todo) {
+    private fun startTodoCreateActivity(todo: Todo, date: Calendar) {
         val intent = Intent(activity, TodoEditActivity::class.java)
         intent.putExtra("todo", todo)
+        intent.putExtra("date", date)
         startActivity(intent)
+    }
+
+    companion object {
+        const val TODO_SWIPE_KEY = "todo_swipe"
     }
 }

@@ -4,7 +4,8 @@ import android.view.LayoutInflater
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import androidx.core.view.get
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.gojol.notto.common.AdapterViewType
@@ -13,8 +14,10 @@ import com.gojol.notto.util.getMonth
 import com.gojol.notto.util.getYear
 import java.util.Calendar
 
-class CalendarAdapter(private val requireActivity: FragmentActivity) :
-    RecyclerView.Adapter<CalendarAdapter.CustomCalendarViewHolder>() {
+class CalendarAdapter(
+    private val fragmentManager: FragmentManager,
+    private val lifecycle: Lifecycle
+) : RecyclerView.Adapter<CalendarAdapter.CustomCalendarViewHolder>() {
 
     private val today = Calendar.getInstance()
     private var date = today
@@ -22,7 +25,8 @@ class CalendarAdapter(private val requireActivity: FragmentActivity) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomCalendarViewHolder {
         return CustomCalendarViewHolder(
             ItemCalendarBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            requireActivity
+            fragmentManager,
+            lifecycle
         )
     }
 
@@ -41,14 +45,18 @@ class CalendarAdapter(private val requireActivity: FragmentActivity) :
         notifyItemChanged(0)
     }
 
-    fun refreshAdapter() {
-        notifyItemChanged(0)
-    }
-
     class CustomCalendarViewHolder(
         private val binding: ItemCalendarBinding,
-        private val requireActivity: FragmentActivity
+        private val fragmentManager: FragmentManager,
+        private val lifecycle: Lifecycle
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        private val calendarViewPagerAdapter = CalendarViewPagerAdapter(fragmentManager, lifecycle)
+
+        init {
+            binding.vpCalendar.adapter = calendarViewPagerAdapter
+            setViewPagerDynamicHeight()
+        }
 
         fun bind(today: Calendar, date: Calendar) {
             binding.date = date
@@ -56,13 +64,10 @@ class CalendarAdapter(private val requireActivity: FragmentActivity) :
             val movePosition =
                 date.getMonth() - today.getMonth() + (date.getYear() - today.getYear()) * 12
 
-            val calendarViewPagerAdapter = CalendarViewPagerAdapter(requireActivity)
-            binding.vpCalendar.adapter = calendarViewPagerAdapter
             binding.vpCalendar.setCurrentItem(
                 calendarViewPagerAdapter.firstFragmentPosition + movePosition,
                 false
             )
-            setViewPagerDynamicHeight()
 
             binding.executePendingBindings()
         }

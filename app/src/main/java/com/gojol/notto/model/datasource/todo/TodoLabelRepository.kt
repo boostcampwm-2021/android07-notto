@@ -12,8 +12,9 @@ import javax.inject.Singleton
 
 @Singleton
 class TodoLabelRepository @Inject constructor(
-    private val localDataSource: TodoLabelDataSource
-) : TodoLabelDataSource {
+    private val localDataSource: TodoLabelDataSource,
+    private val todoAlarmManager: TodoAlarmManager
+) : TodoLabelDataSource, TodoAlarmManager {
 
     override suspend fun getTodosWithLabels(): List<TodoWithLabel> {
         return localDataSource.getTodosWithLabels()
@@ -79,7 +80,23 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.deleteTodo(todo)
     }
 
+    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
+        localDataSource.deleteTodayTodo(todoId, selectedDate)
+    }
+
+    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
+        localDataSource.deleteTodayAndFutureTodo(todoId, selectedDate)
+    }
+
     override suspend fun deleteLabel(label: Label) {
         localDataSource.deleteLabel(label)
+    }
+
+    override fun addAlarm(todo: Todo) {
+        todoAlarmManager.addAlarm(todo)
+    }
+
+    override fun deleteAlarm(todo: Todo) {
+        todoAlarmManager.deleteAlarm(todo)
     }
 }

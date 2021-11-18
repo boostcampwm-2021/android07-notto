@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gojol.notto.common.TimeRepeatType
+import com.gojol.notto.common.TodoDeleteType
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.util.TouchEvent
 import com.gojol.notto.util.getDate
@@ -31,6 +32,9 @@ class TodoBaseDialogViewModel : ViewModel() {
 
     private val _timeRepeat = MutableLiveData<TimeRepeatType>()
     val timeRepeat: LiveData<TimeRepeatType> = _timeRepeat
+
+    private val _todoDeleteType = MutableLiveData<TodoDeleteType>()
+    val todoDeleteType: LiveData<TodoDeleteType> = _todoDeleteType
 
     fun onConfirmClick() {
         _isConfirmClicked.value = TouchEvent(true)
@@ -62,5 +66,9 @@ class TodoBaseDialogViewModel : ViewModel() {
 
     fun setTimeRepeat(time: TimeRepeatType) {
         _timeRepeat.value = time
+    }
+
+    fun setTodoDeleteType(type: TodoDeleteType) {
+        _todoDeleteType.value = type
     }
 }

@@ -8,12 +8,14 @@ import com.example.nottokeyword.FirebaseDB
 import com.gojol.notto.BuildConfig
 import com.gojol.notto.common.Event
 import com.gojol.notto.common.TimeRepeatType
+import com.gojol.notto.common.TodoDeleteType
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.util.TouchEvent
 import com.gojol.notto.util.get12Hour
+import com.gojol.notto.util.toYearMonthDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,6 +39,15 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
     private val _existedTodo = MutableLiveData<Todo>()
     val existedTodo: LiveData<Todo> = _existedTodo
+
+    private val _date = MutableLiveData<Calendar>()
+    val date: LiveData<Calendar> = _date
+
+    private val _todoDeleteType = MutableLiveData<TodoDeleteType>()
+    val todoDeleteType: LiveData<TodoDeleteType> = _todoDeleteType
+
+    private val _isDeletionExecuted = MutableLiveData<Event<Boolean>>()
+    val isDeletionExecuted: LiveData<Event<Boolean>> = _isDeletionExecuted
 
     private val _labelList = MutableLiveData<List<Label>>()
     val labelList: LiveData<List<Label>> = _labelList
@@ -151,8 +162,18 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         }
     }
 
+    fun updateDate(date: Calendar?) {
+        val selectedDate = date ?: return
+        _date.value = selectedDate
+    }
+
     fun updateIsCloseButtonClicked() {
         _isCloseButtonClicked.value = Event(true)
+    }
+
+    fun updateTodoDeleteType(type: TodoDeleteType?) {
+        val deleteType = type ?: return
+        _todoDeleteType.value = deleteType
     }
 
     fun updateTodoContent(content: String) {
@@ -250,7 +271,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         }
 
         viewModelScope.launch {
-            launch { repository.insertTodo(newTodo) }.join()
+            launch {
+                repository.insertTodo(newTodo)
+                repository.addAlarm(repository.getAllTodo().last())
+            }.join()
 
             val saveTodo = withContext(Dispatchers.Default) {
                 repository.getTodosWithLabels().find { it.labels.isEmpty() }?.todo
@@ -302,11 +326,27 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
         viewModelScope.launch {
             repository.updateTodo(newTodo)
+            repository.addAlarm(newTodo)
+
             selectedLabelList.value?.let { list ->
                 val newList = list.filterNot { it.order == 0 }
                 repository.updateTodo(newTodo, newList)
             }
             _isSaveButtonEnabled.value = true
+        }
+    }
+
+    fun deleteTodo() {
+        val todoId = existedTodo.value?.todoId ?: return
+        val deleteType = todoDeleteType.value ?: return
+        val selectedDate = date.value?.toYearMonthDate() ?: return
+
+        viewModelScope.launch {
+            when(deleteType) {
+                TodoDeleteType.TODAY -> repository.deleteTodayTodo(todoId, selectedDate)
+                TodoDeleteType.TODAY_AND_FUTURE -> repository.deleteTodayAndFutureTodo(todoId, selectedDate)
+            }
+            _isDeletionExecuted.postValue(Event(true))
         }
     }
 

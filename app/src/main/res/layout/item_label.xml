@@ -4,12 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="com.gojol.notto.util.ExtensionsKt" />
+
         <variable
             name="viewModel"
             type="com.gojol.notto.ui.home.HomeViewModel" />
+
         <variable
             name="item"
             type="com.gojol.notto.model.database.label.Label" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,14 +26,16 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="2dp"
             android:clickable="true"
             android:focusable="true"
-            android:text="@{item.name}"
+            android:text="@{ExtensionsKt.isShort(item.name) ? @string/home_label_placeholder(item.name) : item.name}"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_x_small"
-            android:layout_marginHorizontal="2dp"
+            android:textSize="@dimen/text_x_x_small"
             android:textStyle="bold"
             app:chipBackgroundColor="@color/bg_chip_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:checked="true"
