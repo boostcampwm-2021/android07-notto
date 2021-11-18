@@ -12,22 +12,14 @@ import android.os.Bundle
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
 import com.gojol.notto.R
-import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.ALARM_EXTRA_TODO
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import com.gojol.notto.model.datasource.todo.ALARM_BUNDLE_TODO
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 const val ACTION_TODO_DATA = "actionTodoData"
 const val ACTION_BUNDLE = "actionBundle"
@@ -66,25 +58,11 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
         bundle?.getSerializable(ALARM_EXTRA_TODO)?.let { serialize ->
             todo = (serialize as Todo)
             todo?.let {
-                removeAlarm(context, intent)
+                repository.deleteAlarm(it)
             }
 
             createNotificationChannel()
             deliverNotification(context)
-        }
-    }
-
-    @SuppressLint("UnspecifiedImmutableFlag")
-    private fun removeAlarm(context: Context, intent: Intent) {
-        todo?.let {
-            val todoTime = it.endTime.getTime() ?: return
-            val endTime = todoTime.time - it.periodTime.time.toInt() * 60 * 1000
-            if (!it.isRepeated || endTime < System.currentTimeMillis()) {
-                val pendingIntent = PendingIntent.getBroadcast(
-                    context, it.todoId, intent, PendingIntent.FLAG_UPDATE_CURRENT
-                )
-                alarmManager.cancel(pendingIntent)
-            }
         }
     }
 
