@@ -155,14 +155,13 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     }
 
     override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
-        val todosWithDailyTodos = todoLabelDao.getDailyTodosByParentTodoId(todoId)
+        todoLabelDao.getDailyTodosByParentTodoId(todoId)
             .filter { dailyTodo ->
                 dailyTodo.date.toInt() >= selectedDate.toInt()
             }
-
-        todosWithDailyTodos.forEach { dailyTodo ->
-            todoLabelDao.deleteDailyTodo(dailyTodo)
-        }
+            .forEach { dailyTodo ->
+                todoLabelDao.deleteDailyTodo(dailyTodo)
+            }
     }
 
     override suspend fun deleteLabel(label: Label) {
