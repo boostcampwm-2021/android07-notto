@@ -40,7 +40,7 @@ class PopularAdapter :
     class PopularDiffUtil : DiffUtil.ItemCallback<Keyword>() {
 
         override fun areItemsTheSame(oldItem: Keyword, newItem: Keyword): Boolean {
-            return oldItem == newItem
+            return oldItem.word == newItem.word
         }
 
         override fun areContentsTheSame(oldItem: Keyword, newItem: Keyword): Boolean {
