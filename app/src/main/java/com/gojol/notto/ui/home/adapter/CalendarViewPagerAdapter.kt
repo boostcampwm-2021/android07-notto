@@ -1,18 +1,18 @@
 package com.gojol.notto.ui.home.adapter
 
-import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.gojol.notto.ui.home.CalendarFragment
-import com.gojol.notto.ui.home.TIME
 import java.util.Calendar
 import com.gojol.notto.util.getMonth
 import com.gojol.notto.util.getYear
 
 class CalendarViewPagerAdapter(
-    fragmentActivity: FragmentActivity
-) : FragmentStateAdapter(fragmentActivity) {
+    fragmentManager: FragmentManager,
+    lifecycle: Lifecycle
+) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
     val firstFragmentPosition = Int.MAX_VALUE / 2
 
@@ -20,13 +20,8 @@ class CalendarViewPagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         val itemId = getItemId(position)
-        val fragment = CalendarFragment()
 
-        val bundle = Bundle()
-        bundle.putLong(TIME, itemId)
-        fragment.arguments = bundle
-
-        return fragment
+        return CalendarFragment.newInstance(itemId)
     }
 
     override fun getItemId(position: Int): Long {
@@ -37,5 +32,9 @@ class CalendarViewPagerAdapter(
 
         // yyyyMM Format
         return (today.getYear() * 100 + today.getMonth()).toLong()
+    }
+
+    override fun containsItem(itemId: Long): Boolean {
+        return itemId in 20000102L..20991230L
     }
 }

@@ -1,16 +1,22 @@
 package com.gojol.notto.util
 
+import kr.bydelta.koala.isHangulEnding
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 fun Calendar.toYearMonth(): String {
     return "${this.get(Calendar.YEAR)}년 ${this.get(Calendar.MONTH) + 1}월"
 }
 
+//yyyyMMdd
 fun Calendar.toYearMonthDate(): String {
-    return "${this.get(Calendar.YEAR)}${this.get(Calendar.MONTH) + 1}${this.get(Calendar.DATE)}"
+    val month = this.get(Calendar.MONTH) + 1
+    val formatMonth = if (month.toString().length == 1) "0$month" else month.toString()
+
+    val date = this.get(Calendar.DATE)
+    val formatDate = if (date.toString().length == 1) "0$date" else date.toString()
+
+    return "${this.get(Calendar.YEAR)}${formatMonth}${formatDate}"
 }
 
 fun Calendar.getYear(): Int {
@@ -82,4 +88,15 @@ fun String.get24Hour(): String {
 
 fun String.timeSplitFormatter(): List<String> {
     return this.split(":")
+}
+
+fun String.toCalendar(): Calendar {
+    val calendar = Calendar.getInstance()
+    calendar.set(this.slice(0..3).toInt(), this.slice(4..5).toInt() - 1, this.slice(6..7).toInt())
+    return calendar
+}
+
+fun String?.isShort(): Boolean {
+    return if (this == null) false
+    else this.isHangulEnding() && this.length < 2 || this.isHangulEnding().not() && this.length < 3
 }
