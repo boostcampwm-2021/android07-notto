@@ -4,21 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="com.gojol.notto.common.TodoDeleteType" />
+
         <variable
             name="viewmodel"
             type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout style="@style/edit_label_dialog_layout">
 
         <TextView
             android:id="@+id/tv_dialog_deletion_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dialog_margin"
-            android:fontFamily="@font/font_nanumsquare"
             android:text="@string/dialog_deletion_title"
             android:textColor="@color/black"
             android:textSize="@dimen/text_large"
@@ -28,20 +28,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_dialog_deletion_description"
+        <RadioGroup
+            android:id="@+id/rg_dialog_todo_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dialog_margin"
-            android:layout_marginEnd="@dimen/dialog_deletion_description_margin_end"
-            android:fontFamily="@font/font_nanumsquare"
-            android:lineSpacingExtra="@dimen/dialog_line_spacing"
-            android:text="@string/dialog_deletion_description"
-            android:textColor="@color/black"
+            android:layout_marginTop="@dimen/space_median"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/tv_dialog_deletion_title"
-            app:layout_constraintTop_toBottomOf="@+id/tv_dialog_deletion_title" />
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/tv_dialog_deletion_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_dialog_deletion_title">
+
+            <RadioButton
+                android:id="@+id/rb_dialog_todo_delete_only_today"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_radio_button_normal"
+                android:checked="@{viewmodel.todoDeleteType == TodoDeleteType.TODAY ? true : false}"
+                android:maxLines="1"
+                android:onClick="@{() -> viewmodel.setTodoDeleteType(TodoDeleteType.TODAY)}"
+                android:text="@string/dialog_todo_delete_only_today"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/rb_dialog_todo_delete_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/bg_radio_button_normal"
+                android:checked="@{viewmodel.todoDeleteType == TodoDeleteType.TODAY_AND_FUTURE ? true : false}"
+                android:maxLines="1"
+                android:onClick="@{() -> viewmodel.setTodoDeleteType(TodoDeleteType.TODAY_AND_FUTURE)}"
+                android:text="@string/dialog_todo_delete_all"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+        </RadioGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

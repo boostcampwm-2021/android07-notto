@@ -225,6 +225,14 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         }
     }
 
+    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
+        throw Exception(ERROR_MSG)
+    }
+
+    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
+        throw Exception(ERROR_MSG)
+    }
+
     override suspend fun deleteLabel(label: Label) {
         labels.remove(label)
 
@@ -241,6 +249,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     }
 
     companion object {
+        private const val ERROR_MSG = "잘못된 호출입니다."
         private var INSTANCE: FakeTodoLabelRepository? = null
 
         fun getInstance(): FakeTodoLabelRepository =

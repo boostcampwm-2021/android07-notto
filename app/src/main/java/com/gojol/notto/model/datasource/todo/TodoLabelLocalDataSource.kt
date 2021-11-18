@@ -1,6 +1,5 @@
 package com.gojol.notto.model.datasource.todo
 
-import java.util.Calendar
 import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
@@ -17,6 +16,7 @@ import com.gojol.notto.util.getDayOfWeek
 import com.gojol.notto.util.getMonth
 import com.gojol.notto.util.toCalendar
 import com.gojol.notto.util.toYearMonthDate
+import java.util.*
 
 class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     TodoLabelDataSource {
@@ -148,6 +148,20 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     override suspend fun deleteTodo(todo: Todo) {
         todoLabelDao.deleteTodo(todo)
         todoLabelDao.deleteTodoLabelCrossRefByTodo(todo.todoId)
+    }
+
+    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
+        todoLabelDao.deleteDailyTodoByTodoIdAndDate(todoId, selectedDate)
+    }
+
+    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
+        todoLabelDao.getDailyTodosByParentTodoId(todoId)
+            .filter { dailyTodo ->
+                dailyTodo.date.toInt() >= selectedDate.toInt()
+            }
+            .forEach { dailyTodo ->
+                todoLabelDao.deleteDailyTodo(dailyTodo)
+            }
     }
 
     override suspend fun deleteLabel(label: Label) {
