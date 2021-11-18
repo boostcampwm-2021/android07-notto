@@ -1,6 +1,8 @@
 package com.gojol.notto.ui.home
 
 import android.content.Intent
+import java.util.Calendar
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,9 @@ import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
 import com.gojol.notto.ui.home.adapter.TodoAdapter
 import com.gojol.notto.ui.home.util.TodoItemTouchCallback
 import com.gojol.notto.ui.todo.TodoEditActivity
+import com.gojol.notto.util.getDate
+import com.gojol.notto.util.getMonth
+import com.gojol.notto.util.getYear
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -56,12 +61,30 @@ class HomeFragment : Fragment() {
         initRecyclerView()
         initObserver()
         initTodoListItemTouchListener()
+        initCalendar()
+    }
+
+    private fun initCalendar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val today = Calendar.getInstance()
+            CalendarFragment.selectedYear = today.getYear()
+            CalendarFragment.selectedMonth = today.getMonth()
+            CalendarFragment.selectedDate = today.getDate()
+        }
+
+        // TODO *인터페이스, sharedviewmodel, eventbus
+        CalendarFragment.callback = ::updateSelectedDate
+    }
+
+    private fun updateSelectedDate(year: Int, month: Int, date: Int) {
+        homeViewModel.updateDate(year, month, date)
     }
 
     override fun onResume() {
         super.onResume()
 
         initData()
+        homeViewModel.updateDate()
     }
 
     private fun initRecyclerView() {
@@ -80,9 +103,7 @@ class HomeFragment : Fragment() {
         binding.rvHome.apply {
             adapter = concatAdapter
             layoutManager = getLayoutManager(concatAdapter)
-            itemAnimator?.removeDuration = 0
-            itemAnimator?.addDuration = 0
-            itemAnimator?.changeDuration = 0
+            itemAnimator = null
         }
     }
 
@@ -98,6 +119,7 @@ class HomeFragment : Fragment() {
 
         homeViewModel.date.observe(viewLifecycleOwner, {
             calendarAdapter.setDate(it)
+            homeViewModel.setDummyData()
         })
 
         homeViewModel.isTodoCreateButtonClicked.observe(viewLifecycleOwner, {
@@ -108,7 +130,9 @@ class HomeFragment : Fragment() {
 
         homeViewModel.todoEditButtonClicked.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { todo ->
-                startTodoCreateActivity(todo)
+                homeViewModel.date.value?.let { date ->
+                    startTodoCreateActivity(todo, date)
+                }
             }
         })
     }
@@ -140,6 +164,7 @@ class HomeFragment : Fragment() {
 
     private fun todoTouchCallback(dailyTodo: DailyTodo) {
         homeViewModel.updateDailyTodo(dailyTodo)
+        calendarAdapter.refreshAdapter()
     }
 
     private fun todoEditButtonCallback(todo: Todo) {
@@ -155,9 +180,10 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 
-    private fun startTodoCreateActivity(todo: Todo) {
+    private fun startTodoCreateActivity(todo: Todo, date: Calendar) {
         val intent = Intent(activity, TodoEditActivity::class.java)
         intent.putExtra("todo", todo)
+        intent.putExtra("date", date)
         startActivity(intent)
     }
 }
