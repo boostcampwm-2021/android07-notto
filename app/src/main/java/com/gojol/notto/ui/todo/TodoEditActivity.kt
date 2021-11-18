@@ -33,6 +33,7 @@ import com.gojol.notto.ui.todo.dialog.TodoRepeatTypeDialog
 import com.gojol.notto.ui.todo.dialog.TodoSetTimeDialog
 import com.gojol.notto.util.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class TodoEditActivity : AppCompatActivity() {
@@ -85,7 +86,9 @@ class TodoEditActivity : AppCompatActivity() {
 
     private fun initIntentExtra() {
         val todo = intent.getSerializableExtra("todo") as Todo?
+        val date = intent.getSerializableExtra("date") as Calendar?
         todoEditViewModel.updateIsTodoEditing(todo)
+        todoEditViewModel.updateDate(date)
     }
 
     private fun initAppbar() {
@@ -129,7 +132,7 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.isDeletionExecuted.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
-                    finish()
+                    // finish()
                     Toast.makeText(
                         this,
                         getString(R.string.todo_edit_delete_message),

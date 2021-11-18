@@ -40,6 +40,9 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _existedTodo = MutableLiveData<Todo>()
     val existedTodo: LiveData<Todo> = _existedTodo
 
+    private val _date = MutableLiveData<Calendar>()
+    val date: LiveData<Calendar> = _date
+
     private val _todoDeleteType = MutableLiveData<TodoDeleteType>()
     val todoDeleteType: LiveData<TodoDeleteType> = _todoDeleteType
 
@@ -155,6 +158,11 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         } ?: run {
             _isTodoEditing.value = false
         }
+    }
+
+    fun updateDate(date: Calendar?) {
+        val selectedDate = date ?: return
+        _date.value = selectedDate
     }
 
     fun updateIsCloseButtonClicked() {
@@ -308,8 +316,8 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     fun deleteTodo() {
         val todoId = existedTodo.value?.todoId ?: return
         val deleteType = todoDeleteType.value ?: return
+        val selectedDate = date.value?.toYearMonthDate() ?: return
 
-        val selectedDate = Calendar.getInstance().toYearMonthDate()
         viewModelScope.launch {
             when(deleteType) {
                 TodoDeleteType.TODAY -> repository.deleteTodayTodo(todoId, selectedDate)
