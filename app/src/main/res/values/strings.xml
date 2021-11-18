@@ -9,6 +9,8 @@
     <string name="okay">확인</string>
     <string name="all_delete">삭제</string>
     <string name="all_save">저장</string>
+    <string name="all_team_name">GoJol</string>
+    <string name="all_team_member">김혜성, 신기열, 신민정, 임도연</string>
     <string name="home_label_placeholder">&#160;&#160;%s&#160;&#160;</string>
 
     <string name="edit_label">라벨 편집</string>
@@ -67,4 +69,14 @@
     <string name="dialog_alarm_period_tag_everyweek">매주</string>
     <string name="dialog_alarm_period_tag_everymonth">매월</string>
     <string name="dialog_alarm_period_tag_everyyear">매년</string>
+
+    <string name="option_title">옵션</string>
+    <string name="option_push_notification">푸쉬 알림</string>
+    <string name="option_push_notification_day">하루 마무리 알림</string>
+    <string name="option_open_source_license">오픈소스 라이선스</string>
+    <string name="option_team">개발팀</string>
+    <string name="option_license_title">오픈소스 라이선스</string>
+    <string name="option_notification_description">오늘의 마무리 알림입니다.</string>
+    <string name="option_notification_title">오늘의 마무리 알림</string>
+    <string name="option_notification_content">하루를 마무리하기 전에 Not Todo를 체크해주세요!</string>
 </resources>
