@@ -143,7 +143,9 @@ class HomeFragment : Fragment() {
 
         homeViewModel.todoEditButtonClicked.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { todo ->
-                startTodoCreateActivity(todo)
+                homeViewModel.date.value?.let { date ->
+                    startTodoCreateActivity(todo, date)
+                }
             }
         })
     }
@@ -191,9 +193,10 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 
-    private fun startTodoCreateActivity(todo: Todo) {
+    private fun startTodoCreateActivity(todo: Todo, date: Calendar) {
         val intent = Intent(activity, TodoEditActivity::class.java)
         intent.putExtra("todo", todo)
+        intent.putExtra("date", date)
         startActivity(intent)
     }
 

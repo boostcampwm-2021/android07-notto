@@ -79,6 +79,14 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.deleteTodo(todo)
     }
 
+    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
+        localDataSource.deleteTodayTodo(todoId, selectedDate)
+    }
+
+    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
+        localDataSource.deleteTodayAndFutureTodo(todoId, selectedDate)
+    }
+
     override suspend fun deleteLabel(label: Label) {
         localDataSource.deleteLabel(label)
     }
