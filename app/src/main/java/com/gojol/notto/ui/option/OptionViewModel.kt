@@ -15,8 +15,8 @@ class OptionViewModel @Inject constructor(
 
     val isPushChecked = MutableLiveData<Boolean>()
 
-    private val _isNavigateToLicenseClicked = MutableLiveData<Event<Boolean>>()
-    val isNavigateToLicenseClicked: LiveData<Event<Boolean>> = _isNavigateToLicenseClicked
+    private val _isNavigateToLicenseClicked = MutableLiveData<Event<Unit>>()
+    val isNavigateToLicenseClicked: LiveData<Event<Unit>> = _isNavigateToLicenseClicked
 
     init {
         isPushChecked.value =
@@ -28,6 +28,6 @@ class OptionViewModel @Inject constructor(
     }
 
     fun updateIsNavigateToLicenseClicked() {
-        _isNavigateToLicenseClicked.value = Event(true)
+        _isNavigateToLicenseClicked.value = Event(Unit)
     }
 }
