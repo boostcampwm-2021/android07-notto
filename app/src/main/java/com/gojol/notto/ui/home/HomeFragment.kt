@@ -2,7 +2,6 @@ package com.gojol.notto.ui.home
 
 import android.content.Intent
 import java.util.Calendar
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -50,12 +49,12 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         setFragmentResultListener(DATE_CLICK_KEY) { _, _ ->
-            CalendarFragment.selectedYear?.let { year ->
-                CalendarFragment.selectedMonth?.let { month ->
-                    CalendarFragment.selectedDate?.let { date ->
-                        updateSelectedDate(year, month, date)
-                    }
-                }
+            val year = CalendarFragment.selectedYear
+            val month = CalendarFragment.selectedMonth
+            val date = CalendarFragment.selectedDate
+
+            if (year != null && month != null && date != null) {
+                updateSelectedDate(year, month, date)
             }
         }
     }
