@@ -12,10 +12,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
+import com.gojol.notto.common.DELETE
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.ui.todo.dialog.DELETE
 import com.gojol.notto.ui.todo.dialog.REPEAT_TIME
 import com.gojol.notto.ui.todo.dialog.REPEAT_TIME_DATA
 import com.gojol.notto.ui.todo.dialog.REPEAT_TYPE

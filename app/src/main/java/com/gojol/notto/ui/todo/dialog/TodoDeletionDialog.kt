@@ -10,8 +10,6 @@ import com.gojol.notto.common.TodoDeleteType
 import com.gojol.notto.databinding.DialogDeletionBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-const val DELETE = "todoDelete"
-
 @AndroidEntryPoint
 class TodoDeletionDialog : TodoBaseDialogImpl() {
     private lateinit var contentBinding: DialogDeletionBinding
