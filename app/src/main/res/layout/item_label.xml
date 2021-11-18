@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="com.gojol.notto.util.ExtensionsKt" />
+
         <variable
             name="viewModel"
             type="com.gojol.notto.ui.home.HomeViewModel" />
@@ -27,7 +29,7 @@
             android:layout_marginHorizontal="2dp"
             android:clickable="true"
             android:focusable="true"
-            android:text="@{item.name}"
+            android:text="@{ExtensionsKt.isShort(item.name) ? @string/home_label_placeholder(item.name) : item.name}"
             android:textColor="@color/black"
             android:textSize="@dimen/text_x_x_small"
             android:textStyle="bold"
@@ -36,9 +38,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:checkedIcon="@drawable/ic_check"
-            app:checkedIconTint="@color/black"
-            app:checkedIconEnabled="true"
             tools:checked="true"
             tools:text="@string/home_label_all" />
 
