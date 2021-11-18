@@ -78,7 +78,6 @@ class CalendarFragment : Fragment() {
     }
 
     private fun dayClickCallback(date: Int) {
-        calendarViewModel.setMonthlyAchievement()
         time?.let { time ->
             val year = (time / 100).toInt()
             val month = (time % 100).toInt()
