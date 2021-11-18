@@ -45,7 +45,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
                     }
                     else -> {
                         // 반복설정을 하지 않고 투두를 생성한 경우 오늘의 Daily 추가
-                        if (selectedDate == Calendar.getInstance().toYearMonthDate()){
+                        if (selectedDate == Calendar.getInstance().toYearMonthDate()) {
                             selectedDate
                         } else {
                             null
@@ -65,6 +65,14 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     }
 
     private fun checkRepeatedWhenSelectedDate(todo: Todo, selectedDate: String): String? {
+        return if (isValidRepeatedTodo(todo, selectedDate)) {
+            selectedDate
+        } else {
+            null
+        }
+    }
+
+    private fun isValidRepeatedTodo(todo: Todo, selectedDate: String): Boolean {
         val dateEqual = todo.startDate.toCalendar().getDate() ==
                 selectedDate.toCalendar().getDate()
         val weekEqual = todo.startDate.toCalendar().getDayOfWeek() ==
@@ -72,16 +80,11 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         val monthEqual = todo.startDate.toCalendar().getMonth() ==
                 selectedDate.toCalendar().getMonth()
 
-        return if ((selectedDate.toInt() >= todo.startDate.toInt()) &&
-            ((todo.repeatType == RepeatType.DAY) ||
-                    (todo.repeatType == RepeatType.WEEK && weekEqual) ||
-                    (todo.repeatType == RepeatType.MONTH && dateEqual) ||
-                    (todo.repeatType == RepeatType.YEAR && dateEqual && monthEqual))
-        ) {
-            selectedDate
-        } else {
-            null
-        }
+        return (selectedDate.toInt() >= todo.startDate.toInt()) &&
+                ((todo.repeatType == RepeatType.DAY) ||
+                        (todo.repeatType == RepeatType.WEEK && weekEqual) ||
+                        (todo.repeatType == RepeatType.MONTH && dateEqual) ||
+                        (todo.repeatType == RepeatType.YEAR && dateEqual && monthEqual))
     }
 
     override suspend fun getLabelsWithTodos(): List<LabelWithTodo> {
