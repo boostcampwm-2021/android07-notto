@@ -8,6 +8,7 @@
         <variable
             name="viewmodel"
             type="com.gojol.notto.ui.todo.TodoEditViewModel" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -91,7 +92,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/btn_todo_edit_label"
                     app:layout_constraintTop_toTopOf="@+id/btn_todo_edit_label"
-                    tools:listitem="@layout/item_label" />
+                    tools:listitem="@layout/item_edit_todo_label" />
 
                 <!-- 반복 설정 -->
                 <ImageView
