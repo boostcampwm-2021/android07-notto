@@ -13,7 +13,6 @@ import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import com.gojol.notto.util.TouchEvent
 import com.gojol.notto.util.get12Hour
 import com.gojol.notto.util.toYearMonthDate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,34 +61,34 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _repeatType = MutableLiveData(RepeatType.YEAR)
     val repeatType: LiveData<RepeatType> = _repeatType
 
-    private val _repeatTypeClick = MutableLiveData<TouchEvent<Boolean>>()
-    val repeatTypeClick: LiveData<TouchEvent<Boolean>> = _repeatTypeClick
+    private val _repeatTypeClick = MutableLiveData<Event<Boolean>>()
+    val repeatTypeClick: LiveData<Event<Boolean>> = _repeatTypeClick
 
     private val _repeatStart = MutableLiveData<String>()
     val repeatStart: LiveData<String> = _repeatStart
 
-    private val _repeatStartClick = MutableLiveData<TouchEvent<Boolean>>()
-    val repeatStartClick: LiveData<TouchEvent<Boolean>> = _repeatStartClick
+    private val _repeatStartClick = MutableLiveData<Event<Boolean>>()
+    val repeatStartClick: LiveData<Event<Boolean>> = _repeatStartClick
 
     val isTimeChecked = MutableLiveData(false)
 
     private val _timeStart = MutableLiveData<String>()
     val timeStart: LiveData<String> = _timeStart
 
-    private val _timeStartClick = MutableLiveData<TouchEvent<Boolean>>()
-    val timeStartClick: LiveData<TouchEvent<Boolean>> = _timeStartClick
+    private val _timeStartClick = MutableLiveData<Event<Boolean>>()
+    val timeStartClick: LiveData<Event<Boolean>> = _timeStartClick
 
     private val _timeFinish = MutableLiveData<String>()
     val timeFinish: LiveData<String> = _timeFinish
 
-    private val _timeFinishClick = MutableLiveData<TouchEvent<Boolean>>()
-    val timeFinishClick: LiveData<TouchEvent<Boolean>> = _timeFinishClick
+    private val _timeFinishClick = MutableLiveData<Event<Boolean>>()
+    val timeFinishClick: LiveData<Event<Boolean>> = _timeFinishClick
 
     private val _timeRepeat = MutableLiveData(TimeRepeatType.MINUTE_5)
     val timeRepeat: LiveData<TimeRepeatType> = _timeRepeat
 
-    private val _timeRepeatClick = MutableLiveData<TouchEvent<Boolean>>()
-    val timeRepeatClick: LiveData<TouchEvent<Boolean>> = _timeRepeatClick
+    private val _timeRepeatClick = MutableLiveData<Event<Boolean>>()
+    val timeRepeatClick: LiveData<Event<Boolean>> = _timeRepeatClick
 
     val isKeywordChecked = MutableLiveData(false)
 
@@ -177,7 +176,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onRepeatTypeClick() {
-        _repeatTypeClick.value = TouchEvent(true)
+        _repeatTypeClick.value = Event(true)
     }
 
     fun updateRepeatType(repeatType: RepeatType) {
@@ -185,7 +184,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onRepeatStartClick() {
-        _repeatStartClick.value = TouchEvent(true)
+        _repeatStartClick.value = Event(true)
     }
 
     fun updateRepeatTime(repeatTime: String) {
@@ -193,7 +192,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onTimeStartClick() {
-        _timeStartClick.value = TouchEvent(true)
+        _timeStartClick.value = Event(true)
     }
 
     fun updateTimeStart(timeStart: String) {
@@ -201,7 +200,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onTimeFinishClick() {
-        _timeFinishClick.value = TouchEvent(true)
+        _timeFinishClick.value = Event(true)
     }
 
     fun updateTimeFinish(timeFinish: String) {
@@ -209,7 +208,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onTimeRepeatClick() {
-        _timeRepeatClick.value = TouchEvent(true)
+        _timeRepeatClick.value = Event(true)
     }
 
     fun updateTimeRepeat(timeRepeat: TimeRepeatType) {

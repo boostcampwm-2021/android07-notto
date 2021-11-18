@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.common.DELETE
+import com.gojol.notto.common.EventObserver
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
@@ -31,7 +32,6 @@ import com.gojol.notto.ui.todo.dialog.TodoDeletionDialog
 import com.gojol.notto.ui.todo.dialog.TodoRepeatTimeDialog
 import com.gojol.notto.ui.todo.dialog.TodoRepeatTypeDialog
 import com.gojol.notto.ui.todo.dialog.TodoSetTimeDialog
-import com.gojol.notto.util.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -165,7 +165,6 @@ class TodoEditActivity : AppCompatActivity() {
                 todoRepeatTypeDialog.show(supportFragmentManager, REPEAT_TYPE)
             }
         })
-
         todoEditViewModel.repeatStartClick.observe(this, EventObserver {
             if (it) {
                 val bundle = Bundle()
