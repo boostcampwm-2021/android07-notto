@@ -25,6 +25,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:splitMotionEvents="false"
+            android:paddingHorizontal="@dimen/space_median"
+            android:clipToPadding="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_home_label_edit"
             app:layout_constraintStart_toStartOf="parent"

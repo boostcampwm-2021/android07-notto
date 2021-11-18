@@ -22,7 +22,6 @@
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/space_median"
             android:paddingBottom="@dimen/home_recyclerview_padding"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
