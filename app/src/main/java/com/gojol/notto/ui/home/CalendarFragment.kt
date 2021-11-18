@@ -14,7 +14,6 @@ import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentCalendarBinding
 import com.gojol.notto.ui.home.HomeFragment.Companion.TODO_SWIPE_KEY
 import com.gojol.notto.ui.home.adapter.CalendarDayAdapter
-import com.gojol.notto.ui.home.util.GridSpacingDecoration
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -78,9 +77,6 @@ class CalendarFragment : Fragment() {
     private fun initRecyclerView() {
         binding.rvCalendar.apply {
             adapter = calendarDayAdapter
-            context?.resources?.displayMetrics?.widthPixels?.let {
-                addItemDecoration(GridSpacingDecoration(it, 7))
-            }
             itemAnimator = null
         }
     }
