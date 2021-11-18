@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.nottokeyword.FirebaseDB
+import com.gojol.notto.BuildConfig
 import com.gojol.notto.common.Event
 import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.common.TodoDeleteType
@@ -19,9 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -99,6 +99,8 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
     private val _isSaveButtonEnabled = MutableLiveData<Boolean>()
     val isSaveButtonEnabled: LiveData<Boolean> = _isSaveButtonEnabled
+
+    private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
 
     init {
         val date = Date(Calendar.getInstance().timeInMillis)
@@ -248,8 +250,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     private fun saveNewTodo() {
+        val content = todoContent.value ?: return
+        val isKeywordOpen = isKeywordChecked.value ?: return
         val newTodo = Todo(
-            todoContent.value!!,
+            content,
             isRepeatChecked.value ?: return,
             repeatType.value ?: return,
             repeatStart.value ?: return,
@@ -257,10 +261,14 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             timeStart.value ?: return,
             timeFinish.value ?: return,
             timeRepeat.value ?: return,
-            isKeywordChecked.value ?: return,
+            isKeywordOpen,
             false,
             ""
         )
+
+        if (isKeywordOpen) {
+            firebaseDB.insertKeyword(content)
+        }
 
         viewModelScope.launch {
             launch {
@@ -291,8 +299,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     private fun updateTodo() {
+        val content = todoContent.value ?: return
+        val isKeywordOpen = isKeywordChecked.value ?: return
         val newTodo = Todo(
-            todoContent.value!!,
+            content,
             isRepeatChecked.value ?: return,
             repeatType.value ?: return,
             repeatStart.value ?: return,
@@ -300,11 +310,19 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             timeStart.value ?: return,
             timeFinish.value ?: return,
             timeRepeat.value ?: return,
-            isKeywordChecked.value ?: return,
+            isKeywordOpen,
             false,
             "",
             existedTodo.value?.todoId ?: return
         )
+
+        if (isKeywordOpen) {
+            val oldTodo = existedTodo.value ?: return
+
+            if (oldTodo.isKeywordOpen.not() || oldTodo.content != content) {
+                firebaseDB.insertKeyword(content)
+            }
+        }
 
         viewModelScope.launch {
             repository.updateTodo(newTodo)
