@@ -15,8 +15,6 @@ import com.gojol.notto.util.getDate
 import com.gojol.notto.util.getMonth
 import com.gojol.notto.util.getYear
 
-const val ERROR_MSG = "잘못된 호출입니다."
-
 class FakeTodoLabelRepository : TodoLabelDataSource {
 
     var todoId = 10
@@ -251,6 +249,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     }
 
     companion object {
+        private const val ERROR_MSG = "잘못된 호출입니다."
         private var INSTANCE: FakeTodoLabelRepository? = null
 
         fun getInstance(): FakeTodoLabelRepository =
