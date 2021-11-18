@@ -26,9 +26,9 @@ class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) :
         viewHolder: RecyclerView.ViewHolder
     ): Int {
         return if (viewHolder is TodoAdapter.TodoViewHolder) {
-            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
             val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-            makeMovementFlags(dragFlags, swipeFlags)
+
+            makeMovementFlags(0, swipeFlags)
         } else 0
     }
 

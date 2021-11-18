@@ -10,6 +10,17 @@ class ItemTouchCallback(private val moveItemCallback: (Int, Int) -> Unit) :
         0
     ) {
 
+    override fun getMovementFlags(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder
+    ): Int {
+        return if (viewHolder is EditLabelAdapter.EditLabelViewHolder) {
+            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+
+            makeMovementFlags(dragFlags, 0)
+        } else 0
+    }
+
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
