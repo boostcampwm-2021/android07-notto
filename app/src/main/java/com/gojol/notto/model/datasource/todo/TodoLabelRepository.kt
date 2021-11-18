@@ -96,11 +96,7 @@ class TodoLabelRepository @Inject constructor(
         todoAlarmManager.addAlarm(todo)
     }
 
-    override fun updateAlarm(todo: Todo) {
-        TODO("Not yet implemented")
-    }
-
     override fun deleteAlarm(todo: Todo) {
-        TODO("Not yet implemented")
+        todoAlarmManager.deleteAlarm(todo)
     }
 }

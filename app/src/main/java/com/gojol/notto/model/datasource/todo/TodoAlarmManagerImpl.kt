@@ -20,12 +20,11 @@ class TodoAlarmManagerImpl @Inject constructor(
     private val alarmManager: AlarmManager
 ) : TodoAlarmManager {
 
-    @SuppressLint("UnspecifiedImmutableFlag", "ShortAlarm")
+    @SuppressLint("UnspecifiedImmutableFlag")
     override fun addAlarm(todo: Todo) {
+        if (!todo.hasAlarm) return
 
         val intent = Intent(context, TodoPushBroadcastReceiver::class.java)
-        println("id: " + todo.todoId)
-
         val bundle = Bundle()
         bundle.putSerializable(ALARM_EXTRA_TODO, todo)
         intent.putExtra(ALARM_BUNDLE_TODO, bundle)
@@ -39,27 +38,31 @@ class TodoAlarmManagerImpl @Inject constructor(
         //  또한 패턴을 const 등으로 정리하고 저장해서 가져다 쓰는 식으로 하면 좋을 것 같다.
         val fullDate = ("${todo.startDate} ${todo.startTime}").getDate("yyyyMMdd a hh:mm")
         fullDate?.let { it ->
-            println(it.getTotalTimeString())
-
-            //val repeatInterval: Long = todo.periodTime.time.toInt() * 60 * 1000L
-            val repeatInterval: Long = 10 * 1000L
-            //val repeatInterval: Long = 0
+            val repeatInterval: Long = todo.periodTime.time.toInt() * 60 * 1000L
             val triggerTime = it.time
 
-//            alarmManager.setRepeating(
-//                AlarmManager.RTC,
-//                triggerTime, repeatInterval,
-//                pendingIntent
-//            )
-            alarmManager.set(AlarmManager.RTC, triggerTime, pendingIntent)
+            alarmManager.setRepeating(
+                AlarmManager.RTC,
+                triggerTime, repeatInterval,
+                pendingIntent
+            )
+            println("register : " + System.currentTimeMillis().getTotalTimeString())
         }
     }
 
-    override fun updateAlarm(todo: Todo) {
-
-    }
-
+    @SuppressLint("UnspecifiedImmutableFlag")
     override fun deleteAlarm(todo: Todo) {
-
+        val todoTime = ("${todo.startDate} ${todo.endTime}").getDate("yyyyMMdd a hh:mm") ?: return
+        val endTime = todoTime.time - todo.periodTime.time.toInt() * 60 * 1000
+        println("${todo.startDate} ${todo.endTime}")
+        println(endTime.getTotalTimeString())
+        println(System.currentTimeMillis().getTotalTimeString())
+        if (!todo.isRepeated || endTime < System.currentTimeMillis()) {
+            val intent = Intent(context, TodoPushBroadcastReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context, todo.todoId, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            alarmManager.cancel(pendingIntent)
+        }
     }
 }

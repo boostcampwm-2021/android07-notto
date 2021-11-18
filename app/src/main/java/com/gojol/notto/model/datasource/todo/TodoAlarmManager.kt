@@ -6,7 +6,5 @@ interface TodoAlarmManager {
 
     fun addAlarm(todo: Todo)
 
-    fun updateAlarm(todo: Todo)
-
     fun deleteAlarm(todo: Todo)
 }
