@@ -19,15 +19,15 @@
         <TextView
             android:id="@+id/tv_calendar_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:gravity="center"
             android:text="@{ExtensionsKt.toYearMonth(date)}"
             android:textColor="@color/black"
             android:textSize="@dimen/text_small"
-            app:layout_constraintBottom_toBottomOf="@id/btn_calendar_control"
+            app:layout_constraintBottom_toTopOf="@id/ll_calendar_day_of_week"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btn_calendar_control"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="2021년 11월" />
 
         <Button
@@ -36,21 +36,21 @@
             android:layout_height="25dp"
             android:layout_marginStart="@dimen/space_small"
             android:background="@drawable/ic_calendar_collapse"
-            app:backgroundTint="@color/black"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/ll_calendar_day_of_week"
+            app:backgroundTint="@color/black"
+            app:layout_constraintBottom_toBottomOf="@id/tv_calendar_title"
             app:layout_constraintStart_toEndOf="@id/tv_calendar_title"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/tv_calendar_title" />
 
         <LinearLayout
             android:id="@+id/ll_calendar_day_of_week"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_large"
+            android:layout_marginTop="@dimen/space_x_large"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_calendar_control">
+            app:layout_constraintTop_toBottomOf="@id/tv_calendar_title">
 
             <TextView
                 android:id="@+id/tv_calendar_sunday"
