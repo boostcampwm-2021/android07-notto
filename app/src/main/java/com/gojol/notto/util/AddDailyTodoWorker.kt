@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -31,9 +32,13 @@ class AddDailyTodoWorker @AssistedInject constructor(
         val calendar = Calendar.getInstance()
         if (calendar.get(Calendar.HOUR_OF_DAY) >= 23) {
             calendar.add(Calendar.DAY_OF_YEAR, 1)
-            val tomorrowDailyTodos =
-                repository.getTodosWithTodayDailyTodos(calendar.time.getDateString())
-            println(tomorrowDailyTodos)
+            repository.getTodosWithTodayDailyTodos(calendar.time.getDateString()).forEach {
+                val todo = it.todo
+                val dailyTodo = it.todayDailyTodo
+                if (todo.hasAlarm && dailyTodo.todoState != TodoState.SUCCESS) {
+                    repository.addAlarm(todo)
+                }
+            }
         }
     }
 }
