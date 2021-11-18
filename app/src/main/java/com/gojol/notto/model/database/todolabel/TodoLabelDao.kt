@@ -38,6 +38,10 @@ interface TodoLabelDao {
     @Query("SELECT * FROM Label")
     suspend fun getAllLabel(): List<Label>
 
+    @Transaction
+    @Query("SELECT * FROM DailyTodo")
+    suspend fun getAllDailyTodo(): List<DailyTodo>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTodo(todo: Todo)
 
