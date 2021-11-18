@@ -32,7 +32,7 @@
             android:layout_height="3dp"
             android:layout_marginTop="-10dp"
             android:background="@drawable/bg_calendar_day_circle"
-            android:backgroundTint="@color/gray_deep"
+            android:backgroundTint="@color/black"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@id/tv_calendar_day"
             app:layout_constraintStart_toStartOf="@id/tv_calendar_day"
