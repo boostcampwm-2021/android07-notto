@@ -8,6 +8,7 @@ import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.DateWithCountAndSelect
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
+import com.gojol.notto.ui.home.CalendarFragment.Companion.selectedDate
 import com.gojol.notto.util.getDate
 import com.gojol.notto.util.getDayOfWeek
 import com.gojol.notto.util.getLastDayOfMonth
@@ -37,12 +38,12 @@ class CalendarViewModel @Inject constructor(
         currentCalendarMonth = month
 
         val startDate = Calendar.getInstance().apply {
-            set(year, month, 1)
+            set(year, month - 1, 1)
         }
         monthStartDate = startDate.toYearMonthDate()
 
         val lastDate = Calendar.getInstance().apply {
-            set(year, month, startDate.getLastDayOfMonth())
+            set(year, month - 1, startDate.getLastDayOfMonth())
         }
         monthLastDate = lastDate.toYearMonthDate()
 
@@ -53,7 +54,25 @@ class CalendarViewModel @Inject constructor(
     }
 
     fun setMonthlyDailyTodos() {
+        val formatMonth = if (currentCalendarMonth.toString().length == 1) {
+            "0$currentCalendarMonth"
+        } else {
+            currentCalendarMonth.toString()
+        }
+
+        val formatDate = if (selectedDate.toString().length == 1) {
+            "0$selectedDate"
+        } else {
+            selectedDate.toString()
+        }
+
         viewModelScope.launch {
+            // TODO 시점을 투두 저장할때로 변경
+            launch {
+                repository.getTodosWithTodayDailyTodos(
+                    "$currentCalendarYear$formatMonth$formatDate"
+                )
+            }.join()
             launch {
                 monthlyDailyTodos = repository.getAllDailyTodos().filter {
                     it.date in monthStartDate..monthLastDate
@@ -64,7 +83,7 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    fun setMonthlyAchievement() {
+    private fun setMonthlyAchievement() {
         _monthlyAchievement.value = monthDateList.map { date ->
             val todayDailyTodos = monthlyDailyTodos
                 .filter { it.date.takeLast(2).toInt() == date }

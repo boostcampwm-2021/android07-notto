@@ -24,7 +24,7 @@ fun Calendar.getYear(): Int {
 }
 
 fun Calendar.getMonth(): Int {
-    return this.get(Calendar.MONTH)
+    return this.get(Calendar.MONTH) + 1
 }
 
 fun Calendar.getDate(): Int {

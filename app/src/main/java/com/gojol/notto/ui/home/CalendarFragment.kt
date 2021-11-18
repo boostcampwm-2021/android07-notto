@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.home
 
+import java.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,9 @@ import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentCalendarBinding
 import com.gojol.notto.ui.home.HomeFragment.Companion.TODO_SWIPE_KEY
 import com.gojol.notto.ui.home.adapter.CalendarDayAdapter
+import com.gojol.notto.util.getDate
+import com.gojol.notto.util.getMonth
+import com.gojol.notto.util.getYear
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,14 +27,6 @@ class CalendarFragment : Fragment() {
     private val calendarViewModel: CalendarViewModel by viewModels()
     private val calendarDayAdapter = CalendarDayAdapter(::dayClickCallback)
     private var time: Long? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setFragmentResultListener(TODO_SWIPE_KEY) { _, _ ->
-            initViewModelData()
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +51,10 @@ class CalendarFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        setFragmentResultListener(TODO_SWIPE_KEY) { _, _ ->
+            swipeUpdate()
+        }
+
         initViewModelData()
     }
 
@@ -66,6 +66,11 @@ class CalendarFragment : Fragment() {
             calendarViewModel.setMonthDate(year, month)
             calendarViewModel.setMonthlyDailyTodos()
         }
+    }
+
+    private fun swipeUpdate(){
+        calendarViewModel.setMonthDate(selectedYear, selectedMonth)
+        calendarViewModel.setMonthlyDailyTodos()
     }
 
     private fun initObserver() {
@@ -86,22 +91,23 @@ class CalendarFragment : Fragment() {
             val year = (time / 100).toInt()
             val month = (time % 100).toInt()
 
-            callback?.let { it(year, month, date) }
             selectedYear = year
             selectedMonth = month
-            selectedDate = date
 
-            calendarViewModel.setMonthlyAchievement()
 
-            setFragmentResult(DATE_CLICK_KEY, bundleOf())
+            calendarViewModel.setMonthDate(year, month)
         }
+
+        selectedDate = date
+        calendarViewModel.setMonthlyDailyTodos()
+
+        setFragmentResult(DATE_CLICK_KEY, bundleOf())
     }
 
     companion object {
-        var selectedYear: Int? = null
-        var selectedMonth: Int? = null
-        var selectedDate: Int? = null
-        var callback: ((Int, Int, Int) -> (Unit))? = null
+        var selectedYear: Int = Calendar.getInstance().getYear()
+        var selectedMonth: Int = Calendar.getInstance().getMonth()
+        var selectedDate: Int = Calendar.getInstance().getDate()
 
         const val DATE_CLICK_KEY = "date_click"
 
