@@ -28,8 +28,7 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
     class CalendarDayViewHolder(
         private val binding: ItemCalendarDayBinding,
         private val dayClickCallback: (Int) -> (Unit)
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.tvCalendarDay.setOnClickListener {
