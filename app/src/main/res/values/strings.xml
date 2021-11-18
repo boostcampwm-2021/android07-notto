@@ -69,6 +69,8 @@
     <string name="dialog_alarm_period_tag_everyweek">매주</string>
     <string name="dialog_alarm_period_tag_everymonth">매월</string>
     <string name="dialog_alarm_period_tag_everyyear">매년</string>
+    <string name="notification_todo_success">성공</string>
+    <string name="notification_todo_fail">실패</string>
 
     <string name="option_title">옵션</string>
     <string name="option_push_notification">푸쉬 알림</string>

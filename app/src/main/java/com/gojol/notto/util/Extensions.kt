@@ -68,6 +68,26 @@ fun String.getTime(): Date? {
     return simpleDateFormatTime.parse(this)
 }
 
+fun String.get24Time(): Date? {
+    val simpleDateFormatTime = SimpleDateFormat("kk:mm", Locale.KOREA)
+    return simpleDateFormatTime.parse(this)
+}
+
+fun String.getDate(pattern: String): Date? {
+    val simpleDateFormatTime = SimpleDateFormat(pattern, Locale.KOREA)
+    return simpleDateFormatTime.parse(this)
+}
+
+fun Long.getTotalTimeString(): String {
+    val simpleDateFormatTime = SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초", Locale.KOREA)
+    return simpleDateFormatTime.format(this)
+}
+
+fun Date.getTotalTimeString(): String {
+    val simpleDateFormatTime = SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초", Locale.KOREA)
+    return simpleDateFormatTime.format(this)
+}
+
 fun String.get12Hour(): String {
     val simpleDateFormatTime = SimpleDateFormat("kk:mm", Locale.KOREA)
     simpleDateFormatTime.parse(this)?.let {
