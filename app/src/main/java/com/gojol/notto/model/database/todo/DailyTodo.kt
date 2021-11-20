@@ -9,4 +9,5 @@ data class DailyTodo(
     @ColumnInfo(name = "todo_state") val todoState: TodoState,
     @ColumnInfo(name = "parent_todo_id") val parentTodoId: Int,
     @ColumnInfo(name = "date") val date: String,
+    @ColumnInfo(name = "is_active") val isActive: Boolean
 )

@@ -70,17 +70,18 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     }
 
     override suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo> {
-        return todos.map { todo ->
+        return todos.mapNotNull { todo ->
             var todayDailyTodo =
                 dailyTodos.find { it.parentTodoId == todo.todoId && it.date == this.selectedDate }
 
             if (todayDailyTodo == null) {
-                todayDailyTodo = DailyTodo(TodoState.NOTHING, todo.todoId, this.selectedDate)
+                todayDailyTodo = DailyTodo(TodoState.NOTHING, todo.todoId, this.selectedDate, true)
                 dailyTodos.add(todayDailyTodo)
+            } else {
+                if (!todayDailyTodo.isActive) todayDailyTodo = null
             }
 
-            TodoWithTodayDailyTodo(todo, todayDailyTodo)
-
+            todayDailyTodo?.let { TodoWithTodayDailyTodo(todo, it) }
         }
     }
 
