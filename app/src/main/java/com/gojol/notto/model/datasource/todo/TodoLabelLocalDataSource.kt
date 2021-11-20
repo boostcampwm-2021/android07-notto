@@ -121,6 +121,13 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
 
     override suspend fun updateTodo(todo: Todo) {
         todoLabelDao.updateTodo(todo)
+        todoLabelDao.getDailyTodosByParentTodoId(todo.todoId)
+            .filter { dailyTodo ->
+                dailyTodo.date.toInt() >= todo.startDate.toInt()
+            }
+            .forEach { dailyTodo ->
+                todoLabelDao.deleteDailyTodo(dailyTodo)
+            }
     }
 
     override suspend fun updateTodo(todo: Todo, labels: List<Label>) {
