@@ -131,7 +131,7 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.isDeletionExecuted.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
-                    // finish()
+                    finish()
                     Toast.makeText(
                         this,
                         getString(R.string.todo_edit_delete_message),
