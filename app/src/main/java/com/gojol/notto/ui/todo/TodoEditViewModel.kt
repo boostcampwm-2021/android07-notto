@@ -27,17 +27,13 @@ import javax.inject.Inject
 class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRepository) :
     ViewModel() {
 
+    // 투두 수정일 때
     private val _isTodoEditing = MutableLiveData<Boolean>()
     val isTodoEditing: LiveData<Boolean> = _isTodoEditing
 
-    private val _popLabelAddDialog = MutableLiveData<Boolean>()
-    val popLabelAddDialog: LiveData<Boolean> = _popLabelAddDialog
-
-    private val _isCloseButtonClicked = MutableLiveData<Event<Boolean>>()
-    val isCloseButtonCLicked: LiveData<Event<Boolean>> = _isCloseButtonClicked
-
     private val _existedTodo = MutableLiveData<Todo>()
     val existedTodo: LiveData<Todo> = _existedTodo
+
 
     private val _date = MutableLiveData<Calendar>()
     val date: LiveData<Calendar> = _date
@@ -45,52 +41,64 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _todoDeleteType = MutableLiveData<TodoDeleteType>()
     val todoDeleteType: LiveData<TodoDeleteType> = _todoDeleteType
 
-    private val _isDeletionExecuted = MutableLiveData<Event<Boolean>>()
-    val isDeletionExecuted: LiveData<Event<Boolean>> = _isDeletionExecuted
+    val todoContent = MutableLiveData("")
 
+    // 라벨 리스트
     private val _labelList = MutableLiveData<List<Label>>()
     val labelList: LiveData<List<Label>> = _labelList
 
     private val _selectedLabelList = MutableLiveData(listOf<Label>())
     val selectedLabelList: LiveData<List<Label>> = _selectedLabelList
 
-    val todoContent = MutableLiveData("")
+    // 날짜
+    private val _repeatStart = MutableLiveData<String>()
+    val repeatStart: LiveData<String> = _repeatStart
 
+    // Repeat
     val isRepeatChecked = MutableLiveData(false)
 
     private val _repeatType = MutableLiveData(RepeatType.YEAR)
     val repeatType: LiveData<RepeatType> = _repeatType
 
-    private val _repeatTypeClick = MutableLiveData<Event<Boolean>>()
-    val repeatTypeClick: LiveData<Event<Boolean>> = _repeatTypeClick
-
-    private val _repeatStart = MutableLiveData<String>()
-    val repeatStart: LiveData<String> = _repeatStart
-
-    private val _repeatStartClick = MutableLiveData<Event<Boolean>>()
-    val repeatStartClick: LiveData<Event<Boolean>> = _repeatStartClick
-
+    // Time
     val isTimeChecked = MutableLiveData(false)
 
     private val _timeStart = MutableLiveData<String>()
     val timeStart: LiveData<String> = _timeStart
 
-    private val _timeStartClick = MutableLiveData<Event<Boolean>>()
-    val timeStartClick: LiveData<Event<Boolean>> = _timeStartClick
-
     private val _timeFinish = MutableLiveData<String>()
     val timeFinish: LiveData<String> = _timeFinish
-
-    private val _timeFinishClick = MutableLiveData<Event<Boolean>>()
-    val timeFinishClick: LiveData<Event<Boolean>> = _timeFinishClick
 
     private val _timeRepeat = MutableLiveData(TimeRepeatType.MINUTE_5)
     val timeRepeat: LiveData<TimeRepeatType> = _timeRepeat
 
+    // Keyword
+    val isKeywordChecked = MutableLiveData(false)
+
+    // Event Boolean
+    private val _isCloseButtonClicked = MutableLiveData<Event<Boolean>>()
+    val isCloseButtonCLicked: LiveData<Event<Boolean>> = _isCloseButtonClicked
+
+    private val _popLabelAddDialog = MutableLiveData<Boolean>()
+    val popLabelAddDialog: LiveData<Boolean> = _popLabelAddDialog
+
+    private val _repeatStartClick = MutableLiveData<Event<Boolean>>()
+    val repeatStartClick: LiveData<Event<Boolean>> = _repeatStartClick
+
+    private val _repeatTypeClick = MutableLiveData<Event<Boolean>>()
+    val repeatTypeClick: LiveData<Event<Boolean>> = _repeatTypeClick
+
+    private val _timeStartClick = MutableLiveData<Event<Boolean>>()
+    val timeStartClick: LiveData<Event<Boolean>> = _timeStartClick
+
+    private val _timeFinishClick = MutableLiveData<Event<Boolean>>()
+    val timeFinishClick: LiveData<Event<Boolean>> = _timeFinishClick
+
     private val _timeRepeatClick = MutableLiveData<Event<Boolean>>()
     val timeRepeatClick: LiveData<Event<Boolean>> = _timeRepeatClick
 
-    val isKeywordChecked = MutableLiveData(false)
+    private val _isDeletionExecuted = MutableLiveData<Event<Boolean>>()
+    val isDeletionExecuted: LiveData<Event<Boolean>> = _isDeletionExecuted
 
     private val _isSaveButtonEnabled = MutableLiveData<Boolean>()
     val isSaveButtonEnabled: LiveData<Boolean> = _isSaveButtonEnabled
@@ -183,7 +191,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _repeatType.value = repeatType
     }
 
-    fun onRepeatStartClick() {
+    fun onDateClick() {
         _repeatStartClick.value = Event(true)
     }
 

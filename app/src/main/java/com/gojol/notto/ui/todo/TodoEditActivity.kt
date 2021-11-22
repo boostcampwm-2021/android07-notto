@@ -118,7 +118,10 @@ class TodoEditActivity : AppCompatActivity() {
 
     private fun initObserver() {
         todoEditViewModel.isTodoEditing.observe(this) {
-            if (it) todoEditViewModel.setupExistedTodo()
+            if (it) {
+                todoEditViewModel.setupExistedTodo()
+                binding.tbTodoEdit.title = getString(R.string.todo_edit_title_edit)
+            }
         }
         todoEditViewModel.isCloseButtonCLicked.observe(this) { event ->
             event.getContentIfNotHandled()?.let {

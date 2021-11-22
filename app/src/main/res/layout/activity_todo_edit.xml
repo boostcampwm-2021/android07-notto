@@ -17,6 +17,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/tb_todo_edit"
+            style="@style/Theme.Notto.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
@@ -25,16 +26,15 @@
             app:menu="@menu/todo_edit_top_app_bar"
             app:navigationIcon="@drawable/ic_close"
             app:navigationOnClickListener="@{() -> viewmodel.updateIsCloseButtonClicked()}"
-            app:title="@string/todo_edit_title"
-            style="@style/Theme.Notto.Toolbar.Primary" />
+            app:title="@string/todo_edit_title_create" />
 
         <ScrollView
             android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintTop_toBottomOf="@+id/tb_todo_edit"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tb_todo_edit">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -56,6 +56,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="adfssfsfsasfsssssssssssssssssssssssssssssssssssssss" />
+
+                <ImageView
+                    android:id="@+id/iv_todo_edit_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_median"
+                    android:src="@drawable/ic_today"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_date"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_date" />
 
                 <ImageView
                     android:id="@+id/iv_todo_edit_repeat"
@@ -89,6 +99,19 @@
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_keyword_setting" />
 
                 <TextView
+                    android:id="@+id/tv_todo_edit_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_x_small"
+                    android:layout_marginTop="@dimen/space_x_x_large"
+                    android:text="@string/todo_edit_repeat_date"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_x_small"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@id/iv_todo_edit_date"
+                    app:layout_constraintTop_toBottomOf="@id/btn_todo_edit_label" />
+
+                <TextView
                     android:id="@+id/tv_todo_edit_repeat_setting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -99,15 +122,15 @@
                     android:textSize="@dimen/text_x_small"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@id/iv_todo_edit_repeat"
-                    app:layout_constraintTop_toBottomOf="@id/btn_todo_edit_label" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_date" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_repeat_type"
+                    style="@style/text_edit_todo_field"
                     android:layout_marginTop="@dimen/space_small"
                     android:text="@string/todo_edit_repeat_type"
                     app:layout_constraintStart_toStartOf="@id/tv_todo_edit_repeat_setting"
-                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_repeat_setting"
-                    style="@style/text_edit_todo_field" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_repeat_setting" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_repeat_type_value"
@@ -122,24 +145,17 @@
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_type"
                     tools:text="매년" />
 
-                <TextView
-                    android:id="@+id/tv_todo_edit_repeat_start"
-                    android:text="@string/todo_edit_repeat_start"
-                    app:layout_constraintStart_toStartOf="@id/tv_todo_edit_repeat_setting"
-                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_repeat_type"
-                    style="@style/text_edit_todo_field" />
 
                 <TextView
-                    android:id="@+id/tv_todo_edit_repeat_start_value"
+                    android:id="@+id/tv_todo_edit_date_value"
                     style="@style/text_edit_todo_field"
                     android:layout_marginEnd="@dimen/space_median"
-                    android:enabled="@{viewmodel.isRepeatChecked ? true : false}"
-                    android:onClick="@{()->viewmodel.onRepeatStartClick()}"
+                    android:onClick="@{()->viewmodel.onDateClick()}"
                     android:text="@{viewmodel.repeatStart}"
-                    android:textColor="@{viewmodel.isRepeatChecked ? @color/black : @color/gray_normal}"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_start"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_date"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_start"
+                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_date"
                     tools:text="2021년 4월 15일" />
 
                 <TextView
@@ -157,11 +173,11 @@
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_start"
+                    style="@style/text_edit_todo_field"
                     android:layout_marginTop="@dimen/space_small"
                     android:text="@string/todo_edit_time_start"
                     app:layout_constraintStart_toStartOf="@id/tv_todo_edit_time_setting"
-                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_time_setting"
-                    style="@style/text_edit_todo_field" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_time_setting" />
 
                 <!-- 시간 설정 -->
                 <TextView
@@ -179,10 +195,10 @@
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_finish"
+                    style="@style/text_edit_todo_field"
                     android:text="@string/todo_edit_time_finish"
                     app:layout_constraintStart_toStartOf="@id/tv_todo_edit_time_setting"
-                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_time_start"
-                    style="@style/text_edit_todo_field" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_time_start" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_finish_value"
@@ -199,10 +215,10 @@
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_repeat"
+                    style="@style/text_edit_todo_field"
                     android:text="@string/todo_edit_time_repeat"
                     app:layout_constraintStart_toStartOf="@id/tv_todo_edit_time_setting"
-                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_time_finish"
-                    style="@style/text_edit_todo_field" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_time_finish" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_repeat_value"
@@ -231,13 +247,22 @@
                     app:layout_constraintTop_toBottomOf="@id/divider_todo_edit_time" />
 
                 <View
+                    android:id="@+id/divider_todo_edit_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="@dimen/space_median"
+                    android:layout_marginTop="@dimen/space_x_small"
+                    android:background="@color/gray_light"
+                    app:layout_constraintTop_toBottomOf="@id/iv_todo_edit_date" />
+
+                <View
                     android:id="@+id/divider_todo_edit_repeat"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginHorizontal="@dimen/space_median"
                     android:layout_marginTop="@dimen/space_x_small"
                     android:background="@color/gray_light"
-                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_repeat_start" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_repeat_type" />
 
                 <View
                     android:id="@+id/divider_todo_edit_time"
