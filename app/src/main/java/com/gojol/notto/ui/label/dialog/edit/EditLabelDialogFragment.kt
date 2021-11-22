@@ -14,7 +14,6 @@ import com.gojol.notto.R
 import com.gojol.notto.common.DIALOG_LABEL_ITEM_KEY
 import com.gojol.notto.databinding.DialogFragmentEditLabelBinding
 import com.gojol.notto.model.database.label.Label
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -47,9 +46,9 @@ class EditLabelDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val label =
-            Gson().fromJson(requireArguments().getString(DIALOG_LABEL_ITEM_KEY), Label::class.java)
-        viewModel.setEditType(label)
+        requireArguments().getParcelable<Label>(DIALOG_LABEL_ITEM_KEY).let { label ->
+            viewModel.setEditType(label)
+        }
 
         return activity?.let {
             val builder = AlertDialog.Builder(it)
@@ -71,7 +70,7 @@ class EditLabelDialogFragment : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(label: String?): EditLabelDialogFragment {
+        fun newInstance(label: Label?): EditLabelDialogFragment {
             return EditLabelDialogFragment().apply {
                 arguments = bundleOf(DIALOG_LABEL_ITEM_KEY to label)
             }
