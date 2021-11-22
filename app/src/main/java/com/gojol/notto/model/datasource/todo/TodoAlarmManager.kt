@@ -12,4 +12,6 @@ interface TodoAlarmManager {
     fun deleteAlarm(todo: Todo)
 
     fun deleteAlarm(todo: Todo, todoState: TodoState)
+
+    suspend fun deleteAlarms()
 }
