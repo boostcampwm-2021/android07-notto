@@ -9,52 +9,54 @@ import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import javax.inject.Inject
 import android.app.NotificationManager
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.work.WorkRequest
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 
 const val SUCCESS_INTENT_ID = 1000000001
 const val FAIL_INTENT_ID = 1000000002
 const val NOTIFICATION_TODO = "notificationTodo"
 
-// TODO: 코드 좀 줄이자...
 class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
 
     @Inject
     lateinit var repository: TodoLabelRepository
 
+    lateinit var notificationManager: NotificationManager
+
+    private lateinit var workRequest: WorkRequest
+    private val gson: Gson = Gson()
+
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
-        if (intent.getStringExtra(ACTION_STATE) == ACTION_SUCCESS) {
-            intent.getBundleExtra(ACTION_BUNDLE)?.let {
-                val todo = it.getSerializable(ACTION_TODO_DATA) as Todo
-                val data = workDataOf(NOTIFICATION_TODO to todo.todoId)
+        notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val workManager = WorkManager.getInstance(context)
 
-                val workManager = WorkManager.getInstance(context)
-                val workRequest =
-                    OneTimeWorkRequestBuilder<SuccessButtonWorker>()
-                        //.setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                        .setInputData(data)
-                        .build()
-                workManager.enqueue(workRequest)
+        val type: Type = object : TypeToken<Todo?>() {}.type
+        val todo = gson.fromJson<Todo>(intent.data.toString(), type)
+        todo ?: return
 
-                val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                manager.cancel(todo.todoId)
-            }
-        } else if (intent.getStringExtra(ACTION_STATE) == ACTION_FAIL) {
-            intent.getBundleExtra(ACTION_BUNDLE)?.let {
-                val todo = it.getSerializable(ACTION_TODO_DATA) as Todo
-                val data = workDataOf(NOTIFICATION_TODO to todo.todoId)
+        if (intent.action == ACTION_SUCCESS) {
+            val data = workDataOf(NOTIFICATION_TODO to todo.todoId)
+            workRequest = OneTimeWorkRequestBuilder<SuccessButtonWorker>()
+                .setInputData(data)
+                .build()
 
-                val workManager = WorkManager.getInstance(context)
-                val workRequest =
-                    OneTimeWorkRequestBuilder<FailButtonWorker>()
-                        //.setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                        .setInputData(data)
-                        .build()
-                workManager.enqueue(workRequest)
-
-                val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                manager.cancel(todo.todoId)
-            }
+        } else if (intent.action == ACTION_FAIL) {
+            val data = workDataOf(NOTIFICATION_TODO to todo.todoId)
+            workRequest = OneTimeWorkRequestBuilder<FailButtonWorker>()
+                .setInputData(data)
+                .build()
+        }
+        workManager.enqueue(workRequest)
+        notificationManager.cancel(todo.todoId)
+        if(notificationManager.activeNotifications.size == 1) {
+            notificationManager.cancelAll()
         }
     }
 }

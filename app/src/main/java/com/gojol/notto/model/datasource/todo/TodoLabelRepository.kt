@@ -1,5 +1,6 @@
 package com.gojol.notto.model.datasource.todo
 
+import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo
@@ -98,5 +99,9 @@ class TodoLabelRepository @Inject constructor(
 
     override fun deleteAlarm(todo: Todo) {
         todoAlarmManager.deleteAlarm(todo)
+    }
+
+    override fun deleteAlarm(todo: Todo, todoState: TodoState) {
+        todoAlarmManager.deleteAlarm(todo, todoState)
     }
 }
