@@ -13,14 +13,12 @@ import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import com.gojol.notto.util.get12Hour
-import com.gojol.notto.util.toYearMonthDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,8 +33,8 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     val existedTodo: LiveData<Todo> = _existedTodo
 
 
-    private val _date = MutableLiveData<Calendar>()
-    val date: LiveData<Calendar> = _date
+    private val _date = MutableLiveData<LocalDate>()
+    val date: LiveData<LocalDate> = _date
 
     private val _todoDeleteType = MutableLiveData<TodoDeleteType>()
     val todoDeleteType: LiveData<TodoDeleteType> = _todoDeleteType
@@ -51,8 +49,8 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     val selectedLabelList: LiveData<List<Label>> = _selectedLabelList
 
     // 날짜
-    private val _repeatStart = MutableLiveData<String>()
-    val repeatStart: LiveData<String> = _repeatStart
+    private val _repeatStart = MutableLiveData<LocalDate>()
+    val repeatStart: LiveData<LocalDate> = _repeatStart
 
     // Repeat
     val isRepeatChecked = MutableLiveData(false)
@@ -63,11 +61,11 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     // Time
     val isTimeChecked = MutableLiveData(false)
 
-    private val _timeStart = MutableLiveData<String>()
-    val timeStart: LiveData<String> = _timeStart
+    private val _timeStart = MutableLiveData<LocalTime>()
+    val timeStart: LiveData<LocalTime> = _timeStart
 
-    private val _timeFinish = MutableLiveData<String>()
-    val timeFinish: LiveData<String> = _timeFinish
+    private val _timeFinish = MutableLiveData<LocalTime>()
+    val timeFinish: LiveData<LocalTime> = _timeFinish
 
     private val _timeRepeat = MutableLiveData(TimeRepeatType.MINUTE_5)
     val timeRepeat: LiveData<TimeRepeatType> = _timeRepeat
@@ -106,12 +104,11 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
 
     init {
-        val date = Date(Calendar.getInstance().timeInMillis)
         _repeatType.value = RepeatType.DAY
         _timeRepeat.value = TimeRepeatType.MINUTE_5
-        _repeatStart.value = getFormattedCurrentDate(date)
-        _timeStart.value = getFormattedCurrentTime(date)
-        _timeFinish.value = getFormattedCurrentTime(date)
+        _repeatStart.value = LocalDate.now()
+        _timeStart.value = LocalTime.now()
+        _timeFinish.value = LocalTime.now()
     }
 
     fun setDummyLabelData() {
@@ -165,7 +162,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         }
     }
 
-    fun updateDate(date: Calendar?) {
+    fun updateDate(date: LocalDate?) {
         val selectedDate = date ?: return
         _date.value = selectedDate
     }
@@ -195,7 +192,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _repeatStartClick.value = Event(true)
     }
 
-    fun updateRepeatTime(repeatTime: String) {
+    fun updateRepeatTime(repeatTime: LocalDate) {
         _repeatStart.value = repeatTime
     }
 
@@ -203,16 +200,16 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _timeStartClick.value = Event(true)
     }
 
-    fun updateTimeStart(timeStart: String) {
-        _timeStart.value = timeStart.get12Hour()
+    fun updateTimeStart(timeStart: LocalTime) {
+        _timeStart.value = timeStart
     }
 
     fun onTimeFinishClick() {
         _timeFinishClick.value = Event(true)
     }
 
-    fun updateTimeFinish(timeFinish: String) {
-        _timeFinish.value = timeFinish.get12Hour()
+    fun updateTimeFinish(timeFinish: LocalTime) {
+        _timeFinish.value = timeFinish
     }
 
     fun onTimeRepeatClick() {
@@ -254,7 +251,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             timeRepeat.value ?: return,
             isKeywordOpen,
             false,
-            ""
+            FINISH_DATE ?: return
         )
 
         if (isKeywordOpen) {
@@ -303,7 +300,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             timeRepeat.value ?: return,
             isKeywordOpen,
             false,
-            "",
+            FINISH_DATE ?: return,
             existedTodo.value?.todoId ?: return
         )
 
@@ -330,7 +327,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     fun deleteTodo() {
         val todoId = existedTodo.value?.todoId ?: return
         val deleteType = todoDeleteType.value ?: return
-        val selectedDate = date.value?.toYearMonthDate() ?: return
+        val selectedDate = date.value ?: return
 
         viewModelScope.launch {
             when(deleteType) {
@@ -341,13 +338,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         }
     }
 
-    private fun getFormattedCurrentDate(date: Date): String {
-        val simpleDateFormatDate = SimpleDateFormat("yyyyMMdd", Locale.KOREA)
-        return simpleDateFormatDate.format(date)
-    }
-
-    private fun getFormattedCurrentTime(date: Date): String {
-        val simpleDateFormatTime = SimpleDateFormat("a hh:mm", Locale.KOREA)
-        return simpleDateFormatTime.format(date)
+    companion object {
+        val FINISH_DATE: LocalDate? = LocalDate.of(2099, 12, 31)
     }
 }

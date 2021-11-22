@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.gojol.notto.util.ExtensionsKt"/>
 
         <variable
             name="viewmodel"
@@ -151,7 +152,7 @@
                     style="@style/text_edit_todo_field"
                     android:layout_marginEnd="@dimen/space_median"
                     android:onClick="@{()->viewmodel.onDateClick()}"
-                    android:text="@{viewmodel.repeatStart}"
+                    android:text="@{viewmodel.repeatStart.toString()}"
                     android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_date"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -186,7 +187,7 @@
                     android:layout_marginEnd="@dimen/space_median"
                     android:enabled="@{viewmodel.isTimeChecked ? true : false}"
                     android:onClick="@{()->viewmodel.onTimeStartClick()}"
-                    android:text="@{viewmodel.timeStart}"
+                    android:text="@{ExtensionsKt.toDialogString(viewmodel.timeStart)}"
                     android:textColor="@{viewmodel.isTimeChecked ? @color/black : @color/gray_normal}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_start"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -206,7 +207,7 @@
                     android:layout_marginEnd="@dimen/space_median"
                     android:enabled="@{viewmodel.isTimeChecked ? true : false}"
                     android:onClick="@{()->viewmodel.onTimeFinishClick()}"
-                    android:text="@{viewmodel.timeFinish}"
+                    android:text="@{ExtensionsKt.toDialogString(viewmodel.timeFinish)}"
                     android:textColor="@{viewmodel.isTimeChecked ? @color/black : @color/gray_normal}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_finish"
                     app:layout_constraintEnd_toEndOf="parent"

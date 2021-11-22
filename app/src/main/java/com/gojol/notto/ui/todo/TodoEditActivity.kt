@@ -1,8 +1,6 @@
 package com.gojol.notto.ui.todo
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -33,7 +31,7 @@ import com.gojol.notto.ui.todo.dialog.TodoRepeatTimeDialog
 import com.gojol.notto.ui.todo.dialog.TodoRepeatTypeDialog
 import com.gojol.notto.ui.todo.dialog.TodoSetTimeDialog
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class TodoEditActivity : AppCompatActivity() {
@@ -85,7 +83,7 @@ class TodoEditActivity : AppCompatActivity() {
 
     private fun initIntentExtra() {
         val todo = intent.getSerializableExtra("todo") as Todo?
-        val date = intent.getSerializableExtra("date") as Calendar?
+        val date = intent.getSerializableExtra("date") as LocalDate?
         todoEditViewModel.updateIsTodoEditing(todo)
         todoEditViewModel.updateDate(date)
     }
@@ -171,7 +169,7 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.repeatStartClick.observe(this, EventObserver {
             if (it) {
                 val bundle = Bundle()
-                bundle.putString(REPEAT_TIME_DATA, todoEditViewModel.repeatStart.value)
+                bundle.putSerializable(REPEAT_TIME_DATA, todoEditViewModel.repeatStart.value)
                 TodoRepeatTimeDialog.callback = todoEditViewModel::updateRepeatTime
                 todoRepeatTimeDialog.arguments = bundle
                 todoRepeatTimeDialog.show(supportFragmentManager, REPEAT_TIME)
@@ -181,7 +179,7 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.timeStartClick.observe(this, EventObserver {
             if (it) {
                 val bundle = Bundle()
-                bundle.putString(TIME_START_DATE, todoEditViewModel.timeStart.value)
+                bundle.putSerializable(TIME_START_DATE, todoEditViewModel.timeStart.value)
                 TodoSetTimeDialog.callback = todoEditViewModel::updateTimeStart
                 TodoSetTimeDialog.currentState = TIME_START
                 todoSetTimeDialog.arguments = bundle
@@ -192,7 +190,7 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.timeFinishClick.observe(this, EventObserver {
             if (it) {
                 val bundle = Bundle()
-                bundle.putString(TIME_FINISH_DATE, todoEditViewModel.timeFinish.value)
+                bundle.putSerializable(TIME_FINISH_DATE, todoEditViewModel.timeFinish.value)
                 TodoSetTimeDialog.callback = todoEditViewModel::updateTimeFinish
                 TodoSetTimeDialog.currentState = TIME_FINISH
                 todoSetTimeDialog.arguments = bundle

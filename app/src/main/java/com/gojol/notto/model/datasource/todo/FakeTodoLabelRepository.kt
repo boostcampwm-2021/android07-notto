@@ -1,7 +1,6 @@
 package com.gojol.notto.model.datasource.todo
 
 import com.gojol.notto.common.TimeRepeatType
-import java.util.Calendar
 import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
@@ -11,27 +10,27 @@ import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.database.todo.TodoWithDailyTodo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
-import com.gojol.notto.util.getDate
-import com.gojol.notto.util.getMonth
-import com.gojol.notto.util.getYear
+import java.time.LocalDate
+import java.time.LocalTime
 
+// not use
 class FakeTodoLabelRepository : TodoLabelDataSource {
 
     var todoId = 10
 
-    private val today = Calendar.getInstance()
+    private val today = LocalDate.now()
+    private val time = LocalTime.now()
 
-    private var selectedDate =
-        today.getYear().toString() + today.getMonth().toString() + today.getDate().toString()
+    private var selectedDate: LocalDate = LocalDate.now()
 
     private var todos = mutableListOf(
-        Todo("밥 굶지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 1),
-        Todo("과제 미루지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 2),
-        Todo("지각하지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 3),
-        Todo("밥 먹을 때 물 먹지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 4),
-        Todo("회의 지각 안하기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 5),
-        Todo("핸드폰 보지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 6),
-        Todo("누워있지 않기", false, RepeatType.DAY, "", false, "", "", TimeRepeatType.MINUTE_5, false, false, "", 7),
+        Todo("밥 굶지 않기", false, RepeatType.DAY, today, false,time, time, TimeRepeatType.MINUTE_5, false, false, today, 1),
+        Todo("과제 미루지 않기", false, RepeatType.DAY, today, false, time, time, TimeRepeatType.MINUTE_5, false, false, today, 2),
+        Todo("지각하지 않기", false, RepeatType.DAY, today, false, time, time, TimeRepeatType.MINUTE_5, false, false,today, 3),
+        Todo("밥 먹을 때 물 먹지 않기", false, RepeatType.DAY, today, false, time, time, TimeRepeatType.MINUTE_5, false, false, today, 4),
+        Todo("회의 지각 안하기", false, RepeatType.DAY, today, false, time, time, TimeRepeatType.MINUTE_5, false, false, today, 5),
+        Todo("핸드폰 보지 않기", false, RepeatType.DAY, today, false, time, time, TimeRepeatType.MINUTE_5, false, false, today, 6),
+        Todo("누워있지 않기", false, RepeatType.DAY, today, false, time, time, TimeRepeatType.MINUTE_5, false, false, today, 7),
     )
 
     private var labels = mutableListOf(
@@ -69,7 +68,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         }
     }
 
-    override suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo> {
+    override suspend fun getTodosWithTodayDailyTodos(selectedDate: LocalDate): List<TodoWithTodayDailyTodo> {
         return todos.mapNotNull { todo ->
             var todayDailyTodo =
                 dailyTodos.find { it.parentTodoId == todo.todoId && it.date == this.selectedDate }
@@ -226,11 +225,11 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         }
     }
 
-    override suspend fun deleteSelectedTodo(todoId: Int, selectedDate: String) {
+    override suspend fun deleteSelectedTodo(todoId: Int, selectedDate: LocalDate) {
         throw Exception(ERROR_MSG)
     }
 
-    override suspend fun deleteSelectedAndFutureTodo(todoId: Int, selectedDate: String) {
+    override suspend fun deleteSelectedAndFutureTodo(todoId: Int, selectedDate: LocalDate) {
         throw Exception(ERROR_MSG)
     }
 

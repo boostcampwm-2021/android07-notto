@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.databinding.DialogTodoRepeatTimeBinding
-import com.gojol.notto.util.getDateString
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.*
 
 const val REPEAT_TIME_DATA = "repeatTimeData"
 const val REPEAT_TIME = "repeatTime"
@@ -18,11 +20,16 @@ class TodoRepeatTimeDialog : TodoBaseDialogImpl() {
     private lateinit var contentBinding: DialogTodoRepeatTimeBinding
 
     companion object {
-        var callback: ((String) -> Unit?)? = null
+        var callback: ((LocalDate) -> Unit?)? = null
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        contentBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_todo_repeat_time, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        contentBinding =
+            DataBindingUtil.inflate(inflater, R.layout.dialog_todo_repeat_time, container, false)
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -37,23 +44,29 @@ class TodoRepeatTimeDialog : TodoBaseDialogImpl() {
 
     private fun initRepeatTime() {
         arguments?.let { arg ->
-            arg.getString(REPEAT_TIME_DATA)?.let {
-                viewModel.setRepeatTime(it)
+            (arg.getSerializable(REPEAT_TIME_DATA) as LocalDate).apply {
+                viewModel.setRepeatTime(this)
                 arg.remove(REPEAT_TIME_DATA)
             }
         }
     }
 
     private fun initClickListener() {
-        contentBinding.cvRepeatTime.setOnDateChangedListener { widget, date, selected ->
-            viewModel.setRepeatTime(date.date)
+        contentBinding.cvRepeatTime.setOnDateChangedListener { _, date, _ ->
+            viewModel.setRepeatTime(
+                date.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            )
         }
     }
 
     override fun initObserver() {
         super.initObserver()
         viewModel.repeatTime.observe(this) {
-            contentBinding.cvRepeatTime.setSelectedDate(it)
+            contentBinding.cvRepeatTime.setSelectedDate(
+                Date.from(
+                    it.atStartOfDay(ZoneId.systemDefault()).toInstant()
+                )
+            )
         }
     }
 
@@ -61,7 +74,7 @@ class TodoRepeatTimeDialog : TodoBaseDialogImpl() {
         super.confirmClick()
         callback?.let {
             viewModel.repeatTime.value?.let { date ->
-                it(date.getDateString())
+                it(date)
             }
         }
     }

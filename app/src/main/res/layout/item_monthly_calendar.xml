@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.gojol.notto.util.ExtensionsKt" />
 
         <variable
             name="viewmodel"
@@ -21,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:text="@{ExtensionsKt.toYearMonth(viewmodel.date)}"
+            android:text="@{viewmodel.date.toString()}"
             android:textColor="@color/black"
             android:textSize="@dimen/text_median"
             android:textStyle="bold"
