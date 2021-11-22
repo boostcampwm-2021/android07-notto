@@ -36,22 +36,28 @@ class FirebaseDB {
         database.get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
-            it.children.forEach { child ->
-                if (child.key == keyword) {
-                    val count = (child.value as Long).toInt() + 1
-                    database.child(keyword).setValue(count).addOnSuccessListener { 
-                        Log.i(TAG, "Successfully counted keyword $keyword")
-                    }
+            val target = it.children.find { child -> child.key == keyword }
 
-                    return@addOnSuccessListener
-                }
-            }
-
-            database.child(keyword).setValue(1).addOnSuccessListener {
-                Log.i(TAG, "Successfully inserted keyword $keyword")
+            if (target == null) {
+                insertNewKeyword(keyword)
+            } else {
+                val count = (target.value as Long).toInt() + 1
+                insertExistingKeyword(keyword, count)
             }
         }.addOnFailureListener{
             Log.e(TAG, "Error getting data", it)
+        }
+    }
+
+    private fun insertNewKeyword(keyword: String) {
+        database.child(keyword).setValue(1).addOnSuccessListener {
+            Log.i(TAG, "Successfully inserted keyword $keyword")
+        }
+    }
+    
+    private fun insertExistingKeyword(keyword: String, count: Int) {
+        database.child(keyword).setValue(count).addOnSuccessListener {
+            Log.i(TAG, "Successfully counted keyword $keyword")
         }
     }
 
