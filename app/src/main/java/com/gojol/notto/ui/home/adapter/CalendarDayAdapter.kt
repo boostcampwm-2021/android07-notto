@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -46,11 +47,7 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
                     ContextCompat.getColorStateList(binding.root.context, R.color.yellow_deep)
                         ?.withAlpha(achievement)
 
-                if (item.isSelected) {
-                    binding.underline.visibility = View.VISIBLE
-                } else {
-                    binding.underline.visibility = View.INVISIBLE
-                }
+                binding.underline.isVisible = item.isSelected
             }
 
             binding.executePendingBindings()
