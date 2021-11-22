@@ -18,8 +18,7 @@ class CalendarAdapter(
     private val lifecycle: Lifecycle
 ) : RecyclerView.Adapter<CalendarAdapter.CustomCalendarViewHolder>() {
 
-    private val today = LocalDate.now()
-    private var date = today
+    private var date = LocalDate.now()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomCalendarViewHolder {
         return CustomCalendarViewHolder(
@@ -30,7 +29,7 @@ class CalendarAdapter(
     }
 
     override fun onBindViewHolder(holder: CustomCalendarViewHolder, position: Int) {
-        holder.bind(today, date)
+        holder.bind(date)
     }
 
     override fun getItemCount(): Int = 1
@@ -41,7 +40,6 @@ class CalendarAdapter(
 
     fun setDate(newDate: LocalDate) {
         date = newDate
-        notifyItemChanged(0)
     }
 
     class CustomCalendarViewHolder(
@@ -55,20 +53,15 @@ class CalendarAdapter(
 
         init {
             binding.vpCalendar.adapter = calendarViewPagerAdapter
+            binding.vpCalendar.setCurrentItem(
+                calendarViewPagerAdapter.firstFragmentPosition,
+                false
+            )
             setViewPagerDynamicHeight()
         }
 
-        fun bind(today: LocalDate, date: LocalDate) {
+        fun bind(date: LocalDate) {
             binding.date = date.format(formatter)
-
-            val movePosition =
-                date.monthValue - today.monthValue + (date.year - today.year) * 12
-
-            binding.vpCalendar.setCurrentItem(
-                calendarViewPagerAdapter.firstFragmentPosition + movePosition,
-                false
-            )
-
             binding.executePendingBindings()
         }
 
