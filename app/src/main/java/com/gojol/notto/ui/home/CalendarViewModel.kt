@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gojol.notto.common.SuccessLevel
 import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.DayWithSuccessLevelAndSelect
 import com.gojol.notto.model.database.todo.DailyTodo
@@ -74,26 +75,23 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    private fun getSuccessLevel(todayDailyTodos: List<DailyTodo>): Int {
+    private fun getSuccessLevel(todayDailyTodos: List<DailyTodo>): SuccessLevel {
         val successCount = todayDailyTodos.count { it.todoState == TodoState.SUCCESS }
         val totalCount = todayDailyTodos.size
 
         val successRate = if (totalCount == 0) {
-            0.toFloat()
+            0f
         } else {
             successCount.toFloat() / totalCount.toFloat()
         }
 
-        var successLevel = when {
-            successRate <= 0.25 -> 1
-            successRate <= 0.5 -> 2
-            successRate <= 0.75 -> 3
-            successRate < 1 -> 4
-            else -> 5
-        }
-
-        if (totalCount == 0 || successCount == 0) {
-            successLevel = 0
+        val successLevel = when {
+            totalCount == 0 || successCount == 0 -> SuccessLevel.ZERO
+            successRate <= 0.25 -> SuccessLevel.ONE
+            successRate <= 0.5 -> SuccessLevel.TWO
+            successRate <= 0.75 -> SuccessLevel.THREE
+            successRate < 1 -> SuccessLevel.FOUR
+            else -> SuccessLevel.FIVE
         }
 
         return successLevel

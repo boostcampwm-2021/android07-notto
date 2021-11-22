@@ -37,14 +37,14 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
         }
 
         fun bind(item: DayWithSuccessLevelAndSelect) {
-            val date = item.date
-            val achievement = item.successLevel
+            val date = item.day
+            val achievement = item.successLevel.toIntAlpha()
 
             if (date != 0) {
                 binding.tvCalendarDay.text = date.toString()
                 binding.tvCalendarDay.backgroundTintList =
                     ContextCompat.getColorStateList(binding.root.context, R.color.yellow_deep)
-                        ?.withAlpha(51 * achievement)
+                        ?.withAlpha(achievement)
 
                 if (item.isSelected) {
                     binding.underline.visibility = View.VISIBLE
@@ -62,7 +62,7 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
             oldItem: DayWithSuccessLevelAndSelect,
             newItem: DayWithSuccessLevelAndSelect
         ): Boolean {
-            return oldItem.date == newItem.date
+            return oldItem.day == newItem.day
         }
 
         override fun areContentsTheSame(
