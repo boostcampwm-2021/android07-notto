@@ -21,8 +21,9 @@ enum class TodoDeleteType {
     TODAY, TODAY_AND_FUTURE
 }
 
-enum class SuccessLevel(val value: Int) {
-    ZERO(0), ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5);
+enum class SuccessLevel(val value: Int, val maxValue: Float) {
+    ZERO(0, 0f), ONE(1, 0.25f), TWO(2, 0.5f),
+    THREE(3, 0.75f), FOUR(4, 1f), FIVE(5, 1f);
 
     fun toIntAlpha(): Int {
         return 51 * value
