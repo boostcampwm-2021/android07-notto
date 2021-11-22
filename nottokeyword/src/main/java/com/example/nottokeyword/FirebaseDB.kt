@@ -10,10 +10,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kr.bydelta.koala.hnn.Tagger
 
-class FirebaseDB(firebaseDbUrl: String) {
+class FirebaseDB {
 
     private val database = Firebase
-        .database(firebaseDbUrl)
+        .database(BuildConfig.FIREBASE_DB_URL)
         .getReference("keywords")
 
     fun insertKeyword(content: String) {

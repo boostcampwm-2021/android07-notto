@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nottokeyword.FirebaseDB
-import com.gojol.notto.BuildConfig
 import com.gojol.notto.common.Event
 import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.common.TodoDeleteType
@@ -22,8 +21,10 @@ import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
-class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRepository) :
-    ViewModel() {
+class TodoEditViewModel @Inject constructor(
+    private val repository: TodoLabelRepository,
+    private val firebaseDB: FirebaseDB
+) : ViewModel() {
 
     private val _isTodoEditing = MutableLiveData<Boolean>()
     val isTodoEditing: LiveData<Boolean> = _isTodoEditing
@@ -92,8 +93,6 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
     private val _isSaveButtonEnabled = MutableLiveData<Boolean>()
     val isSaveButtonEnabled: LiveData<Boolean> = _isSaveButtonEnabled
-
-    private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
 
     init {
         _repeatType.value = RepeatType.DAY

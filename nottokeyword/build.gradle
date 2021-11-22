@@ -3,6 +3,9 @@ plugins {
     id 'kotlin-android'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdk 31
 
@@ -14,6 +17,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField("String", "FIREBASE_DB_URL", properties.getProperty("db_url"))
     }
 
     buildTypes {
