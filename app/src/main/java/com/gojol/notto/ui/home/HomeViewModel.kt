@@ -57,7 +57,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         _date.value = if (year != null && month != null && day != null) {
             LocalDate.of(year, month, day)
         } else {
-            LocalDate.now()
+            return
         }
     }
 
