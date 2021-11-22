@@ -2,18 +2,15 @@ package com.gojol.notto.ui.label
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.gojol.notto.common.LabelEditType
 import com.gojol.notto.databinding.ItemEditLabelBinding
 import com.gojol.notto.model.database.label.Label
-import com.gojol.notto.ui.label.dialog.delete.DeleteLabelDialogFragment
-import com.gojol.notto.ui.label.dialog.edit.EditLabelDialogFragment
-import com.google.gson.Gson
 
 class EditLabelAdapter(
-    private val dialogCallback: (DialogFragment) -> Unit
+    private val dialogCallback: (LabelEditType, Label?) -> Unit
 ) : RecyclerView.Adapter<EditLabelAdapter.EditLabelViewHolder>() {
 
     private val differCallback = object : DiffUtil.ItemCallback<Label>() {
@@ -46,19 +43,17 @@ class EditLabelAdapter(
 
     class EditLabelViewHolder(
         private val binding: ItemEditLabelBinding,
-        private val dialogCallback: (DialogFragment) -> Unit
+        private val dialogCallback: (LabelEditType, Label?) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.apply {
                 setDeleteClickListener {
-                    val dialog = DeleteLabelDialogFragment.newInstance(Gson().toJson(label))
-                    dialogCallback(dialog)
+                    dialogCallback(LabelEditType.DELETE, label)
                 }
 
                 setUpdateClickListener {
-                    val dialog = EditLabelDialogFragment.newInstance(Gson().toJson(label))
-                    dialogCallback(dialog)
+                    dialogCallback(LabelEditType.UPDATE, label)
                 }
             }
         }

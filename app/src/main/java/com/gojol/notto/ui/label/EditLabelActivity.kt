@@ -4,12 +4,15 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.gojol.notto.R
+import com.gojol.notto.common.LabelEditType
 import com.gojol.notto.databinding.ActivityEditLabelBinding
+import com.gojol.notto.model.database.label.Label
+import com.gojol.notto.ui.label.dialog.delete.DeleteLabelDialogFragment
 import com.gojol.notto.ui.label.dialog.edit.EditLabelDialogFragment
 import com.gojol.notto.ui.label.util.ItemTouchCallback
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -62,7 +65,7 @@ class EditLabelActivity : AppCompatActivity() {
         binding.toolbarEditLabel.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.edit_label_menu_create -> {
-                    showCreateDialog()
+                    showDialog(LabelEditType.CREATE, null)
                     true
                 }
                 else -> {
@@ -84,13 +87,13 @@ class EditLabelActivity : AppCompatActivity() {
         })
     }
 
-    private fun showCreateDialog() {
-        val dialog = EditLabelDialogFragment.newInstance(null)
-        showDialog(dialog)
-    }
-
-    private fun showDialog(dialog: DialogFragment) {
-        dialog.show(supportFragmentManager, "EditLabelDialogFragment")
+    private fun showDialog(type: LabelEditType, label: Label?) {
+        val dialog = when (type) {
+            LabelEditType.DELETE -> DeleteLabelDialogFragment.newInstance(Gson().toJson(label))
+            else -> EditLabelDialogFragment.newInstance(Gson().toJson(label))
+        }.apply {
+            show(supportFragmentManager, "EditLabelDialogFragment")
+        }
 
         supportFragmentManager.executePendingTransactions()
 
