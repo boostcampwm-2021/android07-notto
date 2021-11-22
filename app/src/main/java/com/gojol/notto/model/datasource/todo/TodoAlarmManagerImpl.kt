@@ -39,11 +39,13 @@ class TodoAlarmManagerImpl @Inject constructor(
 
         val fullDateTime = LocalDateTime.of(todo.startDate, todo.startTime)
         val repeatInterval: Long = todo.periodTime.time.toInt() * 60 * 1000L
-        val triggerTime = Date.from(fullDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
+        var triggerTime = Date.from(fullDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
+        triggerTime = modifyRepeatTime(triggerTime, repeatInterval)
 
         alarmManager.setRepeating(
             AlarmManager.RTC,
-            triggerTime, repeatInterval,
+            triggerTime,
+            repeatInterval,
             pendingIntent
         )
     }
@@ -63,11 +65,13 @@ class TodoAlarmManagerImpl @Inject constructor(
 
         val fullDateTime = LocalDateTime.of(todo.startDate, todo.startTime)
         val repeatInterval: Long = todo.periodTime.time.toInt() * 60 * 1000L
-        val triggerTime = Date.from(fullDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
+        var triggerTime = Date.from(fullDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
+        triggerTime = modifyRepeatTime(triggerTime, repeatInterval)
 
         alarmManager.setRepeating(
             AlarmManager.RTC,
-            triggerTime, repeatInterval,
+            triggerTime,
+            repeatInterval,
             pendingIntent
         )
     }
@@ -106,5 +110,17 @@ class TodoAlarmManagerImpl @Inject constructor(
         }.forEach {
             deleteAlarm(it.todo, TodoState.SUCCESS)
         }
+    }
+
+    private fun modifyRepeatTime(triggerTime: Long, interval: Long): Long {
+        var time = triggerTime
+        val currTime = System.currentTimeMillis()
+        if (time < System.currentTimeMillis()) {
+            time = (time / 1000) * 1000
+            while(time <= currTime) {
+                time += interval
+            }
+        }
+        return time
     }
 }
