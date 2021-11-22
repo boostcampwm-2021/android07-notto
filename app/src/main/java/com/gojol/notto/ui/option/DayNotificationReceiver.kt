@@ -9,16 +9,12 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.getSystemService
 import com.gojol.notto.R
 import com.gojol.notto.ui.MainActivity
 
 class DayNotificationReceiver : BroadcastReceiver() {
 
-    private var notificationManager: NotificationManager? = null
-
     override fun onReceive(context: Context, intent: Intent) {
-        notificationManager = context.getSystemService()
         createNotificationChannel(context)
         showNotification(context)
     }
@@ -33,9 +29,7 @@ class DayNotificationReceiver : BroadcastReceiver() {
                 description = context.getString(R.string.option_notification_description)
             }
 
-            with(NotificationManagerCompat.from(context)) {
-                createNotificationChannel(notificationChannel)
-            }
+            NotificationManagerCompat.from(context).createNotificationChannel(notificationChannel)
         }
     }
 
@@ -60,9 +54,7 @@ class DayNotificationReceiver : BroadcastReceiver() {
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
 
-        with(NotificationManagerCompat.from(context)) {
-            notify(NOTIFICATION_ID, notificationBuilder.build())
-        }
+        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 
     companion object {
