@@ -11,10 +11,9 @@ import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import com.gojol.notto.util.toYearMonthDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,8 +25,8 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
     private val _todoEditButtonClicked = MutableLiveData<Event<Todo>>()
     val todoEditButtonClicked: LiveData<Event<Todo>> = _todoEditButtonClicked
 
-    private val _date = MutableLiveData(Calendar.getInstance())
-    val date: LiveData<Calendar> = _date
+    private val _date = MutableLiveData(LocalDate.now())
+    val date: LiveData<LocalDate> = _date
 
     private val _todoList = MutableLiveData<List<TodoWithTodayDailyTodo>>()
     val todoList: LiveData<List<TodoWithTodayDailyTodo>> = _todoList
@@ -50,19 +49,16 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
                 .sortedBy { it.labelWithTodo.label.order }
                 .toList()
             _todoList.value =
-                _date.value?.let { repository.getTodosWithTodayDailyTodos(it.toYearMonthDate()) }
+                _date.value?.let { repository.getTodosWithTodayDailyTodos(it) }
         }
     }
 
     fun updateDate(year: Int? = null, month: Int? = null, day: Int? = null) {
-        var calendar: Calendar = Calendar.getInstance()
-        if (year != null && month != null && day != null) {
-            calendar.set(year, month - 1, day)
-        } else if (year == null && month == null && day == null) {
-            date.value?.let { calendar = it }
+        _date.value = if (year != null && month != null && day != null) {
+            LocalDate.of(year, month, day)
+        } else {
+            LocalDate.now()
         }
-
-        _date.value = calendar
     }
 
     fun updateDailyTodo(dailyTodo: DailyTodo) {
@@ -75,7 +71,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
             if (currentShowTodoList != null) {
                 _todoList.value = _date.value?.let { date ->
-                    repository.getTodosWithTodayDailyTodos(date.toYearMonthDate())
+                    repository.getTodosWithTodayDailyTodos(date)
                 }?.filter { currentShowTodoList.contains(it.todo) }
             }
         }
@@ -94,7 +90,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
         _date.value?.let { date ->
             _todoList.value =
-                repository.getTodosWithTodayDailyTodos(date.toYearMonthDate())
+                repository.getTodosWithTodayDailyTodos(date)
                     .filter { it.todo.todoId in todoIdList }
         }
     }

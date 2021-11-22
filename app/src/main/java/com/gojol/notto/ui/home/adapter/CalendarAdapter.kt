@@ -10,16 +10,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.ItemCalendarBinding
-import com.gojol.notto.util.getMonth
-import com.gojol.notto.util.getYear
-import java.util.Calendar
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class CalendarAdapter(
     private val fragmentManager: FragmentManager,
     private val lifecycle: Lifecycle
 ) : RecyclerView.Adapter<CalendarAdapter.CustomCalendarViewHolder>() {
 
-    private val today = Calendar.getInstance()
+    private val today = LocalDate.now()
     private var date = today
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomCalendarViewHolder {
@@ -40,7 +39,7 @@ class CalendarAdapter(
         return AdapterViewType.CALENDAR.viewType
     }
 
-    fun setDate(newDate: Calendar) {
+    fun setDate(newDate: LocalDate) {
         date = newDate
         notifyItemChanged(0)
     }
@@ -51,6 +50,7 @@ class CalendarAdapter(
         private val lifecycle: Lifecycle
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        private val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월")
         private val calendarViewPagerAdapter = CalendarViewPagerAdapter(fragmentManager, lifecycle)
 
         init {
@@ -58,11 +58,11 @@ class CalendarAdapter(
             setViewPagerDynamicHeight()
         }
 
-        fun bind(today: Calendar, date: Calendar) {
-            binding.date = date
+        fun bind(today: LocalDate, date: LocalDate) {
+            binding.date = date.format(formatter)
 
             val movePosition =
-                date.getMonth() - today.getMonth() + (date.getYear() - today.getYear()) * 12
+                date.monthValue - today.monthValue + (date.year - today.year) * 12
 
             binding.vpCalendar.setCurrentItem(
                 calendarViewPagerAdapter.firstFragmentPosition + movePosition,
