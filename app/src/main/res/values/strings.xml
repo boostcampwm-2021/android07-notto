@@ -20,9 +20,10 @@
     <string name="edit_label_edit_text_hint">라벨 이름을 입력해주세요.</string>
     <string name="edit_label_delete_alert">Not-todo에 더이상 이 라벨이 표시되지 않습니다.\n정말 삭제하시겠습니까?</string>
 
-    <string name="todo_edit_repeat_date">날짜</string>
+    <string name="todo_edit_repeat_date">선택한 날짜</string>
     <string name="todo_edit_repeat_setting">반복 설정</string>
     <string name="todo_edit_repeat_type">반복 유형</string>
+    <string name="todo_edit_repeat_start">반복 시작</string>
     <string name="todo_edit_time_setting">시간 설정</string>
     <string name="todo_edit_time_start">시작 시간</string>
     <string name="todo_edit_time_finish">종료 시간</string>

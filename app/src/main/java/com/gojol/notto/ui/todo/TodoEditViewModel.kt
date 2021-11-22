@@ -48,15 +48,14 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _selectedLabelList = MutableLiveData(listOf<Label>())
     val selectedLabelList: LiveData<List<Label>> = _selectedLabelList
 
-    // 날짜
-    private val _repeatStart = MutableLiveData<LocalDate>()
-    val repeatStart: LiveData<LocalDate> = _repeatStart
-
     // Repeat
     val isRepeatChecked = MutableLiveData(false)
 
     private val _repeatType = MutableLiveData(RepeatType.YEAR)
     val repeatType: LiveData<RepeatType> = _repeatType
+
+    private val _repeatStart = MutableLiveData<LocalDate>()
+    val repeatStart: LiveData<LocalDate> = _repeatStart
 
     // Time
     val isTimeChecked = MutableLiveData(false)
@@ -80,11 +79,14 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _popLabelAddDialog = MutableLiveData<Boolean>()
     val popLabelAddDialog: LiveData<Boolean> = _popLabelAddDialog
 
-    private val _repeatStartClick = MutableLiveData<Event<Boolean>>()
-    val repeatStartClick: LiveData<Event<Boolean>> = _repeatStartClick
+    private val _dateClick = MutableLiveData<Event<Boolean>>()
+    val dateClick: LiveData<Event<Boolean>> = _dateClick
 
     private val _repeatTypeClick = MutableLiveData<Event<Boolean>>()
     val repeatTypeClick: LiveData<Event<Boolean>> = _repeatTypeClick
+
+    private val _repeatStartClick = MutableLiveData<Event<Boolean>>()
+    val repeatStartClick: LiveData<Event<Boolean>> = _repeatStartClick
 
     private val _timeStartClick = MutableLiveData<Event<Boolean>>()
     val timeStartClick: LiveData<Event<Boolean>> = _timeStartClick
@@ -167,6 +169,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         _date.value = selectedDate
     }
 
+    fun updateStartDate(date: LocalDate) {
+        _repeatStart.value = date
+    }
+
     fun updateIsCloseButtonClicked() {
         _isCloseButtonClicked.value = Event(true)
     }
@@ -174,10 +180,6 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     fun updateTodoDeleteType(type: TodoDeleteType?) {
         val deleteType = type ?: return
         _todoDeleteType.value = deleteType
-    }
-
-    fun updateTodoContent(content: String) {
-        todoContent.value = content
     }
 
     fun onRepeatTypeClick() {
@@ -189,11 +191,11 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onDateClick() {
-        _repeatStartClick.value = Event(true)
+        _dateClick.value = Event(true)
     }
 
-    fun updateRepeatTime(repeatTime: LocalDate) {
-        _repeatStart.value = repeatTime
+    fun onRepeatStartClick() {
+        _repeatStartClick.value = Event(true)
     }
 
     fun onTimeStartClick() {

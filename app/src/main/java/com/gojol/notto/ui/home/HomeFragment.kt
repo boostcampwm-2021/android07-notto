@@ -121,17 +121,15 @@ class HomeFragment : Fragment() {
             homeViewModel.setDummyData()
         })
 
-        homeViewModel.isTodoCreateButtonClicked.observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let {
-                startTodoEditActivity()
+        homeViewModel.todoCreateButtonClicked.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let { date ->
+                startTodoCreateEditActivity(date)
             }
         })
 
         homeViewModel.todoEditButtonClicked.observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let { todo ->
-                homeViewModel.date.value?.let { date ->
-                    startTodoCreateActivity(todo, date)
-                }
+            it.getContentIfNotHandled()?.let { pair ->
+                startTodoEditActivity(pair.first, pair.second)
             }
         })
     }
@@ -167,19 +165,20 @@ class HomeFragment : Fragment() {
     }
 
     private fun todoEditButtonCallback(todo: Todo) {
-        homeViewModel.updateIsTodoEditButtonClicked(todo)
+        homeViewModel.updateNavigateToTodoEdit(todo)
     }
 
     private fun labelTouchCallback(labelWithCheck: LabelWithCheck) {
         homeViewModel.setLabelClickListener(labelWithCheck)
     }
 
-    private fun startTodoEditActivity() {
+    private fun startTodoCreateEditActivity(date: LocalDate) {
         val intent = Intent(activity, TodoEditActivity::class.java)
+        intent.putExtra("date", date)
         startActivity(intent)
     }
 
-    private fun startTodoCreateActivity(todo: Todo, date: LocalDate) {
+    private fun startTodoEditActivity(todo: Todo, date: LocalDate) {
         val intent = Intent(activity, TodoEditActivity::class.java)
         intent.putExtra("todo", todo)
         intent.putExtra("date", date)

@@ -18,6 +18,9 @@ class TodoBaseDialogViewModel : ViewModel() {
     private val _isDismissClicked = MutableLiveData<Event<Boolean>>()
     val isDismissClicked: LiveData<Event<Boolean>> = _isDismissClicked
 
+    private val _date = MutableLiveData<LocalDate>()
+    val date: LiveData<LocalDate> = _date
+
     private val _repeatType = MutableLiveData<RepeatType>()
     val repeatType: LiveData<RepeatType> = _repeatType
 
@@ -42,6 +45,10 @@ class TodoBaseDialogViewModel : ViewModel() {
 
     fun onDismissClick() {
         _isDismissClicked.value = Event(true)
+    }
+
+    fun setDate(date: LocalDate) {
+        _date.value = date
     }
 
     fun setRepeatType(type: RepeatType) {
