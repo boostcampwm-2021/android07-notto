@@ -1,6 +1,5 @@
 package com.gojol.notto.util
 
-import android.app.AlarmManager
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
@@ -12,6 +11,7 @@ import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.lang.Exception
+import java.time.ZoneId
 import java.util.*
 
 @HiltWorker
@@ -30,7 +30,9 @@ class SuccessButtonWorker @AssistedInject constructor(
     }
 
     private suspend fun onButtonClick() {
-        val currentDate = Date(System.currentTimeMillis()).getDateString()
+        val currentDate =
+            Date(System.currentTimeMillis()).toInstant().atZone(ZoneId.systemDefault())
+                .toLocalDate()
         val todoId = inputData.getInt(NOTIFICATION_TODO, -1)
 
         repository.getTodosWithTodayDailyTodos(currentDate).filter {

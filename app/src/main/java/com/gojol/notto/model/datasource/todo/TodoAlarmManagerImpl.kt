@@ -7,15 +7,15 @@ import android.content.Context
 import android.content.Intent
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.util.TodoPushBroadcastReceiver
-import com.gojol.notto.util.getDate
-import com.gojol.notto.util.getTotalTimeString
 import javax.inject.Inject
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import com.gojol.notto.common.TodoState
-import com.gojol.notto.model.database.todo.DailyTodo
 import com.google.gson.Gson
 import java.io.Serializable
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.*
 
 const val ALARM_EXTRA_TODO = "alarmExtraTodo"
 
@@ -66,23 +66,22 @@ class TodoAlarmManagerImpl @Inject constructor(
             )
         )
 
-        val fullDate = ("${todo.startDate} ${todo.startTime}").getDate("yyyyMMdd a hh:mm")
-        fullDate?.let { it ->
-            val repeatInterval: Long = todo.periodTime.time.toInt() * 60 * 1000L
-            val triggerTime = it.time
+        val fullDateTime = LocalDateTime.of(todo.startDate, todo.startTime)
+        val repeatInterval: Long = todo.periodTime.time.toInt() * 60 * 1000L
+        val triggerTime = Date.from(fullDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
 
-            alarmManager.setRepeating(
-                AlarmManager.RTC,
-                triggerTime, repeatInterval,
-                pendingIntent
-            )
-        }
+        alarmManager.setRepeating(
+            AlarmManager.RTC,
+            triggerTime, repeatInterval,
+            pendingIntent
+        )
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
     override fun deleteAlarm(todo: Todo) {
-        val todoTime = ("${todo.startDate} ${todo.endTime}").getDate("yyyyMMdd a hh:mm") ?: return
-        val endTime = todoTime.time - todo.periodTime.time.toInt() * 60 * 1000
+        val todoDateTime = LocalDateTime.of(todo.startDate, todo.endTime)
+        val todoDate = Date.from(todoDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
+        val endTime = todoDate - todo.periodTime.time.toInt() * 60 * 1000
 
         if (!todo.isRepeated || endTime < System.currentTimeMillis()) {
             val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(context, todo.todoId)

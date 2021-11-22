@@ -13,6 +13,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
+import java.time.ZoneId
 import java.util.*
 
 @HiltWorker
@@ -33,7 +34,9 @@ class FailButtonWorker @AssistedInject constructor(
 
 
     private suspend fun onButtonClick() {
-        val currentDate = Date(System.currentTimeMillis()).getDateString()
+        val currentDate =
+            Date(System.currentTimeMillis()).toInstant().atZone(ZoneId.systemDefault())
+                .toLocalDate()
         val todoId = inputData.getInt(NOTIFICATION_TODO, -1)
 
         repository.getTodosWithTodayDailyTodos(currentDate).filter {

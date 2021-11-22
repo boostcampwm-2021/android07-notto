@@ -11,6 +11,7 @@ import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.lang.Exception
+import java.time.ZoneId
 import java.util.*
 
 @HiltWorker
@@ -29,7 +30,9 @@ class RebootAddAlarmWorker @AssistedInject constructor(
     }
 
     private suspend fun recreateAlarm() {
-        val currentDate = Date(System.currentTimeMillis()).getDateString()
+        val currentDate =
+            Date(System.currentTimeMillis()).toInstant().atZone(ZoneId.systemDefault())
+                .toLocalDate()
         repository.getTodosWithTodayDailyTodos(currentDate).forEach {
             val todo = it.todo
             val dailyTodo = it.todayDailyTodo
