@@ -21,7 +21,7 @@ class OptionViewModel @Inject constructor(
 
     init {
         isPushChecked.value =
-            optionRepository.loadIsPushNotificationChecked()
+            optionRepository.isPushNotificationChecked()
     }
 
     fun updateIsPushChecked(isPushChecked: Boolean) {
