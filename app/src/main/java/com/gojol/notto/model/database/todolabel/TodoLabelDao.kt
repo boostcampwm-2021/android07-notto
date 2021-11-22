@@ -69,6 +69,9 @@ interface TodoLabelDao {
     @Update
     suspend fun updateDailyTodo(dailyTodo: DailyTodo)
 
+    @Query("UPDATE DailyTodo SET is_active=:isActive WHERE parent_todo_id=:parentTodoId and date=:date")
+    suspend fun updateDailyTodoIsActive(parentTodoId: Int, date: String, isActive: Boolean)
+
     @Update
     suspend fun update(todoLabelCrossRef: TodoLabelCrossRef)
 
