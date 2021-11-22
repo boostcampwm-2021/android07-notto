@@ -1,7 +1,6 @@
 package com.example.nottokeyword
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +53,7 @@ class FirebaseDB {
             Log.i(TAG, "Successfully inserted keyword $keyword")
         }
     }
-    
+
     private fun insertExistingKeyword(keyword: String, count: Int) {
         database.child(keyword).setValue(count).addOnSuccessListener {
             Log.i(TAG, "Successfully counted keyword $keyword")
@@ -62,21 +61,20 @@ class FirebaseDB {
     }
 
     suspend fun getKeywords(): List<Keyword> {
-        val orderedList = MutableLiveData<List<Keyword>>()
-        val list = mutableListOf<Keyword>()
+        var list = listOf<Keyword>()
 
         database.get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
-            it.children.forEach { child ->
-                if (child.key != null && child.value != null) {
-                    list.add(Keyword(child.key!!, (child.value!! as Long).toInt()))
+
+            list = it.children
+                .filter { child -> child.key != null && child.value != null }
+                .map { child -> Keyword(child.key!!, (child.value!! as Long).toInt()) }
+                .toMutableList()
+                .apply {
+                    sortByDescending { keyword -> keyword.count }
                 }
-            }
         }.addOnFailureListener{
             Log.e(TAG, "Error getting data", it)
-        }.addOnCompleteListener {
-            list.sortByDescending { it.count }
-            orderedList.value = list
         }.await()
 
         return list
