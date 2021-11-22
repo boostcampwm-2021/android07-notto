@@ -2,12 +2,10 @@ package com.gojol.notto.ui.label
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.gojol.notto.common.DIALOG_LABEL_ITEM_KEY
 import com.gojol.notto.databinding.ItemEditLabelBinding
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.ui.label.dialog.delete.DeleteLabelDialogFragment
@@ -54,16 +52,12 @@ class EditLabelAdapter(
         init {
             binding.apply {
                 setDeleteClickListener {
-                    val dialog = DeleteLabelDialogFragment().apply {
-                        arguments = bundleOf(DIALOG_LABEL_ITEM_KEY to Gson().toJson(label))
-                    }
+                    val dialog = DeleteLabelDialogFragment.newInstance(Gson().toJson(label))
                     dialogCallback(dialog)
                 }
 
                 setUpdateClickListener {
-                    val dialog = EditLabelDialogFragment().apply {
-                        arguments = bundleOf(DIALOG_LABEL_ITEM_KEY to Gson().toJson(label))
-                    }
+                    val dialog = EditLabelDialogFragment.newInstance(Gson().toJson(label))
                     dialogCallback(dialog)
                 }
             }

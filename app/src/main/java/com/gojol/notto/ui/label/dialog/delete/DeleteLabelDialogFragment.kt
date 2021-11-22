@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -67,5 +68,13 @@ class DeleteLabelDialogFragment : DialogFragment() {
                 dialog?.cancel()
             }
         })
+    }
+
+    companion object {
+        fun newInstance(label: String): DeleteLabelDialogFragment {
+            return DeleteLabelDialogFragment().apply {
+                arguments = bundleOf(DIALOG_LABEL_ITEM_KEY to label)
+            }
+        }
     }
 }
