@@ -7,7 +7,7 @@ import androidx.work.WorkManager
 import com.gojol.notto.common.DAY_PUSH_NOTIFICATION_KEY
 import com.gojol.notto.model.SharedPrefManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import com.gojol.notto.ui.option.DayNotificationManager
+import com.gojol.notto.ui.option.DayAlarmManager
 import javax.inject.Inject
 
 
@@ -16,6 +16,9 @@ class TodoRebootBroadcastReceiver : HiltBroadcastReceiver() {
     @Inject
     lateinit var repository: TodoLabelRepository
 
+    @Inject
+    lateinit var dayAlarmManager: DayAlarmManager
+
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
@@ -23,7 +26,7 @@ class TodoRebootBroadcastReceiver : HiltBroadcastReceiver() {
             // DailyNotify
             val sharedPrefManager = SharedPrefManager(context)
             val isPushChecked = sharedPrefManager.getBoolean(DAY_PUSH_NOTIFICATION_KEY)
-            if (isPushChecked) DayNotificationManager.setAlarm(context)
+            if (isPushChecked) dayAlarmManager.setAlarm()
 
             // TODO : 아래 workmanager를 이용한 부분을 주석처리하고 이 부분을 주석 해제한 후
             //  재부팅했을 때 이 로직이 실행되는 분은 말씀해주세요.
