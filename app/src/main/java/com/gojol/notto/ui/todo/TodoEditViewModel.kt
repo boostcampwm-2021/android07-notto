@@ -12,6 +12,7 @@ import com.gojol.notto.common.TodoDeleteType
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.util.get12Hour
 import com.gojol.notto.util.toYearMonthDate
@@ -24,7 +25,10 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRepository) :
+class TodoEditViewModel @Inject constructor(
+    private val repository: TodoLabelRepository,
+    private val todoAlarmManager: TodoAlarmManager
+    ) :
     ViewModel() {
 
     private val _isTodoEditing = MutableLiveData<Boolean>()
@@ -256,7 +260,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         viewModelScope.launch {
             launch {
                 repository.insertTodo(newTodo)
-                repository.addAlarm(repository.getAllTodo().last())
+                todoAlarmManager.addAlarm(repository.getAllTodo().last())
             }.join()
 
             val saveTodo = withContext(Dispatchers.Default) {
@@ -309,7 +313,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
         viewModelScope.launch {
             repository.updateTodo(newTodo)
-            repository.addAlarm(newTodo)
+            todoAlarmManager.addAlarm(newTodo)
 
             selectedLabelList.value?.let { list ->
                 val newList = list.filterNot { it.order == 0 }

@@ -6,8 +6,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import javax.inject.Inject
 import android.app.NotificationManager
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -21,9 +19,6 @@ const val FAIL_INTENT_ID = 1000000002
 const val NOTIFICATION_TODO = "notificationTodo"
 
 class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
-
-    @Inject
-    lateinit var repository: TodoLabelRepository
 
     lateinit var notificationManager: NotificationManager
 

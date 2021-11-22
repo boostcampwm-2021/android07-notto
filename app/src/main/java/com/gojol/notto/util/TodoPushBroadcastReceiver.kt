@@ -1,7 +1,6 @@
 package com.gojol.notto.util
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -15,9 +14,9 @@ import androidx.core.app.NotificationManagerCompat
 import com.gojol.notto.R
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.ALARM_EXTRA_TODO
+import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.google.gson.Gson
 import java.util.*
 import com.google.gson.reflect.TypeToken
@@ -31,10 +30,7 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
     private lateinit var notificationManager: NotificationManager
 
     @Inject
-    lateinit var repository: TodoLabelRepository
-
-    @Inject
-    lateinit var alarmManager: AlarmManager
+    lateinit var todoAlarmManager: TodoAlarmManager
 
     private val gson: Gson = Gson()
 
@@ -55,7 +51,7 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
         val todoData = intent.extras?.getString(ALARM_EXTRA_TODO) ?: return
         val todo = gson.fromJson<Todo>(todoData, object : TypeToken<Todo?>() {}.type)
 
-        repository.deleteAlarm(todo)
+        todoAlarmManager.deleteAlarm(todo)
         createNotificationChannel()
         deliverNotification(context, todo)
     }
