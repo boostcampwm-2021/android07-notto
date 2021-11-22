@@ -157,11 +157,11 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         todoLabelDao.deleteTodoLabelCrossRefByTodo(todo.todoId)
     }
 
-    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
+    override suspend fun deleteSelectedTodo(todoId: Int, selectedDate: String) {
         todoLabelDao.updateDailyTodoIsActive(todoId, selectedDate, isActive = false)
     }
 
-    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
+    override suspend fun deleteSelectedAndFutureTodo(todoId: Int, selectedDate: String) {
         todoLabelDao.getDailyTodosByParentTodoId(todoId)
             .filter { dailyTodo ->
                 dailyTodo.date.toInt() >= selectedDate.toInt()

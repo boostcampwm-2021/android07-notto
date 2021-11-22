@@ -326,8 +326,8 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
 
         viewModelScope.launch {
             when(deleteType) {
-                TodoDeleteType.TODAY -> repository.deleteTodayTodo(todoId, selectedDate)
-                TodoDeleteType.TODAY_AND_FUTURE -> repository.deleteTodayAndFutureTodo(todoId, selectedDate)
+                TodoDeleteType.SELECTED -> repository.deleteSelectedTodo(todoId, selectedDate)
+                TodoDeleteType.SELECTED_AND_FUTURE -> repository.deleteSelectedAndFutureTodo(todoId, selectedDate)
             }
             _isDeletionExecuted.postValue(Event(true))
         }

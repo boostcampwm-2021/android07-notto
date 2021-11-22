@@ -18,5 +18,5 @@ enum class EditType(val text: String) {
 }
 
 enum class TodoDeleteType {
-    TODAY, TODAY_AND_FUTURE
+    SELECTED, SELECTED_AND_FUTURE
 }

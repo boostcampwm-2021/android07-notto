@@ -226,11 +226,11 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         }
     }
 
-    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
+    override suspend fun deleteSelectedTodo(todoId: Int, selectedDate: String) {
         throw Exception(ERROR_MSG)
     }
 
-    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
+    override suspend fun deleteSelectedAndFutureTodo(todoId: Int, selectedDate: String) {
         throw Exception(ERROR_MSG)
     }
 
