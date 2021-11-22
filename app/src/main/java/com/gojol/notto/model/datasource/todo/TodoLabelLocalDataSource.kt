@@ -54,7 +54,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
                 }
 
                 todayDailyTodo =
-                    repeatedDate?.let { DailyTodo(TodoState.NOTHING, todo.todoId, it, true) }
+                    repeatedDate?.let { DailyTodo(TodoState.NOTHING, true, todo.todoId, it) }
                 todayDailyTodo?.let { dailyTodo -> todoLabelDao.insertDailyTodo(dailyTodo) }
             } else {
                 if (!todayDailyTodo.isActive) todayDailyTodo = null

@@ -75,7 +75,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
                 dailyTodos.find { it.parentTodoId == todo.todoId && it.date == this.selectedDate }
 
             if (todayDailyTodo == null) {
-                todayDailyTodo = DailyTodo(TodoState.NOTHING, todo.todoId, this.selectedDate, true)
+                todayDailyTodo = DailyTodo(TodoState.NOTHING, true, todo.todoId, this.selectedDate)
                 dailyTodos.add(todayDailyTodo)
             } else {
                 if (!todayDailyTodo.isActive) todayDailyTodo = null
