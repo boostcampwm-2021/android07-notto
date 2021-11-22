@@ -33,12 +33,11 @@ class SuccessButtonWorker @AssistedInject constructor(
         val currentDate = Date(System.currentTimeMillis()).getDateString()
         val todoId = inputData.getInt(NOTIFICATION_TODO, -1)
 
-        repository.getTodosWithTodayDailyTodos(currentDate).forEach {
-            val dailyTodo = it.todayDailyTodo
-            if (todoId == it.todo.todoId) {
-                repository.updateDailyTodo(dailyTodo.copy(todoState = TodoState.SUCCESS))
-                alarmManager.deleteAlarm(it.todo, TodoState.SUCCESS)
-            }
+        repository.getTodosWithTodayDailyTodos(currentDate).filter {
+            it.todo.todoId == todoId
+        }.forEach {
+            repository.updateDailyTodo(it.todayDailyTodo.copy(todoState = TodoState.SUCCESS))
+            alarmManager.deleteAlarm(it.todo, TodoState.SUCCESS)
         }
     }
 }
