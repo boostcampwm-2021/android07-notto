@@ -31,12 +31,6 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
         private val dayClickCallback: (Int) -> (Unit)
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.tvCalendarDay.setOnClickListener {
-                dayClickCallback(binding.tvCalendarDay.text.toString().toInt())
-            }
-        }
-
         fun bind(item: DayWithSuccessLevelAndSelect) {
             val date = item.day
             val achievement = item.successLevel.toIntAlpha()
@@ -49,6 +43,10 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
                         ?.withAlpha(achievement)
 
                 binding.underline.isVisible = item.isSelected
+
+                binding.tvCalendarDay.setOnClickListener {
+                    dayClickCallback(binding.tvCalendarDay.text.toString().toInt())
+                }
             }
 
             binding.executePendingBindings()
