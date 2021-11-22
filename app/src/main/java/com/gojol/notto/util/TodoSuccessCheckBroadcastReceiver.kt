@@ -1,5 +1,6 @@
 package com.gojol.notto.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.work.OneTimeWorkRequestBuilder
@@ -7,6 +8,8 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.gojol.notto.model.database.todo.Todo
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.work.WorkRequest
@@ -24,6 +27,19 @@ class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
 
     private lateinit var workRequest: WorkRequest
     private val gson: Gson = Gson()
+
+    companion object {
+        @SuppressLint("UnspecifiedImmutableFlag")
+        fun getPendingIntent(context: Context, id: Int, data: Uri, action: String): PendingIntent {
+            val intent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java).apply {
+                setData(data)
+                setAction(action)
+            }
+            return PendingIntent.getBroadcast(
+                context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onReceive(context: Context, intent: Intent) {

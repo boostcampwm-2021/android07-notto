@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -38,6 +39,24 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
         const val CHANNEL_ID = "nottoChannel"
         const val GROUP_ID = "com.android.notto.util.TodoPushBroadcastReceiver.group"
         const val SUMMARY_ID = 0
+
+        @SuppressLint("UnspecifiedImmutableFlag")
+        fun getPendingIntent(context: Context, id: Int): PendingIntent {
+            val intent = Intent(context, TodoPushBroadcastReceiver::class.java)
+            return PendingIntent.getBroadcast(
+                context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+
+        @SuppressLint("UnspecifiedImmutableFlag")
+        fun getPendingIntent(context: Context, id: Int, bundle: Bundle): PendingIntent {
+            val intent = Intent(context, TodoPushBroadcastReceiver::class.java).apply {
+                putExtras(bundle)
+            }
+            return PendingIntent.getBroadcast(
+                context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
@@ -97,24 +116,12 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
     @SuppressLint("RemoteViewLayout", "UnspecifiedImmutableFlag")
     private fun customContentView(context: Context, todo: Todo): RemoteViews {
         val contentView = RemoteViews(context.packageName, R.layout.notification_todo)
-        // putExtra : 마지막에 설정한 값으로만 전달
-        // data : 그 당시에 설정한 값을 반환
-        val successIntent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java).apply {
-            data = Uri.parse(gson.toJson(todo))
-            action = ACTION_SUCCESS
-        }
 
-        val failIntent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java).apply {
-            data = Uri.parse(gson.toJson(todo))
-            action = ACTION_FAIL
-        }
-
-        val successPendingIntent = PendingIntent.getBroadcast(
-            context, SUCCESS_INTENT_ID, successIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        val successPendingIntent = TodoSuccessCheckBroadcastReceiver.getPendingIntent(
+            context, SUCCESS_INTENT_ID, Uri.parse(gson.toJson(todo)), ACTION_SUCCESS
         )
-
-        val failPendingIntent = PendingIntent.getBroadcast(
-            context, FAIL_INTENT_ID, failIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        val failPendingIntent = TodoSuccessCheckBroadcastReceiver.getPendingIntent(
+            context, FAIL_INTENT_ID, Uri.parse(gson.toJson(todo)), ACTION_FAIL
         )
 
         val currentTime = Date(System.currentTimeMillis()).getTimeString()

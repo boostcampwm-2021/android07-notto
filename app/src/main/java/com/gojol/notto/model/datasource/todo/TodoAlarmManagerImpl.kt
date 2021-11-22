@@ -30,19 +30,14 @@ class TodoAlarmManagerImpl @Inject constructor(
     override fun addAlarm(todo: Todo) {
         if (!todo.hasAlarm) return
 
-        val intent = Intent(context, TodoPushBroadcastReceiver::class.java).apply {
-            putExtras(
-                bundleOf(
-                    // TODO: ALARM_EXTRA_TODO to todo로 하면 TodoPushBroadcastReceiver에서
-                    //  intent.extras?.getSerializable(ALARM_EXTRA_TODO)로 받아올 때 null이다??
-                    ALARM_EXTRA_TODO to gson.toJson(todo)
-                )
+        val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(
+            context,
+            todo.todoId,
+            bundleOf(
+                // TODO: ALARM_EXTRA_TODO to todo로 하면 TodoPushBroadcastReceiver에서
+                //  intent.extras?.getSerializable(ALARM_EXTRA_TODO)로 받아올 때 null이다??
+                ALARM_EXTRA_TODO to gson.toJson(todo)
             )
-        }
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            context, todo.todoId, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val fullDate = ("${todo.startDate} ${todo.startTime}").getDate("yyyyMMdd a hh:mm")
@@ -64,10 +59,7 @@ class TodoAlarmManagerImpl @Inject constructor(
         val endTime = todoTime.time - todo.periodTime.time.toInt() * 60 * 1000
 
         if (!todo.isRepeated || endTime < System.currentTimeMillis()) {
-            val intent = Intent(context, TodoPushBroadcastReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(
-                context, todo.todoId, intent, PendingIntent.FLAG_UPDATE_CURRENT
-            )
+            val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(context, todo.todoId)
             alarmManager.cancel(pendingIntent)
         }
     }
@@ -75,10 +67,7 @@ class TodoAlarmManagerImpl @Inject constructor(
     @SuppressLint("UnspecifiedImmutableFlag")
     override fun deleteAlarm(todo: Todo, todoState: TodoState) {
         if (todoState == TodoState.SUCCESS) {
-            val intent = Intent(context, TodoPushBroadcastReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(
-                context, todo.todoId, intent, PendingIntent.FLAG_UPDATE_CURRENT
-            )
+            val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(context, todo.todoId)
             alarmManager.cancel(pendingIntent)
         }
     }
