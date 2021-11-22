@@ -32,13 +32,13 @@ class AddDailyTodoWorker @AssistedInject constructor(
 
     private suspend fun addTomorrowDailyTodosAlarm() {
         val calendar = Calendar.getInstance()
-        if (calendar.get(Calendar.HOUR_OF_DAY) >= 23) {
-            calendar.add(Calendar.DAY_OF_YEAR, 1)
-            repository.getTodosWithTodayDailyTodos(calendar.time.getDateString()).forEach {
-                val todo = it.todo
-                val dailyTodo = it.todayDailyTodo
-                todoAlarmManager.addAlarm(todo, dailyTodo.todoState)
-            }
+        if (calendar.get(Calendar.HOUR_OF_DAY) < 23) return
+        // 다음날을 가져오기 위해서 밤 11시 + 1시간 = 12시를 표시
+        calendar.add(Calendar.DAY_OF_YEAR, 1)
+        repository.getTodosWithTodayDailyTodos(calendar.time.getDateString()).forEach {
+            val todo = it.todo
+            val dailyTodo = it.todayDailyTodo
+            todoAlarmManager.addAlarm(todo, dailyTodo.todoState)
         }
     }
 }
