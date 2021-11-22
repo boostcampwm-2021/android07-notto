@@ -53,11 +53,11 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
                     }
                 }
 
-                todayDailyTodo = repeatedDate?.let { DailyTodo(TodoState.NOTHING, todo.todoId, it) }
-            }
-
-            if (todayDailyTodo != null) {
-                todoLabelDao.insertDailyTodo(todayDailyTodo)
+                todayDailyTodo =
+                    repeatedDate?.let { DailyTodo(TodoState.NOTHING, true, todo.todoId, it) }
+                todayDailyTodo?.let { dailyTodo -> todoLabelDao.insertDailyTodo(dailyTodo) }
+            } else {
+                if (!todayDailyTodo.isActive) todayDailyTodo = null
             }
 
             todayDailyTodo?.let { TodoWithTodayDailyTodo(todo, it) }
@@ -121,6 +121,13 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
 
     override suspend fun updateTodo(todo: Todo) {
         todoLabelDao.updateTodo(todo)
+        todoLabelDao.getDailyTodosByParentTodoId(todo.todoId)
+            .filter { dailyTodo ->
+                dailyTodo.date.toInt() >= todo.startDate.toInt()
+            }
+            .forEach { dailyTodo ->
+                todoLabelDao.deleteDailyTodo(dailyTodo)
+            }
     }
 
     override suspend fun updateTodo(todo: Todo, labels: List<Label>) {
@@ -151,7 +158,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     }
 
     override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
-        todoLabelDao.deleteDailyTodoByTodoIdAndDate(todoId, selectedDate)
+        todoLabelDao.updateDailyTodoIsActive(todoId, selectedDate, isActive = false)
     }
 
     override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
@@ -160,7 +167,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
                 dailyTodo.date.toInt() >= selectedDate.toInt()
             }
             .forEach { dailyTodo ->
-                todoLabelDao.deleteDailyTodo(dailyTodo)
+                todoLabelDao.updateDailyTodoIsActive(todoId, dailyTodo.date, false)
             }
     }
 
