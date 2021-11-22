@@ -8,9 +8,10 @@ import com.gojol.notto.common.DAY_PUSH_NOTIFICATION_KEY
 import com.gojol.notto.model.SharedPrefManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.ui.option.DayAlarmManager
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class TodoRebootBroadcastReceiver : HiltBroadcastReceiver() {
 
     @Inject
@@ -19,12 +20,14 @@ class TodoRebootBroadcastReceiver : HiltBroadcastReceiver() {
     @Inject
     lateinit var dayAlarmManager: DayAlarmManager
 
+    @Inject
+    lateinit var sharedPrefManager: SharedPrefManager
+
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
         if (intent.action.equals(Intent.ACTION_BOOT_COMPLETED)) {
             // DailyNotify
-            val sharedPrefManager = SharedPrefManager(context)
             val isPushChecked = sharedPrefManager.getBoolean(DAY_PUSH_NOTIFICATION_KEY)
             if (isPushChecked) dayAlarmManager.setAlarm()
 

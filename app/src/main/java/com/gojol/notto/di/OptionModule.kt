@@ -2,6 +2,7 @@ package com.gojol.notto.di
 
 import android.content.Context
 import com.gojol.notto.model.SharedPrefManager
+import com.gojol.notto.model.SharedPrefManagerImpl
 import com.gojol.notto.model.datasource.option.OptionDataSource
 import com.gojol.notto.model.datasource.option.OptionLocalDataSource
 import com.gojol.notto.ui.option.DayAlarmManager
@@ -20,6 +21,12 @@ class OptionModule {
     @Provides
     fun provideOptionLocalDataSource(sharedPrefManager: SharedPrefManager): OptionDataSource {
         return OptionLocalDataSource(sharedPrefManager)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPrefManagerImpl(@ApplicationContext context: Context): SharedPrefManager {
+        return SharedPrefManagerImpl(context)
     }
 
     @Singleton
