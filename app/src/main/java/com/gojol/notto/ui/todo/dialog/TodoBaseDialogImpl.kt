@@ -12,9 +12,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.gojol.notto.databinding.DialogBaseBinding
-import com.gojol.notto.util.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 import com.gojol.notto.R
+import com.gojol.notto.common.EventObserver
 import com.gojol.notto.ui.todo.dialog.util.TodoBaseDialog
 import com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel
 

@@ -3,20 +3,20 @@ package com.gojol.notto.ui.todo.dialog.util
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.gojol.notto.common.Event
 import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.common.TodoDeleteType
 import com.gojol.notto.model.data.RepeatType
-import com.gojol.notto.util.TouchEvent
 import com.gojol.notto.util.getDate
 import java.util.*
 
 class TodoBaseDialogViewModel : ViewModel() {
 
-    private val _isConfirmClicked = MutableLiveData<TouchEvent<Boolean>>()
-    val isConfirmClicked: LiveData<TouchEvent<Boolean>> = _isConfirmClicked
+    private val _isConfirmClicked = MutableLiveData<Event<Boolean>>()
+    val isConfirmClicked: LiveData<Event<Boolean>> = _isConfirmClicked
 
-    private val _isDismissClicked = MutableLiveData<TouchEvent<Boolean>>()
-    val isDismissClicked: LiveData<TouchEvent<Boolean>> = _isDismissClicked
+    private val _isDismissClicked = MutableLiveData<Event<Boolean>>()
+    val isDismissClicked: LiveData<Event<Boolean>> = _isDismissClicked
 
     private val _repeatType = MutableLiveData<RepeatType>()
     val repeatType: LiveData<RepeatType> = _repeatType
@@ -37,11 +37,11 @@ class TodoBaseDialogViewModel : ViewModel() {
     val todoDeleteType: LiveData<TodoDeleteType> = _todoDeleteType
 
     fun onConfirmClick() {
-        _isConfirmClicked.value = TouchEvent(true)
+        _isConfirmClicked.value = Event(true)
     }
 
     fun onDismissClick() {
-        _isDismissClicked.value = TouchEvent(true)
+        _isDismissClicked.value = Event(true)
     }
 
     fun setRepeatType(type: RepeatType) {
