@@ -5,25 +5,154 @@
 
     <data>
 
+        <variable
+            name="viewmodel"
+            type="com.gojol.notto.ui.option.OptionViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.option.OptionFragment">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/text_notifications"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/tb_option"
+            style="@style/Theme.Notto.Toolbar.Primary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/option_title"
+            app:titleCentered="true" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                tools:context=".ui.option.OptionFragment">
+
+                <TextView
+                    android:id="@+id/tv_option_push"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_median"
+                    android:layout_marginTop="@dimen/space_x_large"
+                    android:text="@string/option_push_notification"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_x_small"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_option_push_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_median"
+                    android:text="@string/option_push_notification_day"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_x_small"
+                    app:layout_constraintStart_toStartOf="@id/tv_option_push"
+                    app:layout_constraintTop_toBottomOf="@id/tv_option_push" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switch_option_push"
+                    style="@style/Widget.App.Switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_median"
+                    android:checked="@={viewmodel.isPushChecked}"
+                    android:onCheckedChanged="@{(view, isChecked) -> viewmodel.updateIsPushChecked(isChecked)}"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_option_push_day"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_option_push_day"
+                    app:switchMinWidth="55dp"
+                    tools:checked="false" />
+
+                <View
+                    android:id="@+id/divider_option_push"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="@dimen/space_median"
+                    android:layout_marginTop="@dimen/space_x_large"
+                    android:background="@color/gray_light"
+                    app:layout_constraintTop_toBottomOf="@id/tv_option_push_day" />
+
+                <TextView
+                    android:id="@+id/tv_option_open_source_license"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_x_large"
+                    android:text="@string/option_open_source_license"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_x_small"
+                    app:layout_constraintStart_toStartOf="@id/divider_option_push"
+                    app:layout_constraintTop_toBottomOf="@id/divider_option_push" />
+
+                <ImageButton
+                    android:id="@+id/btn_option_expand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:onClick="@{() -> viewmodel.updateIsNavigateToLicenseClicked()}"
+                    android:src="@drawable/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_option_open_source_license"
+                    app:layout_constraintEnd_toEndOf="@id/divider_option_push"
+                    app:layout_constraintTop_toTopOf="@id/tv_option_open_source_license" />
+
+                <View
+                    android:id="@+id/divider_option_open_source_license"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="@dimen/space_median"
+                    android:layout_marginTop="@dimen/space_x_large"
+                    android:background="@color/gray_light"
+                    app:layout_constraintTop_toBottomOf="@id/tv_option_open_source_license" />
+
+                <TextView
+                    android:id="@+id/tv_option_team"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_median"
+                    android:layout_marginTop="@dimen/space_x_large"
+                    android:text="@string/option_team"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_x_small"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider_option_open_source_license" />
+
+                <TextView
+                    android:id="@+id/tv_option_gojol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_median"
+                    android:text="@string/all_team_name"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_x_small"
+                    app:layout_constraintStart_toStartOf="@id/tv_option_team"
+                    app:layout_constraintTop_toBottomOf="@id/tv_option_team" />
+
+                <TextView
+                    android:id="@+id/tv_option_gojol_memeber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_median"
+                    android:layout_marginBottom="@dimen/space_x_large"
+                    android:text="@string/all_team_member"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_x_small"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tv_option_team"
+                    app:layout_constraintTop_toBottomOf="@id/tv_option_gojol" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
 </layout>

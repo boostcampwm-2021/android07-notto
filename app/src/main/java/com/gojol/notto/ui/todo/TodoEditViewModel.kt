@@ -4,22 +4,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.nottokeyword.FirebaseDB
+import com.gojol.notto.BuildConfig
 import com.gojol.notto.common.Event
 import com.gojol.notto.common.TimeRepeatType
+import com.gojol.notto.common.TodoDeleteType
 import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import com.gojol.notto.util.TouchEvent
 import com.gojol.notto.util.get12Hour
+import com.gojol.notto.util.toYearMonthDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,56 +39,63 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _existedTodo = MutableLiveData<Todo>()
     val existedTodo: LiveData<Todo> = _existedTodo
 
+    private val _date = MutableLiveData<Calendar>()
+    val date: LiveData<Calendar> = _date
+
+    private val _todoDeleteType = MutableLiveData<TodoDeleteType>()
+    val todoDeleteType: LiveData<TodoDeleteType> = _todoDeleteType
+
+    private val _isDeletionExecuted = MutableLiveData<Event<Boolean>>()
+    val isDeletionExecuted: LiveData<Event<Boolean>> = _isDeletionExecuted
+
     private val _labelList = MutableLiveData<List<Label>>()
     val labelList: LiveData<List<Label>> = _labelList
 
     private val _selectedLabelList = MutableLiveData(listOf<Label>())
     val selectedLabelList: LiveData<List<Label>> = _selectedLabelList
 
-    private val _todoContent = MutableLiveData("")
-    val todoContent: LiveData<String> = _todoContent
+    val todoContent = MutableLiveData("")
 
-    private val _isRepeatChecked = MutableLiveData(false)
-    val isRepeatChecked: LiveData<Boolean> = _isRepeatChecked
+    val isRepeatChecked = MutableLiveData(false)
 
     private val _repeatType = MutableLiveData(RepeatType.YEAR)
     val repeatType: LiveData<RepeatType> = _repeatType
 
-    private val _repeatTypeClick = MutableLiveData<TouchEvent<Boolean>>()
-    val repeatTypeClick: LiveData<TouchEvent<Boolean>> = _repeatTypeClick
+    private val _repeatTypeClick = MutableLiveData<Event<Boolean>>()
+    val repeatTypeClick: LiveData<Event<Boolean>> = _repeatTypeClick
 
     private val _repeatStart = MutableLiveData<String>()
     val repeatStart: LiveData<String> = _repeatStart
 
-    private val _repeatStartClick = MutableLiveData<TouchEvent<Boolean>>()
-    val repeatStartClick: LiveData<TouchEvent<Boolean>> = _repeatStartClick
+    private val _repeatStartClick = MutableLiveData<Event<Boolean>>()
+    val repeatStartClick: LiveData<Event<Boolean>> = _repeatStartClick
 
-    private val _isTimeChecked = MutableLiveData(false)
-    val isTimeChecked: LiveData<Boolean> = _isTimeChecked
+    val isTimeChecked = MutableLiveData(false)
 
     private val _timeStart = MutableLiveData<String>()
     val timeStart: LiveData<String> = _timeStart
 
-    private val _timeStartClick = MutableLiveData<TouchEvent<Boolean>>()
-    val timeStartClick: LiveData<TouchEvent<Boolean>> = _timeStartClick
+    private val _timeStartClick = MutableLiveData<Event<Boolean>>()
+    val timeStartClick: LiveData<Event<Boolean>> = _timeStartClick
 
     private val _timeFinish = MutableLiveData<String>()
     val timeFinish: LiveData<String> = _timeFinish
 
-    private val _timeFinishClick = MutableLiveData<TouchEvent<Boolean>>()
-    val timeFinishClick: LiveData<TouchEvent<Boolean>> = _timeFinishClick
+    private val _timeFinishClick = MutableLiveData<Event<Boolean>>()
+    val timeFinishClick: LiveData<Event<Boolean>> = _timeFinishClick
 
     private val _timeRepeat = MutableLiveData(TimeRepeatType.MINUTE_5)
     val timeRepeat: LiveData<TimeRepeatType> = _timeRepeat
 
-    private val _timeRepeatClick = MutableLiveData<TouchEvent<Boolean>>()
-    val timeRepeatClick: LiveData<TouchEvent<Boolean>> = _timeRepeatClick
+    private val _timeRepeatClick = MutableLiveData<Event<Boolean>>()
+    val timeRepeatClick: LiveData<Event<Boolean>> = _timeRepeatClick
 
-    private val _isKeywordChecked = MutableLiveData(false)
-    val isKeywordChecked: LiveData<Boolean> = _isKeywordChecked
+    val isKeywordChecked = MutableLiveData(false)
 
     private val _isSaveButtonEnabled = MutableLiveData<Boolean>()
     val isSaveButtonEnabled: LiveData<Boolean> = _isSaveButtonEnabled
+
+    private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
 
     init {
         val date = Date(Calendar.getInstance().timeInMillis)
@@ -129,15 +137,15 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             }?.labels
         }
 
-        _todoContent.value = todo.content
-        _isRepeatChecked.value = todo.isRepeated
+        todoContent.value = todo.content
+        isRepeatChecked.value = todo.isRepeated
         _repeatType.value = todo.repeatType
         _repeatStart.value = todo.startDate
-        _isTimeChecked.value = todo.hasAlarm
+        isTimeChecked.value = todo.hasAlarm
         _timeStart.value = todo.startTime
         _timeFinish.value = todo.endTime
         _timeRepeat.value = todo.periodTime
-        _isKeywordChecked.value = todo.isKeywordOpen
+        isKeywordChecked.value = todo.isKeywordOpen
     }
 
     fun updateIsTodoEditing(todo: Todo?) {
@@ -149,20 +157,26 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
         }
     }
 
+    fun updateDate(date: Calendar?) {
+        val selectedDate = date ?: return
+        _date.value = selectedDate
+    }
+
     fun updateIsCloseButtonClicked() {
         _isCloseButtonClicked.value = Event(true)
     }
 
-    fun updateTodoContent(content: String) {
-        _todoContent.value = content
+    fun updateTodoDeleteType(type: TodoDeleteType?) {
+        val deleteType = type ?: return
+        _todoDeleteType.value = deleteType
     }
 
-    fun updateIsRepeatChecked(isChecked: Boolean) {
-        _isRepeatChecked.value = isChecked
+    fun updateTodoContent(content: String) {
+        todoContent.value = content
     }
 
     fun onRepeatTypeClick() {
-        _repeatTypeClick.value = TouchEvent(true)
+        _repeatTypeClick.value = Event(true)
     }
 
     fun updateRepeatType(repeatType: RepeatType) {
@@ -170,19 +184,15 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onRepeatStartClick() {
-        _repeatStartClick.value = TouchEvent(true)
+        _repeatStartClick.value = Event(true)
     }
 
     fun updateRepeatTime(repeatTime: String) {
         _repeatStart.value = repeatTime
     }
 
-    fun updateIsTimeChecked(isChecked: Boolean) {
-        _isTimeChecked.value = isChecked
-    }
-
     fun onTimeStartClick() {
-        _timeStartClick.value = TouchEvent(true)
+        _timeStartClick.value = Event(true)
     }
 
     fun updateTimeStart(timeStart: String) {
@@ -190,7 +200,7 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onTimeFinishClick() {
-        _timeFinishClick.value = TouchEvent(true)
+        _timeFinishClick.value = Event(true)
     }
 
     fun updateTimeFinish(timeFinish: String) {
@@ -198,15 +208,11 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     fun onTimeRepeatClick() {
-        _timeRepeatClick.value = TouchEvent(true)
+        _timeRepeatClick.value = Event(true)
     }
 
     fun updateTimeRepeat(timeRepeat: TimeRepeatType) {
         _timeRepeat.value = timeRepeat
-    }
-
-    fun updateIsKeywordChecked(isChecked: Boolean) {
-        _isKeywordChecked.value = isChecked
     }
 
     fun updatePopLabelAddDialog() {
@@ -227,8 +233,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     private fun saveNewTodo() {
+        val content = todoContent.value ?: return
+        val isKeywordOpen = isKeywordChecked.value ?: return
         val newTodo = Todo(
-            todoContent.value!!,
+            content,
             isRepeatChecked.value ?: return,
             repeatType.value ?: return,
             repeatStart.value ?: return,
@@ -236,13 +244,20 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             timeStart.value ?: return,
             timeFinish.value ?: return,
             timeRepeat.value ?: return,
-            isKeywordChecked.value ?: return,
+            isKeywordOpen,
             false,
             ""
         )
 
+        if (isKeywordOpen) {
+            firebaseDB.insertKeyword(content)
+        }
+
         viewModelScope.launch {
-            launch { repository.insertTodo(newTodo) }.join()
+            launch {
+                repository.insertTodo(newTodo)
+                repository.addAlarm(repository.getAllTodo().last())
+            }.join()
 
             val saveTodo = withContext(Dispatchers.Default) {
                 repository.getTodosWithLabels().find { it.labels.isEmpty() }?.todo
@@ -267,8 +282,10 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     private fun updateTodo() {
+        val content = todoContent.value ?: return
+        val isKeywordOpen = isKeywordChecked.value ?: return
         val newTodo = Todo(
-            todoContent.value!!,
+            content,
             isRepeatChecked.value ?: return,
             repeatType.value ?: return,
             repeatStart.value ?: return,
@@ -276,19 +293,43 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
             timeStart.value ?: return,
             timeFinish.value ?: return,
             timeRepeat.value ?: return,
-            isKeywordChecked.value ?: return,
+            isKeywordOpen,
             false,
             "",
             existedTodo.value?.todoId ?: return
         )
 
+        if (isKeywordOpen) {
+            val oldTodo = existedTodo.value ?: return
+
+            if (oldTodo.isKeywordOpen.not() || oldTodo.content != content) {
+                firebaseDB.insertKeyword(content)
+            }
+        }
+
         viewModelScope.launch {
             repository.updateTodo(newTodo)
+            repository.addAlarm(newTodo)
+
             selectedLabelList.value?.let { list ->
                 val newList = list.filterNot { it.order == 0 }
                 repository.updateTodo(newTodo, newList)
             }
             _isSaveButtonEnabled.value = true
+        }
+    }
+
+    fun deleteTodo() {
+        val todoId = existedTodo.value?.todoId ?: return
+        val deleteType = todoDeleteType.value ?: return
+        val selectedDate = date.value?.toYearMonthDate() ?: return
+
+        viewModelScope.launch {
+            when(deleteType) {
+                TodoDeleteType.TODAY -> repository.deleteTodayTodo(todoId, selectedDate)
+                TodoDeleteType.TODAY_AND_FUTURE -> repository.deleteTodayAndFutureTodo(todoId, selectedDate)
+            }
+            _isDeletionExecuted.postValue(Event(true))
         }
     }
 

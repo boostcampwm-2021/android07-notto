@@ -70,17 +70,18 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     }
 
     override suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo> {
-        return todos.map { todo ->
+        return todos.mapNotNull { todo ->
             var todayDailyTodo =
                 dailyTodos.find { it.parentTodoId == todo.todoId && it.date == this.selectedDate }
 
             if (todayDailyTodo == null) {
-                todayDailyTodo = DailyTodo(TodoState.NOTHING, todo.todoId, this.selectedDate)
+                todayDailyTodo = DailyTodo(TodoState.NOTHING, true, todo.todoId, this.selectedDate)
                 dailyTodos.add(todayDailyTodo)
+            } else {
+                if (!todayDailyTodo.isActive) todayDailyTodo = null
             }
 
-            TodoWithTodayDailyTodo(todo, todayDailyTodo)
-
+            todayDailyTodo?.let { TodoWithTodayDailyTodo(todo, it) }
         }
     }
 
@@ -94,6 +95,10 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
 
     override suspend fun getAllLabel(): List<Label> {
         return labels
+    }
+
+    override suspend fun getAllDailyTodos(): List<DailyTodo> {
+        return dailyTodos
     }
 
     override suspend fun insertTodo(todo: Todo) {
@@ -221,6 +226,14 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         }
     }
 
+    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
+        throw Exception(ERROR_MSG)
+    }
+
+    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
+        throw Exception(ERROR_MSG)
+    }
+
     override suspend fun deleteLabel(label: Label) {
         labels.remove(label)
 
@@ -237,6 +250,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     }
 
     companion object {
+        private const val ERROR_MSG = "잘못된 호출입니다."
         private var INSTANCE: FakeTodoLabelRepository? = null
 
         fun getInstance(): FakeTodoLabelRepository =

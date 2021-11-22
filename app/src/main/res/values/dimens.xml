@@ -2,6 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="text_x_x_small">14sp</dimen>
     <dimen name="text_x_small">16sp</dimen>
     <dimen name="text_small">18sp</dimen>
     <dimen name="text_median">20sp</dimen>
@@ -16,7 +17,7 @@
     <dimen name="space_x_large">24dp</dimen>
     <dimen name="space_x_x_large">30dp</dimen>
     <dimen name="edit_label_bg_radius">8dp</dimen>
-    <dimen name="home_recyclerview_padding">100dp</dimen>
+    <dimen name="home_recyclerview_padding">72dp</dimen>
     <dimen name="todo_edit_button_margin">70dp</dimen>
     <dimen name="calendar_day_size">40dp</dimen>
     <dimen name="dialog_radiogroup_height">300dp</dimen>
@@ -27,4 +28,13 @@
     <dimen name="dialog_line_spacing">10sp</dimen>
     <dimen name="todo_edit_btn_size">30dp</dimen>
     <dimen name="todo_edit_btn_corner_radius">30dp</dimen>
+    <dimen name="notification_todo_button_size">40dp</dimen>
+    <dimen name="notification_margin">10dp</dimen>
+    <dimen name="notification_title">14sp</dimen>
+    <dimen name="notification_time">10sp</dimen>
+    <dimen name="activity_splash_icon_width">100dp</dimen>
+    <dimen name="activity_splash_icon_height">13dp</dimen>
+    <dimen name="activity_splash_icon_space">6dp</dimen>
+    <dimen name="activity_splash_text_space">28dp</dimen>
+    <dimen name="activity_splash_text_size">34sp</dimen>
 </resources>

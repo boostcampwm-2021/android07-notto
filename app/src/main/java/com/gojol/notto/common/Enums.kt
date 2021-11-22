@@ -16,3 +16,7 @@ enum class TimeRepeatType(val time: String, val text: String) {
 enum class EditType(val text: String) {
     CREATE("라벨 추가"), UPDATE("라벨 수정")
 }
+
+enum class TodoDeleteType {
+    TODAY, TODAY_AND_FUTURE
+}

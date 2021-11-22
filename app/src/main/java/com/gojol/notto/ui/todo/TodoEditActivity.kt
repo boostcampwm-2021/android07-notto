@@ -12,13 +12,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
+import com.gojol.notto.common.DELETE
+import com.gojol.notto.common.EventObserver
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
-import com.gojol.notto.ui.todo.dialog.TodoAlarmPeriodDialog
-import com.gojol.notto.ui.todo.dialog.TodoDeletionDialog
-import com.gojol.notto.ui.todo.dialog.TodoRepeatTimeDialog
-import com.gojol.notto.ui.todo.dialog.TodoRepeatTypeDialog
-import com.gojol.notto.ui.todo.dialog.TodoSetTimeDialog
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.ui.todo.dialog.REPEAT_TIME
 import com.gojol.notto.ui.todo.dialog.REPEAT_TIME_DATA
@@ -30,8 +27,13 @@ import com.gojol.notto.ui.todo.dialog.TIME_REPEAT
 import com.gojol.notto.ui.todo.dialog.TIME_REPEAT_DATA
 import com.gojol.notto.ui.todo.dialog.TIME_START
 import com.gojol.notto.ui.todo.dialog.TIME_START_DATE
-import com.gojol.notto.util.EventObserver
+import com.gojol.notto.ui.todo.dialog.TodoAlarmPeriodDialog
+import com.gojol.notto.ui.todo.dialog.TodoDeletionDialog
+import com.gojol.notto.ui.todo.dialog.TodoRepeatTimeDialog
+import com.gojol.notto.ui.todo.dialog.TodoRepeatTypeDialog
+import com.gojol.notto.ui.todo.dialog.TodoSetTimeDialog
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class TodoEditActivity : AppCompatActivity() {
@@ -57,12 +59,16 @@ class TodoEditActivity : AppCompatActivity() {
         initAppbar()
         initSelectedLabelRecyclerView()
         initObserver()
-        initEditTextListener()
         initTodoDialog()
         todoEditViewModel.setDummyLabelData()
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        hideKeyboardWhenOutsideTouched(ev)
+        return super.dispatchTouchEvent(ev)
+    }
+
+    private fun hideKeyboardWhenOutsideTouched(ev: MotionEvent) {
         val view = currentFocus
         if (view != null && (ev.action == MotionEvent.ACTION_UP || ev.action == MotionEvent.ACTION_MOVE) &&
             view is EditText && !view.javaClass.name.startsWith("android.webkit.")
@@ -75,19 +81,25 @@ class TodoEditActivity : AppCompatActivity() {
                 (this.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager)
                     .hideSoftInputFromWindow(this.window.decorView.applicationWindowToken, 0)
         }
-        return super.dispatchTouchEvent(ev)
     }
 
     private fun initIntentExtra() {
         val todo = intent.getSerializableExtra("todo") as Todo?
+        val date = intent.getSerializableExtra("date") as Calendar?
         todoEditViewModel.updateIsTodoEditing(todo)
+        todoEditViewModel.updateDate(date)
     }
 
     private fun initAppbar() {
         binding.tbTodoEdit.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.delete_todo -> {
-                    //TODO todo 삭제
+                    // TODO: 새로 생성하는 경우면 ??
+                    if (todoEditViewModel.isTodoEditing.value == true) {
+                        TodoDeletionDialog.deleteTodoCallback =
+                            todoEditViewModel::updateTodoDeleteType
+                        todoDeletionDialog.show(supportFragmentManager, DELETE)
+                    }
                     true
                 }
                 else -> false
@@ -111,6 +123,21 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.isCloseButtonCLicked.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
                 finish()
+            }
+        }
+        todoEditViewModel.todoDeleteType.observe(this) {
+            todoEditViewModel.deleteTodo()
+        }
+        todoEditViewModel.isDeletionExecuted.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    finish()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.todo_edit_delete_message),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
         todoEditViewModel.labelList.observe(this) {
@@ -138,7 +165,6 @@ class TodoEditActivity : AppCompatActivity() {
                 todoRepeatTypeDialog.show(supportFragmentManager, REPEAT_TYPE)
             }
         })
-
         todoEditViewModel.repeatStartClick.observe(this, EventObserver {
             if (it) {
                 val bundle = Bundle()
@@ -182,27 +208,6 @@ class TodoEditActivity : AppCompatActivity() {
         })
     }
 
-    private fun initSwitchListener() {
-        binding.switchTodoEditRepeat.setOnCheckedChangeListener { _, isChecked ->
-            todoEditViewModel.updateIsRepeatChecked(isChecked)
-        }
-        binding.switchTodoEditTime.setOnCheckedChangeListener { _, isChecked ->
-            todoEditViewModel.updateIsTimeChecked(isChecked)
-        }
-        binding.switchTodoEditKeyword.setOnCheckedChangeListener { _, isChecked ->
-            todoEditViewModel.updateIsKeywordChecked(isChecked)
-        }
-    }
-
-    private fun initButtonListener() {
-        binding.btnTodoEditLabel.setOnClickListener {
-            labelAddDialog.show()
-        }
-        binding.btnTodoEditSave.setOnClickListener {
-            todoEditViewModel.saveTodo()
-        }
-    }
-
     private fun initDialog(items: Array<String>) {
         labelAddDialog =
             AlertDialog.Builder(this).setTitle(getString(R.string.todo_edit_label_select_sentence))
@@ -217,18 +222,6 @@ class TodoEditActivity : AppCompatActivity() {
         todoRepeatTimeDialog = TodoRepeatTimeDialog()
         todoAlarmPeriodDialog = TodoAlarmPeriodDialog()
         todoSetTimeDialog = TodoSetTimeDialog()
-    }
-
-    private fun initEditTextListener() {
-        binding.etTodoEdit.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(p0: Editable?) {
-                todoEditViewModel.updateTodoContent(p0.toString())
-            }
-        })
     }
 
     private fun showLabelAddDialog() {

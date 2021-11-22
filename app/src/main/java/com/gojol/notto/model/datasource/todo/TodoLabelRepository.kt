@@ -1,5 +1,6 @@
 package com.gojol.notto.model.datasource.todo
 
+import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo
@@ -12,8 +13,9 @@ import javax.inject.Singleton
 
 @Singleton
 class TodoLabelRepository @Inject constructor(
-    private val localDataSource: TodoLabelDataSource
-) : TodoLabelDataSource {
+    private val localDataSource: TodoLabelDataSource,
+    private val todoAlarmManager: TodoAlarmManager
+) : TodoLabelDataSource, TodoAlarmManager {
 
     override suspend fun getTodosWithLabels(): List<TodoWithLabel> {
         return localDataSource.getTodosWithLabels()
@@ -37,6 +39,10 @@ class TodoLabelRepository @Inject constructor(
 
     override suspend fun getAllLabel(): List<Label> {
         return localDataSource.getAllLabel()
+    }
+
+    override suspend fun getAllDailyTodos(): List<DailyTodo> {
+        return localDataSource.getAllDailyTodos()
     }
 
     override suspend fun insertTodo(todo: Todo) {
@@ -75,7 +81,27 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.deleteTodo(todo)
     }
 
+    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
+        localDataSource.deleteTodayTodo(todoId, selectedDate)
+    }
+
+    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
+        localDataSource.deleteTodayAndFutureTodo(todoId, selectedDate)
+    }
+
     override suspend fun deleteLabel(label: Label) {
         localDataSource.deleteLabel(label)
+    }
+
+    override fun addAlarm(todo: Todo) {
+        todoAlarmManager.addAlarm(todo)
+    }
+
+    override fun deleteAlarm(todo: Todo) {
+        todoAlarmManager.deleteAlarm(todo)
+    }
+
+    override fun deleteAlarm(todo: Todo, todoState: TodoState) {
+        todoAlarmManager.deleteAlarm(todo, todoState)
     }
 }

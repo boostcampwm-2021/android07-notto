@@ -51,13 +51,16 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
                 .toList()
             _todoList.value =
                 _date.value?.let { repository.getTodosWithTodayDailyTodos(it.toYearMonthDate()) }
-            _date.value = Calendar.getInstance()
         }
     }
 
-    fun updateDate(year: Int, month: Int, day: Int) {
-        val calendar: Calendar = Calendar.getInstance()
-        calendar.set(year, month, day)
+    fun updateDate(year: Int? = null, month: Int? = null, day: Int? = null) {
+        var calendar: Calendar = Calendar.getInstance()
+        if (year != null && month != null && day != null) {
+            calendar.set(year, month - 1, day)
+        } else if (year == null && month == null && day == null) {
+            date.value?.let { calendar = it }
+        }
 
         _date.value = calendar
     }
