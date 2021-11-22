@@ -1,6 +1,5 @@
 package com.gojol.notto.ui.home
 
-import java.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,10 +14,8 @@ import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentCalendarBinding
 import com.gojol.notto.ui.home.HomeFragment.Companion.TODO_SWIPE_KEY
 import com.gojol.notto.ui.home.adapter.CalendarDayAdapter
-import com.gojol.notto.util.getDate
-import com.gojol.notto.util.getMonth
-import com.gojol.notto.util.getYear
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class CalendarFragment : Fragment() {
@@ -105,9 +102,9 @@ class CalendarFragment : Fragment() {
     }
 
     companion object {
-        var selectedYear: Int = Calendar.getInstance().getYear()
-        var selectedMonth: Int = Calendar.getInstance().getMonth()
-        var selectedDate: Int = Calendar.getInstance().getDate()
+        var selectedYear: Int = LocalDate.now().year
+        var selectedMonth: Int = LocalDate.now().monthValue
+        var selectedDate: Int = LocalDate.now().dayOfMonth
 
         const val DATE_CLICK_KEY = "date_click"
 

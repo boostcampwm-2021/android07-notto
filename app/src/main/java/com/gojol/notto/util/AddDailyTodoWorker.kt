@@ -9,6 +9,7 @@ import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.lang.Exception
+import java.time.ZoneId
 import java.util.*
 
 const val UPDATE_TOMORROW_DAILY_TODO = "com.notto.util.AddDailyTodoWorker"
@@ -32,7 +33,9 @@ class AddDailyTodoWorker @AssistedInject constructor(
         val calendar = Calendar.getInstance()
         if (calendar.get(Calendar.HOUR_OF_DAY) >= 23) {
             calendar.add(Calendar.DAY_OF_YEAR, 1)
-            repository.getTodosWithTodayDailyTodos(calendar.time.getDateString()).forEach {
+            repository.getTodosWithTodayDailyTodos(
+                calendar.time.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            ).forEach {
                 val todo = it.todo
                 val dailyTodo = it.todayDailyTodo
                 if (todo.hasAlarm && dailyTodo.todoState != TodoState.SUCCESS) {
