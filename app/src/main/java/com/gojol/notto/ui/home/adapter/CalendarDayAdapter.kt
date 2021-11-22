@@ -1,7 +1,6 @@
 package com.gojol.notto.ui.home.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -9,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
+import com.gojol.notto.common.EMPTY_DATE
 import com.gojol.notto.databinding.ItemCalendarDayBinding
 import com.gojol.notto.model.data.DayWithSuccessLevelAndSelect
 
@@ -41,7 +41,8 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
             val date = item.day
             val achievement = item.successLevel.toIntAlpha()
 
-            if (date != 0) {
+            // 캘린더의 요일 위치를 맞추기 위해 넣은 EMPTY_DATE(0)을 제외한 위치부터 날짜뷰를 출력
+            if (date != EMPTY_DATE) {
                 binding.tvCalendarDay.text = date.toString()
                 binding.tvCalendarDay.backgroundTintList =
                     ContextCompat.getColorStateList(binding.root.context, R.color.yellow_deep)
