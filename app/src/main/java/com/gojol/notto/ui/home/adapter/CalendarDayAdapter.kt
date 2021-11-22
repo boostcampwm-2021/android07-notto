@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ItemCalendarDayBinding
-import com.gojol.notto.model.data.DateWithCountAndSelect
+import com.gojol.notto.model.data.DayWithSuccessLevelAndSelect
 
 class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
-    ListAdapter<DateWithCountAndSelect, CalendarDayAdapter.CalendarDayViewHolder>(CalendarDayDiff()) {
+    ListAdapter<DayWithSuccessLevelAndSelect, CalendarDayAdapter.CalendarDayViewHolder>(CalendarDayDiff()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarDayViewHolder {
         return CalendarDayViewHolder(
@@ -36,7 +36,7 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
             }
         }
 
-        fun bind(item: DateWithCountAndSelect) {
+        fun bind(item: DayWithSuccessLevelAndSelect) {
             val date = item.date
             val achievement = item.successLevel
 
@@ -57,17 +57,17 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
         }
     }
 
-    class CalendarDayDiff : DiffUtil.ItemCallback<DateWithCountAndSelect>() {
+    class CalendarDayDiff : DiffUtil.ItemCallback<DayWithSuccessLevelAndSelect>() {
         override fun areItemsTheSame(
-            oldItem: DateWithCountAndSelect,
-            newItem: DateWithCountAndSelect
+            oldItem: DayWithSuccessLevelAndSelect,
+            newItem: DayWithSuccessLevelAndSelect
         ): Boolean {
             return oldItem.date == newItem.date
         }
 
         override fun areContentsTheSame(
-            oldItem: DateWithCountAndSelect,
-            newItem: DateWithCountAndSelect
+            oldItem: DayWithSuccessLevelAndSelect,
+            newItem: DayWithSuccessLevelAndSelect
         ): Boolean {
             return oldItem == newItem
         }

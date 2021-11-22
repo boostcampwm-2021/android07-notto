@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gojol.notto.common.TodoState
-import com.gojol.notto.model.data.DateWithCountAndSelect
+import com.gojol.notto.model.data.DayWithSuccessLevelAndSelect
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.ui.home.CalendarFragment.Companion.selectedDate
@@ -26,8 +26,8 @@ class CalendarViewModel @Inject constructor(
     private var monthDateList = emptyList<Int>()
     private var monthlyDailyTodos = emptyList<DailyTodo>()
 
-    private val _monthlyAchievement = MutableLiveData<List<DateWithCountAndSelect>>()
-    val monthlyAchievement: LiveData<List<DateWithCountAndSelect>> = _monthlyAchievement
+    private val _monthlyAchievement = MutableLiveData<List<DayWithSuccessLevelAndSelect>>()
+    val monthlyAchievement: LiveData<List<DayWithSuccessLevelAndSelect>> = _monthlyAchievement
 
     fun setMonthDate(year: Int, month: Int) {
         currentCalendarYear = year
@@ -70,7 +70,7 @@ class CalendarViewModel @Inject constructor(
             val todayDailyTodos = monthlyDailyTodos
                 .filter { it.date.dayOfMonth == date }
 
-            DateWithCountAndSelect(date, getSuccessLevel(todayDailyTodos), getSuccess(date))
+            DayWithSuccessLevelAndSelect(date, getSuccessLevel(todayDailyTodos), getSuccess(date))
         }
     }
 
