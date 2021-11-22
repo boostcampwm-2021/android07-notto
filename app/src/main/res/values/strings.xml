@@ -85,5 +85,4 @@
     <string name="popular_keyword">인기 키워드</string>
     <string name="popular_place_format">%d</string>
     <string name="popular_count_format">%d</string>
-    <string name="activity_splash_title">notto</string>
 </resources>
