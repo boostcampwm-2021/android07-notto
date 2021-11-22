@@ -11,12 +11,7 @@ import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoLabelCrossRef
 import com.gojol.notto.model.database.todolabel.TodoLabelDao
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
-import com.gojol.notto.util.getDate
-import com.gojol.notto.util.getDayOfWeek
-import com.gojol.notto.util.getMonth
-import com.gojol.notto.util.toCalendar
-import com.gojol.notto.util.toYearMonthDate
-import java.util.*
+import java.time.LocalDate
 
 class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     TodoLabelDataSource {
@@ -29,7 +24,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         return todoLabelDao.getTodosWithDailyTodos()
     }
 
-    override suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo> {
+    override suspend fun getTodosWithTodayDailyTodos(selectedDate: LocalDate): List<TodoWithTodayDailyTodo> {
         return todoLabelDao.getTodosWithDailyTodos().mapNotNull { todoWithDailyTodo ->
             val todo = todoWithDailyTodo.todo
             val dailyTodos = todoWithDailyTodo.dailyTodos
@@ -45,7 +40,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
                     }
                     else -> {
                         // 반복설정을 하지 않고 투두를 생성한 경우 오늘의 Daily 추가
-                        if (selectedDate == Calendar.getInstance().toYearMonthDate()) {
+                        if (selectedDate == LocalDate.now()) {
                             selectedDate
                         } else {
                             null
@@ -64,7 +59,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         }
     }
 
-    private fun checkRepeatedWhenSelectedDate(todo: Todo, selectedDate: String): String? {
+    private fun checkRepeatedWhenSelectedDate(todo: Todo, selectedDate: LocalDate): LocalDate? {
         return if (isValidRepeatedTodo(todo, selectedDate)) {
             selectedDate
         } else {
@@ -72,15 +67,15 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         }
     }
 
-    private fun isValidRepeatedTodo(todo: Todo, selectedDate: String): Boolean {
-        val dateEqual = todo.startDate.toCalendar().getDate() ==
-                selectedDate.toCalendar().getDate()
-        val weekEqual = todo.startDate.toCalendar().getDayOfWeek() ==
-                selectedDate.toCalendar().getDayOfWeek()
-        val monthEqual = todo.startDate.toCalendar().getMonth() ==
-                selectedDate.toCalendar().getMonth()
+    private fun isValidRepeatedTodo(todo: Todo, selectedDate: LocalDate): Boolean {
+        val dateEqual = todo.startDate.dayOfMonth ==
+                selectedDate.dayOfMonth
+        val weekEqual = todo.startDate.dayOfWeek ==
+                selectedDate.dayOfWeek
+        val monthEqual = todo.startDate.month ==
+                selectedDate.month
 
-        return (selectedDate.toInt() >= todo.startDate.toInt()) &&
+        return (selectedDate.isAfter(todo.startDate) || selectedDate.isEqual(todo.startDate)) &&
                 ((todo.repeatType == RepeatType.DAY) ||
                         (todo.repeatType == RepeatType.WEEK && weekEqual) ||
                         (todo.repeatType == RepeatType.MONTH && dateEqual) ||
@@ -123,7 +118,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         todoLabelDao.updateTodo(todo)
         todoLabelDao.getDailyTodosByParentTodoId(todo.todoId)
             .filter { dailyTodo ->
-                dailyTodo.date.toInt() >= todo.startDate.toInt()
+                dailyTodo.date.dayOfMonth >= todo.startDate.dayOfMonth
             }
             .forEach { dailyTodo ->
                 todoLabelDao.deleteDailyTodo(dailyTodo)
@@ -157,14 +152,14 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         todoLabelDao.deleteTodoLabelCrossRefByTodo(todo.todoId)
     }
 
-    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
+    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: LocalDate) {
         todoLabelDao.updateDailyTodoIsActive(todoId, selectedDate, isActive = false)
     }
 
-    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
+    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: LocalDate) {
         todoLabelDao.getDailyTodosByParentTodoId(todoId)
             .filter { dailyTodo ->
-                dailyTodo.date.toInt() >= selectedDate.toInt()
+                dailyTodo.date.isAfter(selectedDate)
             }
             .forEach { dailyTodo ->
                 todoLabelDao.updateDailyTodoIsActive(todoId, dailyTodo.date, false)

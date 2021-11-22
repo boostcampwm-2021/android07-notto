@@ -1,7 +1,6 @@
 package com.gojol.notto.ui.home
 
 import android.content.Intent
-import java.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +29,7 @@ import com.gojol.notto.ui.home.adapter.TodoAdapter
 import com.gojol.notto.ui.home.util.TodoItemTouchCallback
 import com.gojol.notto.ui.todo.TodoEditActivity
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -179,7 +179,7 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 
-    private fun startTodoCreateActivity(todo: Todo, date: Calendar) {
+    private fun startTodoCreateActivity(todo: Todo, date: LocalDate) {
         val intent = Intent(activity, TodoEditActivity::class.java)
         intent.putExtra("todo", todo)
         intent.putExtra("date", date)
