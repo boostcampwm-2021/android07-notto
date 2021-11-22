@@ -25,19 +25,16 @@
                 android:name="androidx.work.WorkManagerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
-        </provider> <!-- <provider -->
-        <!-- android:name="androidx.startup.InitializationProvider" -->
-        <!-- android:authorities="${applicationId}.androidx-startup" -->
-        <!-- tools:node="remove"> -->
-        <!-- </provider> -->
+        </provider>
+
         <receiver
             android:name=".util.TodoPushBroadcastReceiver"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
         <receiver
             android:name=".util.TodoSuccessCheckBroadcastReceiver"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
         <receiver
             android:name=".util.TodoRebootBroadcastReceiver"
             android:enabled="true"
@@ -49,8 +46,8 @@
 
         <activity
             android:name=".ui.splash.SplashActivity"
-            android:theme="@style/SplashTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -60,8 +57,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:label="@string/app_name">
-        </activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".ui.label.EditLabelActivity"
             android:exported="false" />
