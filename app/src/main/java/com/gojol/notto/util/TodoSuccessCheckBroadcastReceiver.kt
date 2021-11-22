@@ -23,8 +23,6 @@ const val NOTIFICATION_TODO = "notificationTodo"
 
 class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
 
-    lateinit var notificationManager: NotificationManager
-
     private lateinit var workRequest: WorkRequest
     private val gson: Gson = Gson()
 
@@ -45,7 +43,7 @@ class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
-        notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val workManager = WorkManager.getInstance(context)
 
         val type: Type = object : TypeToken<Todo?>() {}.type
