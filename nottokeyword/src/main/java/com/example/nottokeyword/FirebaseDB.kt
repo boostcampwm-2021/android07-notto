@@ -1,6 +1,7 @@
 package com.example.nottokeyword
 
 import android.util.Log
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -40,8 +41,7 @@ class FirebaseDB {
             if (target == null) {
                 insertNewKeyword(keyword)
             } else {
-                val count = (target.value as Long).toInt() + 1
-                insertExistingKeyword(keyword, count)
+                insertExistingKeyword(target)
             }
         }.addOnFailureListener{
             Log.e(TAG, "Error getting data", it)
@@ -54,9 +54,10 @@ class FirebaseDB {
         }
     }
 
-    private fun insertExistingKeyword(keyword: String, count: Int) {
-        database.child(keyword).setValue(count).addOnSuccessListener {
-            Log.i(TAG, "Successfully counted keyword $keyword")
+    private fun insertExistingKeyword(target: DataSnapshot) {
+        val count = (target.value as Long).toInt() + 1
+        database.child(target.key!!).setValue(count).addOnSuccessListener {
+            Log.i(TAG, "Successfully counted keyword ${target.key}")
         }
     }
 
@@ -84,18 +85,15 @@ class FirebaseDB {
         database.get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
-            it.children.forEach { child ->
-                if (child.key == keyword && child.value as Long > 0) {
-                    val count = (child.value as Long).toInt() - 1
+            val target = it.children.find { child ->
+                child.key == keyword && child.value as Long > 0
+            } ?: return@addOnSuccessListener
 
-                    if (count == 0) {
-                        database.child(keyword).removeValue()
-                    } else {
-                        database.child(keyword).setValue(count)
-                    }
-
-                    return@addOnSuccessListener
-                }
+            val count = (target.value as Long).toInt() - 1
+            if (count == 0) {
+                database.child(keyword).removeValue()
+            } else {
+                database.child(keyword).setValue(count)
             }
         }
     }
