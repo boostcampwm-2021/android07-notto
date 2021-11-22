@@ -55,14 +55,14 @@ class EditLabelAdapter(
             binding.apply {
                 setDeleteClickListener {
                     val dialog = DeleteLabelDialogFragment().apply {
-                        arguments = bundleOf(Pair(DIALOG_LABEL_ITEM_KEY, Gson().toJson(label)))
+                        arguments = bundleOf(DIALOG_LABEL_ITEM_KEY to Gson().toJson(label))
                     }
                     dialogCallback(dialog)
                 }
 
                 setUpdateClickListener {
                     val dialog = EditLabelDialogFragment().apply {
-                        arguments = bundleOf(Pair(DIALOG_LABEL_ITEM_KEY, Gson().toJson(label)))
+                        arguments = bundleOf(DIALOG_LABEL_ITEM_KEY to Gson().toJson(label))
                     }
                     dialogCallback(dialog)
                 }
