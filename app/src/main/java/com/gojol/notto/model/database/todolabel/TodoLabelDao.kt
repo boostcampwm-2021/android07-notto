@@ -7,6 +7,7 @@ import com.gojol.notto.model.database.todo.Keyword
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.database.todo.TodoWithDailyTodo
 import com.gojol.notto.model.database.todo.TodoWithKeyword
+import java.time.LocalDate
 
 @Dao
 interface TodoLabelDao {
@@ -69,6 +70,9 @@ interface TodoLabelDao {
     @Update
     suspend fun updateDailyTodo(dailyTodo: DailyTodo)
 
+    @Query("UPDATE DailyTodo SET is_active=:isActive WHERE parent_todo_id=:parentTodoId and date=:date")
+    suspend fun updateDailyTodoIsActive(parentTodoId: Int, date: LocalDate, isActive: Boolean)
+
     @Update
     suspend fun update(todoLabelCrossRef: TodoLabelCrossRef)
 
@@ -82,7 +86,7 @@ interface TodoLabelDao {
     suspend fun deleteDailyTodo(dailyTodo: DailyTodo)
 
     @Query("DELETE FROM DailyTodo WHERE parent_todo_id=:todoId and date=:date")
-    suspend fun deleteDailyTodoByTodoIdAndDate(todoId: Int, date: String)
+    suspend fun deleteDailyTodoByTodoIdAndDate(todoId: Int, date: LocalDate)
 
     @Delete
     suspend fun deleteKeyword(keyword: Keyword)

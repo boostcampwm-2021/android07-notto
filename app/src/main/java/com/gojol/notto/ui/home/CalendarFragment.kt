@@ -15,6 +15,7 @@ import com.gojol.notto.databinding.FragmentCalendarBinding
 import com.gojol.notto.ui.home.HomeFragment.Companion.TODO_SWIPE_KEY
 import com.gojol.notto.ui.home.adapter.CalendarDayAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class CalendarFragment : Fragment() {
@@ -23,14 +24,6 @@ class CalendarFragment : Fragment() {
     private val calendarViewModel: CalendarViewModel by viewModels()
     private val calendarDayAdapter = CalendarDayAdapter(::dayClickCallback)
     private var time: Long? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setFragmentResultListener(TODO_SWIPE_KEY) { _, _ ->
-            initViewModelData()
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +48,10 @@ class CalendarFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        setFragmentResultListener(TODO_SWIPE_KEY) { _, _ ->
+            swipeUpdate()
+        }
+
         initViewModelData()
     }
 
@@ -66,6 +63,11 @@ class CalendarFragment : Fragment() {
             calendarViewModel.setMonthDate(year, month)
             calendarViewModel.setMonthlyDailyTodos()
         }
+    }
+
+    private fun swipeUpdate(){
+        calendarViewModel.setMonthDate(selectedYear, selectedMonth)
+        calendarViewModel.setMonthlyDailyTodos()
     }
 
     private fun initObserver() {
@@ -86,22 +88,23 @@ class CalendarFragment : Fragment() {
             val year = (time / 100).toInt()
             val month = (time % 100).toInt()
 
-            callback?.let { it(year, month, date) }
             selectedYear = year
             selectedMonth = month
-            selectedDate = date
 
-            calendarViewModel.setMonthlyAchievement()
 
-            setFragmentResult(DATE_CLICK_KEY, bundleOf())
+            calendarViewModel.setMonthDate(year, month)
         }
+
+        selectedDate = date
+        calendarViewModel.setMonthlyDailyTodos()
+
+        setFragmentResult(DATE_CLICK_KEY, bundleOf())
     }
 
     companion object {
-        var selectedYear: Int? = null
-        var selectedMonth: Int? = null
-        var selectedDate: Int? = null
-        var callback: ((Int, Int, Int) -> (Unit))? = null
+        var selectedYear: Int = LocalDate.now().year
+        var selectedMonth: Int = LocalDate.now().monthValue
+        var selectedDate: Int = LocalDate.now().dayOfMonth
 
         const val DATE_CLICK_KEY = "date_click"
 

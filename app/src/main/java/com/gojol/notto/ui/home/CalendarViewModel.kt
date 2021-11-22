@@ -8,13 +8,10 @@ import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.DateWithCountAndSelect
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import com.gojol.notto.util.getDate
-import com.gojol.notto.util.getDayOfWeek
-import com.gojol.notto.util.getLastDayOfMonth
-import com.gojol.notto.util.toYearMonthDate
+import com.gojol.notto.ui.home.CalendarFragment.Companion.selectedDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,10 +19,10 @@ class CalendarViewModel @Inject constructor(
     private val repository: TodoLabelRepository
 ) : ViewModel() {
 
-    private var currentCalendarYear = 0
-    private var currentCalendarMonth = 0
-    private var monthStartDate: String = ""
-    private var monthLastDate: String = ""
+    private var currentCalendarYear = LocalDate.now().year
+    private var currentCalendarMonth = LocalDate.now().monthValue
+    private var monthStartDate: LocalDate = LocalDate.now()
+    private var monthLastDate: LocalDate = LocalDate.now()
     private var monthDateList = emptyList<Int>()
     private var monthlyDailyTodos = emptyList<DailyTodo>()
 
@@ -36,24 +33,28 @@ class CalendarViewModel @Inject constructor(
         currentCalendarYear = year
         currentCalendarMonth = month
 
-        val startDate = Calendar.getInstance().apply {
-            set(year, month, 1)
-        }
-        monthStartDate = startDate.toYearMonthDate()
+        val baseDate = LocalDate.of(year, month, 1)
 
-        val lastDate = Calendar.getInstance().apply {
-            set(year, month, startDate.getLastDayOfMonth())
-        }
-        monthLastDate = lastDate.toYearMonthDate()
+        val startDate = baseDate.withDayOfMonth(1)
+        monthStartDate = startDate
 
-        val dateList = (startDate.getDate()..lastDate.getDate()).toList()
-        val dayOfWeek = startDate.getDayOfWeek() - 1
+        val lastDate = startDate.withDayOfMonth(startDate.lengthOfMonth())
+        monthLastDate = lastDate
+
+        val dateList = (startDate.dayOfMonth..lastDate.dayOfMonth).toList()
+        val dayOfWeek = startDate.dayOfWeek.value
         val prefixDateList = (0 until dayOfWeek).map { 0 }
         monthDateList = prefixDateList + dateList
     }
 
     fun setMonthlyDailyTodos() {
         viewModelScope.launch {
+            // TODO 시점을 투두 저장할때로 변경
+            launch {
+                repository.getTodosWithTodayDailyTodos(
+                    LocalDate.of(currentCalendarYear, currentCalendarMonth, selectedDate)
+                )
+            }.join()
             launch {
                 monthlyDailyTodos = repository.getAllDailyTodos().filter {
                     it.date in monthStartDate..monthLastDate
@@ -64,10 +65,10 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    fun setMonthlyAchievement() {
+    private fun setMonthlyAchievement() {
         _monthlyAchievement.value = monthDateList.map { date ->
             val todayDailyTodos = monthlyDailyTodos
-                .filter { it.date.takeLast(2).toInt() == date }
+                .filter { it.date.dayOfMonth == date }
 
             DateWithCountAndSelect(date, getSuccessLevel(todayDailyTodos), getSuccess(date))
         }
@@ -102,7 +103,7 @@ class CalendarViewModel @Inject constructor(
         return if (CalendarFragment.selectedYear == currentCalendarYear &&
             CalendarFragment.selectedMonth == currentCalendarMonth
         ) {
-            date == CalendarFragment.selectedDate ?: 1
+            date == selectedDate
         } else {
             false
         }

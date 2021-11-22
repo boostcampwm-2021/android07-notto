@@ -24,7 +24,7 @@ class TodoLabelDatabaseModule {
             context.applicationContext,
             TodoLabelDatabase::class.java,
             "notto-database"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Provides

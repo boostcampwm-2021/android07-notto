@@ -88,7 +88,7 @@ class EditLabelActivity : AppCompatActivity() {
 
     private fun showCreateDialog() {
         val dialog = EditLabelDialogFragment().apply {
-            arguments = bundleOf(Pair(DIALOG_LABEL_ITEM_KEY, null))
+            arguments = bundleOf(DIALOG_LABEL_ITEM_KEY to null)
         }
 
         showDialog(dialog)

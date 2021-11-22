@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.gojol.notto.util.ExtensionsKt"/>
 
         <variable
             name="viewmodel"
@@ -51,7 +52,7 @@
                     android:hint="@string/todo_edit_edit_text_hint"
                     android:lines="7"
                     android:paddingVertical="@dimen/space_median"
-                    android:text="@{viewmodel.todoContent}"
+                    android:text="@={viewmodel.todoContent}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -135,7 +136,7 @@
                     android:layout_marginEnd="@dimen/space_median"
                     android:enabled="@{viewmodel.isRepeatChecked ? true : false}"
                     android:onClick="@{()->viewmodel.onRepeatStartClick()}"
-                    android:text="@{viewmodel.repeatStart}"
+                    android:text="@{viewmodel.repeatStart.toString()}"
                     android:textColor="@{viewmodel.isRepeatChecked ? @color/black : @color/gray_normal}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_start"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -170,7 +171,7 @@
                     android:layout_marginEnd="@dimen/space_median"
                     android:enabled="@{viewmodel.isTimeChecked ? true : false}"
                     android:onClick="@{()->viewmodel.onTimeStartClick()}"
-                    android:text="@{viewmodel.timeStart}"
+                    android:text="@{ExtensionsKt.toDialogString(viewmodel.timeStart)}"
                     android:textColor="@{viewmodel.isTimeChecked ? @color/black : @color/gray_normal}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_start"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -190,7 +191,7 @@
                     android:layout_marginEnd="@dimen/space_median"
                     android:enabled="@{viewmodel.isTimeChecked ? true : false}"
                     android:onClick="@{()->viewmodel.onTimeFinishClick()}"
-                    android:text="@{viewmodel.timeFinish}"
+                    android:text="@{ExtensionsKt.toDialogString(viewmodel.timeFinish)}"
                     android:textColor="@{viewmodel.isTimeChecked ? @color/black : @color/gray_normal}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_finish"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -305,8 +306,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/space_x_small"
-                    android:checked="@{viewmodel.isRepeatChecked}"
-                    android:onCheckedChanged="@{(view, isChecked) -> viewmodel.updateIsRepeatChecked(isChecked)}"
+                    android:checked="@={viewmodel.isRepeatChecked}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_setting"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_setting"
@@ -319,8 +319,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/space_x_small"
-                    android:checked="@{viewmodel.isTimeChecked}"
-                    android:onCheckedChanged="@{(view, isChecked) -> viewmodel.updateIsTimeChecked(isChecked)}"
+                    android:checked="@={viewmodel.isTimeChecked}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_setting"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_setting"
@@ -333,8 +332,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/space_x_small"
-                    android:checked="@{viewmodel.isKeywordChecked}"
-                    android:onCheckedChanged="@{(view, isChecked) -> viewmodel.updateIsKeywordChecked(isChecked)}"
+                    android:checked="@={viewmodel.isKeywordChecked}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_keyword_setting"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_keyword_setting"
