@@ -8,6 +8,7 @@ import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.database.todo.TodoWithDailyTodo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,7 +26,7 @@ class TodoLabelRepository @Inject constructor(
         return localDataSource.getTodosWithDailyTodos()
     }
 
-    override suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo> {
+    override suspend fun getTodosWithTodayDailyTodos(selectedDate: LocalDate): List<TodoWithTodayDailyTodo> {
         return localDataSource.getTodosWithTodayDailyTodos(selectedDate)
     }
 
@@ -81,11 +82,11 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.deleteTodo(todo)
     }
 
-    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: String) {
+    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: LocalDate) {
         localDataSource.deleteTodayTodo(todoId, selectedDate)
     }
 
-    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String) {
+    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: LocalDate) {
         localDataSource.deleteTodayAndFutureTodo(todoId, selectedDate)
     }
 
