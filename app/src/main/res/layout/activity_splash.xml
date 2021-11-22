@@ -14,9 +14,9 @@
 
         <ImageView
             android:id="@+id/iv_splash_icon_1"
-            android:layout_width="100dp"
-            android:layout_height="13dp"
-            android:layout_marginTop="296dp"
+            android:layout_width="@dimen/activity_splash_icon_width"
+            android:layout_height="@dimen/activity_splash_icon_height"
+            android:layout_marginTop="@dimen/activity_splash_icon_margin"
             android:src="@drawable/bg_todo_edit_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
@@ -26,9 +26,9 @@
 
         <ImageView
             android:id="@+id/iv_splash_icon_2"
-            android:layout_width="100dp"
-            android:layout_height="13dp"
-            android:layout_marginTop="6dp"
+            android:layout_width="@dimen/activity_splash_icon_width"
+            android:layout_height="@dimen/activity_splash_icon_height"
+            android:layout_marginTop="@dimen/activity_splash_icon_space"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/iv_splash_icon_1"
@@ -38,9 +38,9 @@
 
         <ImageView
             android:id="@+id/iv_splash_icon_3"
-            android:layout_width="100dp"
-            android:layout_height="13dp"
-            android:layout_marginTop="6dp"
+            android:layout_width="@dimen/activity_splash_icon_width"
+            android:layout_height="@dimen/activity_splash_icon_height"
+            android:layout_marginTop="@dimen/activity_splash_icon_space"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/iv_splash_icon_2"
@@ -51,11 +51,11 @@
             android:id="@+id/tv_splash_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="@dimen/activity_splash_text_space"
             android:fontFamily="@font/font_nanumsquare"
-            android:text="notto"
+            android:text="@string/activity_splash_title"
             android:textColor="@color/blue_deep"
-            android:textSize="34sp"
+            android:textSize="@dimen/activity_splash_text_size"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
