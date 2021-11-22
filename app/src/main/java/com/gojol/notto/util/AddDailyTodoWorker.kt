@@ -37,9 +37,7 @@ class AddDailyTodoWorker @AssistedInject constructor(
             repository.getTodosWithTodayDailyTodos(calendar.time.getDateString()).forEach {
                 val todo = it.todo
                 val dailyTodo = it.todayDailyTodo
-                if (todo.hasAlarm && dailyTodo.todoState != TodoState.SUCCESS) {
-                    todoAlarmManager.addAlarm(todo)
-                }
+                todoAlarmManager.addAlarm(todo, dailyTodo.todoState)
             }
         }
     }

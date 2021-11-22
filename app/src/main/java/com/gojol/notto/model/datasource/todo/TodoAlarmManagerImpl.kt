@@ -54,6 +54,32 @@ class TodoAlarmManagerImpl @Inject constructor(
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
+    override fun addAlarm(todo: Todo, todoState: TodoState) {
+        if (!todo.hasAlarm) return
+        if (todoState == TodoState.SUCCESS) return
+
+        val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(
+            context,
+            todo.todoId,
+            bundleOf(
+                ALARM_EXTRA_TODO to gson.toJson(todo)
+            )
+        )
+
+        val fullDate = ("${todo.startDate} ${todo.startTime}").getDate("yyyyMMdd a hh:mm")
+        fullDate?.let { it ->
+            val repeatInterval: Long = todo.periodTime.time.toInt() * 60 * 1000L
+            val triggerTime = it.time
+
+            alarmManager.setRepeating(
+                AlarmManager.RTC,
+                triggerTime, repeatInterval,
+                pendingIntent
+            )
+        }
+    }
+
+    @SuppressLint("UnspecifiedImmutableFlag")
     override fun deleteAlarm(todo: Todo) {
         val todoTime = ("${todo.startDate} ${todo.endTime}").getDate("yyyyMMdd a hh:mm") ?: return
         val endTime = todoTime.time - todo.periodTime.time.toInt() * 60 * 1000
