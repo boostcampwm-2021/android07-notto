@@ -21,7 +21,6 @@ import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.google.gson.Gson
 import java.util.*
 import com.google.gson.reflect.TypeToken
-import java.lang.reflect.Type
 
 const val ACTION_FAIL = "actionFail"
 const val ACTION_SUCCESS = "actionSuccess"
@@ -29,7 +28,7 @@ const val ACTION_SUCCESS = "actionSuccess"
 @AndroidEntryPoint
 class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
 
-    lateinit var notificationManager: NotificationManager
+    private lateinit var notificationManager: NotificationManager
 
     @Inject
     lateinit var repository: TodoLabelRepository
@@ -53,13 +52,12 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
             Context.NOTIFICATION_SERVICE
         ) as NotificationManager
 
-        val type: Type = object : TypeToken<Todo?>() {}.type
-        intent.getStringExtra(ALARM_EXTRA_TODO)?.let {
-            val todo = gson.fromJson<Todo>(it, type)
-            repository.deleteAlarm(todo)
-            createNotificationChannel()
-            deliverNotification(context, todo)
-        }
+        val todoData = intent.extras?.getString(ALARM_EXTRA_TODO) ?: return
+        val todo = gson.fromJson<Todo>(todoData, object : TypeToken<Todo?>() {}.type)
+
+        repository.deleteAlarm(todo)
+        createNotificationChannel()
+        deliverNotification(context, todo)
     }
 
     private fun createNotificationChannel() {

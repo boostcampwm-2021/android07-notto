@@ -11,9 +11,11 @@ import com.gojol.notto.util.getDate
 import com.gojol.notto.util.getTotalTimeString
 import javax.inject.Inject
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.google.gson.Gson
+import java.io.Serializable
 
 const val ALARM_EXTRA_TODO = "alarmExtraTodo"
 
@@ -29,7 +31,13 @@ class TodoAlarmManagerImpl @Inject constructor(
         if (!todo.hasAlarm) return
 
         val intent = Intent(context, TodoPushBroadcastReceiver::class.java).apply {
-            putExtra(ALARM_EXTRA_TODO, gson.toJson(todo))
+            putExtras(
+                bundleOf(
+                    // TODO: ALARM_EXTRA_TODO to todo로 하면 TodoPushBroadcastReceiver에서
+                    //  intent.extras?.getSerializable(ALARM_EXTRA_TODO)로 받아올 때 null이다??
+                    ALARM_EXTRA_TODO to gson.toJson(todo)
+                )
+            )
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
@@ -66,7 +74,7 @@ class TodoAlarmManagerImpl @Inject constructor(
 
     @SuppressLint("UnspecifiedImmutableFlag")
     override fun deleteAlarm(todo: Todo, todoState: TodoState) {
-        if(todoState == TodoState.SUCCESS) {
+        if (todoState == TodoState.SUCCESS) {
             val intent = Intent(context, TodoPushBroadcastReceiver::class.java)
             val pendingIntent = PendingIntent.getBroadcast(
                 context, todo.todoId, intent, PendingIntent.FLAG_UPDATE_CURRENT
