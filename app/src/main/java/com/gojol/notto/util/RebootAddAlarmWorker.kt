@@ -1,6 +1,7 @@
 package com.gojol.notto.util
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -19,13 +20,12 @@ class RebootAddAlarmWorker @AssistedInject constructor(
     private val repository: TodoLabelRepository,
     private val todoAlarmManager: TodoAlarmManager
 ) : CoroutineWorker(context, params) {
-    override suspend fun doWork(): Result {
-        return try {
-            recreateAlarm()
-            Result.success()
-        } catch (e: Exception) {
-            Result.failure()
-        }
+    override suspend fun doWork(): Result = runCatching {
+        recreateAlarm()
+        Result.success()
+    }.getOrElse {
+        Log.d(this.javaClass.name, it.toString())
+        Result.failure()
     }
 
     private suspend fun recreateAlarm() {
