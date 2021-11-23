@@ -16,7 +16,7 @@ class EditLabelDialogViewModel @Inject constructor(private val repository: TodoL
     ViewModel() {
 
     private val _type = MutableLiveData<LabelEditType>()
-    val typeLabel: LiveData<LabelEditType> = _type
+    val type: LiveData<LabelEditType> = _type
 
     private val _label = MutableLiveData<Label>()
     val label: LiveData<Label> = _label
@@ -34,15 +34,16 @@ class EditLabelDialogViewModel @Inject constructor(private val repository: TodoL
     fun clickOkay() {
         _close.value = true
 
-        name.value ?: return
+        val labelName = name.value ?: return
         // TODO: 에러 메시지 출력
 
-        when (typeLabel.value) {
-            LabelEditType.CREATE -> createLabel(Label(1000, name.value!!))
+        when (type.value) {
+            LabelEditType.CREATE -> createLabel(Label(1000, labelName))
             LabelEditType.UPDATE -> {
-                label.value ?: return
-                updateLabel(label.value!!.copy(name = name.value!!))
+                val updatedLabel = label.value ?: return
+                updateLabel(updatedLabel.copy(name = labelName))
             }
+            else -> return
         }
     }
 
