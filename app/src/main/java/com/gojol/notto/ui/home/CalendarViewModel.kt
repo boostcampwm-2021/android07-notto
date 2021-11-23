@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gojol.notto.model.data.DayWithSuccessLevelAndSelect
 import com.gojol.notto.model.data.MonthlyCalendar
-import com.gojol.notto.model.data.Success
+import com.gojol.notto.model.data.DailyTodoSuccess
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.ui.home.CalendarFragment.Companion.ITEM_ID_ARGUMENT
@@ -72,7 +72,7 @@ class CalendarViewModel @Inject constructor(
             val todayDailyTodos = monthlyDailyTodos
                 .filter { it.date.dayOfMonth == date }
 
-            DayWithSuccessLevelAndSelect(date, Success(todayDailyTodos).getSuccessLevel(), isSelected(date))
+            DayWithSuccessLevelAndSelect(date, DailyTodoSuccess(todayDailyTodos).getSuccessLevel(), isSelected(date))
         }
     }
 
