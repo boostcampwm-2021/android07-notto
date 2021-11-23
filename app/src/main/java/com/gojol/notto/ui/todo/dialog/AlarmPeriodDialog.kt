@@ -1,20 +1,15 @@
 package com.gojol.notto.ui.todo.dialog
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.common.TIME_REPEAT_DATA
 import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.databinding.DialogTodoAlarmPeriodBinding
-import com.gojol.notto.databinding.DialogTodoRepeatTimeBinding
+import com.gojol.notto.ui.BaseDialog
 import com.gojol.notto.ui.todo.dialog.util.AlarmPeriodDialogViewModel
-import com.gojol.notto.ui.todo.dialog.util.RepeatTimeDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
 
 @AndroidEntryPoint
 class AlarmPeriodDialog : BaseDialog<DialogTodoAlarmPeriodBinding, AlarmPeriodDialogViewModel>() {

@@ -1,12 +1,12 @@
 package com.gojol.notto.ui.todo.dialog
 
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.common.SET_TIME_FINISH
 import com.gojol.notto.databinding.DialogTodoTimeFinishBinding
+import com.gojol.notto.ui.BaseDialog
 import com.gojol.notto.ui.todo.dialog.util.TimeFinishDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalTime

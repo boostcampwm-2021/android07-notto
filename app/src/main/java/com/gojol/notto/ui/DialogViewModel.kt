@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.todo.dialog.util
+package com.gojol.notto.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

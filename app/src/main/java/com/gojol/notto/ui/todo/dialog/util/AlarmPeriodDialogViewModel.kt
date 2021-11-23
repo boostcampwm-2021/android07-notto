@@ -3,7 +3,7 @@ package com.gojol.notto.ui.todo.dialog.util
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.gojol.notto.common.TimeRepeatType
-import java.time.LocalTime
+import com.gojol.notto.ui.DialogViewModel
 
 class AlarmPeriodDialogViewModel : DialogViewModel() {
 

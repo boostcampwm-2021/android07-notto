@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.todo.dialog
+package com.gojol.notto.ui
 
 import android.app.Dialog
 import android.os.Bundle
@@ -10,11 +10,9 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
 import com.gojol.notto.databinding.DialogBaseBinding
 import com.gojol.notto.R
 import com.gojol.notto.common.EventObserver
-import com.gojol.notto.ui.todo.dialog.util.DialogViewModel
 
 abstract class BaseDialog<B : ViewDataBinding, VM : DialogViewModel> : DialogFragment() {
 

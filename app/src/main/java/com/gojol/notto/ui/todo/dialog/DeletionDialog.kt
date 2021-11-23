@@ -1,13 +1,12 @@
 package com.gojol.notto.ui.todo.dialog
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.common.TodoDeleteType
 import com.gojol.notto.databinding.DialogDeletionBinding
+import com.gojol.notto.ui.BaseDialog
 import com.gojol.notto.ui.todo.dialog.util.DeletionDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
