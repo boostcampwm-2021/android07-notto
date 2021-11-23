@@ -44,8 +44,8 @@ class TodoLabelRepository @Inject constructor(
         return localDataSource.getAllDailyTodos()
     }
 
-    override suspend fun insertTodo(todo: Todo) {
-        localDataSource.insertTodo(todo)
+    override suspend fun insertTodo(todo: Todo, selectedDate: LocalDate): Long {
+        return localDataSource.insertTodo(todo, selectedDate)
     }
 
     override suspend fun insertTodo(todo: Todo, label: Label) {
@@ -60,8 +60,8 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.insertDailyTodo(dailyTodo)
     }
 
-    override suspend fun updateTodo(todo: Todo) {
-        localDataSource.updateTodo(todo)
+    override suspend fun updateTodo(todo: Todo, selectedDate: LocalDate) {
+        localDataSource.updateTodo(todo, selectedDate)
     }
 
     override suspend fun updateTodo(todo: Todo, labels: List<Label>) {
@@ -80,12 +80,12 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.deleteTodo(todo)
     }
 
-    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: LocalDate) {
-        localDataSource.deleteTodayTodo(todoId, selectedDate)
+    override suspend fun deleteSelectedTodo(todoId: Int, selectedDate: LocalDate) {
+        localDataSource.deleteSelectedTodo(todoId, selectedDate)
     }
 
-    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: LocalDate) {
-        localDataSource.deleteTodayAndFutureTodo(todoId, selectedDate)
+    override suspend fun deleteSelectedAndFutureTodo(todoId: Int, selectedDate: LocalDate) {
+        localDataSource.deleteSelectedAndFutureTodo(todoId, selectedDate)
     }
 
     override suspend fun deleteLabel(label: Label) {

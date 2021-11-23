@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.gojol.notto.model.data.RepeatType"/>
+        <import type="com.gojol.notto.common.RepeatType"/>
 
         <variable
             name="viewmodel"

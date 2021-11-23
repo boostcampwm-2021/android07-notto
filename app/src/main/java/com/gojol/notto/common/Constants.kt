@@ -25,3 +25,5 @@ const val TIME_REPEAT_DATA = "timeRepeatData"
 const val TIME_REPEAT = "timeRepeat"
 
 const val EMPTY_DATE = 0
+
+const val LABEL_ADD = "+ 라벨 추가"

@@ -23,11 +23,11 @@ class HomeViewModel @Inject constructor(
     private val todoAlarmManager: TodoAlarmManager
 ) : ViewModel() {
 
-    private val _isTodoCreateButtonClicked = MutableLiveData<Event<Boolean>>()
-    val isTodoCreateButtonClicked: LiveData<Event<Boolean>> = _isTodoCreateButtonClicked
+    private val _todoCreateButtonClicked = MutableLiveData<Event<LocalDate>>()
+    val todoCreateButtonClicked: LiveData<Event<LocalDate>> = _todoCreateButtonClicked
 
-    private val _todoEditButtonClicked = MutableLiveData<Event<Todo>>()
-    val todoEditButtonClicked: LiveData<Event<Todo>> = _todoEditButtonClicked
+    private val _todoEditButtonClicked = MutableLiveData<Event<Pair<Todo, LocalDate>>>()
+    val todoEditButtonClicked: LiveData<Event<Pair<Todo, LocalDate>>> = _todoEditButtonClicked
 
     private val _date = MutableLiveData(LocalDate.now())
     val date: LiveData<LocalDate> = _date
@@ -162,12 +162,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun updateNavigateToTodoEdit() {
-        _isTodoCreateButtonClicked.value = Event(true)
+    fun updateNavigateToTodoCreate() {
+        _todoCreateButtonClicked.value = date.value?.let { Event(it) }
     }
 
-    fun updateIsTodoEditButtonClicked(todo: Todo) {
-        _todoEditButtonClicked.value = Event(todo)
+    fun updateNavigateToTodoEdit(todo: Todo) {
+        _todoEditButtonClicked.value = date.value?.let { Event(Pair(todo, it)) }
     }
 
     companion object {
