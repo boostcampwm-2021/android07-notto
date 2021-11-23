@@ -13,7 +13,7 @@ data class MonthlyCalendar(
 
     fun getMonthlyDateList(): List<Int> {
         val dateList = (startDate.dayOfMonth..endDate.dayOfMonth).toList()
-        val prefixDateList = IntArray(startDate.dayOfWeek.value).toList()
+        val prefixDateList = IntArray(startDate.dayOfWeek.value % 7).toList()
         return prefixDateList + dateList
     }
 }
