@@ -34,14 +34,6 @@ class DayNotificationReceiver : BroadcastReceiver() {
     }
 
     private fun showNotification(context: Context) {
-        val intent = Intent(context, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            NOTIFICATION_ID,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
         val notificationBuilder = NotificationCompat.Builder(
             context,
             CHANNEL_ID
@@ -49,7 +41,7 @@ class DayNotificationReceiver : BroadcastReceiver() {
             .setSmallIcon(R.mipmap.ic_notto_launcher_foreground)
             .setContentTitle(context.getString(R.string.option_notification_title))
             .setContentText(context.getString(R.string.option_notification_content))
-            .setContentIntent(pendingIntent)
+            .setContentIntent(getPendingIntentActivity(context))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
@@ -62,5 +54,25 @@ class DayNotificationReceiver : BroadcastReceiver() {
         const val NOTIFICATION_ID = 0
         const val CHANNEL_ID = "day_notification"
         const val CHANNEL_NAME = "day_push"
+
+        fun getPendingIntentActivity(context: Context): PendingIntent {
+            val intent = Intent(context, MainActivity::class.java)
+            return PendingIntent.getActivity(
+                context,
+                NOTIFICATION_ID,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+
+        fun getPendingIntentBroadcast(context: Context, flag: Int): PendingIntent {
+            val intent = Intent(context, DayNotificationReceiver::class.java)
+            return PendingIntent.getBroadcast(
+                context,
+                NOTIFICATION_ID,
+                intent,
+                flag
+            )
+        }
     }
 }
