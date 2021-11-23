@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.gojol.notto.R
 import com.gojol.notto.common.LabelEditType
@@ -20,7 +21,7 @@ class EditLabelActivity : AppCompatActivity() {
     private lateinit var editLabelAdapter: EditLabelAdapter
 
     private val editLabelViewModel: EditLabelViewModel by viewModels()
-    private val itemTouchHelper = ItemTouchHelper(ItemTouchCallback(::moveItem))
+    private val itemTouchHelper = ItemTouchHelper(ItemTouchCallback(::moveItem, ::onClearView))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +53,12 @@ class EditLabelActivity : AppCompatActivity() {
     }
 
     private fun moveItem(from: Int, to: Int) {
-        editLabelViewModel.moveItem(from , to)
+        editLabelViewModel.moveItem(from, to)
+    }
+
+    private fun onClearView() {
+        binding.rvEditLabel.itemAnimator = null
+        editLabelAdapter.differ.submitList(editLabelViewModel.updatedItems.value)
     }
 
     private fun initToolbar() {
@@ -97,6 +103,7 @@ class EditLabelActivity : AppCompatActivity() {
                 editLabelViewModel.updateLabels()
             }
             setOnDismissListener {
+                binding.rvEditLabel.itemAnimator = DefaultItemAnimator()
                 editLabelViewModel.loadLabels()
                 dialog.dismiss()
             }
