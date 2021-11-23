@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -20,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.gojol.notto.R
 import com.gojol.notto.common.AdapterViewType
+import com.gojol.notto.common.LabelEditType
 import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.model.data.LabelWithCheck
 import com.gojol.notto.model.database.todo.DailyTodo
@@ -32,7 +35,9 @@ import com.gojol.notto.ui.home.adapter.LabelAdapter
 import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
 import com.gojol.notto.ui.home.adapter.TodoAdapter
 import com.gojol.notto.ui.home.util.TodoItemTouchCallback
+import com.gojol.notto.ui.label.EditLabelActivity
 import com.gojol.notto.ui.todo.TodoEditActivity
+import com.gojol.notto.util.EditLabelDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -59,7 +64,7 @@ class HomeFragment : Fragment() {
             homeViewModel.updateDate(year, month, date)
         }
 
-        setFragmentResultListener(UPDATE_HEIGHT_KEY){_,_ ->
+        setFragmentResultListener(UPDATE_HEIGHT_KEY) { _, _ ->
             updateViewPager()
         }
     }
@@ -94,7 +99,7 @@ class HomeFragment : Fragment() {
     private fun initRecyclerView() {
         calendarAdapter = CalendarAdapter(parentFragmentManager, lifecycle)
         labelAdapter = LabelAdapter(::labelTouchCallback)
-        labelWrapperAdapter = LabelWrapperAdapter(labelAdapter)
+        labelWrapperAdapter = LabelWrapperAdapter(labelAdapter, ::onClickLabelMenu)
         todoAdapter = TodoAdapter(::todoTouchCallback, ::todoEditButtonCallback)
 
         val concatAdapter: ConcatAdapter by lazy {
@@ -109,6 +114,43 @@ class HomeFragment : Fragment() {
             layoutManager = getLayoutManager(concatAdapter)
             (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         }
+    }
+
+    private fun onClickLabelMenu(view: View) {
+        val popup = PopupMenu(requireContext(), view)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.home_label_popup_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_create_label -> {
+                    val fragmentManager = requireActivity().supportFragmentManager
+
+                    val dialog = EditLabelDialogBuilder.builder(LabelEditType.CREATE, null).apply {
+                        show(fragmentManager, "EditLabelDialogFragment")
+                    }
+
+                    fragmentManager.executePendingTransactions()
+
+                    dialog.dialog?.apply {
+                        setOnDismissListener {
+                            homeViewModel.setDummyData()
+                            dialog.dismiss()
+                        }
+                    }
+
+                    true
+                }
+                R.id.menu_edit_label -> {
+                    startActivity(Intent(context, EditLabelActivity::class.java))
+
+                    true
+                }
+                else -> false
+            }
+        }
+
+        popup.show()
     }
 
     private fun initObserver() {
