@@ -1,7 +1,7 @@
 package com.gojol.notto.model.datasource.todo
 
-import com.gojol.notto.common.TodoState
 import com.gojol.notto.common.RepeatType
+import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo
@@ -115,7 +115,25 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     }
 
     override suspend fun updateTodo(todo: Todo) {
-        todoLabelDao.updateTodo(todo)
+        // 기존 투두 중 저장되지 않은 Daily 투두 저장
+        val beforeTodo = todoLabelDao.getTodoById(todo.todoId)
+        var beforeStartDate = beforeTodo.startDate
+        while (beforeStartDate.isBefore(todo.startDate)) { // 기존 시작일~바뀐 시작일 하루 전
+            if (isValidRepeatedTodo(beforeTodo, beforeStartDate))
+                todoLabelDao.insertDailyTodo(
+                    DailyTodo(
+                        TodoState.NOTHING,
+                        true,
+                        todo.todoId,
+                        beforeStartDate
+                    )
+                )
+            beforeStartDate = beforeStartDate.plusDays(1)
+        }
+
+        todoLabelDao.updateTodo(todo) // 투두 업데이트
+
+        // 기존에 저장되어 있던 DailyTodo 중 새로 업데이트 된 시작일 이후 것 삭제
         todoLabelDao.getDailyTodosByParentTodoId(todo.todoId)
             .filter { dailyTodo ->
                 dailyTodo.date.dayOfMonth >= todo.startDate.dayOfMonth
