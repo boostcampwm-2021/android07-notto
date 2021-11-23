@@ -8,7 +8,7 @@ class OptionLocalDataSource @Inject constructor(
     private val sharedPreferences: SharedPrefManager
 ) : OptionDataSource {
 
-    override fun loadIsPushNotificationChecked(): Boolean {
+    override fun isPushNotificationChecked(): Boolean {
         return sharedPreferences.getBoolean(DAY_PUSH_NOTIFICATION_KEY)
     }
 
