@@ -21,6 +21,7 @@ class EditLabelViewModel @Inject constructor(private val repository: TodoLabelRe
     val close: LiveData<Boolean> = _close
 
     private val _updatedItems = MutableLiveData<List<Label>>(emptyList())
+    val updatedItems: LiveData<List<Label>> = _updatedItems
 
     fun loadLabels() {
         viewModelScope.launch {
@@ -33,20 +34,18 @@ class EditLabelViewModel @Inject constructor(private val repository: TodoLabelRe
     }
 
     fun moveItem(from: Int, to: Int) {
-        _updatedItems.value ?: return
-
-        val labels = _updatedItems.value!!.toMutableList()
+        val labels = _updatedItems.value?.toMutableList() ?: return
         val labelToMove = labels[from]
+
         labels.remove(labelToMove)
         labels.add(to, labelToMove)
 
         val updatedLabels = mutableListOf<Label>()
         labels.forEachIndexed { index, label ->
-            updatedLabels.add(label.copy(order = index + 2))
-
-            _updatedItems.value = updatedLabels
+            updatedLabels.add(label.copy(order = index + 1))
         }
 
+        _updatedItems.value = updatedLabels
         updateLabels()
     }
 
