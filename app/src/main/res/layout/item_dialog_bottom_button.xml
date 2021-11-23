@@ -7,7 +7,7 @@
 
         <variable
             name="dialog"
-            type="com.gojol.notto.ui.todo.dialog.TodoBaseDialogImpl" />
+            type="com.gojol.notto.ui.todo.dialog.BaseDialog" />
 
     </data>
 

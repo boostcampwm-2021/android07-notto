@@ -8,40 +8,40 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.gojol.notto.databinding.DialogBaseBinding
-import dagger.hilt.android.AndroidEntryPoint
 import com.gojol.notto.R
 import com.gojol.notto.common.EventObserver
-import com.gojol.notto.ui.todo.dialog.util.TodoBaseDialog
-import com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel
+import com.gojol.notto.ui.todo.dialog.util.DialogViewModel
 
+abstract class BaseDialog<B : ViewDataBinding, VM : DialogViewModel> : DialogFragment() {
 
-@AndroidEntryPoint
-open class TodoBaseDialogImpl : DialogFragment(), TodoBaseDialog {
+    private lateinit var rootBinding: DialogBaseBinding
 
-    var fragment: Fragment? = null
-
-    lateinit var binding: DialogBaseBinding
-    val viewModel: TodoBaseDialogViewModel by viewModels()
-
+    protected lateinit var binding: B private set
+    protected abstract val viewModel: VM
+    protected abstract var layoutId: Int
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.dialog_base, container, false)
-        return binding.root
+        rootBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_base, container, false)
+        rootBinding.lifecycleOwner = this
+        rootBinding.viewModel = viewModel
+
+        binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
+        binding.lifecycleOwner = this
+        rootBinding.clDialogContent.addView(binding.root)
+        return rootBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
-        initObserver()
+        initBaseObserver()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -59,7 +59,13 @@ open class TodoBaseDialogImpl : DialogFragment(), TodoBaseDialog {
         return dialog
     }
 
-    override fun initObserver() {
+    abstract fun initObserver()
+
+    abstract fun confirmClick()
+
+    abstract fun dismissClick()
+
+    private fun initBaseObserver() {
         viewModel.isConfirmClicked.observe(this, EventObserver {
             if (it) {
                 confirmClick()
@@ -70,13 +76,5 @@ open class TodoBaseDialogImpl : DialogFragment(), TodoBaseDialog {
                 dismissClick()
             }
         })
-    }
-
-    override fun confirmClick() {
-        this.dismiss()
-    }
-
-    override fun dismissClick() {
-        this.dismiss()
     }
 }
