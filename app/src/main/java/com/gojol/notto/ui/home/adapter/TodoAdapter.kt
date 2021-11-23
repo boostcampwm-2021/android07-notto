@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.home.adapter
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -18,7 +19,8 @@ import com.gojol.notto.ui.home.util.ItemTouchHelperListener
 class TodoAdapter(
     private val swipeCallback: (DailyTodo) -> (Unit),
     private val editButtonCallback: (Todo) -> (Unit)
-) : ListAdapter<TodoWithTodayDailyTodo, TodoAdapter.TodoViewHolder>(TodoDiff()), ItemTouchHelperListener {
+) : ListAdapter<TodoWithTodayDailyTodo, TodoAdapter.TodoViewHolder>(TodoDiff()),
+    ItemTouchHelperListener {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         return TodoViewHolder(
@@ -47,9 +49,10 @@ class TodoAdapter(
         notifyItemInserted(position)
     }
 
-    class TodoViewHolder(private val binding: ItemTodoBinding,
-                         private val editButtonCallback: (Todo) -> (Unit)) :
-        RecyclerView.ViewHolder(binding.root) {
+    class TodoViewHolder(
+        private val binding: ItemTodoBinding,
+        private val editButtonCallback: (Todo) -> (Unit)
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         lateinit var state: TodoState
 
@@ -71,16 +74,24 @@ class TodoAdapter(
             }
 
             binding.tvHomeTodo.setTextColor(ContextCompat.getColor(binding.root.context, color))
+            binding.btnHomeTodoEdit.backgroundTintList =
+                ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, color))
             binding.executePendingBindings()
         }
     }
 
     class TodoDiff : DiffUtil.ItemCallback<TodoWithTodayDailyTodo>() {
-        override fun areItemsTheSame(oldItem: TodoWithTodayDailyTodo, newItem: TodoWithTodayDailyTodo): Boolean {
+        override fun areItemsTheSame(
+            oldItem: TodoWithTodayDailyTodo,
+            newItem: TodoWithTodayDailyTodo
+        ): Boolean {
             return oldItem.todo.todoId == newItem.todo.todoId
         }
 
-        override fun areContentsTheSame(oldItem: TodoWithTodayDailyTodo, newItem: TodoWithTodayDailyTodo): Boolean {
+        override fun areContentsTheSame(
+            oldItem: TodoWithTodayDailyTodo,
+            newItem: TodoWithTodayDailyTodo
+        ): Boolean {
             return oldItem == newItem
         }
     }
