@@ -39,7 +39,7 @@
     </style>
 
     <style name="TodoTimePickerWidgetStyle" parent="@android:style/Widget.Material.TimePicker">
-        <item name="android:headerBackground">@color/yellow_deep</item>
+        <item name="android:headerBackground">@color/white</item>
         <item name="android:numbersSelectorColor">@color/yellow_deep</item>
         <item name="android:numbersBackgroundColor">@color/gray_light</item>
     </style>

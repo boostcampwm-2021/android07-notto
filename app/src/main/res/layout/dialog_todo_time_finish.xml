@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
+            type="com.gojol.notto.ui.todo.dialog.util.TimeFinishDialogViewModel" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content">
 
             <TimePicker
-                android:id="@+id/tp_set_time"
+                android:id="@+id/tp_time_finish"
                 style="@style/TodoTimePickerWidgetStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
