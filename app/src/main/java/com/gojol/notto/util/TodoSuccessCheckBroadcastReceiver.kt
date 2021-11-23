@@ -25,19 +25,6 @@ class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
     private lateinit var workRequest: WorkRequest
     private val gson: Gson = Gson()
 
-    companion object {
-        @SuppressLint("UnspecifiedImmutableFlag")
-        fun getPendingIntent(context: Context, id: Int, data: Uri, action: String): PendingIntent {
-            val intent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java).apply {
-                setData(data)
-                setAction(action)
-            }
-            return PendingIntent.getBroadcast(
-                context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
-    }
-
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
@@ -65,6 +52,19 @@ class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
         notificationManager.cancel(todo.todoId)
         if(notificationManager.activeNotifications.size == 1) {
             notificationManager.cancelAll()
+        }
+    }
+
+    companion object {
+        @SuppressLint("UnspecifiedImmutableFlag")
+        fun getPendingIntent(context: Context, id: Int, data: Uri, action: String): PendingIntent {
+            val intent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java).apply {
+                setData(data)
+                setAction(action)
+            }
+            return PendingIntent.getBroadcast(
+                context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
     }
 }

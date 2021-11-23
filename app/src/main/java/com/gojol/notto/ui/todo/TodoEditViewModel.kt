@@ -26,8 +26,7 @@ import javax.inject.Inject
 class TodoEditViewModel @Inject constructor(
     private val repository: TodoLabelRepository,
     private val todoAlarmManager: TodoAlarmManager
-) :
-    ViewModel() {
+) : ViewModel() {
 
     private val _isTodoEditing = MutableLiveData<Boolean>()
     val isTodoEditing: LiveData<Boolean> = _isTodoEditing
