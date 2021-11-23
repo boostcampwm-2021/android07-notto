@@ -57,7 +57,7 @@ class CalendarViewModel @Inject constructor(
                 LocalDate.of(calendar.year, calendar.month, calendar.selectedDay)
             )
 
-            val monthlyDailyTodos = repository.getAllDailyTodos().filter {
+            val monthlyDailyTodos = repository.getAllDailyTodos().filter { it.isActive &&
                 it.date in calendar.startDate..calendar.endDate
             }
 
