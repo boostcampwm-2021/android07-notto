@@ -43,17 +43,10 @@ abstract class BaseDialog<B : ViewDataBinding, VM : DialogViewModel> : DialogFra
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.bg_dialog))
 
-        val deviceWidth = resources.displayMetrics.widthPixels
-        val deviceHeight = resources.displayMetrics.heightPixels
-        // 가로 모드
-        if (deviceWidth > deviceHeight) {
-            dialog.window?.attributes?.height = (resources.displayMetrics.heightPixels * 0.8).toInt()
-        }
         return dialog
     }
 

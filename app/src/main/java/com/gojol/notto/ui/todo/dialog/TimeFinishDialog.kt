@@ -28,6 +28,22 @@ class TimeFinishDialog : BaseDialog<DialogTodoTimeFinishBinding, TimeFinishDialo
         setClickListener()
     }
 
+    override fun onStart() {
+        super.onStart()
+        resetDialogSize()
+    }
+
+    private fun resetDialogSize() {
+        val deviceWidth = resources.displayMetrics.widthPixels
+        val deviceHeight = resources.displayMetrics.heightPixels
+
+        if(deviceWidth > deviceHeight) {
+            val dialogWidth = deviceWidth * 0.8
+            val dialogHeight = deviceHeight * 0.8
+            dialog?.window?.setLayout(dialogWidth.toInt(), dialogHeight.toInt())
+        }
+    }
+
     private fun initDate() {
         arguments?.let { arg ->
             (arg.getSerializable(SET_TIME_FINISH) as LocalTime?)?.let {

@@ -25,14 +25,6 @@ class DeleteLabelDialogFragment : BaseDialog<DialogFragmentDeleteLabelBinding, D
         }
     }
 
-    companion object {
-        fun newInstance(label: Label): DeleteLabelDialogFragment {
-            return DeleteLabelDialogFragment().apply {
-                arguments = bundleOf(DIALOG_LABEL_ITEM_KEY to label)
-            }
-        }
-    }
-
     override fun initObserver() { }
 
     override fun confirmClick() {
@@ -42,5 +34,13 @@ class DeleteLabelDialogFragment : BaseDialog<DialogFragmentDeleteLabelBinding, D
 
     override fun dismissClick() {
         this.dialog?.cancel()
+    }
+
+    companion object {
+        fun newInstance(label: Label): DeleteLabelDialogFragment {
+            return DeleteLabelDialogFragment().apply {
+                arguments = bundleOf(DIALOG_LABEL_ITEM_KEY to label)
+            }
+        }
     }
 }

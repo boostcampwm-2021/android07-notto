@@ -5,8 +5,8 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.common.REPEAT_TYPE_DATA
+import com.gojol.notto.common.RepeatType
 import com.gojol.notto.databinding.DialogTodoRepeatTypeBinding
-import com.gojol.notto.model.data.RepeatType
 import com.gojol.notto.ui.BaseDialog
 import com.gojol.notto.ui.todo.dialog.util.RepeatTypeDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
