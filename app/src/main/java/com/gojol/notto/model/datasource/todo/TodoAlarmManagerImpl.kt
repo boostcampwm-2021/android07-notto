@@ -9,6 +9,7 @@ import javax.inject.Inject
 import androidx.core.os.bundleOf
 import com.gojol.notto.common.TodoState
 import com.google.gson.Gson
+import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
@@ -31,9 +32,7 @@ class TodoAlarmManagerImpl @Inject constructor(
             context,
             todo.todoId,
             bundleOf(
-                // TODO: ALARM_EXTRA_TODO to todo로 하면 TodoPushBroadcastReceiver에서
-                //  intent.extras?.getSerializable(ALARM_EXTRA_TODO)로 받아올 때 null이다??
-                ALARM_EXTRA_TODO to gson.toJson(todo)
+                ALARM_EXTRA_TODO to (todo as Serializable)
             )
         )
 

@@ -20,8 +20,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import com.google.gson.Gson
 import java.util.*
-import com.google.gson.reflect.TypeToken
 
+const val ALARM_BUNDLE_TODO = "alarmBundleTodo"
 const val ACTION_FAIL = "actionFail"
 const val ACTION_SUCCESS = "actionSuccess"
 
@@ -51,7 +51,7 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
         @SuppressLint("UnspecifiedImmutableFlag")
         fun getPendingIntent(context: Context, id: Int, bundle: Bundle): PendingIntent {
             val intent = Intent(context, TodoPushBroadcastReceiver::class.java).apply {
-                putExtras(bundle)
+                putExtra(ALARM_BUNDLE_TODO, bundle)
             }
             return PendingIntent.getBroadcast(
                 context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT
@@ -67,8 +67,8 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
             Context.NOTIFICATION_SERVICE
         ) as NotificationManager
 
-        val todoData = intent.extras?.getString(ALARM_EXTRA_TODO) ?: return
-        val todo = gson.fromJson<Todo>(todoData, object : TypeToken<Todo?>() {}.type)
+        val todoData = intent.getBundleExtra(ALARM_BUNDLE_TODO)?.getSerializable(ALARM_EXTRA_TODO) ?: return
+        val todo = todoData as Todo
 
         todoAlarmManager.deleteAlarm(todo)
         createNotificationChannel()
