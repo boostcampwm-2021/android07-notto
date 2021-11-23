@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.gojol.notto.common.TimeRepeatType
-import com.gojol.notto.model.data.RepeatType
+import com.gojol.notto.common.RepeatType
 import java.io.Serializable
 import java.time.LocalDate
 import java.time.LocalTime

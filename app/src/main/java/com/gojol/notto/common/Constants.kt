@@ -14,3 +14,5 @@ const val FAIL_INTENT_ID = 1000000002
 const val NOTIFICATION_TODO = "notificationTodo"
 
 const val EMPTY_DATE = 0
+
+const val LABEL_ADD = "+ 라벨 추가"

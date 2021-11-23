@@ -37,6 +37,7 @@ class TodoRepeatTimeDialog : TodoBaseDialogImpl() {
         super.onViewCreated(view, savedInstanceState)
         contentBinding.lifecycleOwner = viewLifecycleOwner
         contentBinding.viewmodel = viewModel
+
         initRepeatTime()
         initClickListener()
         binding.clDialogContent.addView(contentBinding.root)
@@ -51,14 +52,6 @@ class TodoRepeatTimeDialog : TodoBaseDialogImpl() {
         }
     }
 
-    private fun initClickListener() {
-        contentBinding.cvRepeatTime.setOnDateChangedListener { _, date, _ ->
-            viewModel.setRepeatTime(
-                date.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-            )
-        }
-    }
-
     override fun initObserver() {
         super.initObserver()
         viewModel.repeatTime.observe(this) {
@@ -66,6 +59,14 @@ class TodoRepeatTimeDialog : TodoBaseDialogImpl() {
                 Date.from(
                     it.atStartOfDay(ZoneId.systemDefault()).toInstant()
                 )
+            )
+        }
+    }
+
+    private fun initClickListener() {
+        contentBinding.cvRepeatTime.setOnDateChangedListener { _, date, _ ->
+            viewModel.setRepeatTime(
+                date.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
             )
         }
     }
