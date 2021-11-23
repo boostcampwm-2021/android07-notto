@@ -1,7 +1,7 @@
 package com.gojol.notto.model.datasource.todo
 
 import com.gojol.notto.common.TodoState
-import com.gojol.notto.model.data.RepeatType
+import com.gojol.notto.common.RepeatType
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo

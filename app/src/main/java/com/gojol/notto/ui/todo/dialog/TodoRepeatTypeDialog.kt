@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
-import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
+import com.gojol.notto.common.RepeatType
 import com.gojol.notto.databinding.DialogTodoRepeatTypeBinding
-import com.gojol.notto.model.data.RepeatType
 import dagger.hilt.android.AndroidEntryPoint
 
 const val REPEAT_TYPE_DATA = "repeatTypeValue"
