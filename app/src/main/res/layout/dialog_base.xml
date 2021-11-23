@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
+            type="com.gojol.notto.ui.DialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,8 +32,7 @@
             android:onClick="@{()->viewModel.onDismissClick()}"
             android:text="@string/dialog_deletion_reject"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_median"
-            android:textStyle="bold"
+            android:textSize="@dimen/text_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_dialog_base_confirm" />
 
@@ -46,8 +45,7 @@
             android:onClick="@{()->viewModel.onConfirmClick()}"
             android:text="@string/dialog_deletion_confirm"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_median"
-            android:textStyle="bold"
+            android:textSize="@dimen/text_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,7 +7,7 @@
 
         <variable
             name="viewmodel"
-            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
+            type="com.gojol.notto.ui.todo.dialog.util.RepeatTypeDialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
