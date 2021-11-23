@@ -42,7 +42,7 @@ class EditLabelViewModel @Inject constructor(private val repository: TodoLabelRe
 
         val updatedLabels = mutableListOf<Label>()
         labels.forEachIndexed { index, label ->
-            updatedLabels.add(label.copy(order = index + 2))
+            updatedLabels.add(label.copy(order = index + 1))
         }
 
         _updatedItems.value = updatedLabels

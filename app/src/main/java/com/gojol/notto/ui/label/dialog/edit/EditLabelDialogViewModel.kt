@@ -26,15 +26,21 @@ class EditLabelDialogViewModel @Inject constructor(private val repository: TodoL
 
     fun clickOkay() {
         val labelName = name.value ?: return
-        // TODO: 에러 메시지 출력
 
-        when (type.value) {
-            LabelEditType.CREATE -> createLabel(Label(1000, labelName))
-            LabelEditType.UPDATE -> {
-                val updatedLabel = label.value ?: return
-                updateLabel(updatedLabel.copy(name = labelName))
+        viewModelScope.launch {
+            when (type.value) {
+                LabelEditType.CREATE -> createLabel(
+                    Label(
+                        repository.getAllLabel().size,
+                        name.value!!
+                    )
+                )
+                LabelEditType.UPDATE -> {
+                    val updatedLabel = label.value ?: return@launch
+                    updateLabel(updatedLabel.copy(name = labelName))
+                }
+                else -> return@launch
             }
-            else -> return
         }
     }
 
