@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.gojol.notto.common.Event
 import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.common.TodoDeleteType
-import com.gojol.notto.model.data.RepeatType
+import com.gojol.notto.common.RepeatType
 import java.time.LocalDate
 import java.time.LocalTime
 
