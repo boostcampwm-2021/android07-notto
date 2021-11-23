@@ -5,10 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gojol.notto.common.SuccessLevel
-import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.DayWithSuccessLevelAndSelect
 import com.gojol.notto.model.data.MonthlyCalendar
+import com.gojol.notto.model.data.Success
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.ui.home.CalendarFragment.Companion.ITEM_ID_ARGUMENT
@@ -73,30 +72,8 @@ class CalendarViewModel @Inject constructor(
             val todayDailyTodos = monthlyDailyTodos
                 .filter { it.date.dayOfMonth == date }
 
-            DayWithSuccessLevelAndSelect(date, getSuccessLevel(todayDailyTodos), isSelected(date))
+            DayWithSuccessLevelAndSelect(date, Success(todayDailyTodos).getSuccessLevel(), isSelected(date))
         }
-    }
-
-    private fun getSuccessLevel(todayDailyTodos: List<DailyTodo>): SuccessLevel {
-        val successCount = todayDailyTodos.count { it.todoState == TodoState.SUCCESS }
-        val totalCount = todayDailyTodos.size
-
-        val successRate = if (totalCount == 0) {
-            SuccessLevel.ZERO.maxValue
-        } else {
-            successCount.toFloat() / totalCount.toFloat()
-        }
-
-        val successLevel = when {
-            totalCount == SuccessLevel.ZERO.value || successCount == SuccessLevel.ZERO.value -> SuccessLevel.ZERO
-            successRate <= SuccessLevel.ONE.maxValue -> SuccessLevel.ONE
-            successRate <= SuccessLevel.TWO.maxValue -> SuccessLevel.TWO
-            successRate <= SuccessLevel.THREE.maxValue -> SuccessLevel.THREE
-            successRate < SuccessLevel.FOUR.maxValue -> SuccessLevel.FOUR
-            else -> SuccessLevel.FIVE
-        }
-
-        return successLevel
     }
 
     private fun isSelected(date: Int): Boolean {

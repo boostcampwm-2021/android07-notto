@@ -20,12 +20,3 @@ enum class EditType(val text: String) {
 enum class TodoDeleteType {
     TODAY, TODAY_AND_FUTURE
 }
-
-enum class SuccessLevel(val value: Int, val maxValue: Float) {
-    ZERO(0, 0f), ONE(1, 0.25f), TWO(2, 0.5f),
-    THREE(3, 0.75f), FOUR(4, 1f), FIVE(5, 1f);
-
-    fun toIntAlpha(): Int {
-        return 51 * value
-    }
-}
