@@ -41,7 +41,7 @@ class TodoEditViewModel @Inject constructor(
     val clickWrapper = ClickWrapper(
         MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(),
         MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(),
-        MutableLiveData()
+        MutableLiveData(), MutableLiveData()
     )
 
     private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
@@ -198,8 +198,17 @@ class TodoEditViewModel @Inject constructor(
         clickWrapper.labelAddClicked.value = Unit
     }
 
+    fun onSaveButtonClick() {
+        val isEditing = clickWrapper.isTodoEditing.value ?: return
+        clickWrapper.isSaveButtonClicked.value = isEditing
+    }
+
     fun saveTodo() {
-        todoWrapper.value?.todo?.content ?: run {
+        val content = todoWrapper.value?.todo?.content ?: run {
+            clickWrapper.isSaveButtonEnabled.value = false
+            return
+        }
+        if (content.isEmpty()) {
             clickWrapper.isSaveButtonEnabled.value = false
             return
         }
