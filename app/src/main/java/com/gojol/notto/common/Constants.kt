@@ -23,3 +23,5 @@ const val REPEAT_TYPE_DATA = "repeatTypeValue"
 const val REPEAT_TYPE = "repeatType"
 const val TIME_REPEAT_DATA = "timeRepeatData"
 const val TIME_REPEAT = "timeRepeat"
+
+const val EMPTY_DATE = 0

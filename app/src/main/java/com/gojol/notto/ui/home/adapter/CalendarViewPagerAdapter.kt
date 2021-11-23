@@ -37,6 +37,11 @@ class CalendarViewPagerAdapter(
     }
 
     override fun containsItem(itemId: Long): Boolean {
-        return itemId in 20000102L..20991230L
+        return itemId in MIN_DATE..MAX_DATE
+    }
+
+    companion object{
+        const val MIN_DATE = 20000102L
+        const val MAX_DATE = 20991230L
     }
 }
