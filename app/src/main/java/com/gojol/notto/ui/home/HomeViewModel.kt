@@ -10,6 +10,7 @@ import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,7 +18,10 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: TodoLabelRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val repository: TodoLabelRepository,
+    private val todoAlarmManager: TodoAlarmManager
+) : ViewModel() {
 
     private val _isTodoCreateButtonClicked = MutableLiveData<Event<Boolean>>()
     val isTodoCreateButtonClicked: LiveData<Event<Boolean>> = _isTodoCreateButtonClicked
@@ -74,6 +78,8 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
                     repository.getTodosWithTodayDailyTodos(date)
                 }?.filter { currentShowTodoList.contains(it.todo) }
             }
+
+            todoAlarmManager.deleteAlarms()
         }
     }
 

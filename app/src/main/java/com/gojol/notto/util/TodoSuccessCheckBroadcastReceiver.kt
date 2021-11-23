@@ -1,31 +1,26 @@
 package com.gojol.notto.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import javax.inject.Inject
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.work.WorkRequest
+import com.gojol.notto.common.ACTION_FAIL
+import com.gojol.notto.common.ACTION_SUCCESS
+import com.gojol.notto.common.NOTIFICATION_TODO
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
-const val SUCCESS_INTENT_ID = 1000000001
-const val FAIL_INTENT_ID = 1000000002
-const val NOTIFICATION_TODO = "notificationTodo"
-
 class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
-
-    @Inject
-    lateinit var repository: TodoLabelRepository
-
-    lateinit var notificationManager: NotificationManager
 
     private lateinit var workRequest: WorkRequest
     private val gson: Gson = Gson()
@@ -34,7 +29,7 @@ class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
-        notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val workManager = WorkManager.getInstance(context)
 
         val type: Type = object : TypeToken<Todo?>() {}.type
@@ -57,6 +52,19 @@ class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
         notificationManager.cancel(todo.todoId)
         if(notificationManager.activeNotifications.size == 1) {
             notificationManager.cancelAll()
+        }
+    }
+
+    companion object {
+        @SuppressLint("UnspecifiedImmutableFlag")
+        fun getPendingIntent(context: Context, id: Int, data: Uri, action: String): PendingIntent {
+            val intent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java).apply {
+                setData(data)
+                setAction(action)
+            }
+            return PendingIntent.getBroadcast(
+                context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
     }
 }

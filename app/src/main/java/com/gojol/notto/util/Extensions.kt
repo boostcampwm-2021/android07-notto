@@ -25,7 +25,7 @@ fun LocalTime.toDialogString(): String {
             this.format(DateTimeFormatter.ofPattern("a HH:mm"))
         }
         else -> {
-            this.minusHours(12).format(DateTimeFormatter.ofPattern("a HH:mm"))
+            this.format(DateTimeFormatter.ofPattern("a hh:mm"))
         }
     }
 }
