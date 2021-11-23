@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/todo_edit_top_app_bar"
             app:navigationIcon="@drawable/ic_close"
-            app:navigationOnClickListener="@{() -> viewmodel.updateIsCloseButtonClicked()}"
+            app:navigationOnClickListener="@{() -> viewmodel.onIsCloseButtonClicked()}"
             app:title="@string/todo_edit_title_create" />
 
         <ScrollView
@@ -54,6 +54,7 @@
                     android:lines="7"
                     android:paddingVertical="@dimen/space_median"
                     android:text="@{viewmodel.todoWrapper.todo.content}"
+                    android:onTextChanged="@{viewmodel::updateTodoContent}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -335,7 +336,7 @@
                     android:insetTop="0dp"
                     android:insetRight="0dp"
                     android:insetBottom="0dp"
-                    android:onClick="@{() -> viewmodel.updatePopLabelAddDialog()}"
+                    android:onClick="@{() -> viewmodel.onPopLabelAddDialogClick()}"
                     android:textColor="@color/white"
                     app:cornerRadius="@dimen/todo_edit_btn_corner_radius"
                     app:icon="@drawable/ic_add"

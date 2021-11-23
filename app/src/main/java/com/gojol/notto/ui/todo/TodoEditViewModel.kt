@@ -63,7 +63,7 @@ class TodoEditViewModel @Inject constructor(
         )
     }
 
-    fun setDummyLabelData() {
+    fun initLabelData() {
         viewModelScope.launch {
             _labelList.value = repository.getAllLabel()
         }
@@ -102,9 +102,31 @@ class TodoEditViewModel @Inject constructor(
         }
     }
 
+    fun updateTodoDeleteType(type: TodoDeleteType?) {
+        val deleteType = type ?: return
+        val todoModel = todoWrapper.value ?: return
+        _todoWrapper.value = todoModel.copy(todoDeleteType = deleteType)
+        deleteTodo()
+    }
+
+    fun updateTodoContent(s: CharSequence, start: Int, before: Int, count: Int) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(content = s.toString()))
+    }
+
     fun updateDate(date: LocalDate?) {
         val selectedDate = date ?: return
         _todoWrapper.value = todoWrapper.value?.copy(selectedDate = selectedDate)
+    }
+
+    fun updateIsRepeatChecked(isChecked: Boolean) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(isRepeated = isChecked))
+    }
+
+    fun updateRepeatType(repeatType: RepeatType) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(repeatType = repeatType))
     }
 
     fun updateStartDate(date: LocalDate?) {
@@ -113,24 +135,37 @@ class TodoEditViewModel @Inject constructor(
         _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(startDate = startDate))
     }
 
-    fun updateIsCloseButtonClicked() {
-        clickWrapper.isCloseButtonCLicked.value = Event(Unit)
+    fun updateIsTimeChecked(isChecked: Boolean) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(hasAlarm = isChecked))
     }
 
-    fun updateTodoDeleteType(type: TodoDeleteType?) {
-        val deleteType = type ?: return
-        val todoModel = todoWrapper.value ?: return
-        _todoWrapper.value = todoModel.copy(todoDeleteType = deleteType)
-        deleteTodo()
+    fun updateTimeStart(timeStart: LocalTime) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(startTime = timeStart))
+    }
+
+    fun updateTimeFinish(timeFinish: LocalTime) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(endTime = timeFinish))
+    }
+
+    fun updateTimeRepeat(timeRepeat: TimeRepeatType) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(periodTime = timeRepeat))
+    }
+
+    fun updateIsKeywordChecked(isChecked: Boolean) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(isKeywordOpen = isChecked))
+    }
+
+    fun onIsCloseButtonClicked() {
+        clickWrapper.isCloseButtonCLicked.value = Event(Unit)
     }
 
     fun onRepeatTypeClick() {
         clickWrapper.repeatTypeClick.value = Event(true)
-    }
-
-    fun updateRepeatType(repeatType: RepeatType) {
-        val todo = todoWrapper.value?.todo ?: return
-        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(repeatType = repeatType))
     }
 
     fun onRepeatStartClick() {
@@ -141,30 +176,15 @@ class TodoEditViewModel @Inject constructor(
         clickWrapper.timeStartClick.value = Event(true)
     }
 
-    fun updateTimeStart(timeStart: LocalTime) {
-        val todo = todoWrapper.value?.todo ?: return
-        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(startTime = timeStart))
-    }
-
     fun onTimeFinishClick() {
         clickWrapper.timeFinishClick.value = Event(true)
-    }
-
-    fun updateTimeFinish(timeFinish: LocalTime) {
-        val todo = todoWrapper.value?.todo ?: return
-        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(endTime = timeFinish))
     }
 
     fun onTimeRepeatClick() {
         clickWrapper.timeRepeatClick.value = Event(true)
     }
 
-    fun updateTimeRepeat(timeRepeat: TimeRepeatType) {
-        val todo = todoWrapper.value?.todo ?: return
-        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(periodTime = timeRepeat))
-    }
-
-    fun updatePopLabelAddDialog() {
+    fun onPopLabelAddDialogClick() {
         clickWrapper.popLabelAddDialog.value = true
     }
 
@@ -179,11 +199,6 @@ class TodoEditViewModel @Inject constructor(
             false -> saveNewTodo()
             else -> return
         }
-    }
-
-    fun updateTodoContent(content: String) {
-        val todo = todoWrapper.value?.todo ?: return
-        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(content = content))
     }
 
     private fun saveNewTodo() {
@@ -224,21 +239,6 @@ class TodoEditViewModel @Inject constructor(
 
             clickWrapper.isSaveButtonEnabled.value = true
         }
-    }
-
-    fun updateIsRepeatChecked(isChecked: Boolean) {
-        val todo = todoWrapper.value?.todo ?: return
-        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(isRepeated = isChecked))
-    }
-
-    fun updateIsTimeChecked(isChecked: Boolean) {
-        val todo = todoWrapper.value?.todo ?: return
-        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(hasAlarm = isChecked))
-    }
-
-    fun updateIsKeywordChecked(isChecked: Boolean) {
-        val todo = todoWrapper.value?.todo ?: return
-        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(isKeywordOpen = isChecked))
     }
 
     private fun updateTodo() {

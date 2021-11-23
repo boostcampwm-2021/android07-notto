@@ -1,8 +1,6 @@
 package com.gojol.notto.ui.todo
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -60,8 +58,7 @@ class TodoEditActivity : AppCompatActivity() {
         initSelectedLabelRecyclerView()
         initObserver()
         initTodoDialog()
-        initEditTextListener()
-        todoEditViewModel.setDummyLabelData()
+        todoEditViewModel.initLabelData()
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
@@ -224,18 +221,6 @@ class TodoEditActivity : AppCompatActivity() {
         todoRepeatTimeDialog = TodoRepeatTimeDialog()
         todoAlarmPeriodDialog = TodoAlarmPeriodDialog()
         todoSetTimeDialog = TodoSetTimeDialog()
-    }
-
-    private fun initEditTextListener() {
-        binding.etTodoEdit.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(p0: Editable?) {
-                todoEditViewModel.updateTodoContent(p0.toString())
-            }
-        })
     }
 
     private fun showLabelAddDialog() {
