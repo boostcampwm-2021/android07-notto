@@ -41,9 +41,9 @@ class TodoEditViewModel @Inject constructor(
     private val _selectedLabelList = MutableLiveData(listOf<Label>())
     val selectedLabelList: LiveData<List<Label>> = _selectedLabelList
 
-    // Event Boolean
-    private val _isCloseButtonClicked = MutableLiveData<Event<Boolean>>()
-    val isCloseButtonCLicked: LiveData<Event<Boolean>> = _isCloseButtonClicked
+    // Event
+    private val _isCloseButtonClicked = MutableLiveData<Event<Unit>>()
+    val isCloseButtonCLicked: LiveData<Event<Unit>> = _isCloseButtonClicked
 
     private val _popLabelAddDialog = MutableLiveData<Boolean>()
     val popLabelAddDialog: LiveData<Boolean> = _popLabelAddDialog
@@ -63,8 +63,8 @@ class TodoEditViewModel @Inject constructor(
     private val _timeRepeatClick = MutableLiveData<Event<Boolean>>()
     val timeRepeatClick: LiveData<Event<Boolean>> = _timeRepeatClick
 
-    private val _isDeletionExecuted = MutableLiveData<Event<Boolean>>()
-    val isDeletionExecuted: LiveData<Event<Boolean>> = _isDeletionExecuted
+    private val _isDeletionExecuted = MutableLiveData<Event<Unit>>()
+    val isDeletionExecuted: LiveData<Event<Unit>> = _isDeletionExecuted
 
     private val _isSaveButtonEnabled = MutableLiveData<Boolean>()
     val isSaveButtonEnabled: LiveData<Boolean> = _isSaveButtonEnabled
@@ -143,7 +143,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun updateIsCloseButtonClicked() {
-        _isCloseButtonClicked.value = Event(true)
+        _isCloseButtonClicked.value = Event(Unit)
     }
 
     fun updateTodoDeleteType(type: TodoDeleteType?) {
@@ -304,7 +304,7 @@ class TodoEditViewModel @Inject constructor(
                     todoModel.selectedDate
                 )
             }
-            _isDeletionExecuted.value = Event(true)
+            _isDeletionExecuted.value = Event(Unit)
         }
     }
 
