@@ -25,6 +25,7 @@ import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.ui.home.CalendarFragment.Companion.DATE_CLICK_BUNDLE_KEY
 import com.gojol.notto.ui.home.CalendarFragment.Companion.DATE_CLICK_KEY
+import com.gojol.notto.ui.home.CalendarFragment.Companion.UPDATE_HEIGHT_KEY
 import com.gojol.notto.ui.home.adapter.CalendarAdapter
 import com.gojol.notto.ui.home.adapter.LabelAdapter
 import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
@@ -55,6 +56,10 @@ class HomeFragment : Fragment() {
             val date = selectedDate.dayOfMonth
 
             homeViewModel.updateDate(year, month, date)
+        }
+
+        setFragmentResultListener(UPDATE_HEIGHT_KEY){_,_ ->
+            updateViewPager()
         }
     }
 
@@ -118,11 +123,7 @@ class HomeFragment : Fragment() {
         homeViewModel.date.observe(viewLifecycleOwner, {
             homeViewModel.setDummyData()
             calendarAdapter.setDate(it)
-            val handler = Handler(Looper.getMainLooper())
-            val runnable = Runnable {
-                calendarAdapter.notifyItemChanged(0)
-            }
-            handler.post(runnable)
+            updateViewPager()
         })
 
         homeViewModel.isTodoCreateButtonClicked.observe(viewLifecycleOwner, {
@@ -138,6 +139,14 @@ class HomeFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun updateViewPager() {
+        val handler = Handler(Looper.getMainLooper())
+        val runnable = Runnable {
+            calendarAdapter.notifyItemChanged(0)
+        }
+        handler.post(runnable)
     }
 
     private fun initData() {

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -44,7 +45,7 @@ class CalendarFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
+        binding.progressCircular.isVisible = true
         setFragmentResultListener(TODO_SWIPE_KEY) { _, _ ->
             swipeUpdate()
         }
@@ -61,21 +62,31 @@ class CalendarFragment : Fragment() {
     private fun initObserver() {
         calendarViewModel.monthlyAchievement.observe(viewLifecycleOwner, { itemList ->
             calendarDayAdapter.submitList(itemList)
+            binding.progressCircular.isVisible = false
+            sendFragmentResultForHeightUpdate()
         })
         calendarViewModel.monthlyCalendar.observe(viewLifecycleOwner, {
-            calendarViewModel.monthlyCalendar.value?.apply {
-                setFragmentResult(
-                    DATE_CLICK_KEY,
-                    bundleOf(
-                        DATE_CLICK_BUNDLE_KEY to LocalDate.of(
-                            this.year,
-                            this.month,
-                            this.selectedDay
-                        )
+            sendFragmentResultWithClickDate()
+        })
+    }
+
+    private fun sendFragmentResultForHeightUpdate() {
+        setFragmentResult(UPDATE_HEIGHT_KEY, bundleOf())
+    }
+
+    private fun sendFragmentResultWithClickDate() {
+        calendarViewModel.monthlyCalendar.value?.apply {
+            setFragmentResult(
+                DATE_CLICK_KEY,
+                bundleOf(
+                    DATE_CLICK_BUNDLE_KEY to LocalDate.of(
+                        this.year,
+                        this.month,
+                        this.selectedDay
                     )
                 )
-            }
-        })
+            )
+        }
     }
 
     private fun setMonthlyData() {
@@ -92,6 +103,7 @@ class CalendarFragment : Fragment() {
     }
 
     companion object {
+        const val UPDATE_HEIGHT_KEY = "update_height"
         const val DATE_CLICK_KEY = "date_click"
         const val DATE_CLICK_BUNDLE_KEY = "selected_date"
 

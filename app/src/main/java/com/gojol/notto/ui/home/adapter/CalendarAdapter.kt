@@ -50,6 +50,7 @@ class CalendarAdapter(
 
         private val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월")
         private val calendarViewPagerAdapter = CalendarViewPagerAdapter(fragmentManager, lifecycle)
+        private var calendarPosition = calendarViewPagerAdapter.firstFragmentPosition
 
         init {
             binding.vpCalendar.adapter = calendarViewPagerAdapter
@@ -62,6 +63,8 @@ class CalendarAdapter(
 
         fun bind(date: LocalDate) {
             binding.date = date.format(formatter)
+            // submit 되기 전 height가 계산된 경우를 새로 계산
+            setViewPagerHeightWithContent(calendarPosition)
             binding.executePendingBindings()
         }
 
@@ -70,25 +73,31 @@ class CalendarAdapter(
                 ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    val viewPager = binding.vpCalendar
-                    val view =
-                        (viewPager[0] as RecyclerView).layoutManager?.findViewByPosition(position)
+                    calendarPosition = position
 
-                    view?.post {
-                        val widthMeasureSpec =
-                            MeasureSpec.makeMeasureSpec(view.width, MeasureSpec.EXACTLY)
-                        val heightMeasureSpec =
-                            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-                        view.measure(widthMeasureSpec, heightMeasureSpec)
-
-                        if (viewPager.layoutParams.height != view.measuredHeight) {
-                            viewPager.layoutParams = (viewPager.layoutParams).also {
-                                it.height = view.measuredHeight
-                            }
-                        }
-                    }
+                    setViewPagerHeightWithContent(position)
                 }
             })
+        }
+
+        private fun setViewPagerHeightWithContent(position: Int) {
+            val viewPager = binding.vpCalendar
+            val view =
+                (viewPager[0] as RecyclerView).layoutManager?.findViewByPosition(position)
+
+            view?.post {
+                val widthMeasureSpec =
+                    MeasureSpec.makeMeasureSpec(view.width, MeasureSpec.EXACTLY)
+                val heightMeasureSpec =
+                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+                view.measure(widthMeasureSpec, heightMeasureSpec)
+
+                if (viewPager.layoutParams.height != view.measuredHeight) {
+                    viewPager.layoutParams = (viewPager.layoutParams).also {
+                        it.height = view.measuredHeight
+                    }
+                }
+            }
         }
     }
 }
