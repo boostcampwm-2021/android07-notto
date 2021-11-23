@@ -46,6 +46,7 @@ class TodoEditActivity : AppCompatActivity() {
     private lateinit var selectedLabelAdapter: SelectedLabelAdapter
 
     private lateinit var labelAddDialog: AlertDialog.Builder
+    private lateinit var saveButtonDialog: AlertDialog.Builder
     private lateinit var todoDeletionDialog: DeletionDialog
     private lateinit var todoRepeatTypeDialog: RepeatTypeDialog
     private lateinit var todoRepeatTimeDialog: RepeatTimeDialog
@@ -177,6 +178,11 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.clickWrapper.timeRepeatClick.observe(this, EventObserver {
             if (it) todoAlarmPeriodDialog.show(supportFragmentManager, TIME_REPEAT)
         })
+        todoEditViewModel.clickWrapper.isSaveButtonClicked.observe(this, {
+            // 편집일 때
+            if (it) showSaveButtonDialog()
+            else todoEditViewModel.saveTodo()
+        })
     }
 
     private fun initDialog(items: Array<String>) {
@@ -186,6 +192,14 @@ class TodoEditActivity : AppCompatActivity() {
                 .setItems(items) { _, which ->
                     todoEditViewModel.addLabelToSelectedLabelList(items[which])
                 }
+        saveButtonDialog =
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.todo_edit_save_button_title))
+                .setMessage(getString(R.string.todo_edit_save_button_msg))
+                .setPositiveButton(getString(R.string.okay)) { _, _ ->
+                    todoEditViewModel.saveTodo()
+                }
+                .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
     }
 
     private fun initTodoDialog() {
@@ -222,6 +236,13 @@ class TodoEditActivity : AppCompatActivity() {
             .create()
             .window?.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.bg_dialog))
         labelAddDialog.show()
+    }
+
+    private fun showSaveButtonDialog() {
+        saveButtonDialog
+            .create()
+            .window?.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.bg_dialog))
+        saveButtonDialog.show()
     }
 
     private fun showSaveButtonDisabled() {

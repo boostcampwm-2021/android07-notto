@@ -303,7 +303,7 @@
                     android:layout_marginEnd="@dimen/space_median"
                     android:layout_marginBottom="@dimen/space_x_large"
                     android:background="@drawable/bg_todo_edit_button"
-                    android:onClick="@{() -> viewmodel.saveTodo()}"
+                    android:onClick="@{() -> viewmodel.onSaveButtonClick()}"
                     android:text="@string/all_save"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_small"
