@@ -9,7 +9,7 @@
 
         <variable
             name="viewmodel"
-            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
+            type="com.gojol.notto.ui.todo.dialog.util.DeletionDialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout style="@style/edit_label_dialog_layout">
