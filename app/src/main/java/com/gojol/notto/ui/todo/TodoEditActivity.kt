@@ -96,7 +96,7 @@ class TodoEditActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.delete_todo -> {
                     // TODO: 새로 생성하는 경우면 ??
-                    if (todoEditViewModel.isTodoEditing.value == true) {
+                    if (todoEditViewModel.clickWrapper.isTodoEditing.value == true) {
                         TodoDeletionDialog.deleteTodoCallback =
                             todoEditViewModel::updateTodoDeleteType
                         todoDeletionDialog.show(supportFragmentManager, DELETE)
@@ -118,16 +118,16 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
-        todoEditViewModel.isTodoEditing.observe(this) {
+        todoEditViewModel.clickWrapper.isTodoEditing.observe(this) {
             if (it) {
                 todoEditViewModel.setupExistedTodo()
                 binding.tbTodoEdit.title = getString(R.string.todo_edit_title_edit)
             }
         }
-        todoEditViewModel.isCloseButtonCLicked.observe(this, EventObserver {
+        todoEditViewModel.clickWrapper.isCloseButtonCLicked.observe(this, EventObserver {
             finish()
         })
-        todoEditViewModel.isDeletionExecuted.observe(this, EventObserver {
+        todoEditViewModel.clickWrapper.isDeletionExecuted.observe(this, EventObserver {
             finish()
             Toast.makeText(
                 this,
@@ -144,14 +144,14 @@ class TodoEditActivity : AppCompatActivity() {
             val newList = it.filterNot { label -> label.order == 0 }
             selectedLabelAdapter.submitList(newList)
         }
-        todoEditViewModel.isSaveButtonEnabled.observe(this) {
+        todoEditViewModel.clickWrapper.isSaveButtonEnabled.observe(this) {
             if (!it) showSaveButtonDisabled()
             else finish()
         }
-        todoEditViewModel.popLabelAddDialog.observe(this) {
+        todoEditViewModel.clickWrapper.popLabelAddDialog.observe(this) {
             if (it) showLabelAddDialog()
         }
-        todoEditViewModel.repeatTypeClick.observe(this, EventObserver {
+        todoEditViewModel.clickWrapper.repeatTypeClick.observe(this, EventObserver {
             if (it) {
                 val repeatType =
                     todoEditViewModel.todoWrapper.value?.todo?.repeatType ?: return@EventObserver
@@ -162,7 +162,7 @@ class TodoEditActivity : AppCompatActivity() {
                 todoRepeatTypeDialog.show(supportFragmentManager, REPEAT_TYPE)
             }
         })
-        todoEditViewModel.repeatStartClick.observe(this, EventObserver {
+        todoEditViewModel.clickWrapper.repeatStartClick.observe(this, EventObserver {
             if (it) {
                 val date =
                     todoEditViewModel.todoWrapper.value?.todo?.startDate ?: return@EventObserver
@@ -173,7 +173,7 @@ class TodoEditActivity : AppCompatActivity() {
                 todoRepeatTimeDialog.show(supportFragmentManager, REPEAT_TIME)
             }
         })
-        todoEditViewModel.timeStartClick.observe(this, EventObserver {
+        todoEditViewModel.clickWrapper.timeStartClick.observe(this, EventObserver {
             if (it) {
                 val startTime =
                     todoEditViewModel.todoWrapper.value?.todo?.startTime ?: return@EventObserver
@@ -185,7 +185,7 @@ class TodoEditActivity : AppCompatActivity() {
                 todoSetTimeDialog.show(supportFragmentManager, TIME_START)
             }
         })
-        todoEditViewModel.timeFinishClick.observe(this, EventObserver {
+        todoEditViewModel.clickWrapper.timeFinishClick.observe(this, EventObserver {
             if (it) {
                 val endTime =
                     todoEditViewModel.todoWrapper.value?.todo?.endTime ?: return@EventObserver
@@ -197,7 +197,7 @@ class TodoEditActivity : AppCompatActivity() {
                 todoSetTimeDialog.show(supportFragmentManager, TIME_FINISH)
             }
         })
-        todoEditViewModel.timeRepeatClick.observe(this, EventObserver {
+        todoEditViewModel.clickWrapper.timeRepeatClick.observe(this, EventObserver {
             if (it) {
                 val periodTime =
                     todoEditViewModel.todoWrapper.value?.todo?.periodTime ?: return@EventObserver

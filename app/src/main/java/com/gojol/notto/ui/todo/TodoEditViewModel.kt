@@ -10,6 +10,7 @@ import com.gojol.notto.common.Event
 import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.common.TodoDeleteType
 import com.gojol.notto.common.RepeatType
+import com.gojol.notto.model.data.todo.ClickWrapper
 import com.gojol.notto.model.data.todo.TodoWrapper
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
@@ -25,47 +26,19 @@ class TodoEditViewModel @Inject constructor(
     private val repository: TodoLabelRepository
 ) : ViewModel() {
 
-    // 투두 수정일 때
-    private val _isTodoEditing = MutableLiveData<Boolean>()
-    val isTodoEditing: LiveData<Boolean> = _isTodoEditing
-
     private val _todoWrapper = MutableLiveData<TodoWrapper>()
     val todoWrapper: LiveData<TodoWrapper> = _todoWrapper
 
-    // 라벨 리스트
     private val _labelList = MutableLiveData<List<Label>>()
     val labelList: LiveData<List<Label>> = _labelList
 
     private val _selectedLabelList = MutableLiveData(listOf<Label>())
     val selectedLabelList: LiveData<List<Label>> = _selectedLabelList
 
-    // Event
-    private val _isCloseButtonClicked = MutableLiveData<Event<Unit>>()
-    val isCloseButtonCLicked: LiveData<Event<Unit>> = _isCloseButtonClicked
-
-    private val _popLabelAddDialog = MutableLiveData<Boolean>()
-    val popLabelAddDialog: LiveData<Boolean> = _popLabelAddDialog
-
-    private val _repeatTypeClick = MutableLiveData<Event<Boolean>>()
-    val repeatTypeClick: LiveData<Event<Boolean>> = _repeatTypeClick
-
-    private val _repeatStartClick = MutableLiveData<Event<Boolean>>()
-    val repeatStartClick: LiveData<Event<Boolean>> = _repeatStartClick
-
-    private val _timeStartClick = MutableLiveData<Event<Boolean>>()
-    val timeStartClick: LiveData<Event<Boolean>> = _timeStartClick
-
-    private val _timeFinishClick = MutableLiveData<Event<Boolean>>()
-    val timeFinishClick: LiveData<Event<Boolean>> = _timeFinishClick
-
-    private val _timeRepeatClick = MutableLiveData<Event<Boolean>>()
-    val timeRepeatClick: LiveData<Event<Boolean>> = _timeRepeatClick
-
-    private val _isDeletionExecuted = MutableLiveData<Event<Unit>>()
-    val isDeletionExecuted: LiveData<Event<Unit>> = _isDeletionExecuted
-
-    private val _isSaveButtonEnabled = MutableLiveData<Boolean>()
-    val isSaveButtonEnabled: LiveData<Boolean> = _isSaveButtonEnabled
+    val clickWrapper = ClickWrapper(
+        MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(),
+        MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData()
+    )
 
     private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
 
@@ -120,10 +93,10 @@ class TodoEditViewModel @Inject constructor(
 
     fun updateIsTodoEditing(todo: Todo?) {
         todo?.let { existedTodo ->
-            _isTodoEditing.value = true
+            clickWrapper.isTodoEditing.value = true
             _todoWrapper.value = todoWrapper.value?.copy(existedTodo = existedTodo)
         } ?: run {
-            _isTodoEditing.value = false
+            clickWrapper.isTodoEditing.value = false
         }
     }
 
@@ -139,7 +112,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun updateIsCloseButtonClicked() {
-        _isCloseButtonClicked.value = Event(Unit)
+        clickWrapper.isCloseButtonCLicked.value = Event(Unit)
     }
 
     fun updateTodoDeleteType(type: TodoDeleteType?) {
@@ -150,7 +123,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun onRepeatTypeClick() {
-        _repeatTypeClick.value = Event(true)
+        clickWrapper.repeatTypeClick.value = Event(true)
     }
 
     fun updateRepeatType(repeatType: RepeatType) {
@@ -159,11 +132,11 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun onRepeatStartClick() {
-        _repeatStartClick.value = Event(true)
+        clickWrapper.repeatStartClick.value = Event(true)
     }
 
     fun onTimeStartClick() {
-        _timeStartClick.value = Event(true)
+        clickWrapper.timeStartClick.value = Event(true)
     }
 
     fun updateTimeStart(timeStart: LocalTime) {
@@ -172,7 +145,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun onTimeFinishClick() {
-        _timeFinishClick.value = Event(true)
+        clickWrapper.timeFinishClick.value = Event(true)
     }
 
     fun updateTimeFinish(timeFinish: LocalTime) {
@@ -181,7 +154,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun onTimeRepeatClick() {
-        _timeRepeatClick.value = Event(true)
+        clickWrapper.timeRepeatClick.value = Event(true)
     }
 
     fun updateTimeRepeat(timeRepeat: TimeRepeatType) {
@@ -190,16 +163,16 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun updatePopLabelAddDialog() {
-        _popLabelAddDialog.value = true
+        clickWrapper.popLabelAddDialog.value = true
     }
 
     fun saveTodo() {
         todoWrapper.value?.todo?.content ?: run {
-            _isSaveButtonEnabled.value = false
+            clickWrapper.isSaveButtonEnabled.value = false
             return
         }
 
-        when (isTodoEditing.value) {
+        when (clickWrapper.isTodoEditing.value) {
             true -> updateTodo()
             false -> saveNewTodo()
             else -> return
@@ -247,7 +220,7 @@ class TodoEditViewModel @Inject constructor(
                 }
             }
 
-            _isSaveButtonEnabled.value = true
+            clickWrapper.isSaveButtonEnabled.value = true
         }
     }
 
@@ -285,7 +258,7 @@ class TodoEditViewModel @Inject constructor(
                 val newList = list.filterNot { it.order == 0 }
                 repository.updateTodo(todoModel.todo, newList)
             }
-            _isSaveButtonEnabled.value = true
+            clickWrapper.isSaveButtonEnabled.value = true
         }
     }
 
@@ -305,7 +278,7 @@ class TodoEditViewModel @Inject constructor(
                     todoModel.selectedDate
                 )
             }
-            _isDeletionExecuted.value = Event(Unit)
+            clickWrapper.isDeletionExecuted.value = Event(Unit)
         }
     }
 
