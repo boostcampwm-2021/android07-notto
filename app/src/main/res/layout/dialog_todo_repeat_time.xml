@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
+            type="com.gojol.notto.ui.todo.dialog.util.RepeatTimeDialogViewModel" />
     </data>
 
     <androidx.core.widget.NestedScrollView
