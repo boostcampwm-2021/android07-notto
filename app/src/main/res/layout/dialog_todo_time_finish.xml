@@ -3,29 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewmodel"
             type="com.gojol.notto.ui.todo.dialog.util.TimeFinishDialogViewModel" />
     </data>
 
-    <androidx.core.widget.NestedScrollView
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <TimePicker
+            android:id="@+id/tp_time_finish"
+            style="@style/TodoTimePickerWidgetStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:theme="@style/TodoTimePickerWidgetStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TimePicker
-                android:id="@+id/tp_time_finish"
-                style="@style/TodoTimePickerWidgetStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:theme="@style/TodoTimePickerWidgetStyle"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
 </layout>
