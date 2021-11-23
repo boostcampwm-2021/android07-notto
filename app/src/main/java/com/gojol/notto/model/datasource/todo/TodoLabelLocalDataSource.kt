@@ -40,11 +40,6 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
                     }
                     else -> {
                         // 반복설정을 하지 않고 투두를 생성한 경우 오늘의 Daily 추가
-//                        if (selectedDate == LocalDate.now()) {
-//                            selectedDate
-//                        } else {
-//                            null
-//                        }
                         null
                     }
                 }
