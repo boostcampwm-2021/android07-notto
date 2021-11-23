@@ -12,6 +12,7 @@
     <string name="all_team_name">GoJol</string>
     <string name="all_team_member">김혜성, 신기열, 신민정, 임도연</string>
     <string name="home_label_placeholder">&#160;&#160;%s&#160;&#160;</string>
+    <string name="blank">&#160;</string>
 
     <string name="edit_label">라벨 편집</string>
     <string name="edit_label_create">라벨 추가</string>

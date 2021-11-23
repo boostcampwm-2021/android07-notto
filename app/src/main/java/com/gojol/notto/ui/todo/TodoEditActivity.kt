@@ -1,6 +1,8 @@
 package com.gojol.notto.ui.todo
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -60,6 +62,7 @@ class TodoEditActivity : AppCompatActivity() {
         initSelectedLabelRecyclerView()
         initObserver()
         initTodoDialog()
+        initEditTextListener()
         todoEditViewModel.setDummyLabelData()
     }
 
@@ -128,9 +131,6 @@ class TodoEditActivity : AppCompatActivity() {
                 finish()
             }
         }
-        todoEditViewModel.todoDeleteType.observe(this) {
-            todoEditViewModel.deleteTodo()
-        }
         todoEditViewModel.isDeletionExecuted.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
@@ -161,8 +161,9 @@ class TodoEditActivity : AppCompatActivity() {
         }
         todoEditViewModel.dateClick.observe(this, EventObserver {
             if (it) {
+                val selectedDate = todoEditViewModel.todoWrapper.value?.selectedDate ?: return@EventObserver
                 val bundle = Bundle()
-                bundle.putSerializable(DATE_DATA, todoEditViewModel.date.value)
+                bundle.putSerializable(DATE_DATA, selectedDate)
                 TodoRepeatTimeDialog.callback = todoEditViewModel::updateDate
                 TodoRepeatTimeDialog.currentState = DATE
                 todoRepeatTimeDialog.arguments = bundle
@@ -171,8 +172,9 @@ class TodoEditActivity : AppCompatActivity() {
         })
         todoEditViewModel.repeatTypeClick.observe(this, EventObserver {
             if (it) {
+                val repeatType = todoEditViewModel.todoWrapper.value?.todo?.repeatType ?: return@EventObserver
                 val bundle = Bundle()
-                bundle.putSerializable(REPEAT_TYPE_DATA, todoEditViewModel.repeatType.value)
+                bundle.putSerializable(REPEAT_TYPE_DATA, repeatType)
                 TodoRepeatTypeDialog.callback = todoEditViewModel::updateRepeatType
                 todoRepeatTypeDialog.arguments = bundle
                 todoRepeatTypeDialog.show(supportFragmentManager, REPEAT_TYPE)
@@ -180,8 +182,9 @@ class TodoEditActivity : AppCompatActivity() {
         })
         todoEditViewModel.repeatStartClick.observe(this, EventObserver {
             if (it) {
+                val date = todoEditViewModel.todoWrapper.value?.todo?.startDate ?: return@EventObserver
                 val bundle = Bundle()
-                bundle.putSerializable(REPEAT_TIME_DATA, todoEditViewModel.repeatStart.value)
+                bundle.putSerializable(REPEAT_TIME_DATA, date)
                 TodoRepeatTimeDialog.callback = todoEditViewModel::updateStartDate
                 TodoRepeatTimeDialog.currentState = REPEAT_TIME
                 todoRepeatTimeDialog.arguments = bundle
@@ -190,8 +193,9 @@ class TodoEditActivity : AppCompatActivity() {
         })
         todoEditViewModel.timeStartClick.observe(this, EventObserver {
             if (it) {
+                val startTime = todoEditViewModel.todoWrapper.value?.todo?.startTime ?: return@EventObserver
                 val bundle = Bundle()
-                bundle.putSerializable(TIME_START_DATE, todoEditViewModel.timeStart.value)
+                bundle.putSerializable(TIME_START_DATE, startTime)
                 TodoSetTimeDialog.callback = todoEditViewModel::updateTimeStart
                 TodoSetTimeDialog.currentState = TIME_START
                 todoSetTimeDialog.arguments = bundle
@@ -200,8 +204,9 @@ class TodoEditActivity : AppCompatActivity() {
         })
         todoEditViewModel.timeFinishClick.observe(this, EventObserver {
             if (it) {
+                val endTime = todoEditViewModel.todoWrapper.value?.todo?.endTime ?: return@EventObserver
                 val bundle = Bundle()
-                bundle.putSerializable(TIME_FINISH_DATE, todoEditViewModel.timeFinish.value)
+                bundle.putSerializable(TIME_FINISH_DATE, endTime)
                 TodoSetTimeDialog.callback = todoEditViewModel::updateTimeFinish
                 TodoSetTimeDialog.currentState = TIME_FINISH
                 todoSetTimeDialog.arguments = bundle
@@ -210,8 +215,9 @@ class TodoEditActivity : AppCompatActivity() {
         })
         todoEditViewModel.timeRepeatClick.observe(this, EventObserver {
             if (it) {
+                val periodTime = todoEditViewModel.todoWrapper.value?.todo?.periodTime ?: return@EventObserver
                 val bundle = Bundle()
-                bundle.putSerializable(TIME_REPEAT_DATA, todoEditViewModel.timeRepeat.value)
+                bundle.putSerializable(TIME_REPEAT_DATA, periodTime)
                 TodoAlarmPeriodDialog.callback = todoEditViewModel::updateTimeRepeat
                 todoAlarmPeriodDialog.arguments = bundle
                 todoAlarmPeriodDialog.show(supportFragmentManager, TIME_REPEAT)
@@ -233,6 +239,18 @@ class TodoEditActivity : AppCompatActivity() {
         todoRepeatTimeDialog = TodoRepeatTimeDialog()
         todoAlarmPeriodDialog = TodoAlarmPeriodDialog()
         todoSetTimeDialog = TodoSetTimeDialog()
+    }
+
+    private fun initEditTextListener() {
+        binding.etTodoEdit.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun afterTextChanged(p0: Editable?) {
+                todoEditViewModel.updateTodoContent(p0.toString())
+            }
+        })
     }
 
     private fun showLabelAddDialog() {
