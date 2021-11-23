@@ -53,12 +53,8 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         }
     }
 
-    fun updateDate(year: Int? = null, month: Int? = null, day: Int? = null) {
-        _date.value = if (year != null && month != null && day != null) {
-            LocalDate.of(year, month, day)
-        } else {
-            return
-        }
+    fun updateDate(year: Int, month: Int, day: Int) {
+        _date.value = LocalDate.of(year, month, day)
     }
 
     fun updateDailyTodo(dailyTodo: DailyTodo) {

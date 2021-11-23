@@ -83,7 +83,6 @@ class HomeFragment : Fragment() {
         super.onResume()
 
         initData()
-        homeViewModel.updateDate()
     }
 
     private fun initRecyclerView() {
