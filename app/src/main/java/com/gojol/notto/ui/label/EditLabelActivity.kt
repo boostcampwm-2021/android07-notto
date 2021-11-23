@@ -3,13 +3,13 @@ package com.gojol.notto.ui.label
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.gojol.notto.R
-import com.gojol.notto.common.DIALOG_LABEL_ITEM_KEY
+import com.gojol.notto.common.LabelEditType
 import com.gojol.notto.databinding.ActivityEditLabelBinding
+import com.gojol.notto.model.database.label.Label
+import com.gojol.notto.ui.label.dialog.delete.DeleteLabelDialogFragment
 import com.gojol.notto.ui.label.dialog.edit.EditLabelDialogFragment
 import com.gojol.notto.ui.label.util.ItemTouchCallback
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,7 +64,7 @@ class EditLabelActivity : AppCompatActivity() {
         binding.toolbarEditLabel.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.edit_label_menu_create -> {
-                    showCreateDialog()
+                    showDialog(LabelEditType.CREATE, null)
                     true
                 }
                 else -> {
@@ -86,16 +86,16 @@ class EditLabelActivity : AppCompatActivity() {
         })
     }
 
-    private fun showCreateDialog() {
-        val dialog = EditLabelDialogFragment().apply {
-            arguments = bundleOf(DIALOG_LABEL_ITEM_KEY to null)
+    private fun showDialog(type: LabelEditType, label: Label?) {
+        val dialog = when (type) {
+            LabelEditType.DELETE -> {
+                label ?: return
+                DeleteLabelDialogFragment.newInstance(label)
+            }
+            else -> EditLabelDialogFragment.newInstance(label)
+        }.apply {
+            show(supportFragmentManager, "EditLabelDialogFragment")
         }
-
-        showDialog(dialog)
-    }
-
-    private fun showDialog(dialog: DialogFragment) {
-        dialog.show(supportFragmentManager, "EditLabelDialogFragment")
 
         supportFragmentManager.executePendingTransactions()
 
