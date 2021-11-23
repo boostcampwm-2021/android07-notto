@@ -2,21 +2,18 @@ package com.example.nottokeyword
 
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kr.bydelta.koala.hnn.Tagger
+import javax.inject.Inject
 
-class FirebaseDB {
+internal class KeywordDatabaseImpl @Inject constructor(private val database: DatabaseReference) :
+    KeywordDatabase {
 
-    private val database = Firebase
-        .database(BuildConfig.FIREBASE_DB_URL)
-        .getReference("keywords")
-
-    fun insertKeyword(content: String) {
+    override fun insertKeyword(content: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val keywords = getKeywordsFrom(content)
             keywords.forEach {
@@ -43,7 +40,7 @@ class FirebaseDB {
             } else {
                 insertExistingKeyword(target)
             }
-        }.addOnFailureListener{
+        }.addOnFailureListener {
             Log.e(TAG, "Error getting data", it)
         }
     }
@@ -61,7 +58,7 @@ class FirebaseDB {
         }
     }
 
-    suspend fun getKeywords(): List<Keyword> {
+    override suspend fun getKeywords(): List<Keyword> {
         var list = listOf<Keyword>()
 
         database.get().addOnSuccessListener {
@@ -74,14 +71,14 @@ class FirebaseDB {
                 .apply {
                     sortByDescending { keyword -> keyword.count }
                 }
-        }.addOnFailureListener{
+        }.addOnFailureListener {
             Log.e(TAG, "Error getting data", it)
         }.await()
 
         return list
     }
 
-    fun deleteKeyword(keyword: String) {
+    override fun deleteKeyword(keyword: String) {
         database.get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
@@ -97,8 +94,8 @@ class FirebaseDB {
             }
         }
     }
-    
+
     companion object {
-        const val TAG = "FirebaseDB"
+        const val TAG = "KeywordDatabaseImpl"
     }
 }

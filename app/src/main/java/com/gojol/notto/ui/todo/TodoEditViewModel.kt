@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nottokeyword.FirebaseDB
+import com.example.nottokeyword.KeywordDatabase
 import com.gojol.notto.common.Event
 import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.common.TodoDeleteType
@@ -23,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoEditViewModel @Inject constructor(
     private val repository: TodoLabelRepository,
-    private val firebaseDB: FirebaseDB
+    private val keywordDatabase: KeywordDatabase
 ) : ViewModel() {
 
     private val _isTodoEditing = MutableLiveData<Boolean>()
@@ -246,7 +246,7 @@ class TodoEditViewModel @Inject constructor(
         )
 
         if (isKeywordOpen) {
-            firebaseDB.insertKeyword(content)
+            keywordDatabase.insertKeyword(content)
         }
 
         viewModelScope.launch {
@@ -299,7 +299,7 @@ class TodoEditViewModel @Inject constructor(
             val oldTodo = existedTodo.value ?: return
 
             if (oldTodo.isKeywordOpen.not() || oldTodo.content != content) {
-                firebaseDB.insertKeyword(content)
+                keywordDatabase.insertKeyword(content)
             }
         }
 
