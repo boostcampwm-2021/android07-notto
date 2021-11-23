@@ -13,8 +13,8 @@ enum class TimeRepeatType(val time: String, val text: String) {
     MINUTE_30("30", "30분"), MINUTE_60("60", "1시간"), MINUTE_1440("1440", "1일")
 }
 
-enum class EditType(val text: String) {
-    CREATE("라벨 추가"), UPDATE("라벨 수정")
+enum class LabelEditType(val text: String) {
+    CREATE("라벨 추가"), UPDATE("라벨 수정"), DELETE("라벨 삭제")
 }
 
 enum class TodoDeleteType {
