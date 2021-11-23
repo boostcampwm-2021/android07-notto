@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.gojol.notto.R
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.FragmentHomeBinding
@@ -106,7 +107,7 @@ class HomeFragment : Fragment() {
         binding.rvHome.apply {
             adapter = concatAdapter
             layoutManager = getLayoutManager(concatAdapter)
-            itemAnimator = null
+            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         }
     }
 
