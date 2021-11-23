@@ -24,6 +24,7 @@
             android:text="@{date}"
             android:textColor="@color/black"
             android:textSize="@dimen/text_small"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/ll_calendar_day_of_week"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

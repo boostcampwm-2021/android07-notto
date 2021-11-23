@@ -2,6 +2,8 @@ package com.gojol.notto.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +23,9 @@ import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.model.data.LabelWithCheck
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.ui.home.CalendarFragment.Companion.DATE_CLICK_BUNDLE_KEY
 import com.gojol.notto.ui.home.CalendarFragment.Companion.DATE_CLICK_KEY
+import com.gojol.notto.ui.home.CalendarFragment.Companion.UPDATE_HEIGHT_KEY
 import com.gojol.notto.ui.home.adapter.CalendarAdapter
 import com.gojol.notto.ui.home.adapter.LabelAdapter
 import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
@@ -45,12 +49,17 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setFragmentResultListener(DATE_CLICK_KEY) { _, _ ->
-            val year = CalendarFragment.selectedYear
-            val month = CalendarFragment.selectedMonth
-            val date = CalendarFragment.selectedDate
+        setFragmentResultListener(DATE_CLICK_KEY) { _, bundle ->
+            val selectedDate = bundle.get(DATE_CLICK_BUNDLE_KEY) as LocalDate
+            val year = selectedDate.year
+            val month = selectedDate.monthValue
+            val date = selectedDate.dayOfMonth
 
-            updateSelectedDate(year, month, date)
+            homeViewModel.updateDate(year, month, date)
+        }
+
+        setFragmentResultListener(UPDATE_HEIGHT_KEY){_,_ ->
+            updateViewPager()
         }
     }
 
@@ -75,15 +84,10 @@ class HomeFragment : Fragment() {
         initTodoListItemTouchListener()
     }
 
-    private fun updateSelectedDate(year: Int, month: Int, date: Int) {
-        homeViewModel.updateDate(year, month, date)
-    }
-
     override fun onResume() {
         super.onResume()
 
         initData()
-        homeViewModel.updateDate()
     }
 
     private fun initRecyclerView() {
@@ -117,8 +121,9 @@ class HomeFragment : Fragment() {
         })
 
         homeViewModel.date.observe(viewLifecycleOwner, {
-            calendarAdapter.setDate(it)
             homeViewModel.setDummyData()
+            calendarAdapter.setDate(it)
+            updateViewPager()
         })
 
         homeViewModel.isTodoCreateButtonClicked.observe(viewLifecycleOwner, {
@@ -134,6 +139,14 @@ class HomeFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun updateViewPager() {
+        val handler = Handler(Looper.getMainLooper())
+        val runnable = Runnable {
+            calendarAdapter.notifyItemChanged(0)
+        }
+        handler.post(runnable)
     }
 
     private fun initData() {
