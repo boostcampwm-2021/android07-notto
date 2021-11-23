@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.todo
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
@@ -12,9 +13,11 @@ import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.common.DELETE
 import com.gojol.notto.common.EventObserver
+import com.gojol.notto.common.LABEL_ADD
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.ui.label.EditLabelActivity
 import com.gojol.notto.ui.todo.dialog.REPEAT_TIME
 import com.gojol.notto.ui.todo.dialog.REPEAT_TIME_DATA
 import com.gojol.notto.ui.todo.dialog.REPEAT_TYPE
@@ -58,6 +61,10 @@ class TodoEditActivity : AppCompatActivity() {
         initSelectedLabelRecyclerView()
         initObserver()
         initTodoDialog()
+    }
+
+    override fun onResume() {
+        super.onResume()
         todoEditViewModel.initLabelData()
     }
 
@@ -134,7 +141,9 @@ class TodoEditActivity : AppCompatActivity() {
         })
         todoEditViewModel.labelList.observe(this) {
             val newList = it.filterNot { label -> label.order == 0 }
-                .map { label -> label.name }.toTypedArray()
+                .map { label -> label.name }
+                .plus(LABEL_ADD)
+                .toTypedArray()
             initDialog(newList)
         }
         todoEditViewModel.selectedLabelList.observe(this) {
@@ -147,6 +156,10 @@ class TodoEditActivity : AppCompatActivity() {
         }
         todoEditViewModel.clickWrapper.popLabelAddDialog.observe(this) {
             if (it) showLabelAddDialog()
+        }
+        todoEditViewModel.clickWrapper.labelAddClicked.observe(this) {
+            val intent = Intent(this, EditLabelActivity::class.java)
+            startActivity(intent)
         }
         todoEditViewModel.clickWrapper.repeatTypeClick.observe(this, EventObserver {
             if (it) {

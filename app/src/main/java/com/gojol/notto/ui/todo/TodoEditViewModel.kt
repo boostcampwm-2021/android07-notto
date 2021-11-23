@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.nottokeyword.FirebaseDB
 import com.gojol.notto.BuildConfig
 import com.gojol.notto.common.Event
+import com.gojol.notto.common.LABEL_ADD
 import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.common.TodoDeleteType
 import com.gojol.notto.common.RepeatType
@@ -39,7 +40,8 @@ class TodoEditViewModel @Inject constructor(
 
     val clickWrapper = ClickWrapper(
         MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(),
-        MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData()
+        MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(),
+        MutableLiveData()
     )
 
     private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
@@ -70,6 +72,10 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun addLabelToSelectedLabelList(labelName: String) {
+        if (labelName == LABEL_ADD) {
+            onLabelAddClick()
+            return
+        }
         if (selectedLabelList.value?.find { it.name == labelName } != null) return
 
         val label = labelList.value?.find { it.name == labelName } ?: return
@@ -186,6 +192,10 @@ class TodoEditViewModel @Inject constructor(
 
     fun onPopLabelAddDialogClick() {
         clickWrapper.popLabelAddDialog.value = true
+    }
+
+    private fun onLabelAddClick() {
+        clickWrapper.labelAddClicked.value = Unit
     }
 
     fun saveTodo() {
