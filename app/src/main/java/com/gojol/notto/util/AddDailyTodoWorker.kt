@@ -5,16 +5,12 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.lang.Exception
 import java.time.ZoneId
 import java.util.*
-
-const val UPDATE_TOMORROW_DAILY_TODO = "com.notto.util.AddDailyTodoWorker"
 
 @HiltWorker
 class AddDailyTodoWorker @AssistedInject constructor(

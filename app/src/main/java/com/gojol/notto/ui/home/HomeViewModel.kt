@@ -21,7 +21,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val repository: TodoLabelRepository,
     private val todoAlarmManager: TodoAlarmManager
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val _isTodoCreateButtonClicked = MutableLiveData<Event<Boolean>>()
     val isTodoCreateButtonClicked: LiveData<Event<Boolean>> = _isTodoCreateButtonClicked

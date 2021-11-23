@@ -5,14 +5,11 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.gojol.notto.common.NOTIFICATION_TODO
 import com.gojol.notto.common.TodoState
-import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.lang.Exception
 import java.time.ZoneId
 import java.util.*
 
@@ -20,8 +17,7 @@ import java.util.*
 class FailButtonWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted params: WorkerParameters,
-    private val repository: TodoLabelRepository,
-    private val alarmManager: TodoAlarmManager
+    private val repository: TodoLabelRepository
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result = runCatching {

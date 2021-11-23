@@ -7,22 +7,18 @@ import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.util.TodoPushBroadcastReceiver
 import javax.inject.Inject
 import androidx.core.os.bundleOf
+import com.gojol.notto.common.ALARM_EXTRA_TODO
 import com.gojol.notto.common.TodoState
-import com.google.gson.Gson
 import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
-
-const val ALARM_EXTRA_TODO = "alarmExtraTodo"
 
 class TodoAlarmManagerImpl @Inject constructor(
     private val context: Context,
     private val alarmManager: AlarmManager,
     private val repository: TodoLabelRepository
 ) : TodoAlarmManager {
-
-    private val gson: Gson = Gson()
 
     @SuppressLint("UnspecifiedImmutableFlag")
     override fun addAlarm(todo: Todo) {
@@ -58,7 +54,7 @@ class TodoAlarmManagerImpl @Inject constructor(
             context,
             todo.todoId,
             bundleOf(
-                ALARM_EXTRA_TODO to gson.toJson(todo)
+                ALARM_EXTRA_TODO to (todo as Serializable)
             )
         )
 
@@ -82,7 +78,7 @@ class TodoAlarmManagerImpl @Inject constructor(
         val endTime = todoDate - todo.periodTime.time.toInt() * 60 * 1000
 
         if (!todo.isRepeated || endTime < System.currentTimeMillis()) {
-            val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(context, todo.todoId)
+            val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(context, todo.todoId, null)
             alarmManager.cancel(pendingIntent)
         }
     }
@@ -94,7 +90,7 @@ class TodoAlarmManagerImpl @Inject constructor(
         val endTime = todoDate - todo.periodTime.time.toInt() * 60 * 1000
 
         if (todoState == TodoState.SUCCESS || !todo.isRepeated || endTime < System.currentTimeMillis()) {
-            val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(context, todo.todoId)
+            val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(context, todo.todoId, null)
             alarmManager.cancel(pendingIntent)
         }
     }
@@ -116,7 +112,7 @@ class TodoAlarmManagerImpl @Inject constructor(
         val currTime = System.currentTimeMillis()
         if (time < System.currentTimeMillis()) {
             time = (time / 1000) * 1000
-            while(time <= currTime) {
+            while (time <= currTime) {
                 time += interval
             }
         }

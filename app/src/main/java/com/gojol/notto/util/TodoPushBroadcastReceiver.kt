@@ -13,17 +13,18 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.gojol.notto.R
+import com.gojol.notto.common.ACTION_FAIL
+import com.gojol.notto.common.ACTION_SUCCESS
+import com.gojol.notto.common.ALARM_BUNDLE_TODO
+import com.gojol.notto.common.ALARM_EXTRA_TODO
+import com.gojol.notto.common.FAIL_INTENT_ID
+import com.gojol.notto.common.SUCCESS_INTENT_ID
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.datasource.todo.ALARM_EXTRA_TODO
 import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import com.google.gson.Gson
 import java.util.*
-
-const val ALARM_BUNDLE_TODO = "alarmBundleTodo"
-const val ACTION_FAIL = "actionFail"
-const val ACTION_SUCCESS = "actionSuccess"
 
 @AndroidEntryPoint
 class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
@@ -41,18 +42,10 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
         const val SUMMARY_ID = 0
 
         @SuppressLint("UnspecifiedImmutableFlag")
-        fun getPendingIntent(context: Context, id: Int): PendingIntent {
+        fun getPendingIntent(context: Context, id: Int, bundle: Bundle?): PendingIntent {
             val intent = Intent(context, TodoPushBroadcastReceiver::class.java)
-            return PendingIntent.getBroadcast(
-                context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
+            bundle?.let { intent.putExtra(ALARM_BUNDLE_TODO, it) }
 
-        @SuppressLint("UnspecifiedImmutableFlag")
-        fun getPendingIntent(context: Context, id: Int, bundle: Bundle): PendingIntent {
-            val intent = Intent(context, TodoPushBroadcastReceiver::class.java).apply {
-                putExtra(ALARM_BUNDLE_TODO, bundle)
-            }
             return PendingIntent.getBroadcast(
                 context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT
             )

@@ -13,13 +13,12 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.work.WorkRequest
+import com.gojol.notto.common.ACTION_FAIL
+import com.gojol.notto.common.ACTION_SUCCESS
+import com.gojol.notto.common.NOTIFICATION_TODO
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
-
-const val SUCCESS_INTENT_ID = 1000000001
-const val FAIL_INTENT_ID = 1000000002
-const val NOTIFICATION_TODO = "notificationTodo"
 
 class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
 
