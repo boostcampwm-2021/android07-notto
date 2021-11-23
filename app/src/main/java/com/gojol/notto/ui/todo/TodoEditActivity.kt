@@ -1,9 +1,11 @@
 package com.gojol.notto.ui.todo
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -193,7 +195,7 @@ class TodoEditActivity : AppCompatActivity() {
                     todoEditViewModel.addLabelToSelectedLabelList(items[which])
                 }
         saveButtonDialog =
-            AlertDialog.Builder(this)
+            AlertDialog.Builder(this, R.style.AlertDialogTheme)
                 .setTitle(getString(R.string.todo_edit_save_button_title))
                 .setMessage(getString(R.string.todo_edit_save_button_msg))
                 .setPositiveButton(getString(R.string.okay)) { _, _ ->
