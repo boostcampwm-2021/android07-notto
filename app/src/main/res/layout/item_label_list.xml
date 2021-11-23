@@ -42,6 +42,7 @@
             android:contentDescription="@string/edit_label"
             android:onClick="@{editClickListener}"
             android:src="@drawable/ic_more_vert"
+            android:paddingEnd="@dimen/space_median"
             app:layout_constraintBottom_toBottomOf="@+id/rv_home_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/rv_home_label" />
