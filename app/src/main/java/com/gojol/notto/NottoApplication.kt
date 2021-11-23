@@ -7,8 +7,8 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.facebook.stetho.Stetho
+import com.gojol.notto.common.UPDATE_TOMORROW_DAILY_TODO
 import com.gojol.notto.util.AddDailyTodoWorker
-import com.gojol.notto.util.UPDATE_TOMORROW_DAILY_TODO
 import dagger.hilt.android.HiltAndroidApp
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

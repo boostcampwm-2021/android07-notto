@@ -24,23 +24,12 @@
             android:text="@{date}"
             android:textColor="@color/black"
             android:textSize="@dimen/text_small"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/ll_calendar_day_of_week"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="2021년 11월" />
-
-        <Button
-            android:id="@+id/btn_calendar_control"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="@dimen/space_small"
-            android:background="@drawable/ic_calendar_collapse"
-            android:visibility="invisible"
-            app:backgroundTint="@color/black"
-            app:layout_constraintBottom_toBottomOf="@id/tv_calendar_title"
-            app:layout_constraintStart_toEndOf="@id/tv_calendar_title"
-            app:layout_constraintTop_toTopOf="@id/tv_calendar_title" />
 
         <LinearLayout
             android:id="@+id/ll_calendar_day_of_week"

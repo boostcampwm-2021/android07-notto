@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.content.Context
 import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import com.gojol.notto.model.datasource.todo.TodoAlarmManagerImpl
+import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,8 +26,9 @@ class TodoAlarmModule {
     @Provides
     fun provideTodoEditAlarmManager(
         @ApplicationContext context: Context,
-        alarmManager: AlarmManager
+        alarmManager: AlarmManager,
+        repository: TodoLabelRepository
     ): TodoAlarmManager {
-        return TodoAlarmManagerImpl(context, alarmManager)
+        return TodoAlarmManagerImpl(context, alarmManager, repository)
     }
 }

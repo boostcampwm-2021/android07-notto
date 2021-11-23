@@ -9,15 +9,9 @@ import android.os.Looper
 import android.view.animation.AlphaAnimation
 import android.view.animation.TranslateAnimation
 import androidx.databinding.DataBindingUtil
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import com.gojol.notto.R
 import com.gojol.notto.databinding.ActivitySplashBinding
 import com.gojol.notto.ui.MainActivity
-import com.gojol.notto.util.AddDailyTodoWorker
-import com.gojol.notto.util.UPDATE_TOMORROW_DAILY_TODO
-import java.util.concurrent.TimeUnit
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {

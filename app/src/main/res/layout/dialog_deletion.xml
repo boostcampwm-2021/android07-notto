@@ -9,7 +9,7 @@
 
         <variable
             name="viewmodel"
-            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
+            type="com.gojol.notto.ui.todo.dialog.util.DeletionDialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout style="@style/edit_label_dialog_layout">
@@ -43,9 +43,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/bg_radio_button_normal"
-                android:checked="@{viewmodel.todoDeleteType == TodoDeleteType.TODAY ? true : false}"
+                android:checked="@{viewmodel.todoDeleteType == TodoDeleteType.SELECTED ? true : false}"
                 android:maxLines="1"
-                android:onClick="@{() -> viewmodel.setTodoDeleteType(TodoDeleteType.TODAY)}"
+                android:onClick="@{() -> viewmodel.setTodoDeleteType(TodoDeleteType.SELECTED)}"
                 android:text="@string/dialog_todo_delete_only_today"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -55,9 +55,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/bg_radio_button_normal"
-                android:checked="@{viewmodel.todoDeleteType == TodoDeleteType.TODAY_AND_FUTURE ? true : false}"
+                android:checked="@{viewmodel.todoDeleteType == TodoDeleteType.SELECTED_AND_FUTURE ? true : false}"
                 android:maxLines="1"
-                android:onClick="@{() -> viewmodel.setTodoDeleteType(TodoDeleteType.TODAY_AND_FUTURE)}"
+                android:onClick="@{() -> viewmodel.setTodoDeleteType(TodoDeleteType.SELECTED_AND_FUTURE)}"
                 android:text="@string/dialog_todo_delete_all"
                 android:textColor="@color/black"
                 android:textStyle="bold" />

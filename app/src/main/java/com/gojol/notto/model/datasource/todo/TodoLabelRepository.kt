@@ -1,6 +1,5 @@
 package com.gojol.notto.model.datasource.todo
 
-import com.gojol.notto.common.TodoState
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo
@@ -14,9 +13,8 @@ import javax.inject.Singleton
 
 @Singleton
 class TodoLabelRepository @Inject constructor(
-    private val localDataSource: TodoLabelDataSource,
-    private val todoAlarmManager: TodoAlarmManager
-) : TodoLabelDataSource, TodoAlarmManager {
+    private val localDataSource: TodoLabelDataSource
+) : TodoLabelDataSource {
 
     override suspend fun getTodosWithLabels(): List<TodoWithLabel> {
         return localDataSource.getTodosWithLabels()
@@ -46,8 +44,8 @@ class TodoLabelRepository @Inject constructor(
         return localDataSource.getAllDailyTodos()
     }
 
-    override suspend fun insertTodo(todo: Todo) {
-        localDataSource.insertTodo(todo)
+    override suspend fun insertTodo(todo: Todo, selectedDate: LocalDate): Long {
+        return localDataSource.insertTodo(todo, selectedDate)
     }
 
     override suspend fun insertTodo(todo: Todo, label: Label) {
@@ -62,8 +60,8 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.insertDailyTodo(dailyTodo)
     }
 
-    override suspend fun updateTodo(todo: Todo) {
-        localDataSource.updateTodo(todo)
+    override suspend fun updateTodo(todo: Todo, selectedDate: LocalDate) {
+        localDataSource.updateTodo(todo, selectedDate)
     }
 
     override suspend fun updateTodo(todo: Todo, labels: List<Label>) {
@@ -82,27 +80,15 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.deleteTodo(todo)
     }
 
-    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: LocalDate) {
-        localDataSource.deleteTodayTodo(todoId, selectedDate)
+    override suspend fun deleteSelectedTodo(todoId: Int, selectedDate: LocalDate) {
+        localDataSource.deleteSelectedTodo(todoId, selectedDate)
     }
 
-    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: LocalDate) {
-        localDataSource.deleteTodayAndFutureTodo(todoId, selectedDate)
+    override suspend fun deleteSelectedAndFutureTodo(todoId: Int, selectedDate: LocalDate) {
+        localDataSource.deleteSelectedAndFutureTodo(todoId, selectedDate)
     }
 
     override suspend fun deleteLabel(label: Label) {
         localDataSource.deleteLabel(label)
-    }
-
-    override fun addAlarm(todo: Todo) {
-        todoAlarmManager.addAlarm(todo)
-    }
-
-    override fun deleteAlarm(todo: Todo) {
-        todoAlarmManager.deleteAlarm(todo)
-    }
-
-    override fun deleteAlarm(todo: Todo, todoState: TodoState) {
-        todoAlarmManager.deleteAlarm(todo, todoState)
     }
 }

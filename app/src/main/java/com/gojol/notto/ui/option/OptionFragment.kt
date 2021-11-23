@@ -19,7 +19,6 @@ class OptionFragment : Fragment() {
 
     private lateinit var binding: FragmentOptionBinding
     private val optionViewModel: OptionViewModel by viewModels()
-    private lateinit var alarmManager: AlarmManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,10 +40,6 @@ class OptionFragment : Fragment() {
     }
 
     private fun initObserver() {
-        optionViewModel.isPushChecked.observe(viewLifecycleOwner) {
-            if (it) DayNotificationManager.setAlarm(requireContext())
-            else DayNotificationManager.cancelAlarm(requireContext())
-        }
         optionViewModel.isNavigateToLicenseClicked.observe(viewLifecycleOwner) {
             startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
             OssLicensesMenuActivity.setActivityTitle(getString(R.string.option_license_title))
