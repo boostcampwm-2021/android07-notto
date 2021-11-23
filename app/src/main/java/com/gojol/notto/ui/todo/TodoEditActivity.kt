@@ -8,28 +8,29 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.common.DELETE
 import com.gojol.notto.common.EventObserver
+import com.gojol.notto.common.REPEAT_TIME
+import com.gojol.notto.common.REPEAT_TIME_DATA
+import com.gojol.notto.common.REPEAT_TYPE
+import com.gojol.notto.common.REPEAT_TYPE_DATA
+import com.gojol.notto.common.SET_TIME_DATA
+import com.gojol.notto.common.SET_TIME_FINISH
+import com.gojol.notto.common.SET_TIME_START
+import com.gojol.notto.common.TIME_REPEAT
+import com.gojol.notto.common.TIME_REPEAT_DATA
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.ui.todo.dialog.REPEAT_TIME
-import com.gojol.notto.ui.todo.dialog.REPEAT_TIME_DATA
-import com.gojol.notto.ui.todo.dialog.REPEAT_TYPE
-import com.gojol.notto.ui.todo.dialog.REPEAT_TYPE_DATA
-import com.gojol.notto.ui.todo.dialog.TIME_FINISH
-import com.gojol.notto.ui.todo.dialog.TIME_FINISH_DATE
-import com.gojol.notto.ui.todo.dialog.TIME_REPEAT
-import com.gojol.notto.ui.todo.dialog.TIME_REPEAT_DATA
-import com.gojol.notto.ui.todo.dialog.TIME_START
-import com.gojol.notto.ui.todo.dialog.TIME_START_DATE
-import com.gojol.notto.ui.todo.dialog.TodoAlarmPeriodDialog
-import com.gojol.notto.ui.todo.dialog.TodoDeletionDialog
-import com.gojol.notto.ui.todo.dialog.TodoRepeatTimeDialog
-import com.gojol.notto.ui.todo.dialog.TodoRepeatTypeDialog
-import com.gojol.notto.ui.todo.dialog.TodoSetTimeDialog
+import com.gojol.notto.ui.todo.dialog.AlarmPeriodDialog
+import com.gojol.notto.ui.todo.dialog.DeletionDialog
+import com.gojol.notto.ui.todo.dialog.RepeatTimeDialog
+import com.gojol.notto.ui.todo.dialog.RepeatTypeDialog
+import com.gojol.notto.ui.todo.dialog.TimeFinishDialog
+import com.gojol.notto.ui.todo.dialog.TimeStartDialog
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -41,11 +42,12 @@ class TodoEditActivity : AppCompatActivity() {
     private lateinit var selectedLabelAdapter: SelectedLabelAdapter
 
     private lateinit var labelAddDialog: AlertDialog.Builder
-    private lateinit var todoDeletionDialog: TodoDeletionDialog
-    private lateinit var todoRepeatTypeDialog: TodoRepeatTypeDialog
-    private lateinit var todoRepeatTimeDialog: TodoRepeatTimeDialog
-    private lateinit var todoSetTimeDialog: TodoSetTimeDialog
-    private lateinit var todoAlarmPeriodDialog: TodoAlarmPeriodDialog
+    private lateinit var todoDeletionDialog: DeletionDialog
+    private lateinit var todoRepeatTypeDialog: RepeatTypeDialog
+    private lateinit var todoRepeatTimeDialog: RepeatTimeDialog
+    private lateinit var todoTimeStartDialog: TimeStartDialog
+    private lateinit var todoTimeFinishDialog: TimeFinishDialog
+    private lateinit var todoAlarmPeriodDialog: AlarmPeriodDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,8 +96,6 @@ class TodoEditActivity : AppCompatActivity() {
                 R.id.delete_todo -> {
                     // TODO: 새로 생성하는 경우면 ??
                     if (todoEditViewModel.isTodoEditing.value == true) {
-                        TodoDeletionDialog.deleteTodoCallback =
-                            todoEditViewModel::updateTodoDeleteType
                         todoDeletionDialog.show(supportFragmentManager, DELETE)
                     }
                     true
@@ -118,14 +118,17 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.isTodoEditing.observe(this) {
             if (it) todoEditViewModel.setupExistedTodo()
         }
+
         todoEditViewModel.isCloseButtonCLicked.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
                 finish()
             }
         }
+
         todoEditViewModel.todoDeleteType.observe(this) {
             todoEditViewModel.deleteTodo()
         }
+
         todoEditViewModel.isDeletionExecuted.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
@@ -138,71 +141,45 @@ class TodoEditActivity : AppCompatActivity() {
                 }
             }
         }
+
         todoEditViewModel.labelList.observe(this) {
             val newList = it.filterNot { label -> label.order == 0 }
                 .map { label -> label.name }.toTypedArray()
             initDialog(newList)
         }
+
         todoEditViewModel.selectedLabelList.observe(this) {
             val newList = it.filterNot { label -> label.order == 0 }
             selectedLabelAdapter.submitList(newList)
         }
+
         todoEditViewModel.isSaveButtonEnabled.observe(this) {
             if (!it) showSaveButtonDisabled()
             else finish()
         }
+
         todoEditViewModel.popLabelAddDialog.observe(this) {
             if (it) showLabelAddDialog()
         }
+
         todoEditViewModel.repeatTypeClick.observe(this, EventObserver {
-            if (it) {
-                val bundle = Bundle()
-                bundle.putSerializable(REPEAT_TYPE_DATA, todoEditViewModel.repeatType.value)
-                TodoRepeatTypeDialog.callback = todoEditViewModel::updateRepeatType
-                todoRepeatTypeDialog.arguments = bundle
-                todoRepeatTypeDialog.show(supportFragmentManager, REPEAT_TYPE)
-            }
+            if (it) todoRepeatTypeDialog.show(supportFragmentManager, REPEAT_TYPE)
         })
+
         todoEditViewModel.repeatStartClick.observe(this, EventObserver {
-            if (it) {
-                val bundle = Bundle()
-                bundle.putSerializable(REPEAT_TIME_DATA, todoEditViewModel.repeatStart.value)
-                TodoRepeatTimeDialog.callback = todoEditViewModel::updateRepeatTime
-                todoRepeatTimeDialog.arguments = bundle
-                todoRepeatTimeDialog.show(supportFragmentManager, REPEAT_TIME)
-            }
+            if (it) todoRepeatTimeDialog.show(supportFragmentManager, REPEAT_TIME)
         })
 
         todoEditViewModel.timeStartClick.observe(this, EventObserver {
-            if (it) {
-                val bundle = Bundle()
-                bundle.putSerializable(TIME_START_DATE, todoEditViewModel.timeStart.value)
-                TodoSetTimeDialog.callback = todoEditViewModel::updateTimeStart
-                TodoSetTimeDialog.currentState = TIME_START
-                todoSetTimeDialog.arguments = bundle
-                todoSetTimeDialog.show(supportFragmentManager, TIME_START)
-            }
+            if (it) todoTimeStartDialog.show(supportFragmentManager, SET_TIME_START)
         })
 
         todoEditViewModel.timeFinishClick.observe(this, EventObserver {
-            if (it) {
-                val bundle = Bundle()
-                bundle.putSerializable(TIME_FINISH_DATE, todoEditViewModel.timeFinish.value)
-                TodoSetTimeDialog.callback = todoEditViewModel::updateTimeFinish
-                TodoSetTimeDialog.currentState = TIME_FINISH
-                todoSetTimeDialog.arguments = bundle
-                todoSetTimeDialog.show(supportFragmentManager, TIME_FINISH)
-            }
+            if (it) todoTimeFinishDialog.show(supportFragmentManager, SET_TIME_FINISH)
         })
 
         todoEditViewModel.timeRepeatClick.observe(this, EventObserver {
-            if (it) {
-                val bundle = Bundle()
-                bundle.putSerializable(TIME_REPEAT_DATA, todoEditViewModel.timeRepeat.value)
-                TodoAlarmPeriodDialog.callback = todoEditViewModel::updateTimeRepeat
-                todoAlarmPeriodDialog.arguments = bundle
-                todoAlarmPeriodDialog.show(supportFragmentManager, TIME_REPEAT)
-            }
+            if (it) todoAlarmPeriodDialog.show(supportFragmentManager, TIME_REPEAT)
         })
     }
 
@@ -215,11 +192,32 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     private fun initTodoDialog() {
-        todoDeletionDialog = TodoDeletionDialog()
-        todoRepeatTypeDialog = TodoRepeatTypeDialog()
-        todoRepeatTimeDialog = TodoRepeatTimeDialog()
-        todoAlarmPeriodDialog = TodoAlarmPeriodDialog()
-        todoSetTimeDialog = TodoSetTimeDialog()
+        todoDeletionDialog = DeletionDialog.newInstance(todoEditViewModel::updateTodoDeleteType)
+
+        todoRepeatTypeDialog = RepeatTypeDialog.newInstance(
+            bundleOf(REPEAT_TYPE_DATA to todoEditViewModel.repeatType.value),
+            todoEditViewModel::updateRepeatType
+        )
+
+        todoRepeatTimeDialog = RepeatTimeDialog.newInstance(
+            bundleOf(REPEAT_TIME_DATA to todoEditViewModel.repeatStart.value),
+            todoEditViewModel::updateRepeatTime
+        )
+
+        todoAlarmPeriodDialog = AlarmPeriodDialog.newInstance(
+            bundleOf(TIME_REPEAT_DATA to todoEditViewModel.timeRepeat.value),
+            todoEditViewModel::updateTimeRepeat
+        )
+
+        todoTimeStartDialog = TimeStartDialog.newInstance(
+            bundleOf(SET_TIME_DATA to todoEditViewModel.timeStart.value),
+            todoEditViewModel::updateTimeStart
+        )
+
+        todoTimeFinishDialog = TimeFinishDialog.newInstance(
+            bundleOf(SET_TIME_DATA to todoEditViewModel.timeFinish.value),
+            todoEditViewModel::updateTimeFinish
+        )
     }
 
     private fun showLabelAddDialog() {
