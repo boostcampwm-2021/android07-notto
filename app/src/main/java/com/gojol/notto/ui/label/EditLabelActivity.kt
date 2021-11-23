@@ -9,9 +9,8 @@ import com.gojol.notto.R
 import com.gojol.notto.common.LabelEditType
 import com.gojol.notto.databinding.ActivityEditLabelBinding
 import com.gojol.notto.model.database.label.Label
-import com.gojol.notto.ui.label.dialog.delete.DeleteLabelDialogFragment
-import com.gojol.notto.ui.label.dialog.edit.EditLabelDialogFragment
 import com.gojol.notto.ui.label.util.ItemTouchCallback
+import com.gojol.notto.util.EditLabelDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,7 +52,7 @@ class EditLabelActivity : AppCompatActivity() {
     }
 
     private fun moveItem(from: Int, to: Int) {
-        editLabelViewModel.moveItem(from , to)
+        editLabelViewModel.moveItem(from, to)
     }
 
     private fun initToolbar() {
@@ -87,18 +86,7 @@ class EditLabelActivity : AppCompatActivity() {
     }
 
     private fun showDialog(type: LabelEditType, label: Label?) {
-        val dialog = when (type) {
-            LabelEditType.DELETE -> {
-                label ?: return
-                DeleteLabelDialogFragment.newInstance(label)
-            }
-            else -> EditLabelDialogFragment.newInstance(label)
-        }.apply {
-            show(supportFragmentManager, "EditLabelDialogFragment")
-        }
-
-        supportFragmentManager.executePendingTransactions()
-
+        val dialog = EditLabelDialogBuilder(supportFragmentManager).show(type, label)
         dialog.dialog?.apply {
             setOnShowListener {
                 editLabelViewModel.updateLabels()

@@ -17,16 +17,17 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_median">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_home_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_x_large"
-            android:clipToPadding="false"
             android:orientation="horizontal"
-            android:paddingHorizontal="@dimen/space_median"
+            android:paddingStart="@dimen/space_median"
+            android:clipToPadding="false"
             android:splitMotionEvents="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_home_label_edit"
@@ -44,7 +45,8 @@
             android:src="@drawable/ic_more_vert"
             app:layout_constraintBottom_toBottomOf="@+id/rv_home_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/rv_home_label" />
+            app:layout_constraintTop_toTopOf="@+id/rv_home_label"
+            app:tint="@color/black" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
