@@ -100,7 +100,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         return dailyTodos
     }
 
-    override suspend fun insertTodo(todo: Todo) {
+    override suspend fun insertTodo(todo: Todo, selectedDate: LocalDate) {
         todos.add(todo)
     }
 
@@ -134,7 +134,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         dailyTodos.add(dailyTodo)
     }
 
-    override suspend fun updateTodo(todo: Todo) {
+    override suspend fun updateTodo(todo: Todo, selectedDate: LocalDate) {
         for (i in todos.indices) {
             if (todos[i].todoId == todo.todoId) {
                 todos[i] = todo

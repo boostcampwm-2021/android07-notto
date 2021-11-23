@@ -50,7 +50,7 @@ interface TodoLabelDao {
     suspend fun getTodoById(id: Int): Todo
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertTodo(todo: Todo)
+    suspend fun insertTodo(todo: Todo): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLabel(label: Label)

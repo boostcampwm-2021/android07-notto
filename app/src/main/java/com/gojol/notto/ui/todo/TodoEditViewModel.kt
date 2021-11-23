@@ -224,7 +224,7 @@ class TodoEditViewModel @Inject constructor(
 
         viewModelScope.launch {
             launch {
-                repository.insertTodo(todoModel.todo)
+                repository.insertTodo(todoModel.todo, todoModel.selectedDate)
                 repository.addAlarm(repository.getAllTodo().last())
             }.join()
 
@@ -277,7 +277,7 @@ class TodoEditViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.updateTodo(todoModel.todo)
+            repository.updateTodo(todoModel.todo, todoModel.selectedDate)
             repository.addAlarm(todoModel.todo)
 
             selectedLabelList.value?.let { list ->

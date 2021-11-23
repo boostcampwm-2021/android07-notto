@@ -25,7 +25,7 @@ interface TodoLabelDataSource {
 
     suspend fun getAllDailyTodos(): List<DailyTodo>
 
-    suspend fun insertTodo(todo: Todo)
+    suspend fun insertTodo(todo: Todo, selectedDate: LocalDate)
 
     suspend fun insertTodo(todo: Todo, label: Label)
 
@@ -33,7 +33,7 @@ interface TodoLabelDataSource {
 
     suspend fun insertDailyTodo(dailyTodo: DailyTodo)
 
-    suspend fun updateTodo(todo: Todo)
+    suspend fun updateTodo(todo: Todo, selectedDate: LocalDate)
 
     suspend fun updateTodo(todo: Todo, labels: List<Label>)
 
