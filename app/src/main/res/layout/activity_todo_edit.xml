@@ -117,7 +117,6 @@
                     android:id="@+id/tv_todo_edit_date_value"
                     style="@style/text_edit_todo_field"
                     android:layout_marginEnd="12dp"
-                    android:onClick="@{()->viewmodel.onDateClick()}"
                     android:text="@{viewmodel.todoWrapper.selectedDate.toString()}"
                     android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_date"

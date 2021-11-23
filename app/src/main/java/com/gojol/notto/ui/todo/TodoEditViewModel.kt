@@ -48,9 +48,6 @@ class TodoEditViewModel @Inject constructor(
     private val _popLabelAddDialog = MutableLiveData<Boolean>()
     val popLabelAddDialog: LiveData<Boolean> = _popLabelAddDialog
 
-    private val _dateClick = MutableLiveData<Event<Boolean>>()
-    val dateClick: LiveData<Event<Boolean>> = _dateClick
-
     private val _repeatTypeClick = MutableLiveData<Event<Boolean>>()
     val repeatTypeClick: LiveData<Event<Boolean>> = _repeatTypeClick
 
@@ -163,10 +160,6 @@ class TodoEditViewModel @Inject constructor(
     fun updateRepeatType(repeatType: RepeatType) {
         val todo = todoWrapper.value?.todo ?: return
         _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(repeatType = repeatType))
-    }
-
-    fun onDateClick() {
-        _dateClick.value = Event(true)
     }
 
     fun onRepeatStartClick() {

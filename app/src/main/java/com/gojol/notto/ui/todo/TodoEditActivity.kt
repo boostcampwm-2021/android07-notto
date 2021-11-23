@@ -17,8 +17,6 @@ import com.gojol.notto.common.EventObserver
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.ui.todo.dialog.DATE
-import com.gojol.notto.ui.todo.dialog.DATE_DATA
 import com.gojol.notto.ui.todo.dialog.REPEAT_TIME
 import com.gojol.notto.ui.todo.dialog.REPEAT_TIME_DATA
 import com.gojol.notto.ui.todo.dialog.REPEAT_TYPE
@@ -159,17 +157,6 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.popLabelAddDialog.observe(this) {
             if (it) showLabelAddDialog()
         }
-        todoEditViewModel.dateClick.observe(this, EventObserver {
-            if (it) {
-                val selectedDate = todoEditViewModel.todoWrapper.value?.selectedDate ?: return@EventObserver
-                val bundle = Bundle()
-                bundle.putSerializable(DATE_DATA, selectedDate)
-                TodoRepeatTimeDialog.callback = todoEditViewModel::updateDate
-                TodoRepeatTimeDialog.currentState = DATE
-                todoRepeatTimeDialog.arguments = bundle
-                todoRepeatTimeDialog.show(supportFragmentManager, DATE)
-            }
-        })
         todoEditViewModel.repeatTypeClick.observe(this, EventObserver {
             if (it) {
                 val repeatType = todoEditViewModel.todoWrapper.value?.todo?.repeatType ?: return@EventObserver
@@ -186,7 +173,6 @@ class TodoEditActivity : AppCompatActivity() {
                 val bundle = Bundle()
                 bundle.putSerializable(REPEAT_TIME_DATA, date)
                 TodoRepeatTimeDialog.callback = todoEditViewModel::updateStartDate
-                TodoRepeatTimeDialog.currentState = REPEAT_TIME
                 todoRepeatTimeDialog.arguments = bundle
                 todoRepeatTimeDialog.show(supportFragmentManager, REPEAT_TIME)
             }
