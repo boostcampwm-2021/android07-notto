@@ -28,7 +28,8 @@
             android:layout_height="wrap_content"
             android:text="@{item.todo.content}"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_x_small"
+            android:textSize="@dimen/text_x_x_small"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_home_todo_edit"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,8 +38,8 @@
 
         <ImageButton
             android:id="@+id/btn_home_todo_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginStart="@dimen/space_median"
             android:background="@drawable/ic_edit"
             app:layout_constraintEnd_toEndOf="parent"
