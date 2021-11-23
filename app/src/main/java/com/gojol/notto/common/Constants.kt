@@ -15,4 +15,4 @@ const val NOTIFICATION_TODO = "notificationTodo"
 
 const val EMPTY_DATE = 0
 
-const val LABEL_ADD = "라벨 추가"
+const val LABEL_ADD = "➕ 라벨 추가"
