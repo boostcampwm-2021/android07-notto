@@ -2,7 +2,7 @@ package com.gojol.notto.model.datasource.todo
 
 import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.common.TodoState
-import com.gojol.notto.model.data.RepeatType
+import com.gojol.notto.common.RepeatType
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo
@@ -100,8 +100,9 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         return dailyTodos
     }
 
-    override suspend fun insertTodo(todo: Todo) {
+    override suspend fun insertTodo(todo: Todo, selectedDate: LocalDate): Long {
         todos.add(todo)
+        return todos.size.toLong()
     }
 
     override suspend fun insertTodo(todo: Todo, label: Label) {
@@ -134,7 +135,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         dailyTodos.add(dailyTodo)
     }
 
-    override suspend fun updateTodo(todo: Todo) {
+    override suspend fun updateTodo(todo: Todo, selectedDate: LocalDate) {
         for (i in todos.indices) {
             if (todos[i].todoId == todo.todoId) {
                 todos[i] = todo
@@ -225,11 +226,11 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         }
     }
 
-    override suspend fun deleteTodayTodo(todoId: Int, selectedDate: LocalDate) {
+    override suspend fun deleteSelectedTodo(todoId: Int, selectedDate: LocalDate) {
         throw Exception(ERROR_MSG)
     }
 
-    override suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: LocalDate) {
+    override suspend fun deleteSelectedAndFutureTodo(todoId: Int, selectedDate: LocalDate) {
         throw Exception(ERROR_MSG)
     }
 

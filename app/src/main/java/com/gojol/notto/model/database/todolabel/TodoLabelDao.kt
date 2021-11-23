@@ -46,8 +46,11 @@ interface TodoLabelDao {
     @Query("SELECT * FROM DailyTodo WHERE parent_todo_id=:parentTodoId")
     suspend fun getDailyTodosByParentTodoId(parentTodoId: Int): List<DailyTodo>
 
+    @Query("SELECT * FROM Todo WHERE todoId=:id")
+    suspend fun getTodoById(id: Int): Todo
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertTodo(todo: Todo)
+    suspend fun insertTodo(todo: Todo): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLabel(label: Label)
