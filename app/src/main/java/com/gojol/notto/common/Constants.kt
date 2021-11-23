@@ -12,3 +12,5 @@ const val ALARM_EXTRA_TODO = "alarmExtraTodo"
 const val SUCCESS_INTENT_ID = 1000000001
 const val FAIL_INTENT_ID = 1000000002
 const val NOTIFICATION_TODO = "notificationTodo"
+
+const val EMPTY_DATE = 0
