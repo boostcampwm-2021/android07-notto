@@ -10,6 +10,7 @@ import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,7 +18,10 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: TodoLabelRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val repository: TodoLabelRepository,
+    private val todoAlarmManager: TodoAlarmManager
+) : ViewModel() {
 
     private val _todoCreateButtonClicked = MutableLiveData<Event<LocalDate>>()
     val todoCreateButtonClicked: LiveData<Event<LocalDate>> = _todoCreateButtonClicked
@@ -53,12 +57,8 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         }
     }
 
-    fun updateDate(year: Int? = null, month: Int? = null, day: Int? = null) {
-        _date.value = if (year != null && month != null && day != null) {
-            LocalDate.of(year, month, day)
-        } else {
-            return
-        }
+    fun updateDate(year: Int, month: Int, day: Int) {
+        _date.value = LocalDate.of(year, month, day)
     }
 
     fun updateDailyTodo(dailyTodo: DailyTodo) {
@@ -74,6 +74,8 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
                     repository.getTodosWithTodayDailyTodos(date)
                 }?.filter { currentShowTodoList.contains(it.todo) }
             }
+
+            todoAlarmManager.deleteAlarms()
         }
     }
 

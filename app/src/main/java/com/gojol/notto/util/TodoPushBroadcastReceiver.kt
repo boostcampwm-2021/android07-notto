@@ -1,7 +1,6 @@
 package com.gojol.notto.util
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,33 +8,31 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.gojol.notto.R
+import com.gojol.notto.common.ACTION_FAIL
+import com.gojol.notto.common.ACTION_SUCCESS
+import com.gojol.notto.common.ALARM_BUNDLE_TODO
+import com.gojol.notto.common.ALARM_EXTRA_TODO
+import com.gojol.notto.common.FAIL_INTENT_ID
+import com.gojol.notto.common.SUCCESS_INTENT_ID
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.model.datasource.todo.ALARM_EXTRA_TODO
+import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.google.gson.Gson
 import java.util.*
-import com.google.gson.reflect.TypeToken
-import java.lang.reflect.Type
-
-const val ACTION_FAIL = "actionFail"
-const val ACTION_SUCCESS = "actionSuccess"
 
 @AndroidEntryPoint
 class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
 
-    lateinit var notificationManager: NotificationManager
+    private lateinit var notificationManager: NotificationManager
 
     @Inject
-    lateinit var repository: TodoLabelRepository
-
-    @Inject
-    lateinit var alarmManager: AlarmManager
+    lateinit var todoAlarmManager: TodoAlarmManager
 
     private val gson: Gson = Gson()
 
@@ -43,6 +40,16 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
         const val CHANNEL_ID = "nottoChannel"
         const val GROUP_ID = "com.android.notto.util.TodoPushBroadcastReceiver.group"
         const val SUMMARY_ID = 0
+
+        @SuppressLint("UnspecifiedImmutableFlag")
+        fun getPendingIntent(context: Context, id: Int, bundle: Bundle?): PendingIntent {
+            val intent = Intent(context, TodoPushBroadcastReceiver::class.java)
+            bundle?.let { intent.putExtra(ALARM_BUNDLE_TODO, it) }
+
+            return PendingIntent.getBroadcast(
+                context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
@@ -53,13 +60,12 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
             Context.NOTIFICATION_SERVICE
         ) as NotificationManager
 
-        val type: Type = object : TypeToken<Todo?>() {}.type
-        intent.getStringExtra(ALARM_EXTRA_TODO)?.let {
-            val todo = gson.fromJson<Todo>(it, type)
-            repository.deleteAlarm(todo)
-            createNotificationChannel()
-            deliverNotification(context, todo)
-        }
+        val todoData = intent.getBundleExtra(ALARM_BUNDLE_TODO)?.getSerializable(ALARM_EXTRA_TODO) ?: return
+        val todo = todoData as Todo
+
+        todoAlarmManager.deleteAlarm(todo)
+        createNotificationChannel()
+        deliverNotification(context, todo)
     }
 
     private fun createNotificationChannel() {
@@ -103,24 +109,12 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
     @SuppressLint("RemoteViewLayout", "UnspecifiedImmutableFlag")
     private fun customContentView(context: Context, todo: Todo): RemoteViews {
         val contentView = RemoteViews(context.packageName, R.layout.notification_todo)
-        // putExtra : 마지막에 설정한 값으로만 전달
-        // data : 그 당시에 설정한 값을 반환
-        val successIntent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java).apply {
-            data = Uri.parse(gson.toJson(todo))
-            action = ACTION_SUCCESS
-        }
 
-        val failIntent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java).apply {
-            data = Uri.parse(gson.toJson(todo))
-            action = ACTION_FAIL
-        }
-
-        val successPendingIntent = PendingIntent.getBroadcast(
-            context, SUCCESS_INTENT_ID, successIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        val successPendingIntent = TodoSuccessCheckBroadcastReceiver.getPendingIntent(
+            context, SUCCESS_INTENT_ID, Uri.parse(gson.toJson(todo)), ACTION_SUCCESS
         )
-
-        val failPendingIntent = PendingIntent.getBroadcast(
-            context, FAIL_INTENT_ID, failIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        val failPendingIntent = TodoSuccessCheckBroadcastReceiver.getPendingIntent(
+            context, FAIL_INTENT_ID, Uri.parse(gson.toJson(todo)), ACTION_FAIL
         )
 
         val currentTime = Date(System.currentTimeMillis()).getTimeString()

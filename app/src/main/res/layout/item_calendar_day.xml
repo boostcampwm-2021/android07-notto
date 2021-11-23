@@ -19,7 +19,7 @@
             android:background="@drawable/bg_calendar_day_circle"
             android:gravity="center"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_x_small"
+            android:textSize="@dimen/text_x_x_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

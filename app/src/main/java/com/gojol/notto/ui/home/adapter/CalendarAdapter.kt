@@ -18,8 +18,7 @@ class CalendarAdapter(
     private val lifecycle: Lifecycle
 ) : RecyclerView.Adapter<CalendarAdapter.CustomCalendarViewHolder>() {
 
-    private val today = LocalDate.now()
-    private var date = today
+    private var date = LocalDate.now()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomCalendarViewHolder {
         return CustomCalendarViewHolder(
@@ -30,7 +29,7 @@ class CalendarAdapter(
     }
 
     override fun onBindViewHolder(holder: CustomCalendarViewHolder, position: Int) {
-        holder.bind(today, date)
+        holder.bind(date)
     }
 
     override fun getItemCount(): Int = 1
@@ -41,7 +40,6 @@ class CalendarAdapter(
 
     fun setDate(newDate: LocalDate) {
         date = newDate
-        notifyItemChanged(0)
     }
 
     class CustomCalendarViewHolder(
@@ -52,23 +50,21 @@ class CalendarAdapter(
 
         private val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월")
         private val calendarViewPagerAdapter = CalendarViewPagerAdapter(fragmentManager, lifecycle)
+        private var calendarPosition = calendarViewPagerAdapter.firstFragmentPosition
 
         init {
             binding.vpCalendar.adapter = calendarViewPagerAdapter
+            binding.vpCalendar.setCurrentItem(
+                calendarViewPagerAdapter.firstFragmentPosition,
+                false
+            )
             setViewPagerDynamicHeight()
         }
 
-        fun bind(today: LocalDate, date: LocalDate) {
+        fun bind(date: LocalDate) {
             binding.date = date.format(formatter)
-
-            val movePosition =
-                date.monthValue - today.monthValue + (date.year - today.year) * 12
-
-            binding.vpCalendar.setCurrentItem(
-                calendarViewPagerAdapter.firstFragmentPosition + movePosition,
-                false
-            )
-
+            // submit 되기 전 height가 계산된 경우를 새로 계산
+            setViewPagerHeightWithContent(calendarPosition)
             binding.executePendingBindings()
         }
 
@@ -77,25 +73,31 @@ class CalendarAdapter(
                 ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    val viewPager = binding.vpCalendar
-                    val view =
-                        (viewPager[0] as RecyclerView).layoutManager?.findViewByPosition(position)
+                    calendarPosition = position
 
-                    view?.post {
-                        val widthMeasureSpec =
-                            MeasureSpec.makeMeasureSpec(view.width, MeasureSpec.EXACTLY)
-                        val heightMeasureSpec =
-                            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-                        view.measure(widthMeasureSpec, heightMeasureSpec)
-
-                        if (viewPager.layoutParams.height != view.measuredHeight) {
-                            viewPager.layoutParams = (viewPager.layoutParams).also {
-                                it.height = view.measuredHeight
-                            }
-                        }
-                    }
+                    setViewPagerHeightWithContent(position)
                 }
             })
+        }
+
+        private fun setViewPagerHeightWithContent(position: Int) {
+            val viewPager = binding.vpCalendar
+            val view =
+                (viewPager[0] as RecyclerView).layoutManager?.findViewByPosition(position)
+
+            view?.post {
+                val widthMeasureSpec =
+                    MeasureSpec.makeMeasureSpec(view.width, MeasureSpec.EXACTLY)
+                val heightMeasureSpec =
+                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+                view.measure(widthMeasureSpec, heightMeasureSpec)
+
+                if (viewPager.layoutParams.height != view.measuredHeight) {
+                    viewPager.layoutParams = (viewPager.layoutParams).also {
+                        it.height = view.measuredHeight
+                    }
+                }
+            }
         }
     }
 }

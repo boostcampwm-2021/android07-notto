@@ -14,6 +14,7 @@ import com.gojol.notto.model.data.todo.ClickWrapper
 import com.gojol.notto.model.data.todo.TodoWrapper
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,7 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoEditViewModel @Inject constructor(
-    private val repository: TodoLabelRepository
+    private val repository: TodoLabelRepository,
+    private val todoAlarmManager: TodoAlarmManager
 ) : ViewModel() {
 
     private val _todoWrapper = MutableLiveData<TodoWrapper>()
@@ -193,7 +195,7 @@ class TodoEditViewModel @Inject constructor(
             // 투두 insert, 투두 알림 설정
             val generatedTodoId =
                 repository.insertTodo(todoModel.todo, todoModel.selectedDate).toInt()
-            repository.addAlarm(repository.getAllTodo().last())
+            todoAlarmManager.addAlarm(repository.getAllTodo().last())
             _todoWrapper.value = todoModel.copy(todo = todoModel.todo.copy(todoId = generatedTodoId))
 
             insertLabels()
@@ -252,7 +254,7 @@ class TodoEditViewModel @Inject constructor(
 
         viewModelScope.launch {
             repository.updateTodo(todoModel.todo, todoModel.selectedDate)
-            repository.addAlarm(todoModel.todo)
+            todoAlarmManager.addAlarm(todoModel.todo)
 
             selectedLabelList.value?.let { list ->
                 val newList = list.filterNot { it.order == 0 }

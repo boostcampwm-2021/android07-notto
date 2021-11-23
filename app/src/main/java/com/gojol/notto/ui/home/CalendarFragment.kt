@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -23,7 +24,6 @@ class CalendarFragment : Fragment() {
     private lateinit var binding: FragmentCalendarBinding
     private val calendarViewModel: CalendarViewModel by viewModels()
     private val calendarDayAdapter = CalendarDayAdapter(::dayClickCallback)
-    private var time: Long? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,48 +32,24 @@ class CalendarFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_calendar, container, false)
 
-        time = arguments?.get(ITEM_ID_ARGUMENT) as Long?
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initObserver()
         initRecyclerView()
-        initViewModelData()
+        initObserver()
+        setMonthlyData()
     }
 
     override fun onResume() {
         super.onResume()
-
+        binding.progressCircular.isVisible = true
         setFragmentResultListener(TODO_SWIPE_KEY) { _, _ ->
             swipeUpdate()
         }
-
-        initViewModelData()
-    }
-
-    private fun initViewModelData() {
-        time?.let {
-            val year = (it / 100).toInt()
-            val month = (it % 100).toInt()
-
-            calendarViewModel.setMonthDate(year, month)
-            calendarViewModel.setMonthlyDailyTodos()
-        }
-    }
-
-    private fun swipeUpdate(){
-        calendarViewModel.setMonthDate(selectedYear, selectedMonth)
-        calendarViewModel.setMonthlyDailyTodos()
-    }
-
-    private fun initObserver() {
-        calendarViewModel.monthlyAchievement.observe(viewLifecycleOwner, { itemList ->
-            calendarDayAdapter.submitList(itemList)
-        })
+        setMonthlyData()
     }
 
     private fun initRecyclerView() {
@@ -83,32 +59,55 @@ class CalendarFragment : Fragment() {
         }
     }
 
-    private fun dayClickCallback(date: Int) {
-        time?.let { time ->
-            val year = (time / 100).toInt()
-            val month = (time % 100).toInt()
+    private fun initObserver() {
+        calendarViewModel.monthlyAchievement.observe(viewLifecycleOwner, { itemList ->
+            calendarDayAdapter.submitList(itemList)
+            binding.progressCircular.isVisible = false
+            sendFragmentResultForHeightUpdate()
+        })
+        calendarViewModel.monthlyCalendar.observe(viewLifecycleOwner, {
+            sendFragmentResultWithClickDate()
+        })
+    }
 
-            selectedYear = year
-            selectedMonth = month
+    private fun sendFragmentResultForHeightUpdate() {
+        setFragmentResult(UPDATE_HEIGHT_KEY, bundleOf())
+    }
 
-
-            calendarViewModel.setMonthDate(year, month)
+    private fun sendFragmentResultWithClickDate() {
+        calendarViewModel.monthlyCalendar.value?.apply {
+            setFragmentResult(
+                DATE_CLICK_KEY,
+                bundleOf(
+                    DATE_CLICK_BUNDLE_KEY to LocalDate.of(
+                        this.year,
+                        this.month,
+                        this.selectedDay
+                    )
+                )
+            )
         }
+    }
 
-        selectedDate = date
+    private fun setMonthlyData() {
+        calendarViewModel.initData()
         calendarViewModel.setMonthlyDailyTodos()
+    }
 
-        setFragmentResult(DATE_CLICK_KEY, bundleOf())
+    private fun swipeUpdate() {
+        calendarViewModel.setMonthlyDailyTodos()
+    }
+
+    private fun dayClickCallback(date: Int) {
+        calendarViewModel.updateSelectedDay(date)
     }
 
     companion object {
-        var selectedYear: Int = LocalDate.now().year
-        var selectedMonth: Int = LocalDate.now().monthValue
-        var selectedDate: Int = LocalDate.now().dayOfMonth
-
+        const val UPDATE_HEIGHT_KEY = "update_height"
         const val DATE_CLICK_KEY = "date_click"
+        const val DATE_CLICK_BUNDLE_KEY = "selected_date"
 
-        private const val ITEM_ID_ARGUMENT = "item id"
+        const val ITEM_ID_ARGUMENT = "item id"
         fun newInstance(itemId: Long): CalendarFragment {
             return CalendarFragment().apply {
                 arguments = bundleOf(ITEM_ID_ARGUMENT to itemId)

@@ -10,7 +10,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OptionViewModel @Inject constructor(
-    private val optionRepository: OptionRepository
+    private val optionRepository: OptionRepository,
+    private val dayAlarmManager: DayAlarmManager
 ) : ViewModel() {
 
     val isPushChecked = MutableLiveData<Boolean>()
@@ -20,11 +21,13 @@ class OptionViewModel @Inject constructor(
 
     init {
         isPushChecked.value =
-            optionRepository.loadIsPushNotificationChecked()
+            optionRepository.isPushNotificationChecked()
     }
 
     fun updateIsPushChecked(isPushChecked: Boolean) {
         optionRepository.saveIsPushNotificationChecked(isPushChecked)
+        if (isPushChecked) dayAlarmManager.setAlarm()
+        else dayAlarmManager.cancelAlarm()
     }
 
     fun updateIsNavigateToLicenseClicked() {
