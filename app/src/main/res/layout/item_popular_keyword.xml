@@ -22,18 +22,6 @@
         android:paddingHorizontal="@dimen/space_x_large">
 
         <TextView
-            android:id="@+id/tv_keyword_medal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_small"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@+id/tv_keyword_place"
-            app:layout_constraintStart_toStartOf="@+id/tv_keyword_place"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="🥇" />
-
-        <TextView
             android:id="@+id/tv_keyword_place"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
