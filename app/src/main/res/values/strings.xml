@@ -35,7 +35,7 @@
     <string name="todo_edit_edit_text_hint">Not Todo를 입력하세요</string>
     <string name="todo_edit_label_select">라벨 선택</string>
     <string name="todo_edit_label_select_sentence">라벨을 선택하세요</string>
-    <string name="todo_edit_button_disabled_message">부족한 항목을 채워주세요!</string>
+    <string name="todo_edit_button_disabled_message">Todo 내용은 필수입니다!</string>
     <string name="todo_edit_delete_message">Not Todo가 삭제되었습니다.</string>
 
     <string name="dialog_deletion_title">Not Todo 삭제하기</string>
