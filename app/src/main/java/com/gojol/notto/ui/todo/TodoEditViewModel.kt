@@ -15,9 +15,7 @@ import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
@@ -117,15 +115,13 @@ class TodoEditViewModel @Inject constructor(
             }?.labels
         }
 
-        _todoWrapper.value = todoWrapper.value?.copy(
-            todo = todo
-        )
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo)
     }
 
     fun updateIsTodoEditing(todo: Todo?) {
-        todo?.let { todo ->
+        todo?.let { existedTodo ->
             _isTodoEditing.value = true
-            _todoWrapper.value = todoWrapper.value?.copy(existedTodo = todo)
+            _todoWrapper.value = todoWrapper.value?.copy(existedTodo = existedTodo)
         } ?: run {
             _isTodoEditing.value = false
         }
@@ -198,7 +194,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun saveTodo() {
-        val content = todoWrapper.value?.todo?.content ?: run {
+        todoWrapper.value?.todo?.content ?: run {
             _isSaveButtonEnabled.value = false
             return
         }
@@ -218,35 +214,40 @@ class TodoEditViewModel @Inject constructor(
     private fun saveNewTodo() {
         val todoModel = todoWrapper.value ?: return
 
+        insertInFirebase(todoModel)
+
+        viewModelScope.launch {
+            // 투두 insert, 투두 알림 설정
+            val generatedTodoId =
+                repository.insertTodo(todoModel.todo, todoModel.selectedDate).toInt()
+            repository.addAlarm(repository.getAllTodo().last())
+            _todoWrapper.value = todoModel.copy(todo = todoModel.todo.copy(todoId = generatedTodoId))
+
+            insertLabels()
+        }
+    }
+
+    private fun insertInFirebase(todoModel: TodoWrapper) {
         if (todoModel.todo.isKeywordOpen) {
             firebaseDB.insertKeyword(todoModel.todo.content)
         }
+    }
 
-        viewModelScope.launch {
-            launch {
-                repository.insertTodo(todoModel.todo, todoModel.selectedDate)
-                repository.addAlarm(repository.getAllTodo().last())
-            }.join()
-
-            val saveTodo = withContext(Dispatchers.Default) {
-                repository.getTodosWithLabels().find { it.labels.isEmpty() }?.todo
+    private suspend fun insertLabels() {
+        _todoWrapper.value?.todo?.let { todo ->
+            // 전체 라벨에 투두 넣기
+            _labelList.value?.find { it.order == 0 }?.let {
+                repository.insertTodo(todo, it)
             }
 
-            saveTodo?.let { todo ->
-                // 전체 라벨에 투두 넣기
-                _labelList.value?.find { it.order == 0 }?.let {
-                    repository.insertTodo(todo, it)
+            // 선택된 라벨에 투두 넣기
+            _selectedLabelList.value?.let { labels ->
+                labels.forEach { label ->
+                    repository.insertTodo(todo, label)
                 }
-
-                // 선택된 라벨에 투두 넣기
-                _selectedLabelList.value?.let { labels ->
-                    labels.forEach { label ->
-                        repository.insertTodo(todo, label)
-                    }
-                }
-
-                _isSaveButtonEnabled.value = true
             }
+
+            _isSaveButtonEnabled.value = true
         }
     }
 

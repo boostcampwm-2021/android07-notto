@@ -100,8 +100,9 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         return dailyTodos
     }
 
-    override suspend fun insertTodo(todo: Todo, selectedDate: LocalDate) {
+    override suspend fun insertTodo(todo: Todo, selectedDate: LocalDate): Long {
         todos.add(todo)
+        return todos.size.toLong()
     }
 
     override suspend fun insertTodo(todo: Todo, label: Label) {

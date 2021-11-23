@@ -99,7 +99,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         return todoLabelDao.getAllLabel()
     }
 
-    override suspend fun insertTodo(todo: Todo, selectedDate: LocalDate) {
+    override suspend fun insertTodo(todo: Todo, selectedDate: LocalDate): Long {
         val generatedTodoId = todoLabelDao.insertTodo(todo)
         if (todo.isRepeated.not()) todoLabelDao.insertDailyTodo(
             DailyTodo(
@@ -109,6 +109,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
                 selectedDate
             )
         )
+        return generatedTodoId
     }
 
     override suspend fun insertTodo(todo: Todo, label: Label) {

@@ -46,8 +46,8 @@ class TodoLabelRepository @Inject constructor(
         return localDataSource.getAllDailyTodos()
     }
 
-    override suspend fun insertTodo(todo: Todo, selectedDate: LocalDate) {
-        localDataSource.insertTodo(todo, selectedDate)
+    override suspend fun insertTodo(todo: Todo, selectedDate: LocalDate): Long {
+        return localDataSource.insertTodo(todo, selectedDate)
     }
 
     override suspend fun insertTodo(todo: Todo, label: Label) {
