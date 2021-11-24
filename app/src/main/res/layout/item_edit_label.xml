@@ -52,13 +52,13 @@
             android:gravity="center_vertical"
             android:text="@{label.name}"
             android:textSize="@dimen/text_small"
-            android:textColor="@color/black"
             android:onClick="@{updateClickListener}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/iv_drag_handle"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="일반" />
+            tools:text="일반"
+            style="@style/Theme.Notto.TextDefault" />
 
         <ImageView
             android:id="@+id/iv_drag_handle"
