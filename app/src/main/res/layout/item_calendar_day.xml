@@ -13,6 +13,16 @@
         android:layout_marginVertical="4dp">
 
         <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_calendar_day_circle"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_successLevel"
+            app:layout_constraintEnd_toEndOf="@+id/iv_successLevel"
+            app:layout_constraintStart_toStartOf="@+id/iv_successLevel"
+            app:layout_constraintTop_toTopOf="@+id/iv_successLevel"
+            app:tint="@color/white" />
+
+        <ImageView
             android:id="@+id/iv_successLevel"
             android:layout_width="20dp"
             android:layout_height="20dp"
@@ -26,18 +36,33 @@
             tools:backgroundTint="@color/yellow_normal"/>
 
         <TextView
+            android:id="@+id/tv_calendar_day_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="2dp"
+            android:gravity="center"
+            android:textSize="@dimen/text_x_x_small"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_calendar_day"
+            app:layout_constraintEnd_toEndOf="@+id/tv_calendar_day"
+            app:layout_constraintStart_toStartOf="@+id/tv_calendar_day"
+            app:layout_constraintTop_toTopOf="@+id/tv_calendar_day"
+            tools:text="10"
+            style="@style/Theme.Notto.TextDefault" />
+
+        <TextView
             android:id="@+id/tv_calendar_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="2dp"
             android:gravity="center"
-            android:textColor="@color/black"
             android:textSize="@dimen/text_x_x_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_successLevel"
-            tools:text="10" />
+            tools:text="10"
+            style="@style/Theme.Notto.TextGray" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

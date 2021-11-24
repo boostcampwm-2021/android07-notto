@@ -54,22 +54,26 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
         }
 
         private fun setDayText(date: Int, isSelected: Boolean) {
-            val context = binding.root.context
-            val color: Int
-            val style: Typeface
+            val selectedVisibility: Int
+            val unselectedVisibility: Int
             if (isSelected) {
-                color = R.color.black
-                style = Typeface.DEFAULT_BOLD
+                unselectedVisibility = View.INVISIBLE
+                selectedVisibility = View.VISIBLE
             } else {
-                color = R.color.gray_deep
-                style = Typeface.DEFAULT
+                unselectedVisibility = View.VISIBLE
+                selectedVisibility = View.INVISIBLE
             }
 
-            binding.tvCalendarDay.text = date.toString()
-            binding.tvCalendarDay.setTextColor(ContextCompat.getColor(context, color))
-            binding.tvCalendarDay.typeface = style
-        }
+            binding.tvCalendarDay.apply {
+                text = date.toString()
+                visibility = unselectedVisibility
+            }
 
+            binding.tvCalendarDaySelected.apply {
+                text = date.toString()
+                visibility = selectedVisibility
+            }
+        }
 
         private fun setSuccessLevel(achievement: Int) {
             binding.ivSuccessLevel.backgroundTintList = if (achievement == 0) {
