@@ -195,7 +195,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     private fun onLabelAddClick() {
-        clickWrapper.labelAddClicked.value = Unit
+        clickWrapper.labelAddClicked.value = Event(Unit)
     }
 
     fun onSaveButtonClick() {

@@ -25,10 +25,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/todo_edit_top_app_bar"
             app:navigationIcon="@drawable/ic_close"
             app:navigationOnClickListener="@{() -> viewmodel.onIsCloseButtonClicked()}"
             app:title="@string/todo_edit_title_create" />
+
+        <ImageButton
+            android:id="@+id/btn_todo_edit_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_median"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="@id/tb_todo_edit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tb_todo_edit" />
 
         <ScrollView
             android:id="@+id/scrollView2"
