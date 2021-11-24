@@ -164,9 +164,12 @@ class TodoEditActivity : AppCompatActivity() {
             if (it) todoAlarmPeriodDialog.show(supportFragmentManager, TIME_REPEAT)
         })
         todoEditViewModel.clickWrapper.isSaveButtonClicked.observe(this, {
-            // 편집일 때
-            if (it) showSaveButtonDialog()
-            else todoEditViewModel.saveTodo()
+            if (it.first.not()) { // 투두 내용이 없는 경우
+                showSaveButtonDisabled()
+                return@observe
+            }
+            if (it.second) showSaveButtonDialog() // 투두 편집인 경우
+            else todoEditViewModel.saveTodo() //투두 생성인 경우
         })
     }
 

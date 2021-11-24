@@ -199,8 +199,9 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun onSaveButtonClick() {
+        val isTodoContentNotEmpty = todoWrapper.value?.todo?.content?.isNotEmpty() == true
         val isEditing = clickWrapper.isTodoEditing.value ?: return
-        clickWrapper.isSaveButtonClicked.value = isEditing
+        clickWrapper.isSaveButtonClicked.value = Pair(isTodoContentNotEmpty, isEditing)
     }
 
     fun saveTodo() {

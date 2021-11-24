@@ -15,5 +15,5 @@ data class ClickWrapper(
     val timeRepeatClick: MutableLiveData<Event<Boolean>>,
     val isDeletionExecuted: MutableLiveData<Event<Unit>>,
     val isSaveButtonEnabled: MutableLiveData<Boolean>,
-    val isSaveButtonClicked: MutableLiveData<Boolean>
+    val isSaveButtonClicked: MutableLiveData<Pair<Boolean, Boolean>>
 )
