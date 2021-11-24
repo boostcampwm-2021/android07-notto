@@ -36,18 +36,19 @@
 > 📱 💛간🧡지💚나💜는 노또 notto💡가입시💡전원 목표💯100%달성※ 🏆노또 인기 키워드까지🎫전부 무료증정🎗 특정조건 🔔푸시알림🔔🎇절대못잊어🎇획득기회@@@ [즉시이동 GoJol WIKI](https://github.com/boostcampwm-2021/android07-notto/wiki)🔥
 
 ### 🙀notto의 컨셉
-> "만약 하루를 승리하려면 반드시 첫 한 시간을 승리해야 합니다."
-> 
-> -- '마지막 몰입'의 저자, 브레인 코치 Jim Kwik
-
+> 모든 것을 다 하려는 것보다는 '하지 않아도 될 것'을 제외하는 것이 효율적  
+> &ndash; 권오현 박사
+>  
+> 더 이상 추가할 것이 없을 때가 아니라 더 이상 뺄 것이 없을 때, 완벽함이 성취된다.  
+> &ndash; 앙투안 드 생텍쥐페리  
 
 ### 💪notto 목표
-- 누구나 가지고 있는 나쁜 습관, 하나쯤은 가지고 있지 않으십니까?
-- Todo에만 집착했던 당신, 혹시`Not Todo`를 떠올려보신 적은 없으십니까?
+- 누구나 가지고 있는 나쁜 습관, 이제는 고치고 싶지 않습니까?
+- 너무도 바쁜 프로젝트 기간, 아직도 세세한 것에 사로잡히지는 않습니까?
 - 시험 기간 때 `공부하기`보다는 `눕지 않기`라는 목표 세우기, 쉽게 떠오르진 않으실텐데요.
 
 #### **그런 당신을 위해 준비했습니다!!**
-1. 사용자가 일상에서 **하지 말아야 할 일을 적고 나쁜 습관을 없앨 수 있도록** 도와줍니다!
+1. 사용자가 일상에서 **하지 말아야 할 일을 적고 나쁜 습관 혹은 시간 낭비를 줄일 수 있도록** 도와줍니다!
 1. **작성한 Not Todo의 알림**을 받아 잊어버리지 않고 관리할 수 있습니다!
 1. **실시간 인기 키워드**를 통해 자신에게도 해당이 되는지 확인해보세요!
 
@@ -58,59 +59,62 @@
 ### 💛notto 주요 기능
 1️⃣ **Not Todo를 작성하고 캘린더에서 바로 확인할 수 있습니다!**
 - 캘린더의 날짜를 터치하면 그 날의 Not Todo를 손쉽게 확인할 수 있습니다!
-- 캘린더에서 그 날의 `Not Todo 달성률을` 확인할 수 있으며 달성률에 따라 캘린더 표시 색상이 달라집니다. 목표를 이루고 성취감을 느껴보세요!
+- 캘린더에서 그 날의 `Not Todo 달성률`을 확인할 수 있으며 달성률에 따라 캘린더에 Heat chart로 표시됩니다. 목표를 이루고 성취감을 느껴보세요!
 
-2️⃣ **Not Todo마다 커스텀 라벨을 달고 라벨별 Not Todo를 확인할 수 있습니다!**
+2️⃣ **Not Todo마다 커스텀 라벨을 달고 라벨 별 Not Todo를 확인할 수 있습니다!**
 - Todo마다 `여러 개의 라벨`을 달아서 관리할 수도 있습니다!
     
-3️⃣ **Not Todo별 푸쉬 알림을 설정할 수 있습니다!**
-- 각 Not Todo에 `알림 여부 및 시간을 설정`하여 사용자가 원하는 시간에 푸쉬 알림을 보내줍니다!
-- 전체 사용자에게 하루에 한 번, 하루를 마무리하기 전에 푸쉬 알림을 보내 `하루를 회고`할 수 있게 도와줍니다!
+3️⃣ **Not Todo 별 푸쉬 알림을 설정할 수 있습니다!**
+- 각 Not Todo에 `알림 여부 및 시간을 설정`하여 사용자가 원하는 시간에 푸쉬 알림을 받을 수 있습니다!
+- 전체 사용자에게 하루에 한 번, 하루를 마무리할 때 푸쉬 알림을 보내 `오늘 하루를 회고`할 수 있도록 합니다!
     
-4️⃣ **notto 사용자들이 작성한 Not Todo의 인기 키워드를 보여줍니다!**
-- 당신이 작성한 Todo에서 키워드를 추출해 `인기 키워드`에 반영합니다. 남에게 보여주기 싫으시다구요? 걱정마세요! `공개 / 비공개 처리`를 할 수 있으니까요!
-- 사용자들이 작성한 `Not Todo의 키워드`를 뽑아내고 이를 통계내서 인기 키워드 순위를 보여줍니다!
-- 이를 Not Todo를 작성할 때 참고할 수 있습니다!
-
-
+4️⃣ **notto 사용자들이 작성한 인기 Not Todo 키워드를 보여줍니다!**
+- 당신이 작성한 Not Todo에서 키워드를 추출해 `인기 키워드`에 반영합니다. 남에게 보여주기 싫으시다구요? 걱정마세요! `공개 / 비공개 처리`를 할 수 있으니까요!
+- 사용자들이 작성한 `Not Todo의 키워드`를 추출하고 이를 인기 키워드에 반영합니다!
+- Not Todo를 작성할 때 인기 키워드를 참고해보세요!
    
 > **혜성** : 와, 꼭 구매.. 사용해야겠는데요?
 > 
 > **민정** : 그 뿐만이 아닙니다! 저희 notto는 (거의)전문 디자이너(도연)(?)에게 제작을 의뢰해 디자인에도 힘을 줬습니다. 화면 보시죠!
 
 ### 💛간🧡지💚나💜는 notto 디자인🎨
-<img src="https://i.imgur.com/AlPERmJ.png" width=600>
-
-&nbsp;
-
-> 👀 더 자세히 보고 싶다면..
-
 <details>
     <summary>💛<b>홈 화면</b></summary>
-    <img src="https://i.imgur.com/8uEhnBF.png">
+    <img width=300 src="https://user-images.githubusercontent.com/39328846/143289702-2ee5e046-6c05-42f1-b7cc-faf11780f4db.jpg">
+    <img width=300 src="https://user-images.githubusercontent.com/39328846/143289696-4cc23945-e80c-4148-87ad-b9bd62bcb90f.jpg">
+    <img width=300 src="https://user-images.githubusercontent.com/39328846/143289699-dbd07811-02b0-48a3-9182-d34d8364e271.jpg">
 </details>
 
 <details>
-    <summary>🧡<b>목표 추가/편집</b></summary>
-    <img src="https://i.imgur.com/c6wdzN3.png">
-</details>
-<details>
-    <summary>💚<b>라벨 추가/편집 화면 & 인기 키워드 화면</b></summary>
-    <img src="https://i.imgur.com/ZPKsTLS.png">
-</details>
-<details>
-    <summary>💜<b>옵션 화면</b></summary>
-    <img src="https://i.imgur.com/IMEZFsw.png">
+    <summary>🧡<b>목표 추가/편집 화면</b></summary>
+    <img width=300 src="https://user-images.githubusercontent.com/39328846/143290163-d86ab8e8-e1e5-4d50-bed3-b91d7e6c5e6f.jpg">
+    <img width=300 src="https://user-images.githubusercontent.com/39328846/143290116-58686407-c78d-419b-b3da-9097efe3a306.jpg">
+    <img width=300 src="https://user-images.githubusercontent.com/39328846/143291577-05d5bb2b-fd7e-4b0e-8297-fc2a3ee1536c.jpg">
 </details>
 
+<details>
+    <summary>💚<b>라벨 편집 화면</b></summary>
+    <img width=300 src="https://user-images.githubusercontent.com/39328846/143290742-d814ea0b-8300-461c-a0e1-b222157988d2.jpg">
+    <img width=300 src="https://user-images.githubusercontent.com/39328846/143290746-68fb0341-04b5-4e1d-b16a-76e816c6d987.jpg">
+    <img width=300 src="https://user-images.githubusercontent.com/39328846/143291534-6818ab74-7340-41ae-a44f-8e1876756a97.jpg">
+</details>
+
+<details>
+    <summary>💜<b>인기 키워드 화면 & 옵션 화면</b></summary>
+    <img width=300 src="https://user-images.githubusercontent.com/39328846/143291126-ecf8b73c-0507-4808-8e7c-61398b39d1c1.jpg">
+    <img width=300 src="https://user-images.githubusercontent.com/39328846/143291423-fae587ea-f42f-47b8-aac4-a9a5ef8661b9.jpg">
+    <img width=300 src="https://user-images.githubusercontent.com/39328846/143291238-29dba4b1-a698-4049-a772-d715b2316c06.jpg">
+</details>
 
 ### 📚Task 관리
-> 우리는 GITHUB 마스타...😎
-> 모든 관리는 GITHUB에서 한다!
+> 우리는 Github 마스타...😎
+> 모든 관리는 Github에서 한다!
 
-> 👆세부 Task는 Issue, 기능은 Mile Stone, 주차별 일정은 Project로 관리
+> 1. 세부 Task는 Issue, 기능은 Mile Stone, 주차별 일정은 Project로 관리
 > 
-> ✌특정 버그를 발견할 경우 Discussions의 Bug 탭에 작성
+> 1. 특정 버그를 발견할 경우 Discussions의 Bug 탭에 작성
+>
+> 1. Github Actions를 이용해 demo 브랜치에 PR을 보낼 때 CI 체크
 
 - [세부 Task Issue](https://github.com/boostcampwm-2021/android07-notto/issues)
 - [기능 Mile Stone](https://github.com/boostcampwm-2021/android07-notto/milestones)
