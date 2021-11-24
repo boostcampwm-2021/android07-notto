@@ -1,6 +1,5 @@
 package com.gojol.notto.model.datasource.todo
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.content.Context
 import com.gojol.notto.model.database.todo.Todo
@@ -20,7 +19,6 @@ class TodoAlarmManagerImpl @Inject constructor(
     private val repository: TodoLabelRepository
 ) : TodoAlarmManager {
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     override fun addAlarm(todo: Todo) {
         if (!todo.hasAlarm) return
 
@@ -45,7 +43,6 @@ class TodoAlarmManagerImpl @Inject constructor(
         )
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     override fun addAlarm(todo: Todo, todoState: TodoState) {
         if (!todo.hasAlarm) return
         if (todoState == TodoState.SUCCESS) return
@@ -71,7 +68,6 @@ class TodoAlarmManagerImpl @Inject constructor(
         )
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     override fun deleteAlarm(todo: Todo) {
         val todoDateTime = LocalDateTime.of(todo.startDate, todo.endTime)
         val todoDate = Date.from(todoDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
@@ -83,7 +79,6 @@ class TodoAlarmManagerImpl @Inject constructor(
         }
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     override fun deleteAlarm(todo: Todo, todoState: TodoState) {
         val todoDateTime = LocalDateTime.of(todo.startDate, todo.endTime)
         val todoDate = Date.from(todoDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
