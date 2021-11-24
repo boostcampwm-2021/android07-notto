@@ -64,6 +64,7 @@ class TodoEditActivity : AppCompatActivity() {
         initSelectedLabelRecyclerView()
         initObserver()
         initTodoDialog()
+        initEditTextTouchListener()
     }
 
     override fun onResume() {
@@ -217,6 +218,18 @@ class TodoEditActivity : AppCompatActivity() {
             bundleOf(SET_TIME_DATA to todoEditViewModel.todoWrapper.value?.todo?.endTime),
             todoEditViewModel::updateTimeFinish
         )
+    }
+
+    private fun initEditTextTouchListener() {
+        binding.etTodoEdit.setOnTouchListener { view, motionEvent ->
+            if (view == binding.etTodoEdit) {
+                view.parent.requestDisallowInterceptTouchEvent(true)
+                when (motionEvent.action and MotionEvent.ACTION_MASK) {
+                    MotionEvent.ACTION_UP -> view.parent.requestDisallowInterceptTouchEvent(false)
+                }
+            }
+            false
+        }
     }
 
     private fun showLabelAddDialog() {
