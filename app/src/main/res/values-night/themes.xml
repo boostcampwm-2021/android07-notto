@@ -50,4 +50,12 @@
     <style name="Theme.Notto.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="LicenseTheme" parent="Theme.MaterialComponents">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/yellow_deep</item>
+        <item name="colorSecondary">@color/blue_light</item>
+        <item name="fontFamily">@font/font_nanumsquare</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    </style>
 </resources>
