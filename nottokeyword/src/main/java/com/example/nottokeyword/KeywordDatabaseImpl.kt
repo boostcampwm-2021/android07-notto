@@ -23,10 +23,9 @@ internal class KeywordDatabaseImpl @Inject constructor(private val database: Dat
     }
 
     private fun getKeywordsFrom(text: String): List<String> {
-        val tagger = Tagger().tagSentence(text)
-        val nouns = tagger.getNouns()
-
-        return nouns.map { it.surface }
+        return Tagger().tagSentence(text)
+            .getNouns()
+            .map { it.surface }
     }
 
     private fun insert(keyword: String) {
@@ -67,10 +66,7 @@ internal class KeywordDatabaseImpl @Inject constructor(private val database: Dat
             list = it.children
                 .filter { child -> child.key != null && child.value != null }
                 .map { child -> Keyword(child.key!!, (child.value!! as Long).toInt()) }
-                .toMutableList()
-                .apply {
-                    sortByDescending { keyword -> keyword.count }
-                }
+                .sortedByDescending { keyword -> keyword.count }
         }.addOnFailureListener {
             Log.e(TAG, "Error getting data", it)
         }.await()
@@ -96,6 +92,6 @@ internal class KeywordDatabaseImpl @Inject constructor(private val database: Dat
     }
 
     companion object {
-        const val TAG = "KeywordDatabaseImpl"
+        val TAG: String = KeywordDatabaseImpl::class.java.simpleName
     }
 }
