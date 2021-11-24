@@ -6,24 +6,26 @@
 
 package com.gojol.notto.ui.home.adapter
 
-import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.databinding.ItemLabelListBinding
-import com.gojol.notto.ui.label.EditLabelActivity
 
-class LabelWrapperAdapter(private val adapter: LabelAdapter) :
-    RecyclerView.Adapter<LabelWrapperAdapter.LabelWrapperViewHolder>() {
+class LabelWrapperAdapter(
+    private val adapter: LabelAdapter,
+    private val onClickMenu: (View) -> Unit
+) : RecyclerView.Adapter<LabelWrapperAdapter.LabelWrapperViewHolder>() {
 
     private var lastScrollX = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LabelWrapperViewHolder {
         return LabelWrapperViewHolder(
-            ItemLabelListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemLabelListBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            onClickMenu
         )
     }
 
@@ -39,12 +41,15 @@ class LabelWrapperAdapter(private val adapter: LabelAdapter) :
 
     override fun getItemCount(): Int = 1
 
-    class LabelWrapperViewHolder(private val binding: ItemLabelListBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class LabelWrapperViewHolder(
+        private val binding: ItemLabelListBinding,
+        private val onClickMenu: (View) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.setEditClickListener {
-                it.context.startActivity(Intent(it.context, EditLabelActivity::class.java))
+//                it.context.startActivity(Intent(it.context, EditLabelActivity::class.java))
+                onClickMenu(it)
             }
         }
 
