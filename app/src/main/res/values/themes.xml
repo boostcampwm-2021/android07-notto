@@ -22,12 +22,20 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="Theme.Notto.TextContent" parent="Theme.Notto">
+        <item name="android:textColor">@color/charcoal_normal</item>
+    </style>
+
     <style name="Theme.Notto.TextSecondary" parent="Theme.Notto">
         <item name="android:textColor">@color/blue_deep</item>
     </style>
 
     <style name="Theme.Notto.TextGray" parent="Theme.Notto">
         <item name="android:textColor">@color/gray_deep</item>
+    </style>
+
+    <style name="Theme.Notto.Icon" parent="Theme.Notto">
+        <item name="tint">@color/black</item>
     </style>
 
     <style name="Theme.Notto.BottomNav" parent="Theme.Notto">
@@ -67,6 +75,10 @@
         <item name="titleTextColor">@color/black</item>
         <item name="titleCentered">true</item>
         <item name="navigationIconTint">@color/black</item>
+    </style>
+
+    <style name="Theme.Notto.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="LicenseTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">

@@ -68,7 +68,8 @@
                     android:src="@drawable/ic_today"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_date"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_date" />
+                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_date"
+                    style="@style/Theme.Notto.Icon" />
 
                 <ImageView
                     android:id="@+id/iv_todo_edit_repeat"
@@ -78,7 +79,8 @@
                     android:src="@drawable/ic_calendar"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_setting"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_setting" />
+                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_setting"
+                    style="@style/Theme.Notto.Icon" />
 
                 <ImageView
                     android:id="@+id/iv_todo_edit_time"
@@ -88,7 +90,8 @@
                     android:src="@drawable/ic_time_filled"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_setting"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_setting" />
+                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_setting"
+                    style="@style/Theme.Notto.Icon" />
 
                 <!-- 반복 설정 -->
                 <ImageView
@@ -99,7 +102,8 @@
                     android:src="@drawable/ic_visibility_outline"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_keyword_setting"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_keyword_setting" />
+                    app:layout_constraintTop_toTopOf="@id/tv_todo_edit_keyword_setting"
+                    style="@style/Theme.Notto.Icon" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_date"
@@ -108,11 +112,11 @@
                     android:layout_marginStart="@dimen/space_x_small"
                     android:layout_marginTop="@dimen/space_x_x_large"
                     android:text="@string/todo_edit_repeat_date"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/text_x_small"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@id/iv_todo_edit_date"
-                    app:layout_constraintTop_toBottomOf="@id/btn_todo_edit_label" />
+                    app:layout_constraintTop_toBottomOf="@id/btn_todo_edit_label"
+                    style="@style/Theme.Notto.TextDefault" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_date_value"
@@ -133,11 +137,11 @@
                     android:layout_marginStart="@dimen/space_x_small"
                     android:layout_marginTop="@dimen/space_x_x_large"
                     android:text="@string/todo_edit_repeat_setting"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/text_x_small"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@id/iv_todo_edit_repeat"
-                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_date" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_date"
+                    style="@style/Theme.Notto.TextDefault" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_repeat_type"
@@ -187,11 +191,11 @@
                     android:layout_marginStart="@dimen/space_x_small"
                     android:layout_marginTop="@dimen/space_median"
                     android:text="@string/todo_edit_time_setting"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/text_x_small"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@id/iv_todo_edit_time"
-                    app:layout_constraintTop_toBottomOf="@id/divider_todo_edit_repeat" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_todo_edit_repeat"
+                    style="@style/Theme.Notto.TextDefault" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_start"
@@ -262,11 +266,11 @@
                     android:layout_marginStart="@dimen/space_x_small"
                     android:layout_marginTop="@dimen/space_median"
                     android:text="@string/todo_edit_keyword_setting"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/text_x_small"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@id/iv_todo_edit_keyword"
-                    app:layout_constraintTop_toBottomOf="@id/divider_todo_edit_time" />
+                    app:layout_constraintTop_toBottomOf="@id/divider_todo_edit_time"
+                    style="@style/Theme.Notto.TextDefault" />
 
                 <View
                     android:id="@+id/divider_todo_edit_date"

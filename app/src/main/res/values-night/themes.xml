@@ -18,12 +18,20 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="Theme.Notto.TextContent" parent="Theme.Notto">
+        <item name="android:textColor">@color/gray_light</item>
+    </style>
+
     <style name="Theme.Notto.TextSecondary" parent="Theme.Notto">
         <item name="android:textColor">@color/blue_light</item>
     </style>
 
     <style name="Theme.Notto.TextGray" parent="Theme.Notto">
         <item name="android:textColor">@color/gray_normal</item>
+    </style>
+
+    <style name="Theme.Notto.Icon" parent="Theme.Notto">
+        <item name="tint">@color/white</item>
     </style>
 
     <style name="Theme.Notto.BottomNav" parent="Theme.Notto">
@@ -37,5 +45,9 @@
         <item name="titleTextColor">@color/white</item>
         <item name="titleCentered">true</item>
         <item name="navigationIconTint">@color/white</item>
+    </style>
+
+    <style name="Theme.Notto.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>
