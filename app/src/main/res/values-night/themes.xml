@@ -23,7 +23,12 @@
     </style>
 
     <style name="Theme.Notto.TextGray" parent="Theme.Notto">
-        <item name="android:textColor">@color/gray_light</item>
+        <item name="android:textColor">@color/gray_normal</item>
+    </style>
+
+    <style name="Theme.Notto.BottomNav" parent="Theme.Notto">
+        <item name="itemIconTint">@color/bg_bottom_night</item>
+        <item name="itemTextColor">@color/bg_bottom_night</item>
     </style>
 
     <style name="Theme.Notto.Toolbar.Primary" parent="Widget.MaterialComponents.Toolbar.Primary">

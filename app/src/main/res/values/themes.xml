@@ -30,6 +30,11 @@
         <item name="android:textColor">@color/gray_deep</item>
     </style>
 
+    <style name="Theme.Notto.BottomNav" parent="Theme.Notto">
+        <item name="itemIconTint">@color/bg_bottom_normal</item>
+        <item name="itemTextColor">@color/bg_bottom_normal</item>
+    </style>
+
     <style name="Widget.App.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Switch</item>
         <item name="thumbTint">@color/switch_thumb</item>
