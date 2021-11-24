@@ -1,6 +1,5 @@
 package com.gojol.notto.ui.todo
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -16,6 +15,7 @@ import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
 import com.gojol.notto.common.EventObserver
 import com.gojol.notto.common.LABEL_ADD
+import com.gojol.notto.common.LabelEditType
 import com.gojol.notto.common.REPEAT_TIME
 import com.gojol.notto.common.REPEAT_TIME_DATA
 import com.gojol.notto.common.REPEAT_TYPE
@@ -28,13 +28,13 @@ import com.gojol.notto.common.TIME_REPEAT_DATA
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.ui.label.EditLabelActivity
 import com.gojol.notto.ui.todo.dialog.AlarmPeriodDialog
 import com.gojol.notto.ui.todo.dialog.DeletionDialog
 import com.gojol.notto.ui.todo.dialog.RepeatTimeDialog
 import com.gojol.notto.ui.todo.dialog.RepeatTypeDialog
 import com.gojol.notto.ui.todo.dialog.TimeFinishDialog
 import com.gojol.notto.ui.todo.dialog.TimeStartDialog
+import com.gojol.notto.util.EditLabelDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -146,8 +146,7 @@ class TodoEditActivity : AppCompatActivity() {
             if (it) showLabelAddDialog()
         }
         todoEditViewModel.clickWrapper.labelAddClicked.observe(this, EventObserver {
-            val intent = Intent(this, EditLabelActivity::class.java)
-            startActivity(intent)
+            onLabelAddClick()
         })
         todoEditViewModel.clickWrapper.repeatTypeClick.observe(this, EventObserver {
             if (it) todoRepeatTypeDialog.show(supportFragmentManager, REPEAT_TYPE)
@@ -237,5 +236,21 @@ class TodoEditActivity : AppCompatActivity() {
             getString(R.string.todo_edit_button_disabled_message),
             Toast.LENGTH_LONG
         ).show()
+    }
+
+    private fun onLabelAddClick() {
+        val fragmentManager = this.supportFragmentManager
+        val dialog = EditLabelDialogBuilder.builder(LabelEditType.CREATE, null).apply {
+            show(fragmentManager, "EditLabelDialogFragment")
+        }
+
+        fragmentManager.executePendingTransactions()
+
+        dialog.dialog?.apply {
+            setOnDismissListener {
+                todoEditViewModel.initLabelData()
+                dialog.dismiss()
+            }
+        }
     }
 }
