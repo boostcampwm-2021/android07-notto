@@ -41,4 +41,8 @@
         <item name="android:paddingTop">@dimen/space_x_small</item>
         <item name="android:paddingBottom">@dimen/space_x_small</item>
     </style>
+
+    <style name="text_color_black">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>
