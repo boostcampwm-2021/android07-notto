@@ -1,6 +1,5 @@
 package com.gojol.notto.util
 
-import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -41,18 +40,21 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
         const val GROUP_ID = "com.android.notto.util.TodoPushBroadcastReceiver.group"
         const val SUMMARY_ID = 0
 
-        @SuppressLint("UnspecifiedImmutableFlag")
         fun getPendingIntent(context: Context, id: Int, bundle: Bundle?): PendingIntent {
             val intent = Intent(context, TodoPushBroadcastReceiver::class.java)
             bundle?.let { intent.putExtra(ALARM_BUNDLE_TODO, it) }
 
             return PendingIntent.getBroadcast(
-                context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT
+                context, id, intent,
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                } else {
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                }
             )
         }
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
@@ -106,7 +108,6 @@ class TodoPushBroadcastReceiver : HiltBroadcastReceiver() {
         }
     }
 
-    @SuppressLint("RemoteViewLayout", "UnspecifiedImmutableFlag")
     private fun customContentView(context: Context, todo: Todo): RemoteViews {
         val contentView = RemoteViews(context.packageName, R.layout.notification_todo)
 

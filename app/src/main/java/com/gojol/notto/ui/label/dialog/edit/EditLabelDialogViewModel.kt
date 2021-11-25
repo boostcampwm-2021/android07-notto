@@ -2,7 +2,6 @@ package com.gojol.notto.ui.label.dialog.edit
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gojol.notto.common.LabelEditType
 import com.gojol.notto.model.database.label.Label
@@ -17,7 +16,7 @@ class EditLabelDialogViewModel @Inject constructor(private val repository: TodoL
     DialogViewModel() {
 
     private val _type = MutableLiveData<LabelEditType>()
-    val typeLabel: LiveData<LabelEditType> = _type
+    val type: LiveData<LabelEditType> = _type
 
     private val _label = MutableLiveData<Label>()
     val label: LiveData<Label> = _label
@@ -26,14 +25,21 @@ class EditLabelDialogViewModel @Inject constructor(private val repository: TodoL
     val name = MutableLiveData<String>()
 
     fun clickOkay() {
-        name.value ?: return
-        // TODO: 에러 메시지 출력
+        val labelName = name.value ?: return
 
-        when (typeLabel.value) {
-            LabelEditType.CREATE -> createLabel(Label(1000, name.value!!))
-            LabelEditType.UPDATE -> {
-                label.value ?: return
-                updateLabel(label.value!!.copy(name = name.value!!))
+        viewModelScope.launch {
+            when (type.value) {
+                LabelEditType.CREATE -> createLabel(
+                    Label(
+                        repository.getAllLabel().size,
+                        name.value!!
+                    )
+                )
+                LabelEditType.UPDATE -> {
+                    val updatedLabel = label.value ?: return@launch
+                    updateLabel(updatedLabel.copy(name = labelName))
+                }
+                else -> return@launch
             }
         }
     }

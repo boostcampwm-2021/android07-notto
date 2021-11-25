@@ -61,7 +61,11 @@ class DayNotificationReceiver : BroadcastReceiver() {
                 context,
                 NOTIFICATION_ID,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                } else {
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                }
             )
         }
 
