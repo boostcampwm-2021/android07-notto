@@ -53,9 +53,11 @@ class CalendarViewModel @Inject constructor(
 
         viewModelScope.launch {
             // TODO DailyTodo를 가져오는 코드인데 없으면 setting을 해줌 -> 분리 필요
-            repository.getTodosWithTodayDailyTodos(
-                LocalDate.of(calendar.year, calendar.month, calendar.selectedDay)
-            )
+            (calendar.startDate.dayOfMonth..calendar.endDate.dayOfMonth).forEach {
+                repository.getTodosWithTodayDailyTodos(
+                    LocalDate.of(calendar.year, calendar.month, it)
+                )
+            }
 
             val monthlyDailyTodos = repository.getAllDailyTodos().filter { it.isActive &&
                 it.date in calendar.startDate..calendar.endDate
