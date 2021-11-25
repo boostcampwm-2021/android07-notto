@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gojol.notto.model.data.DayWithSuccessLevelAndSelect
 import com.gojol.notto.model.data.MonthlyCalendar
-import com.gojol.notto.model.data.DailyTodoSuccess
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.ui.home.CalendarFragment.Companion.ITEM_ID_ARGUMENT
@@ -45,7 +44,13 @@ class CalendarViewModel @Inject constructor(
     fun updateSelectedDay(date: Int) {
         _monthlyCalendar.value = _monthlyCalendar.value?.copy(selectedDay = date)
 
-        setMonthlyDailyTodos()
+        _monthlyAchievement.value = _monthlyAchievement.value?.map {
+            if (it.day == date) {
+                it.copy(isSelected = true)
+            } else {
+                it.copy(isSelected = false)
+            }
+        }
     }
 
     fun setMonthlyDailyTodos() {
@@ -59,8 +64,9 @@ class CalendarViewModel @Inject constructor(
                 )
             }
 
-            val monthlyDailyTodos = repository.getAllDailyTodos().filter { it.isActive &&
-                it.date in calendar.startDate..calendar.endDate
+            val monthlyDailyTodos = repository.getAllDailyTodos().filter {
+                it.isActive &&
+                        it.date in calendar.startDate..calendar.endDate
             }
 
             setMonthlyAchievement(monthlyDailyTodos)
