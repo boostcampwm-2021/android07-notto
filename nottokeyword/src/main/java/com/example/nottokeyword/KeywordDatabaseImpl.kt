@@ -1,7 +1,6 @@
 package com.example.nottokeyword
 
 import android.util.Log
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,9 +15,7 @@ internal class KeywordDatabaseImpl @Inject constructor(private val database: Dat
     override fun insertKeyword(content: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val keywords = getKeywordsFrom(content)
-            keywords.forEach {
-                insert(it)
-            }
+            insertKeywords(keywords)
         }
     }
 
@@ -28,32 +25,20 @@ internal class KeywordDatabaseImpl @Inject constructor(private val database: Dat
             .map { it.surface }
     }
 
-    private fun insert(keyword: String) {
-        database.child(keyword).apply {
-            get().addOnSuccessListener {
-                Log.i(TAG, "Got value ${it.value}")
+    private fun insertKeywords(keywords: List<String>) {
+        val newKeywords = keywords.map { it to 1 }.toMap().toMutableMap()
 
-                if (it == null) {
-                    insertNewKeyword(keyword, this)
-                } else {
-                    insertExistingKeyword(it, this)
+        database.get().addOnSuccessListener { snapshot ->
+            snapshot.children.forEach {
+                val key = it.key!!
+                val count = (it.value as Long).toInt()
+
+                if (newKeywords.containsKey(key)) {
+                    newKeywords[key] = count + 1
                 }
-            }.addOnFailureListener {
-                Log.e(TAG, "Error getting data", it)
             }
-        }
-    }
 
-    private fun insertNewKeyword(keyword: String, ref: DatabaseReference) {
-        ref.setValue(1).addOnSuccessListener {
-            Log.i(TAG, "Successfully inserted keyword $keyword")
-        }
-    }
-
-    private fun insertExistingKeyword(target: DataSnapshot, ref: DatabaseReference) {
-        val count = (target.value as Long).toInt() + 1
-        ref.setValue(count).addOnSuccessListener {
-            Log.i(TAG, "Successfully counted keyword ${target.key}")
+            database.updateChildren(newKeywords as MutableMap<String, Any>)
         }
     }
 
