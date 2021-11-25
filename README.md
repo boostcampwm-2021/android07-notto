@@ -78,33 +78,17 @@
 > **민정** : 그 뿐만이 아닙니다! 저희 notto는 (거의)전문 디자이너(도연)(?)에게 제작을 의뢰해 디자인에도 힘을 줬습니다. 화면 보시죠!
 
 ### 💛간🧡지💚나💜는 notto 디자인🎨
-<details>
-    <summary>💛<b>홈 화면</b></summary>
-    <img width=300 src="https://user-images.githubusercontent.com/39328846/143289702-2ee5e046-6c05-42f1-b7cc-faf11780f4db.jpg">
-    <img width=300 src="https://user-images.githubusercontent.com/39328846/143289696-4cc23945-e80c-4148-87ad-b9bd62bcb90f.jpg">
-    <img width=300 src="https://user-images.githubusercontent.com/39328846/143289699-dbd07811-02b0-48a3-9182-d34d8364e271.jpg">
-</details>
+💛<b>홈 화면</b>  
+<img width=300 src="https://user-images.githubusercontent.com/39328846/143336664-53801bb2-c1c4-442b-9976-c9b239a52a07.gif">
 
-<details>
-    <summary>🧡<b>목표 추가/편집 화면</b></summary>
-    <img width=300 src="https://user-images.githubusercontent.com/39328846/143290163-d86ab8e8-e1e5-4d50-bed3-b91d7e6c5e6f.jpg">
-    <img width=300 src="https://user-images.githubusercontent.com/39328846/143290116-58686407-c78d-419b-b3da-9097efe3a306.jpg">
-    <img width=300 src="https://user-images.githubusercontent.com/39328846/143291577-05d5bb2b-fd7e-4b0e-8297-fc2a3ee1536c.jpg">
-</details>
+🧡<b>목표 추가/편집 화면</b>  
+<img width=300 src="https://user-images.githubusercontent.com/39328846/143336918-d30627c4-4492-4723-9fae-958b906b0ad4.gif">
 
-<details>
-    <summary>💚<b>라벨 편집 화면</b></summary>
-    <img width=300 src="https://user-images.githubusercontent.com/39328846/143290742-d814ea0b-8300-461c-a0e1-b222157988d2.jpg">
-    <img width=300 src="https://user-images.githubusercontent.com/39328846/143290746-68fb0341-04b5-4e1d-b16a-76e816c6d987.jpg">
-    <img width=300 src="https://user-images.githubusercontent.com/39328846/143291534-6818ab74-7340-41ae-a44f-8e1876756a97.jpg">
-</details>
+💚<b>라벨 편집 화면</b>  
+<img width=300 src="https://user-images.githubusercontent.com/39328846/143337079-d03379b9-b348-4bc2-a566-215963c0a151.gif">
 
-<details>
-    <summary>💜<b>인기 키워드 화면 & 옵션 화면</b></summary>
-    <img width=300 src="https://user-images.githubusercontent.com/39328846/143291126-ecf8b73c-0507-4808-8e7c-61398b39d1c1.jpg">
-    <img width=300 src="https://user-images.githubusercontent.com/39328846/143291423-fae587ea-f42f-47b8-aac4-a9a5ef8661b9.jpg">
-    <img width=300 src="https://user-images.githubusercontent.com/39328846/143291238-29dba4b1-a698-4049-a772-d715b2316c06.jpg">
-</details>
+💜<b>인기 키워드 화면 & 옵션 화면</b>  
+<img width=300 src="https://user-images.githubusercontent.com/39328846/143337187-2442dbae-3e77-4bf5-b472-3c05559c5894.gif">
 
 ### 📚Task 관리
 > 우리는 Github 마스타...😎
