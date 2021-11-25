@@ -242,14 +242,9 @@ class TodoEditViewModel @Inject constructor(
     private fun saveNewTodo() {
         val todoModel = todoWrapper.value ?: return
 
-        if (isKeywordOpen) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val result = keywordDatabase.insertKeyword(content)
-
-                Log.i(this.javaClass.name, "insertKeyword result: $result")
-            }
+        if (todoModel.todo.isKeywordOpen) {
+            insertKeywords(todoModel.todo.content)
         }
-//        insertInFirebase(todoModel)
 
         viewModelScope.launch {
             // 투두 insert, 투두 알림 설정
@@ -259,12 +254,6 @@ class TodoEditViewModel @Inject constructor(
             _todoWrapper.value = todoModel.copy(todo = todoModel.todo.copy(todoId = generatedTodoId))
 
             insertLabels()
-        }
-    }
-
-    private fun insertInFirebase(todoModel: TodoWrapper) {
-        if (todoModel.todo.isKeywordOpen) {
-            firebaseDB.insertKeyword(todoModel.todo.content)
         }
     }
 
@@ -292,12 +281,8 @@ class TodoEditViewModel @Inject constructor(
         if (todoModel.todo.isKeywordOpen) {
             val oldTodo = todoModel.existedTodo ?: return
 
-            if (oldTodo.isKeywordOpen.not() || oldTodo.content != content) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    val result = keywordDatabase.insertKeyword(content)
-
-                    Log.i(TAG, "insertKeyword result: $result")
-                }
+            if (oldTodo.isKeywordOpen.not() || oldTodo.content != todoModel.todo.content) {
+                insertKeywords(todoModel.todo.content)
             }
         }
 
@@ -310,6 +295,14 @@ class TodoEditViewModel @Inject constructor(
                 repository.updateTodo(todoModel.todo, newList)
             }
             clickWrapper.isSaveButtonEnabled.value = true
+        }
+    }
+
+    private fun insertKeywords(content: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = keywordDatabase.insertKeyword(content)
+
+            Log.i(TAG, "insertKeyword result: $result")
         }
     }
 
@@ -334,7 +327,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     companion object {
-        val TAG = TodoEditViewModel::class.java.simpleName
+        val TAG: String = TodoEditViewModel::class.java.simpleName
         val FINISH_DATE: LocalDate? = LocalDate.of(2099, 12, 31)
     }
 }
