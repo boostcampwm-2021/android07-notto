@@ -80,7 +80,7 @@
     <string name="notification_todo_fail">실패</string>
 
     <string name="option_title">옵션</string>
-    <string name="option_push_notification">푸쉬 알림</string>
+    <string name="option_push_notification">푸시 알림</string>
     <string name="option_push_notification_day">하루 마무리 알림</string>
     <string name="option_open_source_license">오픈소스 라이선스</string>
     <string name="option_team">개발팀</string>
@@ -88,6 +88,7 @@
     <string name="option_notification_description">오늘의 마무리 알림입니다.</string>
     <string name="option_notification_title">오늘의 마무리 알림</string>
     <string name="option_notification_content">하루를 마무리하기 전에 Not Todo를 체크해주세요!</string>
+    <string name="option_notification_tooltip_msg">매일 밤, 잊지 않고 Not Todo 성공 여부를 체크하도록 알림을 보냅니다.</string>
 
     <string name="popular_keyword">인기 키워드</string>
     <string name="popular_place_format">%d</string>

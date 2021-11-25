@@ -28,11 +28,21 @@
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
 
-    <style name="text_edit_todo_field">
+    <style name="text_edit_todo_field" parent="Theme.Notto.TextContent">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">@dimen/space_x_small</item>
         <item name="android:paddingBottom">@dimen/space_x_small</item>
-        <item name="android:textColor">@color/charcoal_normal</item>
+    </style>
+
+    <style name="text_edit_todo_value" parent="Theme.Notto.TextDefault">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/space_x_small</item>
+        <item name="android:paddingBottom">@dimen/space_x_small</item>
+    </style>
+
+    <style name="text_color_black">
+        <item name="android:textColor">@color/black</item>
     </style>
 </resources>
