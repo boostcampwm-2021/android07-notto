@@ -5,6 +5,7 @@ import com.gojol.notto.common.Event
 
 data class ClickWrapper(
     val isTodoEditing: MutableLiveData<Boolean>,
+    val isBeforeToday: MutableLiveData<Boolean>,
     val isCloseButtonCLicked: MutableLiveData<Event<Unit>>,
     val popLabelAddDialog: MutableLiveData<Boolean>,
     val labelAddClicked: MutableLiveData<Event<Unit>>,

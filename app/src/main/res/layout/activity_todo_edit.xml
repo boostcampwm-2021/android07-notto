@@ -50,6 +50,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tb_todo_edit">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_todo_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:context=".ui.todo.TodoEditActivity">

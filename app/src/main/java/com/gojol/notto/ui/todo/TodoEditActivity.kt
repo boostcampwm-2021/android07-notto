@@ -107,6 +107,7 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerViewCallback(label: Label) {
+        if (todoEditViewModel.clickWrapper.isBeforeToday.value == true) return
         todoEditViewModel.removeLabelFromSelectedLabelList(label)
     }
 
@@ -119,6 +120,12 @@ class TodoEditActivity : AppCompatActivity() {
                 binding.btnTodoEditDelete.visibility = View.GONE
             }
         }
+        todoEditViewModel.clickWrapper.isBeforeToday.observe(this, {
+            if (it) { //편집일 때
+                binding.tbTodoEdit.title = getString(R.string.todo_edit_title_detail)
+                blockClick()
+            } else showBeforeTodayDisabled()
+        })
         todoEditViewModel.clickWrapper.isCloseButtonCLicked.observe(this, EventObserver {
             finish()
         })
@@ -260,6 +267,10 @@ class TodoEditActivity : AppCompatActivity() {
         ).show()
     }
 
+    private fun showBeforeTodayDisabled() {
+        Toast.makeText(this, getString(R.string.todo_edit_before_today_msg), Toast.LENGTH_LONG).show()
+    }
+
     private fun onLabelAddClick() {
         val fragmentManager = this.supportFragmentManager
         val dialog = EditLabelDialogBuilder.builder(LabelEditType.CREATE, null).apply {
@@ -273,6 +284,23 @@ class TodoEditActivity : AppCompatActivity() {
                 todoEditViewModel.initLabelData()
                 dialog.dismiss()
             }
+        }
+    }
+
+    private fun blockClick() {
+        with(binding) {
+            etTodoEdit.isEnabled = false
+            btnTodoEditLabel.isClickable = false
+            rvTodoEdit.isClickable = false
+            tvTodoEditRepeatStartValue.isClickable = false
+            tvTodoEditRepeatTypeValue.isClickable = false
+            tvTodoEditTimeStartValue.isClickable = false
+            tvTodoEditTimeFinishValue.isClickable = false
+            tvTodoEditTimeRepeatValue.isClickable = false
+            switchTodoEditRepeat.isEnabled = false
+            switchTodoEditTime.isEnabled = false
+            switchTodoEditKeyword.isEnabled = false
+            btnTodoEditSave.visibility = View.GONE
         }
     }
 }
