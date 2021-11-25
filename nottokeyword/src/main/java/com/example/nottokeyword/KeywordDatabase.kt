@@ -2,9 +2,9 @@ package com.example.nottokeyword
 
 interface KeywordDatabase {
 
-    fun insertKeyword(content: String)
+    suspend fun insertKeyword(content: String): Boolean
 
     suspend fun getKeywords(): List<Keyword>
 
-    fun deleteKeyword(keyword: String)
+    suspend fun deleteKeyword(keyword: String): Boolean
 }

@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.todo
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,7 @@ import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -248,7 +250,11 @@ class TodoEditViewModel @Inject constructor(
         )
 
         if (isKeywordOpen) {
-            keywordDatabase.insertKeyword(content)
+            CoroutineScope(Dispatchers.IO).launch {
+                val result = keywordDatabase.insertKeyword(content)
+
+                Log.i(this.javaClass.name, "insertKeyword result: $result")
+            }
         }
 
         viewModelScope.launch {
@@ -301,7 +307,11 @@ class TodoEditViewModel @Inject constructor(
             val oldTodo = existedTodo.value ?: return
 
             if (oldTodo.isKeywordOpen.not() || oldTodo.content != content) {
-                keywordDatabase.insertKeyword(content)
+                CoroutineScope(Dispatchers.IO).launch {
+                    val result = keywordDatabase.insertKeyword(content)
+
+                    Log.i(TAG, "insertKeyword result: $result")
+                }
             }
         }
 
@@ -335,6 +345,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     companion object {
+        val TAG = TodoEditViewModel::class.java.simpleName
         val FINISH_DATE: LocalDate? = LocalDate.of(2099, 12, 31)
     }
 }
