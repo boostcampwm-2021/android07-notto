@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.gojol.notto.R
 import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.common.LabelEditType
@@ -63,7 +64,7 @@ class HomeFragment : Fragment() {
             homeViewModel.updateDate(year, month, date)
         }
 
-        setFragmentResultListener(UPDATE_HEIGHT_KEY){_,_ ->
+        setFragmentResultListener(UPDATE_HEIGHT_KEY) { _, _ ->
             updateViewPager()
         }
     }
@@ -96,7 +97,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        calendarAdapter = CalendarAdapter(parentFragmentManager, lifecycle)
+        calendarAdapter = CalendarAdapter(::todayClickCallback, parentFragmentManager, lifecycle)
         labelAdapter = LabelAdapter(::labelTouchCallback)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter, ::onClickLabelMenu)
         todoAdapter = TodoAdapter(::todoTouchCallback, ::todoEditButtonCallback)
@@ -111,22 +112,26 @@ class HomeFragment : Fragment() {
         binding.rvHome.apply {
             adapter = concatAdapter
             layoutManager = getLayoutManager(concatAdapter)
-            itemAnimator = null
+            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         }
     }
 
     private fun onClickLabelMenu(view: View) {
         val popup = PopupMenu(requireContext(), view)
         val inflater: MenuInflater = popup.menuInflater
-        inflater.inflate(R.menu.home_label_context_menu, popup.menu)
+        inflater.inflate(R.menu.home_label_popup_menu, popup.menu)
 
         popup.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_create_label -> {
-                    val dialog = EditLabelDialogBuilder(requireActivity().supportFragmentManager).show(
-                        LabelEditType.CREATE,
-                        null
-                    )
+                    val fragmentManager = requireActivity().supportFragmentManager
+
+                    val dialog = EditLabelDialogBuilder.builder(LabelEditType.CREATE, null).apply {
+                        show(fragmentManager, "EditLabelDialogFragment")
+                    }
+
+                    fragmentManager.executePendingTransactions()
+
                     dialog.dialog?.apply {
                         setOnDismissListener {
                             homeViewModel.setDummyData()
@@ -138,11 +143,13 @@ class HomeFragment : Fragment() {
                 }
                 R.id.menu_edit_label -> {
                     startActivity(Intent(context, EditLabelActivity::class.java))
+
                     true
                 }
                 else -> false
             }
         }
+
         popup.show()
     }
 
@@ -162,17 +169,15 @@ class HomeFragment : Fragment() {
             updateViewPager()
         })
 
-        homeViewModel.isTodoCreateButtonClicked.observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let {
-                startTodoEditActivity()
+        homeViewModel.todoCreateButtonClicked.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let { date ->
+                startTodoCreateEditActivity(date)
             }
         })
 
         homeViewModel.todoEditButtonClicked.observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let { todo ->
-                homeViewModel.date.value?.let { date ->
-                    startTodoCreateActivity(todo, date)
-                }
+            it.getContentIfNotHandled()?.let { pair ->
+                startTodoEditActivity(pair.first, pair.second)
             }
         })
     }
@@ -210,25 +215,30 @@ class HomeFragment : Fragment() {
         return layoutManager
     }
 
+    private fun todayClickCallback() {
+        setFragmentResult(TODAY_BUTTON_CLICK_KEY, bundleOf())
+    }
+
     private fun todoTouchCallback(dailyTodo: DailyTodo) {
         homeViewModel.updateDailyTodo(dailyTodo)
         setFragmentResult(TODO_SWIPE_KEY, bundleOf())
     }
 
     private fun todoEditButtonCallback(todo: Todo) {
-        homeViewModel.updateIsTodoEditButtonClicked(todo)
+        homeViewModel.updateNavigateToTodoEdit(todo)
     }
 
     private fun labelTouchCallback(labelWithCheck: LabelWithCheck) {
         homeViewModel.setLabelClickListener(labelWithCheck)
     }
 
-    private fun startTodoEditActivity() {
+    private fun startTodoCreateEditActivity(date: LocalDate) {
         val intent = Intent(activity, TodoEditActivity::class.java)
+        intent.putExtra("date", date)
         startActivity(intent)
     }
 
-    private fun startTodoCreateActivity(todo: Todo, date: LocalDate) {
+    private fun startTodoEditActivity(todo: Todo, date: LocalDate) {
         val intent = Intent(activity, TodoEditActivity::class.java)
         intent.putExtra("todo", todo)
         intent.putExtra("date", date)
@@ -236,6 +246,7 @@ class HomeFragment : Fragment() {
     }
 
     companion object {
+        const val TODAY_BUTTON_CLICK_KEY = "today_click"
         const val TODO_SWIPE_KEY = "todo_swipe"
     }
 }

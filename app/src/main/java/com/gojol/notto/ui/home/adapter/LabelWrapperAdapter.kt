@@ -48,6 +48,7 @@ class LabelWrapperAdapter(
 
         init {
             binding.setEditClickListener {
+//                it.context.startActivity(Intent(it.context, EditLabelActivity::class.java))
                 onClickMenu(it)
             }
         }

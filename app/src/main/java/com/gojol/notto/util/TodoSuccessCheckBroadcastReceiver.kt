@@ -1,6 +1,5 @@
 package com.gojol.notto.util
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.work.OneTimeWorkRequestBuilder
@@ -56,14 +55,18 @@ class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
     }
 
     companion object {
-        @SuppressLint("UnspecifiedImmutableFlag")
         fun getPendingIntent(context: Context, id: Int, data: Uri, action: String): PendingIntent {
             val intent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java).apply {
                 setData(data)
                 setAction(action)
             }
             return PendingIntent.getBroadcast(
-                context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT
+                context, id, intent,
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                } else {
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                }
             )
         }
     }

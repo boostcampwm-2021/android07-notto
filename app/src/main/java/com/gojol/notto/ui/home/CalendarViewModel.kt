@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gojol.notto.model.data.DayWithSuccessLevelAndSelect
 import com.gojol.notto.model.data.MonthlyCalendar
-import com.gojol.notto.model.data.DailyTodoSuccess
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.ui.home.CalendarFragment.Companion.ITEM_ID_ARGUMENT
@@ -45,7 +44,13 @@ class CalendarViewModel @Inject constructor(
     fun updateSelectedDay(date: Int) {
         _monthlyCalendar.value = _monthlyCalendar.value?.copy(selectedDay = date)
 
-        setMonthlyDailyTodos()
+        _monthlyAchievement.value = _monthlyAchievement.value?.map {
+            if (it.day == date) {
+                it.copy(isSelected = true)
+            } else {
+                it.copy(isSelected = false)
+            }
+        }
     }
 
     fun setMonthlyDailyTodos() {
@@ -53,12 +58,15 @@ class CalendarViewModel @Inject constructor(
 
         viewModelScope.launch {
             // TODO DailyTodo를 가져오는 코드인데 없으면 setting을 해줌 -> 분리 필요
-            repository.getTodosWithTodayDailyTodos(
-                LocalDate.of(calendar.year, calendar.month, calendar.selectedDay)
-            )
+            (calendar.startDate.dayOfMonth..calendar.endDate.dayOfMonth).forEach {
+                repository.getTodosWithTodayDailyTodos(
+                    LocalDate.of(calendar.year, calendar.month, it)
+                )
+            }
 
-            val monthlyDailyTodos = repository.getAllDailyTodos().filter { it.isActive &&
-                it.date in calendar.startDate..calendar.endDate
+            val monthlyDailyTodos = repository.getAllDailyTodos().filter {
+                it.isActive &&
+                        it.date in calendar.startDate..calendar.endDate
             }
 
             setMonthlyAchievement(monthlyDailyTodos)
@@ -72,7 +80,7 @@ class CalendarViewModel @Inject constructor(
             val todayDailyTodos = monthlyDailyTodos
                 .filter { it.date.dayOfMonth == date }
 
-            DayWithSuccessLevelAndSelect(date, DailyTodoSuccess(todayDailyTodos).getSuccessLevel(), isSelected(date))
+            DayWithSuccessLevelAndSelect(date, todayDailyTodos, isSelected(date))
         }
     }
 
