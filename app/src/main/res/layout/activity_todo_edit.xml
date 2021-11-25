@@ -38,7 +38,8 @@
             android:src="@drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="@id/tb_todo_edit"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tb_todo_edit" />
+            app:layout_constraintTop_toTopOf="@id/tb_todo_edit"
+            style="@style/Theme.Notto.Icon" />
 
         <ScrollView
             android:id="@+id/scrollView2"
