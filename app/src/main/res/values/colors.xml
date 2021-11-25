@@ -21,4 +21,7 @@
 
     <color name="text_enabled">@color/black</color>
     <color name="text_disabled">@color/gray_normal</color>
+
+    <color name="calendar_day_selected">@color/black</color>
+    <color name="calendar_day_default">@color/gray_deep</color>
 </resources>

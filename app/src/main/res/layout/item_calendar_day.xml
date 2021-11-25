@@ -36,33 +36,18 @@
             tools:backgroundTint="@color/yellow_normal"/>
 
         <TextView
-            android:id="@+id/tv_calendar_day_selected"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="2dp"
-            android:gravity="center"
-            android:textSize="@dimen/text_x_x_small"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_calendar_day"
-            app:layout_constraintEnd_toEndOf="@+id/tv_calendar_day"
-            app:layout_constraintStart_toStartOf="@+id/tv_calendar_day"
-            app:layout_constraintTop_toTopOf="@+id/tv_calendar_day"
-            tools:text="10"
-            style="@style/Theme.Notto.TextDefault" />
-
-        <TextView
             android:id="@+id/tv_calendar_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="2dp"
             android:gravity="center"
             android:textSize="@dimen/text_x_x_small"
+            android:textColor="@color/calendar_day_default"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_successLevel"
-            tools:text="10"
-            style="@style/Theme.Notto.TextGray" />
+            tools:text="10" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

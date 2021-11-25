@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.home.adapter
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,24 +54,20 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
         }
 
         private fun setDayText(date: Int, isSelected: Boolean) {
-            val selectedVisibility: Int
-            val unselectedVisibility: Int
+            val color: Int
+            val style: Typeface
             if (isSelected) {
-                unselectedVisibility = View.INVISIBLE
-                selectedVisibility = View.VISIBLE
+                color = R.color.calendar_day_selected
+                style = Typeface.DEFAULT_BOLD
             } else {
-                unselectedVisibility = View.VISIBLE
-                selectedVisibility = View.INVISIBLE
+                color = R.color.calendar_day_default
+                style = Typeface.DEFAULT
             }
 
             binding.tvCalendarDay.apply {
                 text = date.toString()
-                visibility = unselectedVisibility
-            }
-
-            binding.tvCalendarDaySelected.apply {
-                text = date.toString()
-                visibility = selectedVisibility
+                typeface = style
+                setTextColor(ContextCompat.getColor(context, color))
             }
         }
 
