@@ -36,6 +36,7 @@
             android:layout_marginEnd="@dimen/space_median"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_delete"
+            android:onClick="@{() -> viewmodel.onDeleteButtonCLick()}"
             app:layout_constraintBottom_toBottomOf="@id/tb_todo_edit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tb_todo_edit" />

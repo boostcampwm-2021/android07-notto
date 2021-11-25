@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.todo
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
+import com.gojol.notto.common.DELETE
 import com.gojol.notto.common.EventObserver
 import com.gojol.notto.common.LABEL_ADD
 import com.gojol.notto.common.LabelEditType
@@ -114,11 +116,14 @@ class TodoEditActivity : AppCompatActivity() {
                 todoEditViewModel.setupExistedTodo()
                 binding.tbTodoEdit.title = getString(R.string.todo_edit_title_edit)
             } else {
-                binding.btnTodoEditDelete.visibility = View.INVISIBLE
+                binding.btnTodoEditDelete.visibility = View.GONE
             }
         }
         todoEditViewModel.clickWrapper.isCloseButtonCLicked.observe(this, EventObserver {
             finish()
+        })
+        todoEditViewModel.clickWrapper.deleteButtonClick.observe(this, EventObserver {
+            todoDeletionDialog.show(supportFragmentManager, DELETE)
         })
         todoEditViewModel.clickWrapper.isDeletionExecuted.observe(this, EventObserver {
             finish()
@@ -220,6 +225,7 @@ class TodoEditActivity : AppCompatActivity() {
         )
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initEditTextTouchListener() {
         binding.etTodoEdit.setOnTouchListener { view, motionEvent ->
             if (view == binding.etTodoEdit) {
