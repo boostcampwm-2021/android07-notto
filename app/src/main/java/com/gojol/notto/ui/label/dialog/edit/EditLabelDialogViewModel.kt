@@ -25,7 +25,9 @@ class EditLabelDialogViewModel @Inject constructor(private val repository: TodoL
     val name = MutableLiveData<String>()
 
     fun clickOkay() {
-        val labelName = name.value ?: return
+        val labelName = name.value?.apply {
+            if (isBlank()) return
+        } ?: return
 
         viewModelScope.launch {
             when (type.value) {
