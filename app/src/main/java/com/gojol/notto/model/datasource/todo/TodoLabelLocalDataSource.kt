@@ -43,9 +43,17 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
                         null
                     }
                 }
+                val isFinished = when {
+                    todo.isFinished -> {
+                        selectedDate.isAfter(todo.finishDate)
+                    }
+                    else -> false
+                }
 
-                todayDailyTodo =
-                    repeatedDate?.let { DailyTodo(TodoState.NOTHING, true, todo.todoId, it) }
+                todayDailyTodo = if (repeatedDate != null && isFinished.not()) {
+                    DailyTodo(TodoState.NOTHING, true, todo.todoId, repeatedDate)
+                } else null
+
                 todayDailyTodo?.let { dailyTodo -> todoLabelDao.insertDailyTodo(dailyTodo) }
             } else {
                 if (!todayDailyTodo.isActive) todayDailyTodo = null
@@ -136,8 +144,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
                 }
             }
         }
-
-        todoLabelDao.updateTodo(todo) // 투두 업데이트
+        todoLabelDao.updateTodo(todo.copy(isFinished = false)) // 투두 업데이트
     }
 
     private suspend fun saveDailyTodosWhenUpdating(startDate: LocalDate, endDate: LocalDate, beforeTodo: Todo) {
@@ -159,7 +166,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
     private suspend fun deleteDailyTodosWhenUpdating(todoId: Int, date: LocalDate) {
         todoLabelDao.getDailyTodosByParentTodoId(todoId)
             .filter { dailyTodo ->
-                dailyTodo.date.dayOfMonth >= date.dayOfMonth
+                dailyTodo.date.isAfter(date) || dailyTodo.date.isEqual(date)
             }
             .forEach { dailyTodo ->
                 todoLabelDao.deleteDailyTodo(dailyTodo)
@@ -205,6 +212,7 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
             .forEach { dailyTodo ->
                 todoLabelDao.updateDailyTodoIsActive(todoId, dailyTodo.date, false)
             }
+        todoLabelDao.updateTodoFinishDate(todoId, true, selectedDate.minusDays(1))
     }
 
     override suspend fun deleteLabel(label: Label) {
