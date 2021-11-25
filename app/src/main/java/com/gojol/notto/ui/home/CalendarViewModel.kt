@@ -72,7 +72,7 @@ class CalendarViewModel @Inject constructor(
             val todayDailyTodos = monthlyDailyTodos
                 .filter { it.date.dayOfMonth == date }
 
-            DayWithSuccessLevelAndSelect(date, DailyTodoSuccess(todayDailyTodos).getSuccessLevel(), isSelected(date))
+            DayWithSuccessLevelAndSelect(date, todayDailyTodos, isSelected(date))
         }
     }
 
