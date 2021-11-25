@@ -26,14 +26,14 @@
             android:layout_height="?attr/actionBarSize"
             android:gravity="center"
             android:text="@{date}"
-            android:textColor="@color/black"
             android:textSize="@dimen/text_small"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/ll_calendar_day_of_week"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="2021년 11월" />
+            tools:text="2021년 11월"
+            style="@style/Theme.Notto.TextDefault" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_today"
@@ -78,8 +78,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/calendar_sunday"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_x_small" />
+                android:textSize="@dimen/text_x_small"
+                style="@style/Theme.Notto.TextDefault" />
 
             <TextView
                 android:id="@+id/tv_calendar_monday"
@@ -88,8 +88,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/calendar_monday"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_x_small" />
+                android:textSize="@dimen/text_x_small"
+                style="@style/Theme.Notto.TextDefault" />
 
             <TextView
                 android:id="@+id/tv_calendar_tuesday"
@@ -98,8 +98,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/calendar_tuesday"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_x_small" />
+                android:textSize="@dimen/text_x_small"
+                style="@style/Theme.Notto.TextDefault" />
 
             <TextView
                 android:id="@+id/tv_calendar_wednesday"
@@ -108,8 +108,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/calendar_wednesday"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_x_small" />
+                android:textSize="@dimen/text_x_small"
+                style="@style/Theme.Notto.TextDefault" />
 
             <TextView
                 android:id="@+id/tv_calendar_thursday"
@@ -118,8 +118,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/calendar_thursday"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_x_small" />
+                android:textSize="@dimen/text_x_small"
+                style="@style/Theme.Notto.TextDefault" />
 
             <TextView
                 android:id="@+id/tv_calendar_friday"
@@ -128,8 +128,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/calendar_friday"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_x_small" />
+                android:textSize="@dimen/text_x_small"
+                style="@style/Theme.Notto.TextDefault" />
 
             <TextView
                 android:id="@+id/tv_calendar_saturday"
@@ -138,8 +138,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/calendar_saturday"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_x_small" />
+                android:textSize="@dimen/text_x_small"
+                style="@style/Theme.Notto.TextDefault" />
         </LinearLayout>
 
         <androidx.viewpager2.widget.ViewPager2

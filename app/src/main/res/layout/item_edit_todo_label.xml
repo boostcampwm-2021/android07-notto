@@ -17,14 +17,13 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_home_label"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+            style="@style/Theme.Notto.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="2dp"
             android:clickable="true"
             android:focusable="true"
             android:text="@{item.name}"
-            android:textColor="@color/black"
             android:textSize="@dimen/text_x_x_small"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -36,7 +35,7 @@
             app:closeIconTint="@color/gray_normal"
             app:chipStrokeWidth="1dp"
             app:chipStrokeColor="@color/gray_normal"
-            app:chipBackgroundColor="@color/white"
+            app:chipBackgroundColor="@null"
             tools:text="@string/home_label_all" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
