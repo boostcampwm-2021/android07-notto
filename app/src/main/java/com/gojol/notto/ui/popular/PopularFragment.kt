@@ -50,8 +50,10 @@ class PopularFragment : Fragment() {
         initToolbar()
         initAdapter()
         initObservers()
+
         checkNetwork()
         setNetWorkCallback()
+        registerNetworkCallback()
     }
 
     private fun checkNetwork() {
@@ -65,11 +67,6 @@ class PopularFragment : Fragment() {
             binding.progressCircular.isVisible = false
             binding.tvNetworkFail.isVisible = true
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        registerNetworkCallback()
     }
 
     private fun initToolbar() {
@@ -86,11 +83,6 @@ class PopularFragment : Fragment() {
             adapter.submitList(it)
             binding.progressCircular.isVisible = false
         })
-    }
-
-    override fun onStop() {
-        super.onStop()
-        terminateNetworkCallback()
     }
 
     private fun setNetWorkCallback() {
@@ -127,6 +119,11 @@ class PopularFragment : Fragment() {
             ?.registerNetworkCallback(networkRequest, networkCallBack)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        terminateNetworkCallback()
+    }
 
     private fun terminateNetworkCallback() {
         context?.let { getSystemService(it, ConnectivityManager::class.java) }
