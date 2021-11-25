@@ -97,7 +97,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        calendarAdapter = CalendarAdapter(parentFragmentManager, lifecycle)
+        calendarAdapter = CalendarAdapter(::todayClickCallback, parentFragmentManager, lifecycle)
         labelAdapter = LabelAdapter(::labelTouchCallback)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter, ::onClickLabelMenu)
         todoAdapter = TodoAdapter(::todoTouchCallback, ::todoEditButtonCallback)
@@ -215,6 +215,10 @@ class HomeFragment : Fragment() {
         return layoutManager
     }
 
+    private fun todayClickCallback() {
+        setFragmentResult(TODAY_BUTTON_CLICK_KEY, bundleOf())
+    }
+
     private fun todoTouchCallback(dailyTodo: DailyTodo) {
         homeViewModel.updateDailyTodo(dailyTodo)
         setFragmentResult(TODO_SWIPE_KEY, bundleOf())
@@ -242,6 +246,7 @@ class HomeFragment : Fragment() {
     }
 
     companion object {
+        const val TODAY_BUTTON_CLICK_KEY = "today_click"
         const val TODO_SWIPE_KEY = "todo_swipe"
     }
 }

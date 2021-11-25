@@ -35,6 +35,11 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: DayWithSuccessLevelAndSelect) {
+            binding.todoCount = when {
+                item.todoCount in 1..9 -> item.todoCount.toString()
+                item.todoCount > 9 -> "9+"
+                else -> null
+            }
             val date = item.day
             val achievement = item.successLevel.toIntAlpha()
 

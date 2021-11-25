@@ -10,6 +10,10 @@
         <variable
             name="date"
             type="String" />
+
+        <variable
+            name="today"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +34,38 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="2021년 11월"
             style="@style/Theme.Notto.TextDefault" />
+
+        <ImageButton
+            android:id="@+id/btn_today"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_calendar"
+            app:layout_constraintBottom_toBottomOf="@id/tv_calendar_title"
+            app:layout_constraintEnd_toEndOf="@id/ll_calendar_day_of_week"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="@id/tv_calendar_title"
+            app:tint="@color/calendar_today_button" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="7dp"
+            android:text="@{today}"
+            android:textColor="@color/calendar_today_button"
+            app:layout_constraintBottom_toBottomOf="@id/tv_calendar_title"
+            app:layout_constraintEnd_toEndOf="@id/ll_calendar_day_of_week"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="@id/tv_calendar_title"
+            tools:text="24" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.857" />
 
         <LinearLayout
             android:id="@+id/ll_calendar_day_of_week"

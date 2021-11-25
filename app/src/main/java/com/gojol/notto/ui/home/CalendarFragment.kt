@@ -13,6 +13,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentCalendarBinding
+import com.gojol.notto.ui.home.HomeFragment.Companion.TODAY_BUTTON_CLICK_KEY
 import com.gojol.notto.ui.home.HomeFragment.Companion.TODO_SWIPE_KEY
 import com.gojol.notto.ui.home.adapter.CalendarDayAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,11 +46,17 @@ class CalendarFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         binding.progressCircular.isVisible = true
+
+        setMonthlyData()
+
         setFragmentResultListener(TODO_SWIPE_KEY) { _, _ ->
             swipeUpdate()
         }
-        setMonthlyData()
+        setFragmentResultListener(TODAY_BUTTON_CLICK_KEY) { _, _ ->
+            setMonthlyData()
+        }
     }
 
     private fun initRecyclerView() {

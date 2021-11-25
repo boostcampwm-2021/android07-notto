@@ -5,4 +5,6 @@
 
     <color name="calendar_day_selected">@color/white</color>
     <color name="calendar_day_default">@color/gray_normal</color>
+
+    <color name="calendar_today_button">@color/white</color>
 </resources>
