@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -58,6 +59,7 @@ class PopularFragment : Fragment() {
     private fun initObservers() {
         popularViewModel.items.observe(viewLifecycleOwner, {
             adapter.submitList(it)
+            binding.progressCircular.isVisible = false
         })
     }
 }
