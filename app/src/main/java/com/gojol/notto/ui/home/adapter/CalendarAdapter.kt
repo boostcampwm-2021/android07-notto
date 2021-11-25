@@ -14,6 +14,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class CalendarAdapter(
+    private val todayClickCallback: () -> Unit,
     private val fragmentManager: FragmentManager,
     private val lifecycle: Lifecycle
 ) : RecyclerView.Adapter<CalendarAdapter.CustomCalendarViewHolder>() {
@@ -23,6 +24,7 @@ class CalendarAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomCalendarViewHolder {
         return CustomCalendarViewHolder(
             ItemCalendarBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            todayClickCallback,
             fragmentManager,
             lifecycle
         )
@@ -44,6 +46,7 @@ class CalendarAdapter(
 
     class CustomCalendarViewHolder(
         private val binding: ItemCalendarBinding,
+        private val todayClickCallback: () -> (Unit),
         private val fragmentManager: FragmentManager,
         private val lifecycle: Lifecycle
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -53,11 +56,9 @@ class CalendarAdapter(
         private var calendarPosition = calendarViewPagerAdapter.firstFragmentPosition
 
         init {
+            binding.today = LocalDate.now().dayOfMonth.toString()
             binding.vpCalendar.adapter = calendarViewPagerAdapter
-            binding.vpCalendar.setCurrentItem(
-                calendarViewPagerAdapter.firstFragmentPosition,
-                false
-            )
+            setViewPagerPage(false)
             setViewPagerDynamicHeight()
         }
 
@@ -65,7 +66,23 @@ class CalendarAdapter(
             binding.date = date.format(formatter)
             // submit 되기 전 height가 계산된 경우를 새로 계산
             setViewPagerHeightWithContent(calendarPosition)
+
+            binding.btnToday.setOnClickListener {
+                if (date.monthValue == LocalDate.now().monthValue){
+                    todayClickCallback()
+                } else {
+                    setViewPagerPage(true)
+                }
+            }
+
             binding.executePendingBindings()
+        }
+
+        private fun setViewPagerPage(smoothScroll: Boolean) {
+            binding.vpCalendar.setCurrentItem(
+                calendarViewPagerAdapter.firstFragmentPosition,
+                smoothScroll
+            )
         }
 
         private fun setViewPagerDynamicHeight() {

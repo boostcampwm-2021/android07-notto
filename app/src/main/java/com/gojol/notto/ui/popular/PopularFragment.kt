@@ -1,16 +1,27 @@
 package com.gojol.notto.ui.popular
 
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentPopularBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class PopularFragment : Fragment() {
@@ -19,6 +30,7 @@ class PopularFragment : Fragment() {
     private lateinit var adapter: PopularAdapter
 
     private val popularViewModel: PopularViewModel by viewModels()
+    private lateinit var networkCallBack: ConnectivityManager.NetworkCallback
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,12 +50,23 @@ class PopularFragment : Fragment() {
         initToolbar()
         initAdapter()
         initObservers()
+
+        checkNetwork()
+        setNetWorkCallback()
+        registerNetworkCallback()
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        popularViewModel.fetchKeywords()
+    private fun checkNetwork() {
+        val manager = context?.let { getSystemService(it, ConnectivityManager::class.java) }
+        val isConnect = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            manager?.activeNetwork != null
+        } else {
+            manager?.activeNetworkInfo?.isConnected ?: false
+        }
+        if (!isConnect){
+            binding.progressCircular.isVisible = false
+            binding.tvNetworkFail.isVisible = true
+        }
     }
 
     private fun initToolbar() {
@@ -58,6 +81,52 @@ class PopularFragment : Fragment() {
     private fun initObservers() {
         popularViewModel.items.observe(viewLifecycleOwner, {
             adapter.submitList(it)
+            binding.progressCircular.isVisible = false
         })
+    }
+
+    private fun setNetWorkCallback() {
+        networkCallBack = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    if (popularViewModel.items.value.isNullOrEmpty()) {
+                        binding.progressCircular.isVisible = true
+                        withContext(Dispatchers.IO) {
+                            popularViewModel.fetchKeywords()
+                        }
+                    }
+                    binding.tvNetworkFail.isVisible = false
+                }
+            }
+
+            override fun onLost(network: Network) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    binding.progressCircular.isVisible = false
+                    if (popularViewModel.items.value.isNullOrEmpty()) {
+                        binding.tvNetworkFail.isVisible = true
+                    }
+                }
+            }
+        }
+    }
+
+    private fun registerNetworkCallback() {
+        val networkRequest = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        context?.let { getSystemService(it, ConnectivityManager::class.java) }
+            ?.registerNetworkCallback(networkRequest, networkCallBack)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        terminateNetworkCallback()
+    }
+
+    private fun terminateNetworkCallback() {
+        context?.let { getSystemService(it, ConnectivityManager::class.java) }
+            ?.unregisterNetworkCallback(networkCallBack)
     }
 }
