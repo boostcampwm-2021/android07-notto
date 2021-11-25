@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.todo
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
+import com.gojol.notto.common.DELETE
 import com.gojol.notto.common.EventObserver
 import com.gojol.notto.common.LABEL_ADD
 import com.gojol.notto.common.LabelEditType
@@ -105,6 +107,7 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerViewCallback(label: Label) {
+        if (todoEditViewModel.clickWrapper.isBeforeToday.value == true) return
         todoEditViewModel.removeLabelFromSelectedLabelList(label)
     }
 
@@ -114,11 +117,20 @@ class TodoEditActivity : AppCompatActivity() {
                 todoEditViewModel.setupExistedTodo()
                 binding.tbTodoEdit.title = getString(R.string.todo_edit_title_edit)
             } else {
-                binding.btnTodoEditDelete.visibility = View.INVISIBLE
+                binding.btnTodoEditDelete.visibility = View.GONE
             }
         }
+        todoEditViewModel.clickWrapper.isBeforeToday.observe(this, {
+            if (it) { //편집일 때
+                binding.tbTodoEdit.title = getString(R.string.todo_edit_title_detail)
+                blockClick()
+            } else showBeforeTodayDisabled()
+        })
         todoEditViewModel.clickWrapper.isCloseButtonCLicked.observe(this, EventObserver {
             finish()
+        })
+        todoEditViewModel.clickWrapper.deleteButtonClick.observe(this, EventObserver {
+            todoDeletionDialog.show(supportFragmentManager, DELETE)
         })
         todoEditViewModel.clickWrapper.isDeletionExecuted.observe(this, EventObserver {
             finish()
@@ -220,6 +232,7 @@ class TodoEditActivity : AppCompatActivity() {
         )
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initEditTextTouchListener() {
         binding.etTodoEdit.setOnTouchListener { view, motionEvent ->
             if (view == binding.etTodoEdit) {
@@ -254,6 +267,10 @@ class TodoEditActivity : AppCompatActivity() {
         ).show()
     }
 
+    private fun showBeforeTodayDisabled() {
+        Toast.makeText(this, getString(R.string.todo_edit_before_today_msg), Toast.LENGTH_LONG).show()
+    }
+
     private fun onLabelAddClick() {
         val fragmentManager = this.supportFragmentManager
         val dialog = EditLabelDialogBuilder.builder(LabelEditType.CREATE, null).apply {
@@ -267,6 +284,23 @@ class TodoEditActivity : AppCompatActivity() {
                 todoEditViewModel.initLabelData()
                 dialog.dismiss()
             }
+        }
+    }
+
+    private fun blockClick() {
+        with(binding) {
+            etTodoEdit.isEnabled = false
+            btnTodoEditLabel.isClickable = false
+            rvTodoEdit.isClickable = false
+            tvTodoEditRepeatStartValue.isClickable = false
+            tvTodoEditRepeatTypeValue.isClickable = false
+            tvTodoEditTimeStartValue.isClickable = false
+            tvTodoEditTimeFinishValue.isClickable = false
+            tvTodoEditTimeRepeatValue.isClickable = false
+            switchTodoEditRepeat.isEnabled = false
+            switchTodoEditTime.isEnabled = false
+            switchTodoEditKeyword.isEnabled = false
+            btnTodoEditSave.visibility = View.GONE
         }
     }
 }

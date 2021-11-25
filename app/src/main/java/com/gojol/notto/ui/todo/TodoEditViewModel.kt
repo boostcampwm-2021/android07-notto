@@ -41,7 +41,7 @@ class TodoEditViewModel @Inject constructor(
     val clickWrapper = ClickWrapper(
         MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(),
         MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(),
-        MutableLiveData(), MutableLiveData()
+        MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData()
     )
 
     private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
@@ -121,7 +121,20 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun updateDate(date: LocalDate?) {
-        val selectedDate = date ?: return
+        val isEditing = clickWrapper.isTodoEditing.value ?: return
+        var selectedDate = date ?: return
+
+        if (isEditing) {
+            if (selectedDate.isBefore(LocalDate.now())) {
+                clickWrapper.isBeforeToday.value = isEditing
+            }
+        } else {
+            if (selectedDate.isBefore(LocalDate.now())) {
+                selectedDate = LocalDate.now()
+                clickWrapper.isBeforeToday.value = isEditing
+            }
+        }
+
         _todoWrapper.value = todoWrapper.value?.copy(selectedDate = selectedDate)
     }
 
@@ -168,6 +181,10 @@ class TodoEditViewModel @Inject constructor(
 
     fun onIsCloseButtonClicked() {
         clickWrapper.isCloseButtonCLicked.value = Event(Unit)
+    }
+
+    fun onDeleteButtonCLick(){
+        clickWrapper.deleteButtonClick.value = Event(Unit)
     }
 
     fun onRepeatTypeClick() {

@@ -67,6 +67,9 @@ interface TodoLabelDao {
     @Update
     suspend fun updateTodo(todo: Todo)
 
+    @Query("UPDATE Todo SET finish_date=:finishDate, is_finished=:isFinished WHERE todoId=:todoId")
+    suspend fun updateTodoFinishDate(todoId: Int, isFinished: Boolean, finishDate: LocalDate)
+
     @Update
     suspend fun updateLabel(label: Label)
 
