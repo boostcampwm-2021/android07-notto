@@ -29,18 +29,18 @@ internal class KeywordDatabaseImpl @Inject constructor(private val database: Dat
     }
 
     private fun insert(keyword: String) {
-        database.get().addOnSuccessListener {
-            Log.i(TAG, "Got value ${it.value}")
+        database.child(keyword).apply {
+            get().addOnSuccessListener {
+                Log.i(TAG, "Got value ${it.value}")
 
-            val target = it.children.find { child -> child.key == keyword }
-
-            if (target == null) {
-                insertNewKeyword(keyword)
-            } else {
-                insertExistingKeyword(target)
+                if (it == null) {
+                    insertNewKeyword(keyword)
+                } else {
+                    insertExistingKeyword(it, this)
+                }
+            }.addOnFailureListener {
+                Log.e(TAG, "Error getting data", it)
             }
-        }.addOnFailureListener {
-            Log.e(TAG, "Error getting data", it)
         }
     }
 
@@ -50,9 +50,9 @@ internal class KeywordDatabaseImpl @Inject constructor(private val database: Dat
         }
     }
 
-    private fun insertExistingKeyword(target: DataSnapshot) {
+    private fun insertExistingKeyword(target: DataSnapshot, ref: DatabaseReference) {
         val count = (target.value as Long).toInt() + 1
-        database.child(target.key!!).setValue(count).addOnSuccessListener {
+        ref.setValue(count).addOnSuccessListener {
             Log.i(TAG, "Successfully counted keyword ${target.key}")
         }
     }
