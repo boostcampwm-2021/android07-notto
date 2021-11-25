@@ -25,10 +25,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/todo_edit_top_app_bar"
             app:navigationIcon="@drawable/ic_close"
             app:navigationOnClickListener="@{() -> viewmodel.onIsCloseButtonClicked()}"
             app:title="@string/todo_edit_title_create" />
+
+        <ImageButton
+            android:id="@+id/btn_todo_edit_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_median"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="@id/tb_todo_edit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tb_todo_edit" />
 
         <ScrollView
             android:id="@+id/scrollView2"
@@ -52,9 +62,10 @@
                     android:gravity="top"
                     android:hint="@string/todo_edit_edit_text_hint"
                     android:lines="7"
-                    android:paddingVertical="@dimen/space_median"
-                    android:text="@{viewmodel.todoWrapper.todo.content}"
                     android:onTextChanged="@{viewmodel::updateTodoContent}"
+                    android:paddingVertical="@dimen/space_median"
+                    android:scrollbars="vertical"
+                    android:text="@{viewmodel.todoWrapper.todo.content}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -90,7 +101,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_setting" />
 
-                <!-- 반복 설정 -->
                 <ImageView
                     android:id="@+id/iv_todo_edit_keyword"
                     android:layout_width="wrap_content"
@@ -162,10 +172,10 @@
 
                 <TextView
                     android:id="@+id/tv_todo_edit_repeat_start"
+                    style="@style/text_edit_todo_field"
                     android:text="@string/todo_edit_repeat_start"
                     app:layout_constraintStart_toStartOf="@id/tv_todo_edit_repeat_setting"
-                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_repeat_type"
-                    style="@style/text_edit_todo_field" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_repeat_type" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_repeat_start_value"
@@ -201,7 +211,6 @@
                     app:layout_constraintStart_toStartOf="@id/tv_todo_edit_time_setting"
                     app:layout_constraintTop_toBottomOf="@id/tv_todo_edit_time_setting" />
 
-                <!-- 시간 설정 -->
                 <TextView
                     android:id="@+id/tv_todo_edit_time_start_value"
                     style="@style/text_edit_todo_field"
@@ -325,13 +334,12 @@
                     app:layout_constraintTop_toTopOf="@+id/btn_todo_edit_label"
                     tools:listitem="@layout/item_edit_todo_label" />
 
-                <!-- 키워드 공개 설정 -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_todo_edit_label"
                     android:layout_width="@dimen/todo_edit_btn_size"
                     android:layout_height="@dimen/todo_edit_btn_size"
                     android:layout_marginStart="@dimen/space_median"
-                    android:layout_marginTop="@dimen/space_x_large"
+                    android:layout_marginTop="@dimen/space_median"
                     android:insetLeft="0dp"
                     android:insetTop="0dp"
                     android:insetRight="0dp"

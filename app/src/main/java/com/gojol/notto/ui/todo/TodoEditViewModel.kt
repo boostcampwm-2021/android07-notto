@@ -195,12 +195,13 @@ class TodoEditViewModel @Inject constructor(
     }
 
     private fun onLabelAddClick() {
-        clickWrapper.labelAddClicked.value = Unit
+        clickWrapper.labelAddClicked.value = Event(Unit)
     }
 
     fun onSaveButtonClick() {
+        val isTodoContentNotEmpty = todoWrapper.value?.todo?.content?.isNotEmpty() ?: false
         val isEditing = clickWrapper.isTodoEditing.value ?: return
-        clickWrapper.isSaveButtonClicked.value = isEditing
+        clickWrapper.isSaveButtonClicked.value = Pair(isTodoContentNotEmpty, isEditing)
     }
 
     fun saveTodo() {
