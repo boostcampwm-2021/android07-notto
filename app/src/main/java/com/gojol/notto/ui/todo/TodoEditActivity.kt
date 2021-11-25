@@ -1,11 +1,9 @@
 package com.gojol.notto.ui.todo
 
-import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -15,9 +13,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import com.gojol.notto.R
-import com.gojol.notto.common.DELETE
 import com.gojol.notto.common.EventObserver
 import com.gojol.notto.common.LABEL_ADD
+import com.gojol.notto.common.LabelEditType
 import com.gojol.notto.common.REPEAT_TIME
 import com.gojol.notto.common.REPEAT_TIME_DATA
 import com.gojol.notto.common.REPEAT_TYPE
@@ -30,13 +28,13 @@ import com.gojol.notto.common.TIME_REPEAT_DATA
 import com.gojol.notto.databinding.ActivityTodoEditBinding
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.ui.label.EditLabelActivity
 import com.gojol.notto.ui.todo.dialog.AlarmPeriodDialog
 import com.gojol.notto.ui.todo.dialog.DeletionDialog
 import com.gojol.notto.ui.todo.dialog.RepeatTimeDialog
 import com.gojol.notto.ui.todo.dialog.RepeatTypeDialog
 import com.gojol.notto.ui.todo.dialog.TimeFinishDialog
 import com.gojol.notto.ui.todo.dialog.TimeStartDialog
+import com.gojol.notto.util.EditLabelDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -63,10 +61,10 @@ class TodoEditActivity : AppCompatActivity() {
         binding.viewmodel = todoEditViewModel
 
         initIntentExtra()
-        initAppbar()
         initSelectedLabelRecyclerView()
         initObserver()
         initTodoDialog()
+        initEditTextTouchListener()
     }
 
     override fun onResume() {
@@ -101,21 +99,6 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.updateDate(date)
     }
 
-    private fun initAppbar() {
-        binding.tbTodoEdit.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.delete_todo -> {
-                    // TODO: 새로 생성하는 경우면 ??
-                    if (todoEditViewModel.clickWrapper.isTodoEditing.value == true) {
-                        todoDeletionDialog.show(supportFragmentManager, DELETE)
-                    }
-                    true
-                }
-                else -> false
-            }
-        }
-    }
-
     private fun initSelectedLabelRecyclerView() {
         selectedLabelAdapter = SelectedLabelAdapter(::setRecyclerViewCallback)
         binding.rvTodoEdit.adapter = selectedLabelAdapter
@@ -130,6 +113,8 @@ class TodoEditActivity : AppCompatActivity() {
             if (it) {
                 todoEditViewModel.setupExistedTodo()
                 binding.tbTodoEdit.title = getString(R.string.todo_edit_title_edit)
+            } else {
+                binding.btnTodoEditDelete.visibility = View.INVISIBLE
             }
         }
         todoEditViewModel.clickWrapper.isCloseButtonCLicked.observe(this, EventObserver {
@@ -161,10 +146,9 @@ class TodoEditActivity : AppCompatActivity() {
         todoEditViewModel.clickWrapper.popLabelAddDialog.observe(this) {
             if (it) showLabelAddDialog()
         }
-        todoEditViewModel.clickWrapper.labelAddClicked.observe(this) {
-            val intent = Intent(this, EditLabelActivity::class.java)
-            startActivity(intent)
-        }
+        todoEditViewModel.clickWrapper.labelAddClicked.observe(this, EventObserver {
+            onLabelAddClick()
+        })
         todoEditViewModel.clickWrapper.repeatTypeClick.observe(this, EventObserver {
             if (it) todoRepeatTypeDialog.show(supportFragmentManager, REPEAT_TYPE)
         })
@@ -181,9 +165,12 @@ class TodoEditActivity : AppCompatActivity() {
             if (it) todoAlarmPeriodDialog.show(supportFragmentManager, TIME_REPEAT)
         })
         todoEditViewModel.clickWrapper.isSaveButtonClicked.observe(this, {
-            // 편집일 때
-            if (it) showSaveButtonDialog()
-            else todoEditViewModel.saveTodo()
+            if (it.first.not()) { // 투두 내용이 없는 경우
+                showSaveButtonDisabled()
+                return@observe
+            }
+            if (it.second) showSaveButtonDialog() // 투두 편집인 경우
+            else todoEditViewModel.saveTodo() //투두 생성인 경우
         })
     }
 
@@ -233,6 +220,18 @@ class TodoEditActivity : AppCompatActivity() {
         )
     }
 
+    private fun initEditTextTouchListener() {
+        binding.etTodoEdit.setOnTouchListener { view, motionEvent ->
+            if (view == binding.etTodoEdit) {
+                view.parent.requestDisallowInterceptTouchEvent(true)
+                when (motionEvent.action and MotionEvent.ACTION_MASK) {
+                    MotionEvent.ACTION_UP -> view.parent.requestDisallowInterceptTouchEvent(false)
+                }
+            }
+            false
+        }
+    }
+
     private fun showLabelAddDialog() {
         labelAddDialog
             .create()
@@ -253,5 +252,21 @@ class TodoEditActivity : AppCompatActivity() {
             getString(R.string.todo_edit_button_disabled_message),
             Toast.LENGTH_LONG
         ).show()
+    }
+
+    private fun onLabelAddClick() {
+        val fragmentManager = this.supportFragmentManager
+        val dialog = EditLabelDialogBuilder.builder(LabelEditType.CREATE, null).apply {
+            show(fragmentManager, "EditLabelDialogFragment")
+        }
+
+        fragmentManager.executePendingTransactions()
+
+        dialog.dialog?.apply {
+            setOnDismissListener {
+                todoEditViewModel.initLabelData()
+                dialog.dismiss()
+            }
+        }
     }
 }
