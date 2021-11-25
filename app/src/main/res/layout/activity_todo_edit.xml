@@ -36,6 +36,7 @@
             android:layout_marginEnd="@dimen/space_median"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_delete"
+            android:onClick="@{() -> viewmodel.onDeleteButtonCLick()}"
             app:layout_constraintBottom_toBottomOf="@id/tb_todo_edit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tb_todo_edit"
@@ -50,6 +51,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tb_todo_edit">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_todo_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:context=".ui.todo.TodoEditActivity">
