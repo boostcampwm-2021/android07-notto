@@ -53,12 +53,14 @@ class CalendarAdapter(
         private var calendarPosition = calendarViewPagerAdapter.firstFragmentPosition
 
         init {
+            binding.today = LocalDate.now().dayOfMonth.toString()
             binding.vpCalendar.adapter = calendarViewPagerAdapter
-            binding.vpCalendar.setCurrentItem(
-                calendarViewPagerAdapter.firstFragmentPosition,
-                false
-            )
+            setViewPagerPage(false)
             setViewPagerDynamicHeight()
+
+            binding.btnToday.setOnClickListener {
+                setViewPagerPage(true)
+            }
         }
 
         fun bind(date: LocalDate) {
@@ -66,6 +68,13 @@ class CalendarAdapter(
             // submit 되기 전 height가 계산된 경우를 새로 계산
             setViewPagerHeightWithContent(calendarPosition)
             binding.executePendingBindings()
+        }
+
+        private fun setViewPagerPage(smoothScroll: Boolean) {
+            binding.vpCalendar.setCurrentItem(
+                calendarViewPagerAdapter.firstFragmentPosition,
+                smoothScroll
+            )
         }
 
         private fun setViewPagerDynamicHeight() {

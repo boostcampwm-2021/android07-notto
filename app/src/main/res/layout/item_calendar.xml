@@ -10,6 +10,10 @@
         <variable
             name="date"
             type="String" />
+
+        <variable
+            name="today"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +34,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="2021년 11월" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_today"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:backgroundTint="@color/gray_light"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:text="@{today}"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/tv_calendar_title"
+            app:layout_constraintEnd_toEndOf="@id/ll_calendar_day_of_week"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="@id/tv_calendar_title"
+            tools:text="25" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.857" />
 
         <LinearLayout
             android:id="@+id/ll_calendar_day_of_week"
