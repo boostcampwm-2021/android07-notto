@@ -120,15 +120,14 @@
 
                 <TextView
                     android:id="@+id/tv_todo_edit_date_value"
-                    style="@style/text_edit_todo_field"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginEnd="@dimen/space_median"
                     android:text="@{viewmodel.todoWrapper.selectedDate.toString()}"
-                    android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_date"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_date"
                     app:layout_constraintVertical_bias="0.0"
-                    tools:text="2021년 4월 15일" />
+                    tools:text="2021년 4월 15일"
+                    style="@style/text_edit_todo_value" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_repeat_setting"
@@ -153,16 +152,16 @@
 
                 <TextView
                     android:id="@+id/tv_todo_edit_repeat_type_value"
-                    style="@style/text_edit_todo_field"
                     android:layout_marginEnd="@dimen/space_median"
                     android:enabled="@{viewmodel.todoWrapper.todo.isRepeated}"
                     android:onClick="@{()->viewmodel.onRepeatTypeClick()}"
                     android:text="@{viewmodel.todoWrapper.todo.repeatType.text}"
-                    android:textColor="@{viewmodel.todoWrapper.todo.isRepeated ? @color/black : @color/gray_normal}"
+                    android:textColor="@{viewmodel.todoWrapper.todo.isRepeated ? @color/text_enabled : @color/text_disabled}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_type"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_type"
-                    tools:text="매년" />
+                    tools:text="매년"
+                    style="@style/text_edit_todo_value" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_repeat_start"
@@ -173,16 +172,16 @@
 
                 <TextView
                     android:id="@+id/tv_todo_edit_repeat_start_value"
-                    style="@style/text_edit_todo_field"
                     android:layout_marginEnd="@dimen/space_median"
                     android:enabled="@{viewmodel.todoWrapper.todo.isRepeated ? true : false}"
                     android:onClick="@{()->viewmodel.onRepeatStartClick()}"
                     android:text="@{viewmodel.todoWrapper.todo.startDate.toString()}"
-                    android:textColor="@{viewmodel.todoWrapper.todo.isRepeated ? @color/black : @color/gray_normal}"
+                    android:textColor="@{viewmodel.todoWrapper.todo.isRepeated ? @color/text_enabled : @color/text_disabled}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_repeat_start"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_repeat_start"
-                    tools:text="2021년 4월 15일" />
+                    tools:text="2021년 4월 15일"
+                    style="@style/text_edit_todo_value" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_setting"
@@ -208,16 +207,16 @@
                 <!-- 시간 설정 -->
                 <TextView
                     android:id="@+id/tv_todo_edit_time_start_value"
-                    style="@style/text_edit_todo_field"
                     android:layout_marginEnd="@dimen/space_median"
                     android:enabled="@{viewmodel.todoWrapper.todo.hasAlarm}"
                     android:onClick="@{()->viewmodel.onTimeStartClick()}"
                     android:text="@{ExtensionsKt.toDialogString(viewmodel.todoWrapper.todo.startTime)}"
-                    android:textColor="@{viewmodel.todoWrapper.todo.hasAlarm ? @color/black : @color/gray_normal}"
+                    android:textColor="@{viewmodel.todoWrapper.todo.hasAlarm ? @color/text_enabled : @color/text_disabled}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_start"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_start"
-                    tools:text="오전 08:00" />
+                    tools:text="오전 08:00"
+                    style="@style/text_edit_todo_value" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_finish"
@@ -228,16 +227,16 @@
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_finish_value"
-                    style="@style/text_edit_todo_field"
                     android:layout_marginEnd="@dimen/space_median"
                     android:enabled="@{viewmodel.todoWrapper.todo.hasAlarm}"
                     android:onClick="@{()->viewmodel.onTimeFinishClick()}"
                     android:text="@{ExtensionsKt.toDialogString(viewmodel.todoWrapper.todo.endTime)}"
-                    android:textColor="@{viewmodel.todoWrapper.todo.hasAlarm ? @color/black : @color/gray_normal}"
+                    android:textColor="@{viewmodel.todoWrapper.todo.hasAlarm ? @color/text_enabled : @color/text_disabled}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_finish"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_finish"
-                    tools:text="오후 02:00" />
+                    tools:text="오후 02:00"
+                    style="@style/text_edit_todo_value" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_repeat"
@@ -248,16 +247,16 @@
 
                 <TextView
                     android:id="@+id/tv_todo_edit_time_repeat_value"
-                    style="@style/text_edit_todo_field"
                     android:layout_marginEnd="@dimen/space_median"
                     android:enabled="@{viewmodel.todoWrapper.todo.hasAlarm}"
                     android:onClick="@{()->viewmodel.onTimeRepeatClick()}"
                     android:text="@{viewmodel.todoWrapper.todo.periodTime.text}"
-                    android:textColor="@{viewmodel.todoWrapper.todo.hasAlarm ? @color/black : @color/gray_normal}"
+                    android:textColor="@{viewmodel.todoWrapper.todo.hasAlarm ? @color/text_enabled : @color/text_disabled}"
                     app:layout_constraintBottom_toBottomOf="@id/tv_todo_edit_time_repeat"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_todo_edit_time_repeat"
-                    tools:text="1시간" />
+                    tools:text="1시간"
+                    style="@style/text_edit_todo_value" />
 
                 <TextView
                     android:id="@+id/tv_todo_edit_keyword_setting"
