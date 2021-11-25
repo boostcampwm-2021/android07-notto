@@ -34,7 +34,7 @@ internal class KeywordDatabaseImpl @Inject constructor(private val database: Dat
                 Log.i(TAG, "Got value ${it.value}")
 
                 if (it == null) {
-                    insertNewKeyword(keyword)
+                    insertNewKeyword(keyword, this)
                 } else {
                     insertExistingKeyword(it, this)
                 }
@@ -44,8 +44,8 @@ internal class KeywordDatabaseImpl @Inject constructor(private val database: Dat
         }
     }
 
-    private fun insertNewKeyword(keyword: String) {
-        database.child(keyword).setValue(1).addOnSuccessListener {
+    private fun insertNewKeyword(keyword: String, ref: DatabaseReference) {
+        ref.setValue(1).addOnSuccessListener {
             Log.i(TAG, "Successfully inserted keyword $keyword")
         }
     }
