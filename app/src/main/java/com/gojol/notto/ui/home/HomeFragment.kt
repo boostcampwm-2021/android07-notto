@@ -91,6 +91,14 @@ class HomeFragment : Fragment() {
         initData()
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        parentFragmentManager.fragments.forEach {
+            parentFragmentManager.beginTransaction().remove(it).commit()
+        }
+    }
+
     private fun initRecyclerView() {
         calendarAdapter = CalendarAdapter(parentFragmentManager, lifecycle)
         labelAdapter = LabelAdapter(::labelTouchCallback)
