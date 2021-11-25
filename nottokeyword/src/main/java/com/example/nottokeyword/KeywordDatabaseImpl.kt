@@ -75,14 +75,13 @@ internal class KeywordDatabaseImpl @Inject constructor(private val database: Dat
     }
 
     override fun deleteKeyword(keyword: String) {
-        database.get().addOnSuccessListener {
+        database.child(keyword).get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
-            val target = it.children.find { child ->
-                child.key == keyword && child.value as Long > 0
+            val count = it.value?.let { count ->
+                (count as Long).toInt() - 1
             } ?: return@addOnSuccessListener
 
-            val count = (target.value as Long).toInt() - 1
             if (count == 0) {
                 database.child(keyword).removeValue()
             } else {
