@@ -99,8 +99,10 @@ class HomeFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         parentFragmentManager.fragments.forEachIndexed { position, fragment ->
-            parentFragmentManager.fragments[position].onDestroy()
-            parentFragmentManager.beginTransaction().remove(fragment).commit()
+            if (fragment is CalendarFragment) {
+                parentFragmentManager.fragments[position].onDestroy()
+                parentFragmentManager.beginTransaction().remove(fragment).commit()
+            }
         }
     }
 
