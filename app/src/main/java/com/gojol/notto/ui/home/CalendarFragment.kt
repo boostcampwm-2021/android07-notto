@@ -59,6 +59,11 @@ class CalendarFragment : Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.rvCalendar.adapter = null
+    }
+
     private fun initRecyclerView() {
         binding.rvCalendar.apply {
             adapter = calendarDayAdapter

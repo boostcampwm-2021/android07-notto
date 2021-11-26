@@ -25,9 +25,11 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         navView.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            binding.navView.menu.forEach {
-                it.isEnabled = it.itemId != destination.id
-            }
+            binding.navView.postDelayed({
+                binding.navView.menu.forEach {
+                    it.isEnabled = it.itemId != destination.id
+                }
+            }, 500)
         }
     }
 }
