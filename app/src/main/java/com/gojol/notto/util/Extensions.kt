@@ -11,7 +11,7 @@ fun Date.getTimeString(): String {
     return simpleDateFormatTime.format(this)
 }
 
-fun String?.isShort(): Boolean {
+fun String?.isShorterThanMinLabelLength(): Boolean {
     return if (this == null) false
     else this.isHangulEnding() && this.length < 2 || this.isHangulEnding().not() && this.length < 3
 }
