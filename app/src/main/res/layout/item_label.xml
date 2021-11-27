@@ -29,7 +29,7 @@
             android:layout_marginHorizontal="2dp"
             android:clickable="true"
             android:focusable="true"
-            android:text="@{ExtensionsKt.isShort(item.name) ? @string/home_label_placeholder(item.name) : item.name}"
+            android:text="@{ExtensionsKt.isShorterThanMinLabelLength(item.name) ? @string/home_label_placeholder(item.name) : item.name}"
             android:textColor="@color/black"
             android:textSize="@dimen/text_x_x_small"
             android:textStyle="bold"

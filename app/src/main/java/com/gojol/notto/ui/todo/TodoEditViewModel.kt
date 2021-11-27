@@ -1,11 +1,11 @@
 package com.gojol.notto.ui.todo
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nottokeyword.FirebaseDB
-import com.gojol.notto.BuildConfig
+import com.example.nottokeyword.KeywordDatabase
 import com.gojol.notto.common.Event
 import com.gojol.notto.common.LABEL_ADD
 import com.gojol.notto.common.TimeRepeatType
@@ -18,6 +18,8 @@ import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
@@ -26,6 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoEditViewModel @Inject constructor(
     private val repository: TodoLabelRepository,
+    private val keywordDatabase: KeywordDatabase,
     private val todoAlarmManager: TodoAlarmManager
 ) : ViewModel() {
 
@@ -43,8 +46,6 @@ class TodoEditViewModel @Inject constructor(
         MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(),
         MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData()
     )
-
-    private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
 
     init {
         _todoWrapper.value = TodoWrapper(
@@ -241,7 +242,9 @@ class TodoEditViewModel @Inject constructor(
     private fun saveNewTodo() {
         val todoModel = todoWrapper.value ?: return
 
-        insertInFirebase(todoModel)
+        if (todoModel.todo.isKeywordOpen) {
+            insertKeywords(todoModel.todo.content)
+        }
 
         viewModelScope.launch {
             // 투두 insert, 투두 알림 설정
@@ -251,12 +254,6 @@ class TodoEditViewModel @Inject constructor(
             _todoWrapper.value = todoModel.copy(todo = todoModel.todo.copy(todoId = generatedTodoId))
 
             insertLabels()
-        }
-    }
-
-    private fun insertInFirebase(todoModel: TodoWrapper) {
-        if (todoModel.todo.isKeywordOpen) {
-            firebaseDB.insertKeyword(todoModel.todo.content)
         }
     }
 
@@ -285,7 +282,7 @@ class TodoEditViewModel @Inject constructor(
             val oldTodo = todoModel.existedTodo ?: return
 
             if (oldTodo.isKeywordOpen.not() || oldTodo.content != todoModel.todo.content) {
-                firebaseDB.insertKeyword(todoModel.todo.content)
+                insertKeywords(todoModel.todo.content)
             }
         }
 
@@ -298,6 +295,14 @@ class TodoEditViewModel @Inject constructor(
                 repository.updateTodo(todoModel.todo, newList)
             }
             clickWrapper.isSaveButtonEnabled.value = true
+        }
+    }
+
+    private fun insertKeywords(content: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = keywordDatabase.insertKeyword(content)
+
+            Log.i(TAG, "insertKeyword result: $result")
         }
     }
 
@@ -322,6 +327,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     companion object {
+        val TAG: String = TodoEditViewModel::class.java.simpleName
         val FINISH_DATE: LocalDate? = LocalDate.of(2099, 12, 31)
     }
 }
