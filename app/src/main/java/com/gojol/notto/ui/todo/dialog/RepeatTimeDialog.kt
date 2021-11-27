@@ -54,7 +54,6 @@ class RepeatTimeDialog : BaseDialog<DialogTodoRepeatTimeBinding, RepeatTimeDialo
 
     override fun initObserver() {
         viewModel.repeatTime.observe(this) {
-            println(it)
             binding.cvRepeatTime.setSelectedDate(
                 Date.from(
                     it.atStartOfDay(ZoneId.systemDefault()).toInstant()

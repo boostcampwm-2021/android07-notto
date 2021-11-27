@@ -55,7 +55,6 @@ class CalendarViewModel @Inject constructor(
 
     fun setMonthlyDailyTodos() {
         val calendar = _monthlyCalendar.value ?: return
-
         viewModelScope.launch {
             // TODO DailyTodo를 가져오는 코드인데 없으면 setting을 해줌 -> 분리 필요
             (calendar.startDate.dayOfMonth..calendar.endDate.dayOfMonth).forEach {

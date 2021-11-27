@@ -11,12 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentCalendarBinding
 import com.gojol.notto.ui.home.HomeFragment.Companion.TODAY_BUTTON_CLICK_KEY
 import com.gojol.notto.ui.home.HomeFragment.Companion.TODO_SWIPE_KEY
 import com.gojol.notto.ui.home.adapter.CalendarDayAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.isActive
 import java.time.LocalDate
 
 @AndroidEntryPoint
@@ -39,6 +41,7 @@ class CalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.progressCircular.isVisible = true
         initRecyclerView()
         initObserver()
         setMonthlyData()
@@ -46,8 +49,6 @@ class CalendarFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
-        binding.progressCircular.isVisible = true
 
         setMonthlyData()
 
@@ -57,11 +58,6 @@ class CalendarFragment : Fragment() {
         setFragmentResultListener(TODAY_BUTTON_CLICK_KEY) { _, _ ->
             setMonthlyData()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.rvCalendar.adapter = null
     }
 
     private fun initRecyclerView() {
@@ -113,6 +109,8 @@ class CalendarFragment : Fragment() {
     private fun dayClickCallback(date: Int) {
         calendarViewModel.updateSelectedDay(date)
     }
+
+    fun getItemId() = arguments?.getLong(ITEM_ID_ARGUMENT)
 
     companion object {
         const val UPDATE_HEIGHT_KEY = "update_height"

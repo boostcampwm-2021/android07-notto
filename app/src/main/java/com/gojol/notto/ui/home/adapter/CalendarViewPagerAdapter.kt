@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.abs
 
 class CalendarViewPagerAdapter(
-    fragmentManager: FragmentManager,
+    private val fragmentManager: FragmentManager,
     lifecycle: Lifecycle
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
@@ -21,13 +21,19 @@ class CalendarViewPagerAdapter(
     override fun createFragment(position: Int): Fragment {
         val itemId = getItemId(position)
 
+        fragmentManager.fragments.forEach {
+            if (it is CalendarFragment && it.getItemId() == itemId) {
+                fragmentManager.beginTransaction().remove(it).commitNow()
+                return CalendarFragment.newInstance(itemId)
+            }
+        }
         return CalendarFragment.newInstance(itemId)
     }
 
     override fun getItemId(position: Int): Long {
         val moveMonth: Long = (position - firstFragmentPosition).toLong()
 
-         val today = if (moveMonth > 0){
+        val today = if (moveMonth > 0) {
             LocalDate.now().plusMonths(moveMonth)
         } else {
             LocalDate.now().minusMonths(abs(moveMonth))
@@ -40,7 +46,7 @@ class CalendarViewPagerAdapter(
         return itemId in MIN_DATE..MAX_DATE
     }
 
-    companion object{
+    companion object {
         const val MIN_DATE = 20000102L
         const val MAX_DATE = 20991230L
     }
