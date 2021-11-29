@@ -94,4 +94,6 @@
     <string name="popular_place_format">%d</string>
     <string name="popular_count_format">%d</string>
     <string name="popular_network_state_alert">데이터 요청에 실패하였습니다.\n네트워크 상태를 확인해주세요.</string>
+    <string name="dialog_start_exception">시작 시간은 종료 시간보다 낮게 설정해야 합니다.</string>
+    <string name="dialog_end_exception">종료 시간은 시작 시간보다 높게 설정해야 합니다.</string>
 </resources>

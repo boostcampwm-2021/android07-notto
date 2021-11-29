@@ -3,6 +3,8 @@ package com.gojol.notto.ui.todo.dialog
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.common.TIME_FINISH_DATA
@@ -17,6 +19,8 @@ class TimeFinishDialog : BaseDialog<DialogTodoTimeFinishBinding, TimeFinishDialo
 
     override val viewModel: TimeFinishDialogViewModel by viewModels()
     override var layoutId: Int = R.layout.dialog_todo_time_finish
+
+    private var startTime: LocalTime? = null
 
     var setTimeCallback: ((LocalTime) -> Unit)? = null
 
@@ -33,11 +37,16 @@ class TimeFinishDialog : BaseDialog<DialogTodoTimeFinishBinding, TimeFinishDialo
         resetDialogSize()
     }
 
+    fun show(manager: FragmentManager, tag: String?, startTime: LocalTime?) {
+        super.show(manager, tag)
+        this.startTime = startTime
+    }
+
     private fun resetDialogSize() {
         val deviceWidth = resources.displayMetrics.widthPixels
         val deviceHeight = resources.displayMetrics.heightPixels
 
-        if(deviceWidth > deviceHeight) {
+        if (deviceWidth > deviceHeight) {
             val dialogWidth = deviceWidth * 0.8
             val dialogHeight = deviceHeight * 0.8
             dialog?.window?.setLayout(dialogWidth.toInt(), dialogHeight.toInt())
@@ -80,9 +89,31 @@ class TimeFinishDialog : BaseDialog<DialogTodoTimeFinishBinding, TimeFinishDialo
     override fun confirmClick() {
         with(binding.tpTimeFinish) {
             if (Build.VERSION.SDK_INT >= 23) {
-                viewModel.setTimeFinishCallback.value?.let { it(LocalTime.of(hour, minute)) }
+                val currTime = LocalTime.of(hour, minute)
+                startTime?.let {
+                    if (currTime <= startTime) {
+                        Toast.makeText(
+                            requireContext(),
+                            context.getString(R.string.dialog_end_exception),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return
+                    }
+                }
+                viewModel.setTimeFinishCallback.value?.let { it(currTime) }
             } else {
-                viewModel.setTimeFinishCallback.value?.let { it(LocalTime.of(currentHour, currentMinute)) }
+                val currTime = LocalTime.of(currentHour, currentMinute)
+                startTime?.let {
+                    if (currTime <= startTime) {
+                        Toast.makeText(
+                            requireContext(),
+                            context.getString(R.string.dialog_end_exception),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return
+                    }
+                }
+                viewModel.setTimeFinishCallback.value?.let { it(currTime) }
             }
         }
         this.dismiss()

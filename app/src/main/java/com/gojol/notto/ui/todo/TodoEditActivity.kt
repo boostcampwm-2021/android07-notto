@@ -169,10 +169,18 @@ class TodoEditActivity : AppCompatActivity() {
             if (it) todoRepeatTimeDialog.show(supportFragmentManager, REPEAT_TIME)
         })
         todoEditViewModel.clickWrapper.timeStartClick.observe(this, EventObserver {
-            if (it) todoTimeStartDialog.show(supportFragmentManager, TIME_START)
+            if (it) todoTimeStartDialog.show(
+                supportFragmentManager,
+                TIME_START,
+                todoEditViewModel.todoWrapper.value?.todo?.endTime
+            )
         })
         todoEditViewModel.clickWrapper.timeFinishClick.observe(this, EventObserver {
-            if (it) todoTimeFinishDialog.show(supportFragmentManager, TIME_FINISH)
+            if (it) todoTimeFinishDialog.show(
+                supportFragmentManager,
+                TIME_FINISH,
+                todoEditViewModel.todoWrapper.value?.todo?.startTime
+            )
         })
         todoEditViewModel.clickWrapper.timeRepeatClick.observe(this, EventObserver {
             if (it) todoAlarmPeriodDialog.show(supportFragmentManager, TIME_REPEAT)

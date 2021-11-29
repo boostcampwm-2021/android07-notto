@@ -5,7 +5,9 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.Window
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.common.TIME_START_DATA
@@ -21,6 +23,8 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
     override val viewModel: TimeStartDialogViewModel by viewModels()
     override var layoutId: Int = R.layout.dialog_todo_time_start
 
+    private var endTime: LocalTime? = null
+
     var setTimeCallback: ((LocalTime) -> Unit)? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,6 +39,11 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
     override fun onStart() {
         super.onStart()
         resetDialogSize()
+    }
+
+    fun show(manager: FragmentManager, tag: String?, endTime: LocalTime?) {
+        super.show(manager, tag)
+        this.endTime = endTime
     }
 
     private fun resetDialogSize() {
@@ -91,7 +100,7 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
     }
 
     private fun setClickListener() {
-        binding.tpTimeStart.setOnTimeChangedListener { timePicker, hour, minute ->
+        binding.tpTimeStart.setOnTimeChangedListener { _, hour, minute ->
             viewModel.setTimeStart(LocalTime.of(hour, minute))
         }
     }
@@ -99,9 +108,31 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
     override fun confirmClick() {
         with(binding.tpTimeStart) {
             if (Build.VERSION.SDK_INT >= 23) {
-                viewModel.setTimeStartCallback.value?.let { it(LocalTime.of(hour, minute)) }
+                val currTime = LocalTime.of(hour, minute)
+                endTime?.let {
+                    if (currTime >= endTime) {
+                        Toast.makeText(
+                            requireContext(),
+                            context.getString(R.string.dialog_start_exception),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return
+                    }
+                }
+                viewModel.setTimeStartCallback.value?.let { it(currTime) }
             } else {
-                viewModel.setTimeStartCallback.value?.let { it(LocalTime.of(currentHour, currentMinute)) }
+                val currTime = LocalTime.of(currentHour, currentMinute)
+                endTime?.let {
+                    if (currTime >= endTime) {
+                        Toast.makeText(
+                            requireContext(),
+                            context.getString(R.string.dialog_start_exception),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return
+                    }
+                }
+                viewModel.setTimeStartCallback.value?.let { it(currTime) }
             }
         }
         this.dismiss()
