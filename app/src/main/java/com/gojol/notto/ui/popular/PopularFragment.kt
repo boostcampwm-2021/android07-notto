@@ -28,7 +28,7 @@ class PopularFragment : Fragment() {
     private lateinit var adapter: PopularAdapter
 
     private val popularViewModel: PopularViewModel by viewModels()
-    private lateinit var networkCallBack: ConnectivityManager.NetworkCallback
+    private val networkCallBack = generateNetworkCallback()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,8 +49,7 @@ class PopularFragment : Fragment() {
         initAdapter()
         initObservers()
 
-        setNetworkCallback()
-        registerNetworkCallback()
+        registerNetworkCallback(networkCallBack)
     }
 
     override fun onResume() {
@@ -81,8 +80,8 @@ class PopularFragment : Fragment() {
         })
     }
 
-    private fun setNetworkCallback() {
-        networkCallBack = object : ConnectivityManager.NetworkCallback() {
+    private fun generateNetworkCallback(): ConnectivityManager.NetworkCallback {
+        return object : ConnectivityManager.NetworkCallback() {
 
             override fun onAvailable(network: Network) {
                 if (popularViewModel.items.value.isNullOrEmpty()) {
@@ -97,7 +96,7 @@ class PopularFragment : Fragment() {
         }
     }
 
-    private fun registerNetworkCallback() {
+    private fun registerNetworkCallback(callback: ConnectivityManager.NetworkCallback) {
         val networkRequest = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
@@ -106,19 +105,19 @@ class PopularFragment : Fragment() {
         getSystemService(
             requireContext(),
             ConnectivityManager::class.java
-        )?.registerNetworkCallback(networkRequest, networkCallBack)
+        )?.registerNetworkCallback(networkRequest, callback)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        terminateNetworkCallback()
+        terminateNetworkCallback(networkCallBack)
     }
 
-    private fun terminateNetworkCallback() {
+    private fun terminateNetworkCallback(callback: ConnectivityManager.NetworkCallback) {
         getSystemService(
             requireContext(),
             ConnectivityManager::class.java
-        )?.unregisterNetworkCallback(networkCallBack)
+        )?.unregisterNetworkCallback(callback)
     }
 }
