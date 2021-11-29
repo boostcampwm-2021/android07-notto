@@ -1,15 +1,13 @@
 package com.gojol.notto.ui.popular
 
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -17,9 +15,6 @@ import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentPopularBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PopularFragment : Fragment() {
@@ -28,7 +23,12 @@ class PopularFragment : Fragment() {
     private lateinit var adapter: PopularAdapter
 
     private val popularViewModel: PopularViewModel by viewModels()
-    private val networkCallBack = generateNetworkCallback()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,14 +48,30 @@ class PopularFragment : Fragment() {
         initToolbar()
         initAdapter()
         initObservers()
-
-        registerNetworkCallback(networkCallBack)
+        initRefreshLayout()
     }
 
     override fun onResume() {
         super.onResume()
 
         popularViewModel.fetchKeywords()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.popular_toolbar_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_refresh -> {
+                binding.swipeRefreshLayout.isRefreshing = true
+                popularViewModel.fetchKeywords()
+
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initToolbar() {
@@ -69,55 +85,17 @@ class PopularFragment : Fragment() {
 
     private fun initObservers() {
         popularViewModel.items.observe(viewLifecycleOwner, {
-            val isOffline = it.isNullOrEmpty()
-
+            binding.swipeRefreshLayout.isRefreshing = false
             binding.pbPopular.isVisible = false
-            binding.tvNetworkFail.isVisible = isOffline
+            binding.tvNetworkFail.isVisible = it.isNullOrEmpty()
 
-            if (isOffline.not()) {
-                adapter.submitList(it)
-            }
+            adapter.submitList(it)
         })
     }
 
-    private fun generateNetworkCallback(): ConnectivityManager.NetworkCallback {
-        return object : ConnectivityManager.NetworkCallback() {
-
-            override fun onAvailable(network: Network) {
-                if (popularViewModel.items.value.isNullOrEmpty()) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        binding.tvNetworkFail.isVisible = false
-                        binding.pbPopular.isVisible = true
-                    }
-
-                    popularViewModel.fetchKeywords()
-                }
-            }
+    private fun initRefreshLayout() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            popularViewModel.fetchKeywords()
         }
-    }
-
-    private fun registerNetworkCallback(callback: ConnectivityManager.NetworkCallback) {
-        val networkRequest = NetworkRequest.Builder()
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            .build()
-
-        getSystemService(
-            requireContext(),
-            ConnectivityManager::class.java
-        )?.registerNetworkCallback(networkRequest, callback)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        terminateNetworkCallback(networkCallBack)
-    }
-
-    private fun terminateNetworkCallback(callback: ConnectivityManager.NetworkCallback) {
-        getSystemService(
-            requireContext(),
-            ConnectivityManager::class.java
-        )?.unregisterNetworkCallback(callback)
     }
 }
