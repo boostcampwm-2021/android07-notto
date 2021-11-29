@@ -60,6 +60,10 @@ class TodoLabelRepository @Inject constructor(
         localDataSource.insertDailyTodo(dailyTodo)
     }
 
+    override suspend fun insertDailyTodosWithDateRange(dateRange: List<LocalDate>) {
+        localDataSource.insertDailyTodosWithDateRange(dateRange)
+    }
+
     override suspend fun updateTodo(todo: Todo, selectedDate: LocalDate) {
         localDataSource.updateTodo(todo, selectedDate)
     }

@@ -25,4 +25,5 @@
     <color name="calendar_day_selected">@color/black</color>
     <color name="calendar_day_default">@color/gray_deep</color>
     <color name="calendar_today_button">@color/black</color>
+    <color name="calendar_day_background_default">@color/gray_light</color>
 </resources>
