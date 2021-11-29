@@ -8,7 +8,7 @@ import android.view.Window
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
-import com.gojol.notto.common.SET_TIME_START
+import com.gojol.notto.common.TIME_START_DATA
 import com.gojol.notto.databinding.DialogTodoTimeStartBinding
 import com.gojol.notto.ui.BaseDialog
 import com.gojol.notto.ui.todo.dialog.util.TimeStartDialogViewModel
@@ -28,6 +28,7 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
         binding.viewmodel = viewModel
         setTimeCallback?.let { viewModel.setTimeStartCallback(it) }
         initDate()
+        initObserver()
         setClickListener()
     }
 
@@ -64,9 +65,9 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
 
     private fun initDate() {
         arguments?.let { arg ->
-            (arg.getSerializable(SET_TIME_START) as LocalTime?)?.let {
+            (arg.getSerializable(TIME_START_DATA) as LocalTime?)?.let {
                 viewModel.setTimeStart(it)
-                arg.remove(SET_TIME_START)
+                arg.remove(TIME_START_DATA)
             }
         }
     }

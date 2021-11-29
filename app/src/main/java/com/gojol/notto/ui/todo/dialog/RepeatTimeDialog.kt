@@ -30,7 +30,6 @@ class RepeatTimeDialog : BaseDialog<DialogTodoRepeatTimeBinding, RepeatTimeDialo
             Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
         ).commit()
 
-        initObserver()
         initRepeatTime()
         initClickListener()
     }

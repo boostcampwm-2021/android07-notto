@@ -22,9 +22,10 @@ import com.gojol.notto.common.REPEAT_TIME
 import com.gojol.notto.common.REPEAT_TIME_DATA
 import com.gojol.notto.common.REPEAT_TYPE
 import com.gojol.notto.common.REPEAT_TYPE_DATA
-import com.gojol.notto.common.SET_TIME_DATA
-import com.gojol.notto.common.SET_TIME_FINISH
-import com.gojol.notto.common.SET_TIME_START
+import com.gojol.notto.common.TIME_FINISH
+import com.gojol.notto.common.TIME_FINISH_DATA
+import com.gojol.notto.common.TIME_START
+import com.gojol.notto.common.TIME_START_DATA
 import com.gojol.notto.common.TIME_REPEAT
 import com.gojol.notto.common.TIME_REPEAT_DATA
 import com.gojol.notto.databinding.ActivityTodoEditBinding
@@ -168,10 +169,10 @@ class TodoEditActivity : AppCompatActivity() {
             if (it) todoRepeatTimeDialog.show(supportFragmentManager, REPEAT_TIME)
         })
         todoEditViewModel.clickWrapper.timeStartClick.observe(this, EventObserver {
-            if (it) todoTimeStartDialog.show(supportFragmentManager, SET_TIME_START)
+            if (it) todoTimeStartDialog.show(supportFragmentManager, TIME_START)
         })
         todoEditViewModel.clickWrapper.timeFinishClick.observe(this, EventObserver {
-            if (it) todoTimeFinishDialog.show(supportFragmentManager, SET_TIME_FINISH)
+            if (it) todoTimeFinishDialog.show(supportFragmentManager, TIME_FINISH)
         })
         todoEditViewModel.clickWrapper.timeRepeatClick.observe(this, EventObserver {
             if (it) todoAlarmPeriodDialog.show(supportFragmentManager, TIME_REPEAT)
@@ -222,12 +223,12 @@ class TodoEditActivity : AppCompatActivity() {
         )
 
         todoTimeStartDialog = TimeStartDialog.newInstance(
-            bundleOf(SET_TIME_DATA to todoEditViewModel.todoWrapper.value?.todo?.startTime),
+            bundleOf(TIME_START_DATA to todoEditViewModel.todoWrapper.value?.todo?.startTime),
             todoEditViewModel::updateTimeStart
         )
 
         todoTimeFinishDialog = TimeFinishDialog.newInstance(
-            bundleOf(SET_TIME_DATA to todoEditViewModel.todoWrapper.value?.todo?.endTime),
+            bundleOf(TIME_FINISH_DATA to todoEditViewModel.todoWrapper.value?.todo?.endTime),
             todoEditViewModel::updateTimeFinish
         )
     }

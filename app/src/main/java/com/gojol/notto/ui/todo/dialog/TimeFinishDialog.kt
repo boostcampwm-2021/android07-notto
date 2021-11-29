@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
-import com.gojol.notto.common.SET_TIME_FINISH
+import com.gojol.notto.common.TIME_FINISH_DATA
 import com.gojol.notto.databinding.DialogTodoTimeFinishBinding
 import com.gojol.notto.ui.BaseDialog
 import com.gojol.notto.ui.todo.dialog.util.TimeFinishDialogViewModel
@@ -46,9 +46,9 @@ class TimeFinishDialog : BaseDialog<DialogTodoTimeFinishBinding, TimeFinishDialo
 
     private fun initDate() {
         arguments?.let { arg ->
-            (arg.getSerializable(SET_TIME_FINISH) as LocalTime?)?.let {
+            (arg.getSerializable(TIME_FINISH_DATA) as LocalTime?)?.let {
                 viewModel.setTimeFinish(it)
-                arg.remove(SET_TIME_FINISH)
+                arg.remove(TIME_FINISH_DATA)
             }
         }
     }

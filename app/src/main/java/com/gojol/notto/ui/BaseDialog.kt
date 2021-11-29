@@ -40,6 +40,7 @@ abstract class BaseDialog<B : ViewDataBinding, VM : DialogViewModel> : DialogFra
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initBaseObserver()
+        initObserver()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
