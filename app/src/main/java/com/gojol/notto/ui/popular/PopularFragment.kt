@@ -79,7 +79,7 @@ class PopularFragment : Fragment() {
         } else {
             manager.activeNetworkInfo?.isConnected ?: false
         }
-        if (isConnected.not()){
+        if (isConnected.not()) {
             binding.pbPopular.isVisible = false
             binding.tvNetworkFail.isVisible = true
         }
@@ -116,8 +116,11 @@ class PopularFragment : Fragment() {
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
             .build()
-        context?.let { getSystemService(it, ConnectivityManager::class.java) }
-            ?.registerNetworkCallback(networkRequest, networkCallBack)
+
+        getSystemService(
+            requireContext(),
+            ConnectivityManager::class.java
+        )?.registerNetworkCallback(networkRequest, networkCallBack)
     }
 
     override fun onDestroy() {
@@ -127,7 +130,9 @@ class PopularFragment : Fragment() {
     }
 
     private fun terminateNetworkCallback() {
-        context?.let { getSystemService(it, ConnectivityManager::class.java) }
-            ?.unregisterNetworkCallback(networkCallBack)
+        getSystemService(
+            requireContext(),
+            ConnectivityManager::class.java
+        )?.unregisterNetworkCallback(networkCallBack)
     }
 }
