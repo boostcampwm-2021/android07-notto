@@ -9,12 +9,14 @@ import com.bumptech.glide.Glide
 import com.gojol.notto.databinding.ItemContributorBinding
 import com.gojol.notto.network.Contributor
 
-class ContributorAdapter :
-    ListAdapter<Contributor, ContributorAdapter.ContributorViewHolder>(ContributorDiffUtil()) {
+class ContributorAdapter(
+    private val clickCallback: (String) -> (Unit)
+) : ListAdapter<Contributor, ContributorAdapter.ContributorViewHolder>(ContributorDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContributorViewHolder {
         return ContributorViewHolder(
-            ItemContributorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemContributorBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            clickCallback
         )
     }
 
@@ -22,8 +24,18 @@ class ContributorAdapter :
         holder.bind(getItem(position))
     }
 
-    class ContributorViewHolder(private val binding: ItemContributorBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class ContributorViewHolder(
+        private val binding: ItemContributorBinding,
+        private val clickCallback: (String) -> (Unit)
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener {
+                binding.item?.let { contributor ->
+                    clickCallback(contributor.htmlUrl)
+                }
+            }
+        }
 
         fun bind(item: Contributor) {
             binding.item = item
@@ -45,6 +57,5 @@ class ContributorAdapter :
         ): Boolean {
             return oldItem == newItem
         }
-
     }
 }

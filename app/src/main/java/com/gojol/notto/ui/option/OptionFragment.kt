@@ -53,10 +53,16 @@ class OptionFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        contributorAdapter = ContributorAdapter()
+        contributorAdapter = ContributorAdapter(::setClickCallback)
         binding.rvOptionContributors.apply {
             adapter = contributorAdapter
             layoutManager = GridLayoutManager(requireContext(), 2)
         }
+    }
+
+    private fun setClickCallback(url: String) {
+        val intent = Intent(requireContext(), ContributorActivity::class.java)
+        intent.putExtra("url", url)
+        startActivity(intent)
     }
 }
