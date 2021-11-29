@@ -1,6 +1,5 @@
 package com.gojol.notto.ui.option
 
-import android.app.AlarmManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
+import com.gojol.notto.common.EventObserver
 import com.gojol.notto.databinding.FragmentOptionBinding
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,9 +40,9 @@ class OptionFragment : Fragment() {
     }
 
     private fun initObserver() {
-        optionViewModel.isNavigateToLicenseClicked.observe(viewLifecycleOwner) {
+        optionViewModel.isNavigateToLicenseClicked.observe(viewLifecycleOwner, EventObserver {
             startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
             OssLicensesMenuActivity.setActivityTitle(getString(R.string.option_license_title))
-        }
+        })
     }
 }
