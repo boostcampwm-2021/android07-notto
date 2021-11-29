@@ -8,9 +8,6 @@
         android:bottomLeftRadius="@dimen/edit_label_bg_radius"
         android:bottomRightRadius="@dimen/edit_label_bg_radius" />
 
-    <solid
-        android:color="@color/white" />
-
     <stroke
         android:width="1dp"
         android:color="@color/gray_normal" />

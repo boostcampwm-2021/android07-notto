@@ -1,52 +1,39 @@
 package com.gojol.notto.ui.todo
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nottokeyword.FirebaseDB
-import com.gojol.notto.BuildConfig
+import com.example.nottokeyword.KeywordDatabase
 import com.gojol.notto.common.Event
+import com.gojol.notto.common.LABEL_ADD
 import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.common.TodoDeleteType
-import com.gojol.notto.model.data.RepeatType
+import com.gojol.notto.common.RepeatType
+import com.gojol.notto.model.data.todo.ClickWrapper
+import com.gojol.notto.model.data.todo.TodoWrapper
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import com.gojol.notto.util.get12Hour
-import com.gojol.notto.util.toYearMonthDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
-class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRepository) :
-    ViewModel() {
+class TodoEditViewModel @Inject constructor(
+    private val repository: TodoLabelRepository,
+    private val keywordDatabase: KeywordDatabase,
+    private val todoAlarmManager: TodoAlarmManager
+) : ViewModel() {
 
-    private val _isTodoEditing = MutableLiveData<Boolean>()
-    val isTodoEditing: LiveData<Boolean> = _isTodoEditing
-
-    private val _popLabelAddDialog = MutableLiveData<Boolean>()
-    val popLabelAddDialog: LiveData<Boolean> = _popLabelAddDialog
-
-    private val _isCloseButtonClicked = MutableLiveData<Event<Boolean>>()
-    val isCloseButtonCLicked: LiveData<Event<Boolean>> = _isCloseButtonClicked
-
-    private val _existedTodo = MutableLiveData<Todo>()
-    val existedTodo: LiveData<Todo> = _existedTodo
-
-    private val _date = MutableLiveData<Calendar>()
-    val date: LiveData<Calendar> = _date
-
-    private val _todoDeleteType = MutableLiveData<TodoDeleteType>()
-    val todoDeleteType: LiveData<TodoDeleteType> = _todoDeleteType
-
-    private val _isDeletionExecuted = MutableLiveData<Event<Boolean>>()
-    val isDeletionExecuted: LiveData<Event<Boolean>> = _isDeletionExecuted
+    private val _todoWrapper = MutableLiveData<TodoWrapper>()
+    val todoWrapper: LiveData<TodoWrapper> = _todoWrapper
 
     private val _labelList = MutableLiveData<List<Label>>()
     val labelList: LiveData<List<Label>> = _labelList
@@ -54,178 +41,198 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     private val _selectedLabelList = MutableLiveData(listOf<Label>())
     val selectedLabelList: LiveData<List<Label>> = _selectedLabelList
 
-    val todoContent = MutableLiveData("")
-
-    val isRepeatChecked = MutableLiveData(false)
-
-    private val _repeatType = MutableLiveData(RepeatType.YEAR)
-    val repeatType: LiveData<RepeatType> = _repeatType
-
-    private val _repeatTypeClick = MutableLiveData<Event<Boolean>>()
-    val repeatTypeClick: LiveData<Event<Boolean>> = _repeatTypeClick
-
-    private val _repeatStart = MutableLiveData<String>()
-    val repeatStart: LiveData<String> = _repeatStart
-
-    private val _repeatStartClick = MutableLiveData<Event<Boolean>>()
-    val repeatStartClick: LiveData<Event<Boolean>> = _repeatStartClick
-
-    val isTimeChecked = MutableLiveData(false)
-
-    private val _timeStart = MutableLiveData<String>()
-    val timeStart: LiveData<String> = _timeStart
-
-    private val _timeStartClick = MutableLiveData<Event<Boolean>>()
-    val timeStartClick: LiveData<Event<Boolean>> = _timeStartClick
-
-    private val _timeFinish = MutableLiveData<String>()
-    val timeFinish: LiveData<String> = _timeFinish
-
-    private val _timeFinishClick = MutableLiveData<Event<Boolean>>()
-    val timeFinishClick: LiveData<Event<Boolean>> = _timeFinishClick
-
-    private val _timeRepeat = MutableLiveData(TimeRepeatType.MINUTE_5)
-    val timeRepeat: LiveData<TimeRepeatType> = _timeRepeat
-
-    private val _timeRepeatClick = MutableLiveData<Event<Boolean>>()
-    val timeRepeatClick: LiveData<Event<Boolean>> = _timeRepeatClick
-
-    val isKeywordChecked = MutableLiveData(false)
-
-    private val _isSaveButtonEnabled = MutableLiveData<Boolean>()
-    val isSaveButtonEnabled: LiveData<Boolean> = _isSaveButtonEnabled
-
-    private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
+    val clickWrapper = ClickWrapper(
+        MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(),
+        MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(),
+        MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData()
+    )
 
     init {
-        val date = Date(Calendar.getInstance().timeInMillis)
-        _repeatType.value = RepeatType.DAY
-        _timeRepeat.value = TimeRepeatType.MINUTE_5
-        _repeatStart.value = getFormattedCurrentDate(date)
-        _timeStart.value = getFormattedCurrentTime(date)
-        _timeFinish.value = getFormattedCurrentTime(date)
+        _todoWrapper.value = TodoWrapper(
+            Todo(
+                "",
+                false,
+                RepeatType.DAY,
+                LocalDate.now(),
+                false,
+                LocalTime.now(),
+                LocalTime.now(),
+                TimeRepeatType.MINUTE_5,
+                false,
+                isFinished = false,
+                FINISH_DATE ?: LocalDate.now()
+            ),
+            null, LocalDate.now(), null
+        )
     }
 
-    fun setDummyLabelData() {
+    fun initLabelData() {
         viewModelScope.launch {
             _labelList.value = repository.getAllLabel()
         }
     }
 
     fun addLabelToSelectedLabelList(labelName: String) {
+        if (labelName == LABEL_ADD) {
+            onLabelAddClick()
+            return
+        }
         if (selectedLabelList.value?.find { it.name == labelName } != null) return
 
         val label = labelList.value?.find { it.name == labelName } ?: return
-        val newLabelList = selectedLabelList.value?.toMutableList()?.apply {
-            add(label)
-        } ?: return
+        val newLabelList = selectedLabelList.value?.plus(label) ?: return
         _selectedLabelList.value = newLabelList
     }
 
     fun removeLabelFromSelectedLabelList(label: Label) {
-        val newLabelList = selectedLabelList.value?.toMutableList()?.apply {
-            remove(label)
-        } ?: return
+        val newLabelList = selectedLabelList.value?.minus(label) ?: return
         _selectedLabelList.value = newLabelList
     }
 
     fun setupExistedTodo() {
-        val todo = existedTodo.value ?: return
+        val todo = todoWrapper.value?.existedTodo ?: return
         viewModelScope.launch {
             _selectedLabelList.value = repository.getTodosWithLabels().find { todoWithLabel ->
                 todo.todoId == todoWithLabel.todo.todoId
             }?.labels
         }
 
-        todoContent.value = todo.content
-        isRepeatChecked.value = todo.isRepeated
-        _repeatType.value = todo.repeatType
-        _repeatStart.value = todo.startDate
-        isTimeChecked.value = todo.hasAlarm
-        _timeStart.value = todo.startTime
-        _timeFinish.value = todo.endTime
-        _timeRepeat.value = todo.periodTime
-        isKeywordChecked.value = todo.isKeywordOpen
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo)
     }
 
     fun updateIsTodoEditing(todo: Todo?) {
-        todo?.let {
-            _isTodoEditing.value = true
-            _existedTodo.value = it
+        todo?.let { existedTodo ->
+            clickWrapper.isTodoEditing.value = true
+            _todoWrapper.value = todoWrapper.value?.copy(existedTodo = existedTodo)
         } ?: run {
-            _isTodoEditing.value = false
+            clickWrapper.isTodoEditing.value = false
         }
-    }
-
-    fun updateDate(date: Calendar?) {
-        val selectedDate = date ?: return
-        _date.value = selectedDate
-    }
-
-    fun updateIsCloseButtonClicked() {
-        _isCloseButtonClicked.value = Event(true)
     }
 
     fun updateTodoDeleteType(type: TodoDeleteType?) {
         val deleteType = type ?: return
-        _todoDeleteType.value = deleteType
+        val todoModel = todoWrapper.value ?: return
+        _todoWrapper.value = todoModel.copy(todoDeleteType = deleteType)
+        deleteTodo()
     }
 
-    fun updateTodoContent(content: String) {
-        todoContent.value = content
+    fun updateTodoContent(s: CharSequence, start: Int, before: Int, count: Int) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(content = s.toString()))
     }
 
-    fun onRepeatTypeClick() {
-        _repeatTypeClick.value = Event(true)
+    fun updateDate(date: LocalDate?) {
+        val isEditing = clickWrapper.isTodoEditing.value ?: return
+        var selectedDate = date ?: return
+
+        if (isEditing) {
+            if (selectedDate.isBefore(LocalDate.now())) {
+                clickWrapper.isBeforeToday.value = isEditing
+            }
+        } else {
+            if (selectedDate.isBefore(LocalDate.now())) {
+                selectedDate = LocalDate.now()
+                clickWrapper.isBeforeToday.value = isEditing
+            }
+        }
+
+        _todoWrapper.value = todoWrapper.value?.copy(selectedDate = selectedDate)
+    }
+
+    fun updateIsRepeatChecked(isChecked: Boolean) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(isRepeated = isChecked))
     }
 
     fun updateRepeatType(repeatType: RepeatType) {
-        _repeatType.value = repeatType
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(repeatType = repeatType))
     }
 
-    fun onRepeatStartClick() {
-        _repeatStartClick.value = Event(true)
+    fun updateStartDate(date: LocalDate?) {
+        val startDate = date ?: return
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(startDate = startDate))
     }
 
-    fun updateRepeatTime(repeatTime: String) {
-        _repeatStart.value = repeatTime
+    fun updateIsTimeChecked(isChecked: Boolean) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(hasAlarm = isChecked))
     }
 
-    fun onTimeStartClick() {
-        _timeStartClick.value = Event(true)
+    fun updateTimeStart(timeStart: LocalTime) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(startTime = timeStart))
     }
 
-    fun updateTimeStart(timeStart: String) {
-        _timeStart.value = timeStart.get12Hour()
-    }
-
-    fun onTimeFinishClick() {
-        _timeFinishClick.value = Event(true)
-    }
-
-    fun updateTimeFinish(timeFinish: String) {
-        _timeFinish.value = timeFinish.get12Hour()
-    }
-
-    fun onTimeRepeatClick() {
-        _timeRepeatClick.value = Event(true)
+    fun updateTimeFinish(timeFinish: LocalTime) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(endTime = timeFinish))
     }
 
     fun updateTimeRepeat(timeRepeat: TimeRepeatType) {
-        _timeRepeat.value = timeRepeat
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(periodTime = timeRepeat))
     }
 
-    fun updatePopLabelAddDialog() {
-        _popLabelAddDialog.value = true
+    fun updateIsKeywordChecked(isChecked: Boolean) {
+        val todo = todoWrapper.value?.todo ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(isKeywordOpen = isChecked))
+    }
+
+    fun onIsCloseButtonClicked() {
+        clickWrapper.isCloseButtonCLicked.value = Event(Unit)
+    }
+
+    fun onDeleteButtonCLick(){
+        clickWrapper.deleteButtonClick.value = Event(Unit)
+    }
+
+    fun onRepeatTypeClick() {
+        clickWrapper.repeatTypeClick.value = Event(true)
+    }
+
+    fun onRepeatStartClick() {
+        clickWrapper.repeatStartClick.value = Event(true)
+    }
+
+    fun onTimeStartClick() {
+        clickWrapper.timeStartClick.value = Event(true)
+    }
+
+    fun onTimeFinishClick() {
+        clickWrapper.timeFinishClick.value = Event(true)
+    }
+
+    fun onTimeRepeatClick() {
+        clickWrapper.timeRepeatClick.value = Event(true)
+    }
+
+    fun onPopLabelAddDialogClick() {
+        clickWrapper.popLabelAddDialog.value = true
+    }
+
+    private fun onLabelAddClick() {
+        clickWrapper.labelAddClicked.value = Event(Unit)
+    }
+
+    fun onSaveButtonClick() {
+        val isTodoContentNotEmpty = todoWrapper.value?.todo?.content?.isNotEmpty() ?: false
+        val isEditing = clickWrapper.isTodoEditing.value ?: return
+        clickWrapper.isSaveButtonClicked.value = Pair(isTodoContentNotEmpty, isEditing)
     }
 
     fun saveTodo() {
-        if (todoContent.value.isNullOrEmpty()) {
-            _isSaveButtonEnabled.value = false
+        val content = todoWrapper.value?.todo?.content ?: run {
+            clickWrapper.isSaveButtonEnabled.value = false
+            return
+        }
+        if (content.isEmpty()) {
+            clickWrapper.isSaveButtonEnabled.value = false
             return
         }
 
-        when (isTodoEditing.value) {
+        when (clickWrapper.isTodoEditing.value) {
             true -> updateTodo()
             false -> saveNewTodo()
             else -> return
@@ -233,113 +240,94 @@ class TodoEditViewModel @Inject constructor(private val repository: TodoLabelRep
     }
 
     private fun saveNewTodo() {
-        val content = todoContent.value ?: return
-        val isKeywordOpen = isKeywordChecked.value ?: return
-        val newTodo = Todo(
-            content,
-            isRepeatChecked.value ?: return,
-            repeatType.value ?: return,
-            repeatStart.value ?: return,
-            isTimeChecked.value ?: return,
-            timeStart.value ?: return,
-            timeFinish.value ?: return,
-            timeRepeat.value ?: return,
-            isKeywordOpen,
-            false,
-            ""
-        )
+        val todoModel = todoWrapper.value ?: return
 
-        if (isKeywordOpen) {
-            firebaseDB.insertKeyword(content)
+        if (todoModel.todo.isKeywordOpen) {
+            insertKeywords(todoModel.todo.content)
         }
 
         viewModelScope.launch {
-            launch {
-                repository.insertTodo(newTodo)
-                repository.addAlarm(repository.getAllTodo().last())
-            }.join()
+            // 투두 insert, 투두 알림 설정
+            val generatedTodoId =
+                repository.insertTodo(todoModel.todo, todoModel.selectedDate).toInt()
+            todoAlarmManager.addAlarm(repository.getAllTodo().last())
+            _todoWrapper.value = todoModel.copy(todo = todoModel.todo.copy(todoId = generatedTodoId))
 
-            val saveTodo = withContext(Dispatchers.Default) {
-                repository.getTodosWithLabels().find { it.labels.isEmpty() }?.todo
+            insertLabels()
+        }
+    }
+
+    private suspend fun insertLabels() {
+        _todoWrapper.value?.todo?.let { todo ->
+            // 전체 라벨에 투두 넣기
+            _labelList.value?.find { it.order == 0 }?.let {
+                repository.insertTodo(todo, it)
             }
 
-            saveTodo?.let { todo ->
-                // 전체 라벨에 투두 넣기
-                _labelList.value?.find { it.order == 0 }?.let {
-                    repository.insertTodo(todo, it)
+            // 선택된 라벨에 투두 넣기
+            _selectedLabelList.value?.let { labels ->
+                labels.forEach { label ->
+                    repository.insertTodo(todo, label)
                 }
-
-                // 선택된 라벨에 투두 넣기
-                _selectedLabelList.value?.let { labels ->
-                    labels.forEach { label ->
-                        repository.insertTodo(todo, label)
-                    }
-                }
-
-                _isSaveButtonEnabled.value = true
             }
+
+            clickWrapper.isSaveButtonEnabled.value = true
         }
     }
 
     private fun updateTodo() {
-        val content = todoContent.value ?: return
-        val isKeywordOpen = isKeywordChecked.value ?: return
-        val newTodo = Todo(
-            content,
-            isRepeatChecked.value ?: return,
-            repeatType.value ?: return,
-            repeatStart.value ?: return,
-            isTimeChecked.value ?: return,
-            timeStart.value ?: return,
-            timeFinish.value ?: return,
-            timeRepeat.value ?: return,
-            isKeywordOpen,
-            false,
-            "",
-            existedTodo.value?.todoId ?: return
-        )
+        val todoModel = todoWrapper.value ?: return
 
-        if (isKeywordOpen) {
-            val oldTodo = existedTodo.value ?: return
+        if (todoModel.todo.isKeywordOpen) {
+            val oldTodo = todoModel.existedTodo ?: return
 
-            if (oldTodo.isKeywordOpen.not() || oldTodo.content != content) {
-                firebaseDB.insertKeyword(content)
+            if (oldTodo.isKeywordOpen.not() || oldTodo.content != todoModel.todo.content) {
+                insertKeywords(todoModel.todo.content)
             }
         }
 
         viewModelScope.launch {
-            repository.updateTodo(newTodo)
-            repository.addAlarm(newTodo)
+            repository.updateTodo(todoModel.todo, todoModel.selectedDate)
+            todoAlarmManager.addAlarm(todoModel.todo)
 
             selectedLabelList.value?.let { list ->
                 val newList = list.filterNot { it.order == 0 }
-                repository.updateTodo(newTodo, newList)
+                repository.updateTodo(todoModel.todo, newList)
             }
-            _isSaveButtonEnabled.value = true
+            clickWrapper.isSaveButtonEnabled.value = true
         }
     }
 
-    fun deleteTodo() {
-        val todoId = existedTodo.value?.todoId ?: return
-        val deleteType = todoDeleteType.value ?: return
-        val selectedDate = date.value?.toYearMonthDate() ?: return
+    private fun insertKeywords(content: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = keywordDatabase.insertKeyword(content)
+
+            Log.i(TAG, "insertKeyword result: $result")
+        }
+    }
+
+    private fun deleteTodo() {
+        val todoModel = todoWrapper.value ?: return
+        val todoId = todoModel.existedTodo?.todoId ?: return
+        val deleteType = todoModel.todoDeleteType ?: return
 
         viewModelScope.launch {
-            when(deleteType) {
-                TodoDeleteType.TODAY -> repository.deleteTodayTodo(todoId, selectedDate)
-                TodoDeleteType.TODAY_AND_FUTURE -> repository.deleteTodayAndFutureTodo(todoId, selectedDate)
+            when (deleteType) {
+                TodoDeleteType.SELECTED -> repository.deleteSelectedTodo(
+                    todoId,
+                    todoModel.selectedDate
+                )
+                TodoDeleteType.SELECTED_AND_FUTURE -> repository.deleteSelectedAndFutureTodo(
+                    todoId,
+                    todoModel.selectedDate
+                )
             }
-            _isDeletionExecuted.postValue(Event(true))
+            clickWrapper.isDeletionExecuted.value = Event(Unit)
         }
     }
 
-    private fun getFormattedCurrentDate(date: Date): String {
-        val simpleDateFormatDate = SimpleDateFormat("yyyyMMdd", Locale.KOREA)
-        return simpleDateFormatDate.format(date)
-    }
-
-    private fun getFormattedCurrentTime(date: Date): String {
-        val simpleDateFormatTime = SimpleDateFormat("a hh:mm", Locale.KOREA)
-        return simpleDateFormatTime.format(date)
+    companion object {
+        val TAG: String = TodoEditViewModel::class.java.simpleName
+        val FINISH_DATE: LocalDate? = LocalDate.of(2099, 12, 31)
     }
 }

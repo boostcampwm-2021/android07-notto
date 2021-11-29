@@ -36,12 +36,12 @@
 
                 <TextView
                     android:id="@+id/tv_option_push"
+                    style="@style/Theme.Notto.TextDefault"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_median"
                     android:layout_marginTop="@dimen/space_x_large"
                     android:text="@string/option_push_notification"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/text_x_small"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -49,14 +49,26 @@
 
                 <TextView
                     android:id="@+id/tv_option_push_day"
+                    style="@style/Theme.Notto.TextDefault"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_median"
                     android:text="@string/option_push_notification_day"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/text_x_small"
                     app:layout_constraintStart_toStartOf="@id/tv_option_push"
                     app:layout_constraintTop_toBottomOf="@id/tv_option_push" />
+
+                <ImageView
+                    android:id="@+id/btn_option_push_tool"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_median"
+                    android:background="@drawable/ic_info"
+                    android:backgroundTint="@color/gray_normal"
+                    android:tooltipText="@string/option_notification_tooltip_msg"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_option_push_day"
+                    app:layout_constraintStart_toEndOf="@id/tv_option_push_day"
+                    app:layout_constraintTop_toTopOf="@id/tv_option_push_day" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switch_option_push"
@@ -83,11 +95,11 @@
 
                 <TextView
                     android:id="@+id/tv_option_open_source_license"
+                    style="@style/Theme.Notto.TextDefault"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_x_large"
                     android:text="@string/option_open_source_license"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/text_x_small"
                     app:layout_constraintStart_toStartOf="@id/divider_option_push"
                     app:layout_constraintTop_toBottomOf="@id/divider_option_push" />
@@ -114,12 +126,12 @@
 
                 <TextView
                     android:id="@+id/tv_option_team"
+                    style="@style/Theme.Notto.TextDefault"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/space_median"
                     android:layout_marginTop="@dimen/space_x_large"
                     android:text="@string/option_team"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/text_x_small"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -127,23 +139,23 @@
 
                 <TextView
                     android:id="@+id/tv_option_gojol"
+                    style="@style/Theme.Notto.TextDefault"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_median"
                     android:text="@string/all_team_name"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/text_x_small"
                     app:layout_constraintStart_toStartOf="@id/tv_option_team"
                     app:layout_constraintTop_toBottomOf="@id/tv_option_team" />
 
                 <TextView
                     android:id="@+id/tv_option_gojol_memeber"
+                    style="@style/Theme.Notto.TextDefault"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_median"
                     android:layout_marginBottom="@dimen/space_x_large"
                     android:text="@string/all_team_member"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/text_x_small"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_option_team"

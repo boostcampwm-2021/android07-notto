@@ -10,24 +10,27 @@ import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
+import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import com.gojol.notto.util.toYearMonthDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: TodoLabelRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val repository: TodoLabelRepository,
+    private val todoAlarmManager: TodoAlarmManager
+) : ViewModel() {
 
-    private val _isTodoCreateButtonClicked = MutableLiveData<Event<Boolean>>()
-    val isTodoCreateButtonClicked: LiveData<Event<Boolean>> = _isTodoCreateButtonClicked
+    private val _todoCreateButtonClicked = MutableLiveData<Event<LocalDate>>()
+    val todoCreateButtonClicked: LiveData<Event<LocalDate>> = _todoCreateButtonClicked
 
-    private val _todoEditButtonClicked = MutableLiveData<Event<Todo>>()
-    val todoEditButtonClicked: LiveData<Event<Todo>> = _todoEditButtonClicked
+    private val _todoEditButtonClicked = MutableLiveData<Event<Pair<Todo, LocalDate>>>()
+    val todoEditButtonClicked: LiveData<Event<Pair<Todo, LocalDate>>> = _todoEditButtonClicked
 
-    private val _date = MutableLiveData(Calendar.getInstance())
-    val date: LiveData<Calendar> = _date
+    private val _date = MutableLiveData(LocalDate.now())
+    val date: LiveData<LocalDate> = _date
 
     private val _todoList = MutableLiveData<List<TodoWithTodayDailyTodo>>()
     val todoList: LiveData<List<TodoWithTodayDailyTodo>> = _todoList
@@ -50,19 +53,12 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
                 .sortedBy { it.labelWithTodo.label.order }
                 .toList()
             _todoList.value =
-                _date.value?.let { repository.getTodosWithTodayDailyTodos(it.toYearMonthDate()) }
+                _date.value?.let { repository.getTodosWithTodayDailyTodos(it) }
         }
     }
 
-    fun updateDate(year: Int? = null, month: Int? = null, day: Int? = null) {
-        var calendar: Calendar = Calendar.getInstance()
-        if (year != null && month != null && day != null) {
-            calendar.set(year, month - 1, day)
-        } else if (year == null && month == null && day == null) {
-            date.value?.let { calendar = it }
-        }
-
-        _date.value = calendar
+    fun updateDate(year: Int, month: Int, day: Int) {
+        _date.value = LocalDate.of(year, month, day)
     }
 
     fun updateDailyTodo(dailyTodo: DailyTodo) {
@@ -75,9 +71,11 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
             if (currentShowTodoList != null) {
                 _todoList.value = _date.value?.let { date ->
-                    repository.getTodosWithTodayDailyTodos(date.toYearMonthDate())
+                    repository.getTodosWithTodayDailyTodos(date)
                 }?.filter { currentShowTodoList.contains(it.todo) }
             }
+
+            todoAlarmManager.deleteAlarms()
         }
     }
 
@@ -94,7 +92,7 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
 
         _date.value?.let { date ->
             _todoList.value =
-                repository.getTodosWithTodayDailyTodos(date.toYearMonthDate())
+                repository.getTodosWithTodayDailyTodos(date)
                     .filter { it.todo.todoId in todoIdList }
         }
     }
@@ -164,12 +162,12 @@ class HomeViewModel @Inject constructor(private val repository: TodoLabelReposit
         }
     }
 
-    fun updateNavigateToTodoEdit() {
-        _isTodoCreateButtonClicked.value = Event(true)
+    fun updateNavigateToTodoCreate() {
+        _todoCreateButtonClicked.value = date.value?.let { Event(it) }
     }
 
-    fun updateIsTodoEditButtonClicked(todo: Todo) {
-        _todoEditButtonClicked.value = Event(todo)
+    fun updateNavigateToTodoEdit(todo: Todo) {
+        _todoEditButtonClicked.value = date.value?.let { Event(Pair(todo, it)) }
     }
 
     companion object {

@@ -5,9 +5,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.gojol.notto.ui.home.CalendarFragment
-import java.util.Calendar
-import com.gojol.notto.util.getMonth
-import com.gojol.notto.util.getYear
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import kotlin.math.abs
 
 class CalendarViewPagerAdapter(
     fragmentManager: FragmentManager,
@@ -25,16 +25,23 @@ class CalendarViewPagerAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        val today = Calendar.getInstance()
-        val moveMonth = position - firstFragmentPosition
+        val moveMonth: Long = (position - firstFragmentPosition).toLong()
 
-        today.add(Calendar.MONTH, moveMonth)
+         val today = if (moveMonth > 0){
+            LocalDate.now().plusMonths(moveMonth)
+        } else {
+            LocalDate.now().minusMonths(abs(moveMonth))
+        }
 
-        // yyyyMM Format
-        return (today.getYear() * 100 + today.getMonth()).toLong()
+        return today.format(DateTimeFormatter.ofPattern("yyyyMM")).toLong()
     }
 
     override fun containsItem(itemId: Long): Boolean {
-        return itemId in 20000102L..20991230L
+        return itemId in MIN_DATE..MAX_DATE
+    }
+
+    companion object{
+        const val MIN_DATE = 20000102L
+        const val MAX_DATE = 20991230L
     }
 }

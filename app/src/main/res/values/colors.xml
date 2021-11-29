@@ -18,4 +18,12 @@
     <color name="gray_normal">#CDCDCD</color>
     <color name="gray_deep">#8C8C8C</color>
     <color name="charcoal_normal">#534F4F</color>
+
+    <color name="text_enabled">@color/black</color>
+    <color name="text_disabled">@color/gray_normal</color>
+
+    <color name="calendar_day_selected">@color/black</color>
+    <color name="calendar_day_default">@color/gray_deep</color>
+    <color name="calendar_today_button">@color/black</color>
+    <color name="calendar_day_background_default">@color/gray_light</color>
 </resources>

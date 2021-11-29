@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.gojol.notto.model.data.RepeatType"/>
+        <import type="com.gojol.notto.common.RepeatType"/>
 
         <variable
             name="viewmodel"
-            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
+            type="com.gojol.notto.ui.todo.dialog.util.RepeatTypeDialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

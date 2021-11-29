@@ -1,14 +1,17 @@
 package com.gojol.notto.ui.label.util
 
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.ui.label.EditLabelAdapter
 
-class ItemTouchCallback(private val moveItemCallback: (Int, Int) -> Unit) :
-    ItemTouchHelper.SimpleCallback(
-        ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
-        0
-    ) {
+class ItemTouchCallback(
+    private val moveItemCallback: (Int, Int) -> Unit,
+    private val onClearView: () -> Unit
+) : ItemTouchHelper.SimpleCallback(
+    ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
+    0
+) {
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
@@ -31,6 +34,8 @@ class ItemTouchCallback(private val moveItemCallback: (Int, Int) -> Unit) :
         val to = target.bindingAdapterPosition
 
         moveItemCallback(from, to)
+
+        recyclerView.itemAnimator = DefaultItemAnimator()
         adapter.notifyItemMoved(from, to)
 
         return true
@@ -53,5 +58,6 @@ class ItemTouchCallback(private val moveItemCallback: (Int, Int) -> Unit) :
         super.clearView(recyclerView, viewHolder)
 
         viewHolder.itemView.alpha = 1.0f
+        onClearView()
     }
 }

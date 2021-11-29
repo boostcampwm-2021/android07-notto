@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.gojol.notto.ui.todo.dialog.util.TodoBaseDialogViewModel" />
+            type="com.gojol.notto.ui.todo.dialog.util.RepeatTimeDialogViewModel" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -29,7 +29,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:mcv_selectionColor="@color/yellow_deep" />
+                app:mcv_selectionColor="@color/yellow_deep"
+                app:mcv_headerTextAppearance="@style/text_color_black"
+                app:mcv_weekDayTextAppearance="@style/text_color_black" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

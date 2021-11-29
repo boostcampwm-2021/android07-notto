@@ -7,6 +7,7 @@ import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.database.todo.TodoWithDailyTodo
 import com.gojol.notto.model.database.todolabel.LabelWithTodo
 import com.gojol.notto.model.database.todolabel.TodoWithLabel
+import java.time.LocalDate
 
 interface TodoLabelDataSource {
 
@@ -14,7 +15,7 @@ interface TodoLabelDataSource {
 
     suspend fun getTodosWithDailyTodos(): List<TodoWithDailyTodo>
 
-    suspend fun getTodosWithTodayDailyTodos(selectedDate: String): List<TodoWithTodayDailyTodo>
+    suspend fun getTodosWithTodayDailyTodos(selectedDate: LocalDate): List<TodoWithTodayDailyTodo>
 
     suspend fun getLabelsWithTodos(): List<LabelWithTodo>
 
@@ -24,7 +25,7 @@ interface TodoLabelDataSource {
 
     suspend fun getAllDailyTodos(): List<DailyTodo>
 
-    suspend fun insertTodo(todo: Todo)
+    suspend fun insertTodo(todo: Todo, selectedDate: LocalDate): Long
 
     suspend fun insertTodo(todo: Todo, label: Label)
 
@@ -32,7 +33,9 @@ interface TodoLabelDataSource {
 
     suspend fun insertDailyTodo(dailyTodo: DailyTodo)
 
-    suspend fun updateTodo(todo: Todo)
+    suspend fun insertDailyTodosWithDateRange(dateRange: List<LocalDate>)
+
+    suspend fun updateTodo(todo: Todo, selectedDate: LocalDate)
 
     suspend fun updateTodo(todo: Todo, labels: List<Label>)
 
@@ -42,9 +45,9 @@ interface TodoLabelDataSource {
 
     suspend fun deleteTodo(todo: Todo)
 
-    suspend fun deleteTodayTodo(todoId: Int, selectedDate: String)
+    suspend fun deleteSelectedTodo(todoId: Int, selectedDate: LocalDate)
 
-    suspend fun deleteTodayAndFutureTodo(todoId: Int, selectedDate: String)
+    suspend fun deleteSelectedAndFutureTodo(todoId: Int, selectedDate: LocalDate)
 
     suspend fun deleteLabel(label: Label)
 }

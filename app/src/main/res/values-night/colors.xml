@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_enabled">@color/white</color>
+    <color name="text_disabled">@color/gray_deep</color>
+
+    <color name="calendar_day_selected">@color/white</color>
+    <color name="calendar_day_default">@color/gray_normal</color>
+
+    <color name="calendar_today_button">@color/white</color>
+    <color name="calendar_day_background_default">@color/gray_normal</color>
+</resources>

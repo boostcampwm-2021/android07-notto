@@ -1,71 +1,47 @@
 package com.gojol.notto.ui.label.dialog.edit
 
-import android.app.AlertDialog
-import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.common.DIALOG_LABEL_ITEM_KEY
 import com.gojol.notto.databinding.DialogFragmentEditLabelBinding
 import com.gojol.notto.model.database.label.Label
-import com.google.gson.Gson
+import com.gojol.notto.ui.BaseDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EditLabelDialogFragment : DialogFragment() {
+class EditLabelDialogFragment : BaseDialog<DialogFragmentEditLabelBinding, EditLabelDialogViewModel>() {
 
-    private lateinit var binding: DialogFragmentEditLabelBinding
+    override val viewModel: EditLabelDialogViewModel by viewModels()
+    override var layoutId: Int = R.layout.dialog_fragment_edit_label
 
-    private val viewModel: EditLabelDialogViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding = DataBindingUtil.inflate(
-            LayoutInflater.from(context),
-            R.layout.dialog_fragment_edit_label,
-            null,
-            false
-        )
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        initViewModel()
-        initObservers()
-
-        return binding.root
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val label =
-            Gson().fromJson(requireArguments().getString(DIALOG_LABEL_ITEM_KEY), Label::class.java)
-        viewModel.setEditType(label)
-
-        return activity?.let {
-            val builder = AlertDialog.Builder(it)
-            builder.setView(binding.root)
-            builder.create()
-        } ?: throw IllegalStateException("Activity cannot be null")
-    }
-
-    private fun initViewModel() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.viewmodel = viewModel
+        requireArguments().getParcelable<Label>(DIALOG_LABEL_ITEM_KEY).let { label ->
+            viewModel.setEditType(label)
+        }
     }
 
-    private fun initObservers() {
-        viewModel.close.observe(viewLifecycleOwner, {
-            if (it) {
-                dialog?.cancel()
+    override fun initObserver() {}
+
+    override fun confirmClick() {
+        viewModel.clickOkay()
+        this.dialog?.cancel()
+    }
+
+    override fun dismissClick() {
+        this.dialog?.cancel()
+    }
+
+    companion object {
+        fun newInstance(label: Label?): EditLabelDialogFragment {
+            return EditLabelDialogFragment().apply {
+                arguments = bundleOf(DIALOG_LABEL_ITEM_KEY to label)
             }
-        })
+        }
     }
 }
+

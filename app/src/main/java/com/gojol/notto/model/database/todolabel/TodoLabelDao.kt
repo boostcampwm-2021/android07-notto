@@ -7,6 +7,7 @@ import com.gojol.notto.model.database.todo.Keyword
 import com.gojol.notto.model.database.todo.Todo
 import com.gojol.notto.model.database.todo.TodoWithDailyTodo
 import com.gojol.notto.model.database.todo.TodoWithKeyword
+import java.time.LocalDate
 
 @Dao
 interface TodoLabelDao {
@@ -45,8 +46,11 @@ interface TodoLabelDao {
     @Query("SELECT * FROM DailyTodo WHERE parent_todo_id=:parentTodoId")
     suspend fun getDailyTodosByParentTodoId(parentTodoId: Int): List<DailyTodo>
 
+    @Query("SELECT * FROM Todo WHERE todoId=:id")
+    suspend fun getTodoById(id: Int): Todo
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertTodo(todo: Todo)
+    suspend fun insertTodo(todo: Todo): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLabel(label: Label)
@@ -63,6 +67,9 @@ interface TodoLabelDao {
     @Update
     suspend fun updateTodo(todo: Todo)
 
+    @Query("UPDATE Todo SET finish_date=:finishDate, is_finished=:isFinished WHERE todoId=:todoId")
+    suspend fun updateTodoFinishDate(todoId: Int, isFinished: Boolean, finishDate: LocalDate)
+
     @Update
     suspend fun updateLabel(label: Label)
 
@@ -70,7 +77,7 @@ interface TodoLabelDao {
     suspend fun updateDailyTodo(dailyTodo: DailyTodo)
 
     @Query("UPDATE DailyTodo SET is_active=:isActive WHERE parent_todo_id=:parentTodoId and date=:date")
-    suspend fun updateDailyTodoIsActive(parentTodoId: Int, date: String, isActive: Boolean)
+    suspend fun updateDailyTodoIsActive(parentTodoId: Int, date: LocalDate, isActive: Boolean)
 
     @Update
     suspend fun update(todoLabelCrossRef: TodoLabelCrossRef)
@@ -85,7 +92,7 @@ interface TodoLabelDao {
     suspend fun deleteDailyTodo(dailyTodo: DailyTodo)
 
     @Query("DELETE FROM DailyTodo WHERE parent_todo_id=:todoId and date=:date")
-    suspend fun deleteDailyTodoByTodoIdAndDate(todoId: Int, date: String)
+    suspend fun deleteDailyTodoByTodoIdAndDate(todoId: Int, date: LocalDate)
 
     @Delete
     suspend fun deleteKeyword(keyword: Keyword)
