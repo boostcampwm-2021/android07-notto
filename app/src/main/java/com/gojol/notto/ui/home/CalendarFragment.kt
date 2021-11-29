@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,23 +9,32 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentCalendarBinding
-import com.gojol.notto.ui.home.HomeFragment.Companion.TODAY_BUTTON_CLICK_KEY
-import com.gojol.notto.ui.home.HomeFragment.Companion.TODO_SWIPE_KEY
 import com.gojol.notto.ui.home.adapter.CalendarDayAdapter
+import com.gojol.notto.ui.home.util.DayClickListener
+import com.gojol.notto.ui.home.util.MonthSwipeListener
+import com.gojol.notto.ui.home.util.TodayClickListener
+import com.gojol.notto.ui.home.util.TodoSwipeListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
 @AndroidEntryPoint
-class CalendarFragment : Fragment() {
+class CalendarFragment : Fragment(), TodayClickListener, TodoSwipeListener {
 
     private lateinit var binding: FragmentCalendarBinding
     private val calendarViewModel: CalendarViewModel by viewModels()
     private val calendarDayAdapter = CalendarDayAdapter(::dayClickCallback)
+    private lateinit var dayClickListener: DayClickListener
+    private lateinit var monthSwipeListener: MonthSwipeListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        dayClickListener = (parentFragment as DayClickListener)
+        monthSwipeListener = (parentFragment as MonthSwipeListener)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,17 +56,18 @@ class CalendarFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
+        (parentFragment as HomeFragment).setCalendarListener(this)
         binding.progressCircular.isVisible = true
 
         setMonthlyData()
+    }
 
-        setFragmentResultListener(TODO_SWIPE_KEY) { _, _ ->
-            swipeUpdate()
-        }
-        setFragmentResultListener(TODAY_BUTTON_CLICK_KEY) { _, _ ->
-            setMonthlyData()
-        }
+    override fun onSwipe() {
+        swipeUpdate()
+    }
+
+    override fun onClick() {
+        setMonthlyData()
     }
 
     private fun initRecyclerView() {
@@ -70,30 +81,11 @@ class CalendarFragment : Fragment() {
         calendarViewModel.monthlyAchievement.observe(viewLifecycleOwner, { itemList ->
             calendarDayAdapter.submitList(itemList)
             binding.progressCircular.isVisible = false
-            sendFragmentResultForHeightUpdate()
+            monthSwipeListener.onSwipe()
         })
         calendarViewModel.monthlyCalendar.observe(viewLifecycleOwner, {
-            sendFragmentResultWithClickDate()
+            dayClickListener.onClick(LocalDate.of(it.year, it.month, it.selectedDay))
         })
-    }
-
-    private fun sendFragmentResultForHeightUpdate() {
-        setFragmentResult(UPDATE_HEIGHT_KEY, bundleOf())
-    }
-
-    private fun sendFragmentResultWithClickDate() {
-        calendarViewModel.monthlyCalendar.value?.apply {
-            setFragmentResult(
-                DATE_CLICK_KEY,
-                bundleOf(
-                    DATE_CLICK_BUNDLE_KEY to LocalDate.of(
-                        this.year,
-                        this.month,
-                        this.selectedDay
-                    )
-                )
-            )
-        }
     }
 
     private fun setMonthlyData() {
@@ -110,10 +102,6 @@ class CalendarFragment : Fragment() {
     }
 
     companion object {
-        const val UPDATE_HEIGHT_KEY = "update_height"
-        const val DATE_CLICK_KEY = "date_click"
-        const val DATE_CLICK_BUNDLE_KEY = "selected_date"
-
         const val ITEM_ID_ARGUMENT = "item id"
         fun newInstance(itemId: Long): CalendarFragment {
             return CalendarFragment().apply {
