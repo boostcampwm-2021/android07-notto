@@ -10,7 +10,6 @@ import com.gojol.notto.model.datasource.option.OptionRepository
 import com.gojol.notto.network.Contributor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import org.apache.lucene.util.packed.PackedInts
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,7 +29,6 @@ class OptionViewModel @Inject constructor(
     init {
         isPushChecked.value =
             optionRepository.isPushNotificationChecked()
-        initGitContributors()
     }
 
     fun updateIsPushChecked(isPushChecked: Boolean) {
@@ -43,17 +41,11 @@ class OptionViewModel @Inject constructor(
         _isNavigateToLicenseClicked.value = Event(Unit)
     }
 
-    private fun initGitContributors() {
+    fun updateGitContributors() {
         viewModelScope.launch {
             optionRepository.getGitContributors(OWNER, REPO)
                 .onSuccess {
                     _contributorList.value = it
-                    Log.d(OptionViewModel::class.java.simpleName, it.toString())
-                }
-                .onFailure {
-                    // TODO: is IOException
-                    // TODO: is HttpException
-                    // TODO: api 호출 횟수 제한
                 }
         }
     }

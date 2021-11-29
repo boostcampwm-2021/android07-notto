@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.gojol.notto.R
 import com.gojol.notto.common.EventObserver
 import com.gojol.notto.databinding.FragmentOptionBinding
+import com.gojol.notto.util.NetworkState
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,6 +22,7 @@ class OptionFragment : Fragment() {
     private lateinit var binding: FragmentOptionBinding
     private val optionViewModel: OptionViewModel by viewModels()
     private lateinit var contributorAdapter: ContributorAdapter
+    private lateinit var networkState: NetworkState
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +40,8 @@ class OptionFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewmodel = optionViewModel
 
+        networkState = NetworkState(requireContext())
+
         initObserver()
         initRecyclerView()
     }
@@ -49,6 +53,15 @@ class OptionFragment : Fragment() {
         })
         optionViewModel.contributorList.observe(viewLifecycleOwner, {
             contributorAdapter.submitList(it)
+        })
+        networkState.observe(viewLifecycleOwner, {
+            if (it) {
+                optionViewModel.updateGitContributors()
+                binding.tvOptionContributors.visibility = View.VISIBLE
+            } else {
+                if (optionViewModel.contributorList.value.isNullOrEmpty())
+                    binding.tvOptionContributors.visibility = View.GONE
+            }
         })
     }
 
