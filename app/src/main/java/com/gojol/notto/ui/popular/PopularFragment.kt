@@ -4,7 +4,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class PopularFragment : Fragment() {
@@ -51,9 +49,14 @@ class PopularFragment : Fragment() {
         initAdapter()
         initObservers()
 
-        checkNetwork()
         setNetworkCallback()
         registerNetworkCallback()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        popularViewModel.fetchKeywords()
     }
 
     private fun initToolbar() {
@@ -67,45 +70,28 @@ class PopularFragment : Fragment() {
 
     private fun initObservers() {
         popularViewModel.items.observe(viewLifecycleOwner, {
-            adapter.submitList(it)
-            binding.pbPopular.isVisible = false
-        })
-    }
+            val isOffline = it.isNullOrEmpty()
 
-    private fun checkNetwork() {
-        val manager = getSystemService(requireContext(), ConnectivityManager::class.java) ?: return
-        val isConnected = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            manager.activeNetwork != null
-        } else {
-            manager.activeNetworkInfo?.isConnected ?: false
-        }
-        if (isConnected.not()) {
             binding.pbPopular.isVisible = false
-            binding.tvNetworkFail.isVisible = true
-        }
+            binding.tvNetworkFail.isVisible = isOffline
+
+            if (isOffline.not()) {
+                adapter.submitList(it)
+            }
+        })
     }
 
     private fun setNetworkCallback() {
         networkCallBack = object : ConnectivityManager.NetworkCallback() {
 
             override fun onAvailable(network: Network) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    if (popularViewModel.items.value.isNullOrEmpty()) {
+                if (popularViewModel.items.value.isNullOrEmpty()) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        binding.tvNetworkFail.isVisible = false
                         binding.pbPopular.isVisible = true
-                        withContext(Dispatchers.IO) {
-                            popularViewModel.fetchKeywords()
-                        }
                     }
-                    binding.tvNetworkFail.isVisible = false
-                }
-            }
 
-            override fun onLost(network: Network) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    binding.pbPopular.isVisible = false
-                    if (popularViewModel.items.value.isNullOrEmpty()) {
-                        binding.tvNetworkFail.isVisible = true
-                    }
+                    popularViewModel.fetchKeywords()
                 }
             }
         }
