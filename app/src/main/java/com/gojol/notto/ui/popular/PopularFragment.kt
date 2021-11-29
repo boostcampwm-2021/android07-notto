@@ -52,21 +52,8 @@ class PopularFragment : Fragment() {
         initObservers()
 
         checkNetwork()
-        setNetWorkCallback()
+        setNetworkCallback()
         registerNetworkCallback()
-    }
-
-    private fun checkNetwork() {
-        val manager = getSystemService(requireContext(), ConnectivityManager::class.java) ?: return
-        val isConnected = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            manager.activeNetwork != null
-        } else {
-            manager.activeNetworkInfo?.isConnected ?: false
-        }
-        if (isConnected.not()){
-            binding.pbPopular.isVisible = false
-            binding.tvNetworkFail.isVisible = true
-        }
     }
 
     private fun initToolbar() {
@@ -85,8 +72,22 @@ class PopularFragment : Fragment() {
         })
     }
 
-    private fun setNetWorkCallback() {
+    private fun checkNetwork() {
+        val manager = getSystemService(requireContext(), ConnectivityManager::class.java) ?: return
+        val isConnected = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            manager.activeNetwork != null
+        } else {
+            manager.activeNetworkInfo?.isConnected ?: false
+        }
+        if (isConnected.not()){
+            binding.pbPopular.isVisible = false
+            binding.tvNetworkFail.isVisible = true
+        }
+    }
+
+    private fun setNetworkCallback() {
         networkCallBack = object : ConnectivityManager.NetworkCallback() {
+
             override fun onAvailable(network: Network) {
                 CoroutineScope(Dispatchers.Main).launch {
                     if (popularViewModel.items.value.isNullOrEmpty()) {
