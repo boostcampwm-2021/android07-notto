@@ -136,7 +136,7 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     }
 
     override suspend fun insertDailyTodosWithDateRange(dateRange: List<LocalDate>) {
-        TODO("Not yet implemented")
+        throw Exception(ERROR_MSG)
     }
 
     override suspend fun updateTodo(todo: Todo, selectedDate: LocalDate) {
