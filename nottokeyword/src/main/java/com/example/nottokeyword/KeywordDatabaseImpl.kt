@@ -4,10 +4,8 @@ import android.util.Log
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.tasks.await
 import kr.bydelta.koala.hnn.Tagger
-import javax.inject.Inject
 
-internal class KeywordDatabaseImpl @Inject constructor(private val database: DatabaseReference) :
-    KeywordDatabase {
+internal class KeywordDatabaseImpl(private val database: DatabaseReference) : KeywordDatabase {
 
     override suspend fun insertKeyword(content: String): Boolean {
         val keywords = getKeywordsFrom(content)
