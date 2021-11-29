@@ -52,6 +52,7 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
                     dayClickCallback(binding.tvCalendarDay.text.toString().toInt())
                 }
             } else {
+                binding.ivSuccessLevelBackground.visibility = View.INVISIBLE
                 binding.ivSuccessLevel.visibility = View.INVISIBLE
             }
 
@@ -78,7 +79,10 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
 
         private fun setSuccessLevel(achievement: Int) {
             binding.ivSuccessLevel.backgroundTintList = if (achievement == 0) {
-                ContextCompat.getColorStateList(binding.root.context, R.color.gray_light)
+                ContextCompat.getColorStateList(
+                    binding.root.context,
+                    R.color.calendar_day_background_default
+                )
             } else {
                 ContextCompat.getColorStateList(binding.root.context, R.color.yellow_deep)
                     ?.withAlpha(achievement)

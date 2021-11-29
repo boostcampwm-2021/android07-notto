@@ -127,6 +127,43 @@ class TodoLabelLocalDataSource(private val todoLabelDao: TodoLabelDao) :
         todoLabelDao.insertDailyTodo(dailyTodo)
     }
 
+    override suspend fun insertDailyTodosWithDateRange(dateRange: List<LocalDate>){
+        todoLabelDao.getTodosWithDailyTodos().forEach { todoWithDailyTodo ->
+            dateRange.forEach { selectedDate ->
+                val todo = todoWithDailyTodo.todo
+                val dailyTodos = todoWithDailyTodo.dailyTodos
+
+                var todayDailyTodo =
+                    dailyTodos.find { it.parentTodoId == todo.todoId && it.date == selectedDate }
+
+                if (todayDailyTodo == null) {
+                    val repeatedDate = when {
+                        // 반복설정한 경우 반복 조건에 따라 오늘의 Daily를 추가할지 결정
+                        todo.isRepeated -> {
+                            checkRepeatedWhenSelectedDate(todo, selectedDate)
+                        }
+                        else -> {
+                            // 반복설정을 하지 않고 투두를 생성한 경우 오늘의 Daily 추가
+                            null
+                        }
+                    }
+                    val isFinished = when {
+                        todo.isFinished -> {
+                            selectedDate.isAfter(todo.finishDate)
+                        }
+                        else -> false
+                    }
+
+                    todayDailyTodo = if (repeatedDate != null && isFinished.not()) {
+                        DailyTodo(TodoState.NOTHING, true, todo.todoId, repeatedDate)
+                    } else null
+
+                    todayDailyTodo?.let { dailyTodo -> todoLabelDao.insertDailyTodo(dailyTodo) }
+                }
+            }
+        }
+    }
+
     override suspend fun updateTodo(todo: Todo, selectedDate: LocalDate) {
         val beforeTodo = todoLabelDao.getTodoById(todo.todoId)
         if (beforeTodo.isRepeated) {
