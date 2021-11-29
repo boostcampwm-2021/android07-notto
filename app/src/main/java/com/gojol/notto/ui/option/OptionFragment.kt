@@ -37,6 +37,7 @@ class OptionFragment : Fragment() {
         binding.viewmodel = optionViewModel
 
         initObserver()
+        optionViewModel.initGitContributors()
     }
 
     private fun initObserver() {

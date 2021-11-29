@@ -6,6 +6,7 @@ buildscript {
         coroutineVersion = "1.5.2"
         lifecycleVersion = "2.4.0"
         navigationVersion = "2.3.5"
+        retrofitVersion = "2.9.0"
     }
 
     repositories {
