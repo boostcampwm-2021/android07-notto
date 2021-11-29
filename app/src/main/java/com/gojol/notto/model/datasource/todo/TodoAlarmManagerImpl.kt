@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import com.gojol.notto.common.ALARM_EXTRA_TODO
 import com.gojol.notto.common.TodoState
 import java.io.Serializable
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
@@ -46,6 +47,10 @@ class TodoAlarmManagerImpl @Inject constructor(
     override fun addAlarm(todo: Todo, todoState: TodoState) {
         if (!todo.hasAlarm) return
         if (todoState == TodoState.SUCCESS) return
+
+        val todoDateTime = LocalDateTime.of(todo.startDate, todo.endTime)
+        val todoDate = Date.from(todoDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
+        if (todoDate < System.currentTimeMillis()) return
 
         val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(
             context,
@@ -113,4 +118,9 @@ class TodoAlarmManagerImpl @Inject constructor(
         }
         return time
     }
+}
+
+fun Long.getFullTimeString(): String {
+    val simpleDateFormatTime = SimpleDateFormat("yyyy MM dd a hh:mm", Locale.KOREA)
+    return simpleDateFormatTime.format(this)
 }
