@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.home
 
+import androidx.core.util.toRange
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -57,12 +58,10 @@ class CalendarViewModel @Inject constructor(
         val calendar = _monthlyCalendar.value ?: return
 
         viewModelScope.launch {
-            // TODO DailyTodo를 가져오는 코드인데 없으면 setting을 해줌 -> 분리 필요
-            (calendar.startDate.dayOfMonth..calendar.endDate.dayOfMonth).forEach {
-                repository.getTodosWithTodayDailyTodos(
-                    LocalDate.of(calendar.year, calendar.month, it)
-                )
+            val dateList = (calendar.startDate.dayOfMonth..calendar.endDate.dayOfMonth).map {
+                LocalDate.of(calendar.year, calendar.month, it)
             }
+            repository.insertDailyTodosWithDateRange(dateList)
 
             val monthlyDailyTodos = repository.getAllDailyTodos().filter {
                 it.isActive &&
