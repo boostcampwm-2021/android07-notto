@@ -135,6 +135,10 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
         dailyTodos.add(dailyTodo)
     }
 
+    override suspend fun insertDailyTodosWithDateRange(dateRange: List<LocalDate>) {
+        throw Exception(ERROR_MSG)
+    }
+
     override suspend fun updateTodo(todo: Todo, selectedDate: LocalDate) {
         for (i in todos.indices) {
             if (todos[i].todoId == todo.todoId) {

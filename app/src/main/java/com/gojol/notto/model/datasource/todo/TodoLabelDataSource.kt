@@ -33,6 +33,8 @@ interface TodoLabelDataSource {
 
     suspend fun insertDailyTodo(dailyTodo: DailyTodo)
 
+    suspend fun insertDailyTodosWithDateRange(dateRange: List<LocalDate>)
+
     suspend fun updateTodo(todo: Todo, selectedDate: LocalDate)
 
     suspend fun updateTodo(todo: Todo, labels: List<Label>)
