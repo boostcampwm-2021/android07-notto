@@ -24,7 +24,7 @@
             style="@style/Theme.Notto.Toolbar.Primary" />
 
         <ProgressBar
-            android:id="@+id/progress_circular"
+            android:id="@+id/pb_popular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"

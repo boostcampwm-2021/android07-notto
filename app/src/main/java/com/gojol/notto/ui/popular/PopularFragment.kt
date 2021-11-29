@@ -57,14 +57,14 @@ class PopularFragment : Fragment() {
     }
 
     private fun checkNetwork() {
-        val manager = context?.let { getSystemService(it, ConnectivityManager::class.java) }
-        val isConnect = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            manager?.activeNetwork != null
+        val manager = getSystemService(requireContext(), ConnectivityManager::class.java) ?: return
+        val isConnected = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            manager.activeNetwork != null
         } else {
-            manager?.activeNetworkInfo?.isConnected ?: false
+            manager.activeNetworkInfo?.isConnected ?: false
         }
-        if (!isConnect){
-            binding.progressCircular.isVisible = false
+        if (isConnected.not()){
+            binding.pbPopular.isVisible = false
             binding.tvNetworkFail.isVisible = true
         }
     }
@@ -81,7 +81,7 @@ class PopularFragment : Fragment() {
     private fun initObservers() {
         popularViewModel.items.observe(viewLifecycleOwner, {
             adapter.submitList(it)
-            binding.progressCircular.isVisible = false
+            binding.pbPopular.isVisible = false
         })
     }
 
@@ -90,7 +90,7 @@ class PopularFragment : Fragment() {
             override fun onAvailable(network: Network) {
                 CoroutineScope(Dispatchers.Main).launch {
                     if (popularViewModel.items.value.isNullOrEmpty()) {
-                        binding.progressCircular.isVisible = true
+                        binding.pbPopular.isVisible = true
                         withContext(Dispatchers.IO) {
                             popularViewModel.fetchKeywords()
                         }
@@ -101,7 +101,7 @@ class PopularFragment : Fragment() {
 
             override fun onLost(network: Network) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    binding.progressCircular.isVisible = false
+                    binding.pbPopular.isVisible = false
                     if (popularViewModel.items.value.isNullOrEmpty()) {
                         binding.tvNetworkFail.isVisible = true
                     }
