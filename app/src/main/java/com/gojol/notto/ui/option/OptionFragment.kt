@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import com.gojol.notto.R
 import com.gojol.notto.common.EventObserver
 import com.gojol.notto.databinding.FragmentOptionBinding
@@ -19,6 +20,7 @@ class OptionFragment : Fragment() {
 
     private lateinit var binding: FragmentOptionBinding
     private val optionViewModel: OptionViewModel by viewModels()
+    private lateinit var contributorAdapter: ContributorAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +39,7 @@ class OptionFragment : Fragment() {
         binding.viewmodel = optionViewModel
 
         initObserver()
-        optionViewModel.initGitContributors()
+        initRecyclerView()
     }
 
     private fun initObserver() {
@@ -45,5 +47,16 @@ class OptionFragment : Fragment() {
             startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
             OssLicensesMenuActivity.setActivityTitle(getString(R.string.option_license_title))
         })
+        optionViewModel.contributorList.observe(viewLifecycleOwner, {
+            contributorAdapter.submitList(it)
+        })
+    }
+
+    private fun initRecyclerView() {
+        contributorAdapter = ContributorAdapter()
+        binding.rvOptionContributors.apply {
+            adapter = contributorAdapter
+            layoutManager = GridLayoutManager(requireContext(), 2)
+        }
     }
 }

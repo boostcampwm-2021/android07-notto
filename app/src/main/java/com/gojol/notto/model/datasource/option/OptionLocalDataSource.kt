@@ -3,7 +3,7 @@ package com.gojol.notto.model.datasource.option
 import com.gojol.notto.common.DAY_PUSH_NOTIFICATION_KEY
 import com.gojol.notto.common.ERROR_MSG
 import com.gojol.notto.model.SharedPrefManager
-import network.GithubResponse
+import com.gojol.notto.network.GithubResponse
 import javax.inject.Inject
 
 class OptionLocalDataSource @Inject constructor(

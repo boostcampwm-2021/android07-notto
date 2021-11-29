@@ -1,8 +1,8 @@
 package com.gojol.notto.model.datasource.option
 
 import com.gojol.notto.common.ERROR_MSG
-import network.GithubResponse
-import network.GithubService
+import com.gojol.notto.network.GithubResponse
+import com.gojol.notto.network.GithubService
 import java.lang.NullPointerException
 import javax.inject.Inject
 

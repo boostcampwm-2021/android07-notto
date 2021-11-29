@@ -1,6 +1,6 @@
 package com.gojol.notto.model.datasource.option
 
-import network.GithubResponse
+import com.gojol.notto.network.GithubResponse
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton

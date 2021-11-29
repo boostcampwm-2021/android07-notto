@@ -13,7 +13,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import network.GithubService
+import com.gojol.notto.network.GithubService
 import javax.inject.Named
 import javax.inject.Singleton
 
