@@ -48,9 +48,10 @@ class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
                 .build()
         }
         workManager.enqueue(workRequest)
-        notificationManager.cancel(todo.todoId)
-        if(notificationManager.activeNotifications.size == 1) {
+        if(notificationManager.activeNotifications.size == 2) {
             notificationManager.cancelAll()
+        } else {
+            notificationManager.cancel(todo.todoId)
         }
     }
 
