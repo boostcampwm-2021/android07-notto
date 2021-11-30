@@ -31,9 +31,9 @@ class CalendarFragment : Fragment(), TodayClickListener, TodoSwipeListener {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
         dayClickListener = (parentFragment as DayClickListener)
         monthSwipeListener = (parentFragment as MonthSwipeListener)
-
     }
 
     override fun onCreateView(
