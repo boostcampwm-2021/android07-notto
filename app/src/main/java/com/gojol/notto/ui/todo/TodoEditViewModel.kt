@@ -66,6 +66,11 @@ class TodoEditViewModel @Inject constructor(
         )
     }
 
+    fun fillContentWithKeyword(keyword: String) {
+        val todoWithKeyword = todoWrapper.value?.todo?.copy(content = keyword) ?: return
+        _todoWrapper.value = todoWrapper.value?.copy(todo = todoWithKeyword)
+    }
+
     fun initLabelData() {
         viewModelScope.launch {
             _labelList.value = repository.getAllLabel()

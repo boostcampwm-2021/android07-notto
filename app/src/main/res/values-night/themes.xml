@@ -12,6 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="switchStyle">@style/Widget.App.Switch</item>
+        <item name="fontFamily">@font/font_nanumsquare</item>
     </style>
 
     <style name="Theme.Notto.TextDefault" parent="Theme.Notto">
