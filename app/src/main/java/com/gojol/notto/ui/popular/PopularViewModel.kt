@@ -18,7 +18,11 @@ class PopularViewModel @Inject constructor(private val keywordDatabase: KeywordD
 
     fun fetchKeywords() {
         viewModelScope.launch {
-            _items.value = keywordDatabase.getKeywords()
+            keywordDatabase.getKeywords(::onGetKeywords)
         }
+    }
+
+    private fun onGetKeywords(keywords: List<Keyword>) {
+        _items.value = keywords
     }
 }

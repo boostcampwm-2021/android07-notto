@@ -18,6 +18,7 @@ import com.gojol.notto.common.DELETE
 import com.gojol.notto.common.EventObserver
 import com.gojol.notto.common.LABEL_ADD
 import com.gojol.notto.common.LabelEditType
+import com.gojol.notto.common.POPULAR_KEYWORD
 import com.gojol.notto.common.REPEAT_TIME
 import com.gojol.notto.common.REPEAT_TIME_DATA
 import com.gojol.notto.common.REPEAT_TYPE
@@ -95,10 +96,14 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     private fun initIntentExtra() {
-        val todo = intent.getSerializableExtra("todo") as Todo?
         val date = intent.getSerializableExtra("date") as LocalDate?
-        todoEditViewModel.updateIsTodoEditing(todo)
+        val todo = intent.getSerializableExtra("todo") as Todo?
+        val keyword = intent.getStringExtra(POPULAR_KEYWORD)
+
         todoEditViewModel.updateDate(date)
+        todoEditViewModel.updateIsTodoEditing(todo)
+
+        if (keyword != null) todoEditViewModel.fillContentWithKeyword(keyword)
     }
 
     private fun initSelectedLabelRecyclerView() {
