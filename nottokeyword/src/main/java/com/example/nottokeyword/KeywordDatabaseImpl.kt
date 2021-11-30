@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 internal class KeywordDatabaseImpl @Inject constructor(
     private val database: DatabaseReference,
-    private val prefs: CacheManager
+    private val cache: CacheManager
 ) : KeywordDatabase {
 
     override suspend fun insertKeyword(content: String): Boolean {
@@ -55,18 +55,69 @@ internal class KeywordDatabaseImpl @Inject constructor(
         database.orderByValue().limitToLast(POPULAR_KEYWORD_LIMIT).get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
-            val list = it.children.mapNotNull { child ->
+            val oldList = cache.getPopularKeywords()
+            val tempList = it.children.mapNotNull { child ->
                 child.key?.let { key ->
                     child.value?.let { value ->
                         Keyword(key, (value as Long).toInt())
                     }
                 }
+            }.sortedByDescending { keyword ->
+                keyword.count
             }
 
-            prefs.updatePopularKeywords(list)
+            val newList = comparePopularKeywords(oldList, tempList)
+            cache.updatePopularKeywords(newList)
         }.addOnCompleteListener {
-            callback(prefs.getPopularKeywords())
+            callback(cache.getPopularKeywords())
         }
+    }
+
+    private fun comparePopularKeywords(
+        oldList: List<Keyword>,
+        newList: List<Keyword>
+    ): List<Keyword> {
+        val result = mutableListOf<Keyword>()
+
+        newList.forEachIndexed { index, keyword ->
+            val oldKeyword = oldList.find {
+                it.word == keyword.word
+            }
+
+            val oldPlace = oldKeyword?.place
+            val state: PlaceState
+            val notch: Int?
+            val hasChanged: Boolean
+
+            when {
+                oldPlace == null -> {
+                    state = PlaceState.New
+                    notch = null
+                    hasChanged = false
+                }
+                oldPlace > index -> {
+                    state = PlaceState.Up
+                    notch = oldPlace - index
+                    hasChanged = true
+                }
+                oldPlace < index -> {
+                    state = PlaceState.Down
+                    notch = index - oldPlace
+                    hasChanged = true
+                }
+                else -> {
+                    state = PlaceState.Same
+                    notch = 0
+                    hasChanged = false
+                }
+            }
+
+            val newKeyword =
+                keyword.copy(place = index, state = state, notch = notch, hasChanged = hasChanged)
+            result.add(newKeyword)
+        }
+
+        return result
     }
 
     override suspend fun deleteKeyword(keyword: String): Boolean {

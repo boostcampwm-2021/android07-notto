@@ -98,4 +98,5 @@
     <string name="popular_network_state_alert">데이터 요청에 실패하였습니다.\n네트워크 상태를 확인해주세요.</string>
     <string name="popular_refresh">새로 고침</string>
     <string name="popular_dialog">%s&#160;Not Todo에 추가하시겠습니까?</string>
+    <string name="popular_keyword_place_change">인기 키워드 순위 변동</string>
 </resources>

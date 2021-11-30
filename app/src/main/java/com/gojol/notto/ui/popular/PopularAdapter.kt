@@ -2,10 +2,14 @@ package com.gojol.notto.ui.popular
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nottokeyword.Keyword
+import com.example.nottokeyword.PlaceState
+import com.gojol.notto.R
 import com.gojol.notto.databinding.ItemPopularKeywordBinding
 
 class PopularAdapter(private val callback: (String?) -> Unit) :
@@ -43,6 +47,21 @@ class PopularAdapter(private val callback: (String?) -> Unit) :
             binding.apply {
                 keyword = item
                 place = absoluteAdapterPosition + 1
+
+                val id = when (item.state) {
+                    PlaceState.New -> R.drawable.ic_keyword_new
+                    PlaceState.Up -> R.drawable.ic_keyword_up
+                    PlaceState.Down -> R.drawable.ic_keyword_down
+                    else -> null
+                }
+
+                if (id == null) {
+                    binding.ivPopularKeywordState.isVisible = false
+                } else {
+                    state = ContextCompat.getDrawable(binding.root.context, id)
+                    binding.ivPopularKeywordState.isVisible = true
+                }
+
                 executePendingBindings()
             }
         }

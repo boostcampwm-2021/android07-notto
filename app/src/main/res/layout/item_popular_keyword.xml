@@ -17,6 +17,10 @@
             name="clickKeywordListener"
             type="android.view.View.OnClickListener" />
 
+        <variable
+            name="state"
+            type="android.graphics.drawable.Drawable" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,17 +61,31 @@
 
         <TextView
             android:id="@+id/tv_keyword_count"
+            style="@style/Theme.Notto.TextSecondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/space_median"
-            android:text="@{@string/popular_count_format(keyword.count)}"
+            android:layout_marginEnd="@dimen/space_x_small"
+            android:text="@{keyword.hasChanged ? @string/popular_count_format(keyword.notch) : @string/blank}"
             android:textSize="@dimen/text_small"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_popular_keyword_state"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="1000"
-            style="@style/Theme.Notto.TextSecondary" />
+            tools:text="1" />
+
+        <ImageView
+            android:id="@+id/iv_popular_keyword_state"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@{state}"
+            android:contentDescription="@string/popular_keyword_place_change"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_keyword_count"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_keyword_count"
+            app:tint="@color/blue_normal"
+            tools:src="@drawable/ic_keyword_up" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
