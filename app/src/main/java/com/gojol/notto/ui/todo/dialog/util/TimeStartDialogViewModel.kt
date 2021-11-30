@@ -13,7 +13,6 @@ class TimeStartDialogViewModel : DialogViewModel() {
     private val _setTimeStartCallback = MutableLiveData<(LocalTime) -> Unit>()
     val setTimeStartCallback: LiveData<(LocalTime) -> Unit> = _setTimeStartCallback
 
-
     fun setTimeStart(date: LocalTime) {
         _timeStart.value = date
     }
