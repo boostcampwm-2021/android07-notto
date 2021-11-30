@@ -167,9 +167,9 @@ class TodoEditActivity : AppCompatActivity() {
             if (!it) showSaveButtonDisabled()
             else finish()
         }
-        todoEditViewModel.clickWrapper.popLabelAddDialog.observe(this) {
+        todoEditViewModel.clickWrapper.popLabelAddDialog.observe(this, EventObserver {
             if (it) showLabelAddDialog()
-        }
+        })
         todoEditViewModel.clickWrapper.labelAddClicked.observe(this, EventObserver {
             onLabelAddClick()
         })
