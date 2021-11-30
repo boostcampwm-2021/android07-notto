@@ -1,12 +1,17 @@
 package com.example.nottokeyword
 
 import android.util.Log
+import com.example.nottokeyword.cache.CacheManager
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.tasks.await
 import kr.bydelta.koala.hnn.Tagger
 import java.util.*
+import javax.inject.Inject
 
-internal class KeywordDatabaseImpl(private val database: DatabaseReference) : KeywordDatabase {
+internal class KeywordDatabaseImpl @Inject constructor(
+    private val database: DatabaseReference,
+    private val prefs: CacheManager
+) : KeywordDatabase {
 
     override suspend fun insertKeyword(content: String): Boolean {
         val keywords = getKeywordsFrom(content)
@@ -51,18 +56,16 @@ internal class KeywordDatabaseImpl(private val database: DatabaseReference) : Ke
             Log.i(TAG, "Got value ${it.value}")
 
             val list = it.children.mapNotNull { child ->
-                child.key?.let{ key ->
-                    child.value?.let{ value ->
+                child.key?.let { key ->
+                    child.value?.let { value ->
                         Keyword(key, (value as Long).toInt())
                     }
                 }
-            }.reversed()
+            }
 
-            callback(list)
-        }.addOnFailureListener {
-            Log.e(TAG, "Error getting data", it)
-
-            callback(emptyList())
+            prefs.updatePopularKeywords(list)
+        }.addOnCompleteListener {
+            callback(prefs.getPopularKeywords())
         }
     }
 
