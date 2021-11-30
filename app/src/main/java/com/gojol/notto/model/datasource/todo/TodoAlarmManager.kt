@@ -9,6 +9,10 @@ interface TodoAlarmManager {
 
     fun addAlarm(todo: Todo, todoState: TodoState)
 
+    suspend fun updateAlarm(todo: Todo)
+
+    suspend fun updateAlarms()
+
     fun deleteAlarm(todo: Todo)
 
     fun deleteAlarm(todo: Todo, todoState: TodoState)
