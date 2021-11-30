@@ -1,5 +1,6 @@
 package com.gojol.notto.model.datasource.todo
 
+import com.gojol.notto.common.ERROR_MSG
 import com.gojol.notto.common.TimeRepeatType
 import com.gojol.notto.common.TodoState
 import com.gojol.notto.common.RepeatType
@@ -254,7 +255,6 @@ class FakeTodoLabelRepository : TodoLabelDataSource {
     }
 
     companion object {
-        private const val ERROR_MSG = "잘못된 호출입니다."
         private var INSTANCE: FakeTodoLabelRepository? = null
 
         fun getInstance(): FakeTodoLabelRepository =
