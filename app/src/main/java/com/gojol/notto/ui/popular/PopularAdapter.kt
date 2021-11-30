@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.nottokeyword.Keyword
 import com.gojol.notto.databinding.ItemPopularKeywordBinding
 
-class PopularAdapter :
+class PopularAdapter(private val callback: (String?) -> Unit) :
     ListAdapter<Keyword, PopularAdapter.PopularViewHolder>(PopularDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularViewHolder {
@@ -17,7 +17,8 @@ class PopularAdapter :
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            callback
         )
     }
 
@@ -25,8 +26,19 @@ class PopularAdapter :
         holder.bind(getItem(position))
     }
 
-    class PopularViewHolder(private val binding: ItemPopularKeywordBinding) :
+    class PopularViewHolder(
+        private val binding: ItemPopularKeywordBinding,
+        private val callback: (String?) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.apply {
+                setClickKeywordListener {
+                    callback(keyword?.word)
+                }
+            }
+        }
 
         fun bind(item: Keyword) {
             binding.apply {

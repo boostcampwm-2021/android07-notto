@@ -1,5 +1,6 @@
 package com.gojol.notto.ui.popular
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -7,13 +8,17 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
+import com.gojol.notto.common.POPULAR_KEYWORD
 import com.gojol.notto.databinding.FragmentPopularBinding
+import com.gojol.notto.ui.todo.TodoEditActivity
+import com.gojol.notto.util.addEulLeul
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -79,8 +84,22 @@ class PopularFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        adapter = PopularAdapter()
+        adapter = PopularAdapter(::onKeywordClick)
         binding.rvPopularKeyword.adapter = adapter
+    }
+
+    private fun onKeywordClick(keyword: String?) {
+        val dialog = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+            .setMessage(getString(R.string.popular_dialog, keyword.addEulLeul()))
+            .setPositiveButton(getString(R.string.okay)) { _, _ ->
+                val intent = Intent(requireContext(), TodoEditActivity::class.java).apply {
+                    putExtra(POPULAR_KEYWORD, keyword)
+                }
+                startActivity(intent)
+            }
+            .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+
+        dialog.show()
     }
 
     private fun initObservers() {
