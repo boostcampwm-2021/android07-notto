@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home
+package com.gojol.notto.ui.home.calendar
 
 import android.content.Context
 import android.os.Bundle
@@ -12,7 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentCalendarBinding
-import com.gojol.notto.ui.home.adapter.CalendarDayAdapter
+import com.gojol.notto.ui.home.HomeFragment
+import com.gojol.notto.ui.home.calendar.adapter.CalendarDayAdapter
 import com.gojol.notto.ui.home.util.DayClickListener
 import com.gojol.notto.ui.home.util.MonthSwipeListener
 import com.gojol.notto.ui.home.util.TodayClickListener

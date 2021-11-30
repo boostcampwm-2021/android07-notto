@@ -24,14 +24,14 @@ import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.model.data.LabelWithCheck
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.ui.home.adapter.CalendarAdapter
+import com.gojol.notto.ui.home.calendar.adapter.CalendarAdapter
 import com.gojol.notto.ui.home.adapter.LabelAdapter
 import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
 import com.gojol.notto.ui.home.adapter.TodoAdapter
 import com.gojol.notto.ui.home.util.DayClickListener
 import com.gojol.notto.ui.home.util.MonthSwipeListener
 import com.gojol.notto.ui.home.util.TodayClickListener
-import com.gojol.notto.ui.home.util.TodoItemTouchCallback
+import com.gojol.notto.ui.home.util.todo.TodoItemTouchCallback
 import com.gojol.notto.ui.home.util.TodoSwipeListener
 import com.gojol.notto.ui.label.EditLabelActivity
 import com.gojol.notto.ui.todo.TodoEditActivity
