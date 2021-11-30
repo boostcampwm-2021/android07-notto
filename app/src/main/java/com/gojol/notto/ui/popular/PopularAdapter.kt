@@ -33,7 +33,7 @@ class PopularAdapter(private val callback: (String?) -> Unit) :
     class PopularViewHolder(
         private val binding: ItemPopularKeywordBinding,
         private val callback: (String?) -> Unit
-    ): RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.apply {
@@ -48,18 +48,31 @@ class PopularAdapter(private val callback: (String?) -> Unit) :
                 keyword = item
                 place = absoluteAdapterPosition + 1
 
-                val id = when (item.state) {
-                    PlaceState.New -> R.drawable.ic_keyword_new
-                    PlaceState.Up -> R.drawable.ic_keyword_up
-                    PlaceState.Down -> R.drawable.ic_keyword_down
-                    else -> null
-                }
-
-                if (id == null) {
-                    binding.ivPopularKeywordState.isVisible = false
-                } else {
-                    state = ContextCompat.getDrawable(binding.root.context, id)
-                    binding.ivPopularKeywordState.isVisible = true
+                when (item.state) {
+                    PlaceState.New -> {
+                        binding.ivPopularKeywordState.isVisible = false
+                        binding.ivPopularKeywordNew.isVisible = true
+                    }
+                    PlaceState.Up -> {
+                        state = ContextCompat.getDrawable(
+                            binding.root.context,
+                            R.drawable.ic_keyword_up
+                        )
+                        binding.ivPopularKeywordNew.isVisible = false
+                        binding.ivPopularKeywordState.isVisible = true
+                    }
+                    PlaceState.Down -> {
+                        state = ContextCompat.getDrawable(
+                            binding.root.context,
+                            R.drawable.ic_keyword_down
+                        )
+                        binding.ivPopularKeywordNew.isVisible = false
+                        binding.ivPopularKeywordState.isVisible = true
+                    }
+                    else -> {
+                        binding.ivPopularKeywordState.isVisible = false
+                        binding.ivPopularKeywordNew.isVisible = false
+                    }
                 }
 
                 executePendingBindings()

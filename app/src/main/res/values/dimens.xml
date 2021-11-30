@@ -9,6 +9,7 @@
     <dimen name="text_s_large">22sp</dimen>
     <dimen name="text_large">24sp</dimen>
     <dimen name="text_x_large">28sp</dimen>
+    <dimen name="space_x_x_small">4dp</dimen>
     <dimen name="space_x_small">8dp</dimen>
     <dimen name="space_small">12dp</dimen>
     <dimen name="space_median">16dp</dimen>

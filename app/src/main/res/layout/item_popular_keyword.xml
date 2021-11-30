@@ -62,17 +62,18 @@
         <TextView
             android:id="@+id/tv_keyword_count"
             style="@style/Theme.Notto.TextSecondary"
-            android:layout_width="wrap_content"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/space_median"
-            android:layout_marginEnd="@dimen/space_x_small"
+            android:layout_marginEnd="@dimen/space_x_x_small"
             android:text="@{keyword.hasChanged ? @string/popular_count_format(keyword.notch) : @string/blank}"
-            android:textSize="@dimen/text_small"
+            android:textSize="@dimen/text_x_small"
+            android:textAlignment="center"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/iv_popular_keyword_state"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="1" />
+            tools:text="88" />
 
         <ImageView
             android:id="@+id/iv_popular_keyword_state"
@@ -86,6 +87,19 @@
             app:layout_constraintTop_toTopOf="@+id/tv_keyword_count"
             app:tint="@color/blue_normal"
             tools:src="@drawable/ic_keyword_up" />
+
+        <ImageView
+            android:id="@+id/iv_popular_keyword_new"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_keyword_new"
+            android:visibility="invisible"
+            android:contentDescription="@string/popular_keyword_new"
+            app:tint="@color/yellow_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/iv_popular_keyword_state"
+            app:layout_constraintStart_toStartOf="@+id/tv_keyword_count"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
