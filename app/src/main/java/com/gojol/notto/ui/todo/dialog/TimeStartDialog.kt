@@ -50,7 +50,7 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
         val deviceWidth = resources.displayMetrics.widthPixels
         val deviceHeight = resources.displayMetrics.heightPixels
 
-        if(deviceWidth > deviceHeight) {
+        if (deviceWidth > deviceHeight) {
             val dialogWidth = deviceWidth * 0.8
             val dialogHeight = deviceHeight * 0.8
             dialog?.window?.setLayout(dialogWidth.toInt(), dialogHeight.toInt())
@@ -109,33 +109,30 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
         with(binding.tpTimeStart) {
             if (Build.VERSION.SDK_INT >= 23) {
                 val currTime = LocalTime.of(hour, minute)
-                endTime?.let {
-                    if (currTime >= endTime) {
-                        Toast.makeText(
-                            requireContext(),
-                            context.getString(R.string.dialog_start_exception),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return
-                    }
-                }
+                if (!isCorrectTime(currTime)) return
                 viewModel.setTimeStartCallback.value?.let { it(currTime) }
             } else {
                 val currTime = LocalTime.of(currentHour, currentMinute)
-                endTime?.let {
-                    if (currTime >= endTime) {
-                        Toast.makeText(
-                            requireContext(),
-                            context.getString(R.string.dialog_start_exception),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return
-                    }
-                }
+                if (!isCorrectTime(currTime)) return
                 viewModel.setTimeStartCallback.value?.let { it(currTime) }
             }
         }
         this.dismiss()
+    }
+
+    private fun isCorrectTime(currTime: LocalTime): Boolean {
+        val context = requireContext()
+        endTime?.let {
+            if (currTime >= endTime) {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.dialog_start_exception),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return false
+            }
+        }
+        return true
     }
 
     override fun dismissClick() {

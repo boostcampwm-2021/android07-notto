@@ -90,33 +90,30 @@ class TimeFinishDialog : BaseDialog<DialogTodoTimeFinishBinding, TimeFinishDialo
         with(binding.tpTimeFinish) {
             if (Build.VERSION.SDK_INT >= 23) {
                 val currTime = LocalTime.of(hour, minute)
-                startTime?.let {
-                    if (currTime <= startTime) {
-                        Toast.makeText(
-                            requireContext(),
-                            context.getString(R.string.dialog_end_exception),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return
-                    }
-                }
+                if (!isCorrectTime(currTime)) return
                 viewModel.setTimeFinishCallback.value?.let { it(currTime) }
             } else {
                 val currTime = LocalTime.of(currentHour, currentMinute)
-                startTime?.let {
-                    if (currTime <= startTime) {
-                        Toast.makeText(
-                            requireContext(),
-                            context.getString(R.string.dialog_end_exception),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return
-                    }
-                }
+                if (!isCorrectTime(currTime)) return
                 viewModel.setTimeFinishCallback.value?.let { it(currTime) }
             }
         }
         this.dismiss()
+    }
+
+    private fun isCorrectTime(currTime: LocalTime): Boolean {
+        val context = requireContext()
+        startTime?.let {
+            if (currTime >= startTime) {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.dialog_end_exception),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return false
+            }
+        }
+        return true
     }
 
     override fun dismissClick() {
