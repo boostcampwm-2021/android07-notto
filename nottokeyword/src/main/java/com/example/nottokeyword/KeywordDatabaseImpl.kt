@@ -60,10 +60,13 @@ internal class KeywordDatabaseImpl @Inject constructor(
         database.orderByValue().limitToLast(POPULAR_KEYWORD_LIMIT).get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
-            val list = it.children
-                .filter { child -> child.key != null && child.value != null }
-                .map { child -> Keyword(child.key!!, (child.value!! as Long).toInt()) }
-                .reversed()
+            val list = it.children.mapNotNull { child ->
+                child.key?.let{ key ->
+                    child.value?.let{ value ->
+                        Keyword(key, (value as Long).toInt())
+                    }
+                }
+            }.reversed()
 
             callback(list)
         }.addOnFailureListener {
