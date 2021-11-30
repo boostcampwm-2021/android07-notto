@@ -57,7 +57,7 @@ internal class KeywordDatabaseImpl @Inject constructor(
     override suspend fun getKeywords(callback: (List<Keyword>) -> Unit) {
         if (isOnline().not()) return
 
-        database.orderByValue().limitToLast(30).get().addOnSuccessListener {
+        database.orderByValue().limitToLast(POPULAR_KEYWORD_LIMIT).get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
             val list = it.children
