@@ -27,3 +27,5 @@ const val TIME_REPEAT = "timeRepeat"
 const val EMPTY_DATE = 0
 
 const val LABEL_ADD = "+ 라벨 추가"
+
+const val ERROR_MSG = "잘못된 호출입니다."
