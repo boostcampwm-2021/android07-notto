@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home.util
+package com.gojol.notto.ui.home.util.todo
 
 import com.gojol.notto.common.TodoState
 
