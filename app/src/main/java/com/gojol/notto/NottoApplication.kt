@@ -4,11 +4,13 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.facebook.stetho.Stetho
 import com.gojol.notto.common.UPDATE_TOMORROW_DAILY_TODO
 import com.gojol.notto.util.AddDailyTodoWorker
+import com.gojol.notto.util.RebootAddAlarmWorker
 import dagger.hilt.android.HiltAndroidApp
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -29,12 +31,18 @@ class NottoApplication : Application(), Configuration.Provider {
                 .addTag(UPDATE_TOMORROW_DAILY_TODO)
                 .build()
 
+        val todayWorkRequest =
+            OneTimeWorkRequestBuilder<RebootAddAlarmWorker>()
+                .build()
+
         val workManager = WorkManager.getInstance(this)
+        
         workManager.enqueueUniquePeriodicWork(
             UPDATE_TOMORROW_DAILY_TODO,
             ExistingPeriodicWorkPolicy.KEEP,
             dailyWorkRequest
         )
+        workManager.enqueue(todayWorkRequest)
     }
 
     override fun getWorkManagerConfiguration() =

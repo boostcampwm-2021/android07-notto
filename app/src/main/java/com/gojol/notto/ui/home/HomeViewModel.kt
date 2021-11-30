@@ -75,7 +75,7 @@ class HomeViewModel @Inject constructor(
                 }?.filter { currentShowTodoList.contains(it.todo) }
             }
 
-            todoAlarmManager.deleteAlarms()
+            todoAlarmManager.updateAlarms()
         }
     }
 

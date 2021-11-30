@@ -14,9 +14,10 @@ const val FAIL_INTENT_ID = 1000000002
 const val NOTIFICATION_TODO = "notificationTodo"
 
 // dialog
-const val SET_TIME_DATA = "setTimeData"
-const val SET_TIME_START = "timeStart"
-const val SET_TIME_FINISH = "timeFinish"
+const val TIME_START_DATA = "setTimeStartData"
+const val TIME_START = "timeStart"
+const val TIME_FINISH_DATA = "setTimeFinishData"
+const val TIME_FINISH = "timeFinish"
 const val REPEAT_TIME_DATA = "repeatTimeData"
 const val REPEAT_TIME = "repeatTime"
 const val REPEAT_TYPE_DATA = "repeatTypeValue"
