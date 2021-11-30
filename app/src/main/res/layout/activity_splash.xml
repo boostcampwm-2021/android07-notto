@@ -52,9 +52,12 @@
             android:layout_width="80dp"
             android:layout_height="50dp"
             android:layout_marginTop="30dp"
-            app:srcCompat="@drawable/img_notto_title"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_splash_icon_3" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_splash_icon_3"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/img_notto_title" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
