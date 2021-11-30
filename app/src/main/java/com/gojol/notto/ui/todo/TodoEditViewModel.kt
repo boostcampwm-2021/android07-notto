@@ -209,7 +209,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun onPopLabelAddDialogClick() {
-        clickWrapper.popLabelAddDialog.value = true
+        clickWrapper.popLabelAddDialog.value = Event(true)
     }
 
     private fun onLabelAddClick() {
