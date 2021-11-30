@@ -6,18 +6,23 @@ import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 object KeywordModule {
 
     @Provides
+    @Singleton
     fun provideKeywordDatabase(@ApplicationContext context: Context): KeywordDatabase {
+        val database = Firebase.database(BuildConfig.FIREBASE_DB_URL)
+            .apply { setPersistenceEnabled(true) }
+
         return KeywordDatabaseImpl(
             context,
-            Firebase.database(BuildConfig.FIREBASE_DB_URL).getReference("keywords")
+            database.getReference("keywords")
         )
     }
 }
