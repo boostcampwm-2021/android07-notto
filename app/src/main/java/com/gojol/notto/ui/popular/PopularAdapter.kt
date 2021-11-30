@@ -29,8 +29,7 @@ class PopularAdapter(private val callback: (String?) -> Unit) :
     class PopularViewHolder(
         private val binding: ItemPopularKeywordBinding,
         private val callback: (String?) -> Unit
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+    ): RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.apply {
