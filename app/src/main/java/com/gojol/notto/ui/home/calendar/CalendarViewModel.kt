@@ -1,6 +1,5 @@
-package com.gojol.notto.ui.home
+package com.gojol.notto.ui.home.calendar
 
-import androidx.core.util.toRange
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -10,7 +9,7 @@ import com.gojol.notto.model.data.DayWithSuccessLevelAndSelect
 import com.gojol.notto.model.data.MonthlyCalendar
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import com.gojol.notto.ui.home.CalendarFragment.Companion.ITEM_ID_ARGUMENT
+import com.gojol.notto.ui.home.calendar.CalendarFragment.Companion.ITEM_ID_ARGUMENT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate

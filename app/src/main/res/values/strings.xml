@@ -89,6 +89,8 @@
     <string name="option_notification_title">오늘의 마무리 알림</string>
     <string name="option_notification_content">하루를 마무리하기 전에 Not Todo를 체크해주세요!</string>
     <string name="option_notification_tooltip_msg">매일 밤, 잊지 않고 Not Todo 성공 여부를 체크하도록 알림을 보냅니다.</string>
+    <string name="option_contributors">Contributors</string>
+    <string name="option_contributor_login">\@%1$s</string>
 
     <string name="popular_keyword">인기 키워드</string>
     <string name="popular_place_format">%d</string>
