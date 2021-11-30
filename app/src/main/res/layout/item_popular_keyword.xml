@@ -13,18 +13,22 @@
             name="place"
             type="Integer" />
 
+        <variable
+            name="clickKeywordListener"
+            type="android.view.View.OnClickListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/space_median"
         android:paddingHorizontal="@dimen/space_x_large">
 
         <TextView
             android:id="@+id/tv_keyword_place"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/space_median"
             android:text="@{@string/popular_place_format(place)}"
             android:textSize="@dimen/text_small"
             android:textStyle="bold"
@@ -37,21 +41,25 @@
 
         <TextView
             android:id="@+id/tv_keyword_word"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_large"
+            style="@style/Theme.Notto.TextDefault"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/space_x_x_large"
+            android:gravity="center"
+            android:onClick="@{clickKeywordListener}"
             android:text="@{keyword.word}"
             android:textSize="@dimen/text_small"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_keyword_place"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="늦잠"
-            style="@style/Theme.Notto.TextDefault" />
+            tools:text="늦잠" />
 
         <TextView
             android:id="@+id/tv_keyword_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/space_median"
             android:text="@{@string/popular_count_format(keyword.count)}"
             android:textSize="@dimen/text_small"
             android:textStyle="bold"
