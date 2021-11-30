@@ -1,6 +1,7 @@
 package com.gojol.notto.util
 
 import kr.bydelta.koala.isHangulEnding
+import kr.bydelta.koala.isJongsungEnding
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -28,4 +29,9 @@ fun LocalTime.toDialogString(): String {
             this.format(DateTimeFormatter.ofPattern("a hh:mm"))
         }
     }
+}
+
+fun String?.addEulLeul(): String {
+    if (this == null) return "키워드를"
+    return if (this.isJongsungEnding()) "[${this}]을" else "[${this}]를"
 }
