@@ -48,7 +48,7 @@ class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
                 .build()
         }
         workManager.enqueue(workRequest)
-        if(notificationManager.activeNotifications.size == 2) {
+        if(notificationManager.activeNotifications.size == LAST_NOTIFICATION_SIZE) {
             notificationManager.cancelAll()
         } else {
             notificationManager.cancel(todo.todoId)
@@ -56,6 +56,8 @@ class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
     }
 
     companion object {
+        const val LAST_NOTIFICATION_SIZE = 2
+
         fun getPendingIntent(context: Context, id: Int, data: Uri, action: String): PendingIntent {
             val intent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java).apply {
                 setData(data)
