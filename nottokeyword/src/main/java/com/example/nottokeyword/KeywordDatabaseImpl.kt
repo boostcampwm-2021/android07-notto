@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.tasks.await
 import kr.bydelta.koala.hnn.Tagger
+import java.util.*
 import javax.inject.Inject
 
 internal class KeywordDatabaseImpl @Inject constructor(
@@ -53,23 +54,21 @@ internal class KeywordDatabaseImpl @Inject constructor(
         return result
     }
 
-    override suspend fun getKeywords(): List<Keyword> {
-        var list = listOf<Keyword>()
+    override suspend fun getKeywords(callback: (List<Keyword>) -> Unit) {
+        if (isOnline().not()) return
 
-        if (isOnline().not()) return list
-
-        database.get().addOnSuccessListener {
+        database.orderByValue().limitToLast(30).get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
-            list = it.children
+            val list = it.children
                 .filter { child -> child.key != null && child.value != null }
                 .map { child -> Keyword(child.key!!, (child.value!! as Long).toInt()) }
-                .sortedByDescending { keyword -> keyword.count }
+                .reversed()
+
+            callback(list)
         }.addOnFailureListener {
             Log.e(TAG, "Error getting data", it)
-        }.await()
-
-        return list
+        }
     }
 
     private fun isOnline(): Boolean {
