@@ -1,10 +1,7 @@
-package com.gojol.notto.ui.home.util
+package com.gojol.notto.ui.home.util.todo
 
-import android.graphics.BlendMode
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.PorterDuff
 import android.graphics.Rect
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -13,7 +10,6 @@ import com.gojol.notto.R
 import com.gojol.notto.common.TodoState
 import com.gojol.notto.ui.home.adapter.TodoAdapter
 import android.view.View
-import android.os.Build
 
 class TodoItemTouchCallback(private val listener: ItemTouchHelperListener) :
     ItemTouchHelper.Callback() {

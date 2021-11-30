@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home.adapter
+package com.gojol.notto.ui.home.calendar.adapter
 
 import android.graphics.Typeface
 import android.view.LayoutInflater
