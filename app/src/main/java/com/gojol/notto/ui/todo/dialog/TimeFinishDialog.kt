@@ -104,7 +104,7 @@ class TimeFinishDialog : BaseDialog<DialogTodoTimeFinishBinding, TimeFinishDialo
     private fun isCorrectTime(currTime: LocalTime): Boolean {
         val context = requireContext()
         startTime?.let {
-            if (currTime >= startTime) {
+            if (currTime <= startTime) {
                 Toast.makeText(
                     context,
                     context.getString(R.string.dialog_end_exception),
