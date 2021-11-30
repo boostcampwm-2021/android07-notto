@@ -66,7 +66,6 @@ class TodoEditActivity : AppCompatActivity() {
         initIntentExtra()
         initSelectedLabelRecyclerView()
         initObserver()
-        initTodoDialog()
         initEditTextTouchListener()
     }
 
@@ -119,6 +118,13 @@ class TodoEditActivity : AppCompatActivity() {
                 binding.tbTodoEdit.title = getString(R.string.todo_edit_title_edit)
             } else {
                 binding.btnTodoEditDelete.visibility = View.GONE
+            }
+        }
+        todoEditViewModel.todoWrapper.observe(this) {
+            if (it.existedTodo != null) {
+                initTodoDialog(it.existedTodo)
+            } else {
+                initTodoDialog(it.todo)
             }
         }
         todoEditViewModel.clickWrapper.isBeforeToday.observe(this, {
@@ -212,31 +218,31 @@ class TodoEditActivity : AppCompatActivity() {
                 .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
     }
 
-    private fun initTodoDialog() {
+    private fun initTodoDialog(todo: Todo) {
         todoDeletionDialog = DeletionDialog.newInstance(todoEditViewModel::updateTodoDeleteType)
 
         todoRepeatTypeDialog = RepeatTypeDialog.newInstance(
-            bundleOf(REPEAT_TYPE_DATA to todoEditViewModel.todoWrapper.value?.todo?.repeatType),
+            bundleOf(REPEAT_TYPE_DATA to todo.repeatType),
             todoEditViewModel::updateRepeatType
         )
 
         todoRepeatTimeDialog = RepeatTimeDialog.newInstance(
-            bundleOf(REPEAT_TIME_DATA to todoEditViewModel.todoWrapper.value?.todo?.startDate),
+            bundleOf(REPEAT_TIME_DATA to todo.startDate),
             todoEditViewModel::updateStartDate
         )
 
         todoAlarmPeriodDialog = AlarmPeriodDialog.newInstance(
-            bundleOf(TIME_REPEAT_DATA to todoEditViewModel.todoWrapper.value?.todo?.periodTime),
+            bundleOf(TIME_REPEAT_DATA to todo.periodTime),
             todoEditViewModel::updateTimeRepeat
         )
 
         todoTimeStartDialog = TimeStartDialog.newInstance(
-            bundleOf(TIME_START_DATA to todoEditViewModel.todoWrapper.value?.todo?.startTime),
+            bundleOf(TIME_START_DATA to todo.startTime),
             todoEditViewModel::updateTimeStart
         )
 
         todoTimeFinishDialog = TimeFinishDialog.newInstance(
-            bundleOf(TIME_FINISH_DATA to todoEditViewModel.todoWrapper.value?.todo?.endTime),
+            bundleOf(TIME_FINISH_DATA to todo.endTime),
             todoEditViewModel::updateTimeFinish
         )
     }
