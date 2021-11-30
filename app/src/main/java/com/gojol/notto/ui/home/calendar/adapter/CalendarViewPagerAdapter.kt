@@ -1,10 +1,10 @@
-package com.gojol.notto.ui.home.adapter
+package com.gojol.notto.ui.home.calendar.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.gojol.notto.ui.home.CalendarFragment
+import com.gojol.notto.ui.home.calendar.CalendarFragment
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.math.abs
