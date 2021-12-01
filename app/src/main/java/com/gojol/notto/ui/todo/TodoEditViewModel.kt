@@ -293,7 +293,7 @@ class TodoEditViewModel @Inject constructor(
 
         viewModelScope.launch {
             repository.updateTodo(todoModel.todo, todoModel.selectedDate)
-            todoAlarmManager.addAlarm(todoModel.todo)
+            todoAlarmManager.updateAlarms()
 
             selectedLabelList.value?.let { list ->
                 val newList = list.filterNot { it.order == 0 }
@@ -327,6 +327,7 @@ class TodoEditViewModel @Inject constructor(
                     todoModel.selectedDate
                 )
             }
+            todoAlarmManager.deleteAlarms()
             clickWrapper.isDeletionExecuted.value = Event(Unit)
         }
     }
