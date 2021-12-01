@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.ViewTreeObserver
 import android.view.animation.AlphaAnimation
 import android.view.animation.TranslateAnimation
 import androidx.databinding.DataBindingUtil
@@ -35,21 +36,25 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun initIconAnimation() {
-        val firstIconBarAnimation = TranslateAnimation(0f, -100f, 0f, 0f)
-        firstIconBarAnimation.duration = 500
-        firstIconBarAnimation.fillAfter = true
+        binding.ivSplashIcon1.viewTreeObserver.addOnGlobalLayoutListener {
+            val width = binding.ivSplashIcon1.width
 
-        val lastIconBarAnimation = TranslateAnimation(0f, 100f, 0f, 0f)
-        lastIconBarAnimation.duration = 500
-        lastIconBarAnimation.startOffset = 500
-        lastIconBarAnimation.fillAfter = true
+            val firstIconBarAnimation = TranslateAnimation(0f, -(width * 0.25f), 0f, 0f)
+            firstIconBarAnimation.duration = 500
+            firstIconBarAnimation.fillAfter = true
 
-        val textAnimation = AlphaAnimation(0.0f, 1.0f)
-        textAnimation.duration = 500
-        textAnimation.startOffset = 1500
+            val lastIconBarAnimation = TranslateAnimation(0f, (width * 0.25f), 0f, 0f)
+            lastIconBarAnimation.duration = 500
+            lastIconBarAnimation.startOffset = 500
+            lastIconBarAnimation.fillAfter = true
 
-        binding.ivSplashIcon1.startAnimation(firstIconBarAnimation)
-        binding.ivSplashIcon3.startAnimation(lastIconBarAnimation)
-        binding.tvSplashTitle.startAnimation(textAnimation)
+            val textAnimation = AlphaAnimation(0.0f, 1.0f)
+            textAnimation.duration = 500
+            textAnimation.startOffset = 1500
+
+            binding.ivSplashIcon1.startAnimation(firstIconBarAnimation)
+            binding.ivSplashIcon3.startAnimation(lastIconBarAnimation)
+            binding.tvSplashTitle.startAnimation(textAnimation)
+        }
     }
 }
