@@ -8,4 +8,6 @@
 
     <color name="calendar_today_button">@color/white</color>
     <color name="calendar_day_background_default">@color/gray_normal</color>
+
+    <color name="splash_title_color">@color/white</color>
 </resources>
