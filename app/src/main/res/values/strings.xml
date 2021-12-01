@@ -100,7 +100,8 @@
     <string name="dialog_end_exception">종료 시간은 시작 시간보다 높게 설정해야 합니다.</string>
     <string name="popular_refresh">새로 고침</string>
     <string name="popular_dialog">%s&#160;Not Todo에 추가하시겠습니까?</string>
-    <string name="popular_keyword_place_change">인기 키워드 순위 변동</string>
     <string name="popular_keyword_info">원하는 키워드를 터치해 Not Todo에 추가해보세요!</string>
-    <string name="popular_keyword_new">새로운 인기 키워드</string>
+    <string name="popular_keyword_up">순위 상승</string>
+    <string name="popular_keyword_down">순위 하락</string>
+    <string name="popular_keyword_new">NEW</string>
 </resources>
