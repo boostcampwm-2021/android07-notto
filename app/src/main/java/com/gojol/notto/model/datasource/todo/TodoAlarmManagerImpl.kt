@@ -8,8 +8,8 @@ import javax.inject.Inject
 import androidx.core.os.bundleOf
 import com.gojol.notto.common.ALARM_EXTRA_TODO
 import com.gojol.notto.common.TodoState
+import com.gojol.notto.model.database.todo.DailyTodo
 import java.io.Serializable
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -80,70 +80,65 @@ class TodoAlarmManagerImpl @Inject constructor(
         )
     }
 
-    override suspend fun updateAlarm(todo: Todo) {
-        val currentDate =
-            Date(System.currentTimeMillis()).toInstant().atZone(ZoneId.systemDefault())
-                .toLocalDate()
-
-        repository.getTodosWithTodayDailyTodos(currentDate).filter {
-            todo.todoId == it.todo.todoId
-        }.forEach {
-            if (it.todayDailyTodo.todoState == TodoState.SUCCESS) {
-                deleteAlarm(it.todo, TodoState.SUCCESS)
-            } else {
-                addAlarm(it.todo)
-            }
-        }
-    }
-
     override suspend fun updateAlarms() {
         val currentDate =
             Date(System.currentTimeMillis()).toInstant().atZone(ZoneId.systemDefault())
                 .toLocalDate()
 
         repository.getTodosWithTodayDailyTodos(currentDate).forEach {
-            if (it.todayDailyTodo.todoState == TodoState.SUCCESS) {
-                deleteAlarm(it.todo, TodoState.SUCCESS)
+            if (isDeleted(it.todo, it.todayDailyTodo.todoState) && !it.todayDailyTodo.isActive) {
+                deleteAlarm(it.todo)
             } else {
-                addAlarm(it.todo)
+                addAlarm(it.todo, it.todayDailyTodo.todoState)
             }
         }
     }
 
     override fun deleteAlarm(todo: Todo) {
-        val todayAlarmDateTime = LocalDateTime.of(LocalDate.now(), todo.endTime)
-        val todayAlarmDate = Date.from(todayAlarmDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
-        val endTime = todayAlarmDate - todo.periodTime.time.toInt() * 60 * 1000
-
-        if (!todo.isRepeated || todo.isFinished || endTime < System.currentTimeMillis()) {
+        if (isDeleted(todo)) {
             val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(context, todo.todoId, null)
             alarmManager.cancel(pendingIntent)
         }
     }
 
     override fun deleteAlarm(todo: Todo, todoState: TodoState) {
-        val todayAlarmDateTime = LocalDateTime.of(LocalDate.now(), todo.endTime)
-        val todayAlarmDate = Date.from(todayAlarmDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
-        val endTime = todayAlarmDate - todo.periodTime.time.toInt() * 60 * 1000
-
-        if (todoState == TodoState.SUCCESS || !todo.isRepeated ||
-            todo.isFinished || endTime < System.currentTimeMillis()
-        ) {
+        if (isDeleted(todo, todoState)) {
             val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(context, todo.todoId, null)
             alarmManager.cancel(pendingIntent)
         }
     }
 
-    override suspend fun deleteAlarms() {
-        val currentDate =
-            Date(System.currentTimeMillis()).toInstant().atZone(ZoneId.systemDefault())
-                .toLocalDate()
-
-        repository.getTodosWithTodayDailyTodos(currentDate).filter {
-            it.todayDailyTodo.todoState == TodoState.SUCCESS
-        }.forEach {
-            deleteAlarm(it.todo, TodoState.SUCCESS)
+    private fun deleteDailyAlarm(todo: Todo, dailyTodo: DailyTodo, todoState: TodoState) {
+        if (isDeleted(todo, todoState) || !dailyTodo.isActive) {
+            val pendingIntent = TodoPushBroadcastReceiver.getPendingIntent(context, todo.todoId, null)
+            alarmManager.cancel(pendingIntent)
         }
+    }
+
+    // 등록된 dailyTodo 알림 중 더 이상 사용하지 않는 것 지우기
+    override suspend fun deleteAlarms() {
+        repository.getTodosWithDailyTodos().forEach { todoWithDailyTodo ->
+            todoWithDailyTodo.dailyTodos.forEach { dailyTodo ->
+                deleteDailyAlarm(todoWithDailyTodo.todo, dailyTodo, dailyTodo.todoState)
+            }
+        }
+    }
+
+    private fun isDeleted(todo: Todo): Boolean {
+        val todayAlarmDateTime = LocalDateTime.of(LocalDate.now(), todo.endTime)
+        val todayAlarmDate = Date.from(todayAlarmDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
+        val endTime = todayAlarmDate - todo.periodTime.time.toInt() * 60 * 1000
+
+        return !todo.isRepeated || todo.isFinished || endTime < System.currentTimeMillis()
+    }
+
+    private fun isDeleted(todo: Todo, todoState: TodoState): Boolean {
+        val todayAlarmDateTime = LocalDateTime.of(LocalDate.now(), todo.endTime)
+        val todayAlarmDate = Date.from(todayAlarmDateTime.atZone(ZoneId.systemDefault()).toInstant()).time
+        val endTime = todayAlarmDate - todo.periodTime.time.toInt() * 60 * 1000
+
+        return !todo.isRepeated || todo.isFinished
+                || endTime < System.currentTimeMillis() || todoState == TodoState.SUCCESS
     }
 
     private fun modifyRepeatTime(triggerTime: Long, interval: Long): Long {
