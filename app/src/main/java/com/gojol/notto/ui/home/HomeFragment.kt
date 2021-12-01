@@ -13,12 +13,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.gojol.notto.R
-import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.common.LabelEditType
 import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.model.data.LabelWithCheck
@@ -116,7 +113,6 @@ class HomeFragment : Fragment(), DayClickListener, MonthSwipeListener {
 
         binding.rvHome.apply {
             adapter = concatAdapter
-            layoutManager = getLayoutManager(concatAdapter)
             (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         }
     }
@@ -202,22 +198,6 @@ class HomeFragment : Fragment(), DayClickListener, MonthSwipeListener {
     private fun initTodoListItemTouchListener() {
         val itemTouchHelper = ItemTouchHelper(TodoItemTouchCallback(todoAdapter))
         itemTouchHelper.attachToRecyclerView(binding.rvHome)
-    }
-
-    private fun getLayoutManager(adapter: ConcatAdapter): RecyclerView.LayoutManager {
-        val layoutManager = GridLayoutManager(context, 7)
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (adapter.getItemViewType(position)) {
-                    AdapterViewType.CALENDAR.viewType -> 7
-                    AdapterViewType.LABEL.viewType -> 1
-                    AdapterViewType.TODO.viewType -> 7
-                    else -> 7
-                }
-            }
-        }
-
-        return layoutManager
     }
 
     private fun todayClickCallback() {
