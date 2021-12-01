@@ -22,6 +22,6 @@ internal class CacheManagerImpl(context: Context) : CacheManager {
     override fun getPopularKeywords(): List<Keyword> {
         return prefs.getStringSet(POPULAR_KEYWORDS, setOf())
             ?.map { json -> gson.fromJson(json, Keyword::class.java) }?.toList()
-            ?.sortedByDescending { it.count } ?: listOf()
+            ?.sortedBy { it.place } ?: listOf()
     }
 }

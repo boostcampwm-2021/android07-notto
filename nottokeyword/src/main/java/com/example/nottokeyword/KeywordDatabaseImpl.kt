@@ -62,9 +62,7 @@ internal class KeywordDatabaseImpl @Inject constructor(
                         Keyword(key, (value as Long).toInt())
                     }
                 }
-            }.sortedByDescending { keyword ->
-                keyword.count
-            }
+            }.reversed()
 
             val newList = comparePopularKeywords(oldList, tempList)
             cache.updatePopularKeywords(newList)
