@@ -23,6 +23,19 @@
             app:titleCentered="true"
             style="@style/Theme.Notto.Toolbar.Primary" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_median"
+            android:src="@drawable/ic_info"
+            android:tooltipText="@string/popular_keyword_info"
+            android:contentDescription="@string/popular_keyword_info"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar_popular_keyword"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/gray_normal"
+            tools:targetApi="o" />
+
         <ProgressBar
             android:id="@+id/pb_popular"
             android:layout_width="wrap_content"

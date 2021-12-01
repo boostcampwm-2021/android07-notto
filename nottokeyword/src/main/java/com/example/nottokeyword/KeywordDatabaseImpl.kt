@@ -1,10 +1,7 @@
 package com.example.nottokeyword
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.os.Build
 import android.util.Log
-import androidx.core.content.ContextCompat.getSystemService
+import com.example.nottokeyword.cache.CacheManager
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.tasks.await
 import kr.bydelta.koala.hnn.Tagger
@@ -12,8 +9,8 @@ import java.util.*
 import javax.inject.Inject
 
 internal class KeywordDatabaseImpl @Inject constructor(
-    private val context: Context,
-    private val database: DatabaseReference
+    private val database: DatabaseReference,
+    private val cache: CacheManager
 ) : KeywordDatabase {
 
     override suspend fun insertKeyword(content: String): Boolean {
@@ -55,33 +52,72 @@ internal class KeywordDatabaseImpl @Inject constructor(
     }
 
     override suspend fun getKeywords(callback: (List<Keyword>) -> Unit) {
-        if (isOnline().not()) return
-
         database.orderByValue().limitToLast(POPULAR_KEYWORD_LIMIT).get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
-            val list = it.children.mapNotNull { child ->
-                child.key?.let{ key ->
-                    child.value?.let{ value ->
+            val oldList = cache.getPopularKeywords()
+            val tempList = it.children.mapNotNull { child ->
+                child.key?.let { key ->
+                    child.value?.let { value ->
                         Keyword(key, (value as Long).toInt())
                     }
                 }
-            }.reversed()
+            }.sortedByDescending { keyword ->
+                keyword.count
+            }
 
-            callback(list)
-        }.addOnFailureListener {
-            Log.e(TAG, "Error getting data", it)
+            val newList = comparePopularKeywords(oldList, tempList)
+            cache.updatePopularKeywords(newList)
+        }.addOnCompleteListener {
+            callback(cache.getPopularKeywords())
         }
     }
 
-    private fun isOnline(): Boolean {
-        val manager = getSystemService(context, ConnectivityManager::class.java) ?: return false
+    private fun comparePopularKeywords(
+        oldList: List<Keyword>,
+        newList: List<Keyword>
+    ): List<Keyword> {
+        val result = mutableListOf<Keyword>()
 
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            manager.activeNetwork != null
-        } else {
-            manager.activeNetworkInfo?.isConnected ?: false
+        newList.forEachIndexed { index, keyword ->
+            val oldKeyword = oldList.find {
+                it.word == keyword.word
+            }
+
+            val oldPlace = oldKeyword?.place
+            val state: PlaceState
+            val notch: Int?
+            val hasChanged: Boolean
+
+            when {
+                oldPlace == null -> {
+                    state = PlaceState.New
+                    notch = null
+                    hasChanged = false
+                }
+                oldPlace > index -> {
+                    state = PlaceState.Up
+                    notch = oldPlace - index
+                    hasChanged = true
+                }
+                oldPlace < index -> {
+                    state = PlaceState.Down
+                    notch = index - oldPlace
+                    hasChanged = true
+                }
+                else -> {
+                    state = PlaceState.Same
+                    notch = 0
+                    hasChanged = false
+                }
+            }
+
+            val newKeyword =
+                keyword.copy(place = index, state = state, notch = notch, hasChanged = hasChanged)
+            result.add(newKeyword)
         }
+
+        return result
     }
 
     override suspend fun deleteKeyword(keyword: String): Boolean {
