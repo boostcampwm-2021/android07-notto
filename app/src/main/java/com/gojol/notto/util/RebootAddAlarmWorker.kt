@@ -28,13 +28,6 @@ class RebootAddAlarmWorker @AssistedInject constructor(
     }
 
     private suspend fun recreateAlarm() {
-        val currentDate =
-            Date(System.currentTimeMillis()).toInstant().atZone(ZoneId.systemDefault())
-                .toLocalDate()
-        repository.getTodosWithTodayDailyTodos(currentDate).forEach {
-            val todo = it.todo
-            val dailyTodo = it.todayDailyTodo
-            todoAlarmManager.addAlarm(todo, dailyTodo.todoState)
-        }
+        todoAlarmManager.updateAlarms()
     }
 }
