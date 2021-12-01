@@ -45,7 +45,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_splash_icon_2"
             app:srcCompat="@drawable/bg_todo_edit_button"
-            app:tint="@color/blue_normal"/>
+            app:tint="@color/blue_light"/>
 
         <ImageView
             android:id="@+id/tv_splash_title"
