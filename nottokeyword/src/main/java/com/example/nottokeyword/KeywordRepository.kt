@@ -1,6 +1,6 @@
 package com.example.nottokeyword
 
-interface KeywordDatabase {
+interface KeywordRepository {
 
     suspend fun insertKeyword(content: String): Boolean
 

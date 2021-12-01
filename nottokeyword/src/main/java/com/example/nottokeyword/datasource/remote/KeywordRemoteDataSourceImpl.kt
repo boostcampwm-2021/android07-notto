@@ -1,17 +1,20 @@
-package com.example.nottokeyword
+package com.example.nottokeyword.datasource.remote
 
 import android.util.Log
-import com.example.nottokeyword.cache.CacheManager
+import com.example.nottokeyword.Keyword
+import com.example.nottokeyword.POPULAR_KEYWORD_LIMIT
+import com.example.nottokeyword.PlaceState
+import com.example.nottokeyword.datasource.local.KeywordLocalDataSource
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.tasks.await
 import kr.bydelta.koala.hnn.Tagger
 import java.util.*
 import javax.inject.Inject
 
-internal class KeywordDatabaseImpl @Inject constructor(
+internal class KeywordRemoteDataSourceImpl @Inject constructor(
     private val database: DatabaseReference,
-    private val cache: CacheManager
-) : KeywordDatabase {
+    private val keywordLocalDataSource: KeywordLocalDataSource
+) : KeywordRemoteDataSource {
 
     override suspend fun insertKeyword(content: String): Boolean {
         val keywords = getKeywordsFrom(content)
@@ -51,11 +54,11 @@ internal class KeywordDatabaseImpl @Inject constructor(
         return result
     }
 
-    override suspend fun getKeywords(callback: (List<Keyword>) -> Unit) {
+    override suspend fun getKeywords() {
         database.orderByValue().limitToLast(POPULAR_KEYWORD_LIMIT).get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
-            val oldList = cache.getPopularKeywords()
+            val oldList = keywordLocalDataSource.getPopularKeywords()
             val tempList = it.children.mapNotNull { child ->
                 child.key?.let { key ->
                     child.value?.let { value ->
@@ -65,9 +68,7 @@ internal class KeywordDatabaseImpl @Inject constructor(
             }.reversed()
 
             val newList = comparePopularKeywords(oldList, tempList)
-            cache.updatePopularKeywords(newList)
-        }.addOnCompleteListener {
-            callback(cache.getPopularKeywords())
+            keywordLocalDataSource.updatePopularKeywords(newList)
         }
     }
 
@@ -140,6 +141,6 @@ internal class KeywordDatabaseImpl @Inject constructor(
     }
 
     companion object {
-        val TAG: String = KeywordDatabaseImpl::class.java.simpleName
+        val TAG: String = KeywordRemoteDataSourceImpl::class.java.simpleName
     }
 }
