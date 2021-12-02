@@ -6,7 +6,7 @@ interface KeywordRepository {
 
     suspend fun insertKeyword(content: String): Boolean
 
-    suspend fun getKeywordsFromRemote(): List<Keyword>
+    suspend fun getKeywordsFromRemote(callback: (List<Keyword>) -> Unit)
 
     fun getKeywordsFromLocal(): List<Keyword>
 

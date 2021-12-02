@@ -50,6 +50,7 @@ object KeywordModule {
     }
 
     @Provides
+    @Singleton
     fun provideKeywordDB(repository: KeywordRepository): KeywordDB {
         return KeywordDBImpl(repository)
     }

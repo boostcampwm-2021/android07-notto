@@ -1,26 +1,27 @@
 package com.example.nottokeyword
 
 import com.example.nottokeyword.datasource.KeywordRepository
-import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 internal class KeywordDBImpl @Inject constructor(private val repository: KeywordRepository) :
     KeywordDB {
+
+    private lateinit var callbackFromViewModel: (List<Keyword>) -> Unit
 
     override suspend fun insertKeyword(content: String): Boolean {
         return repository.insertKeyword(content)
     }
 
     override suspend fun getKeywords(callbackFromViewModel: (List<Keyword>) -> Unit) {
-        coroutineScope {
-            val oldList = repository.getKeywordsFromLocal()
-            val newList = repository.getKeywordsFromRemote()
-            val keywords = reorderKeywords(oldList, newList)
+        this.callbackFromViewModel = callbackFromViewModel
+        repository.getKeywordsFromRemote(::onGetRemoteData)
+    }
 
-            repository.updateLocalCache(keywords)
-
-            callbackFromViewModel(repository.getKeywordsFromLocal())
-        }
+    private fun onGetRemoteData(newList: List<Keyword>) {
+        val oldList = repository.getKeywordsFromLocal()
+        val keywords = reorderKeywords(oldList, newList)
+        repository.updateLocalCache(keywords)
+        callbackFromViewModel(repository.getKeywordsFromLocal())
     }
 
     private fun reorderKeywords(
