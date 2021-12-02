@@ -15,7 +15,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 // not use
-class FakeTodoLabelRepository : TodoLabelDataSource {
+class FakeTodoLabelRepository : TodoLabelRepository {
 
     var todoId = 10
 
