@@ -12,8 +12,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EditLabelDialogViewModel @Inject constructor(private val repository: TodoLabelRepository) :
-    DialogViewModel() {
+class EditLabelDialogViewModel @Inject constructor(
+    private val repository: TodoLabelRepository
+) : DialogViewModel() {
 
     private val _type = MutableLiveData<LabelEditType>()
     val type: LiveData<LabelEditType> = _type
