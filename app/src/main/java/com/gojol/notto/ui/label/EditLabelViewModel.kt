@@ -11,8 +11,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EditLabelViewModel @Inject constructor(private val repository: TodoLabelRepository) :
-    ViewModel() {
+class EditLabelViewModel @Inject constructor(
+    private val repository: TodoLabelRepository
+) : ViewModel() {
 
     private val _items = MutableLiveData<List<Label>>(emptyList())
     val items: LiveData<List<Label>> = _items
