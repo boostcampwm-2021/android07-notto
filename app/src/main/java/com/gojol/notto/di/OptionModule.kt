@@ -3,9 +3,11 @@ package com.gojol.notto.di
 import android.content.Context
 import com.gojol.notto.model.SharedPrefManager
 import com.gojol.notto.model.SharedPrefManagerImpl
-import com.gojol.notto.model.datasource.option.OptionDataSource
 import com.gojol.notto.model.datasource.option.OptionLocalDataSource
+import com.gojol.notto.model.datasource.option.OptionLocalDataSourceImpl
 import com.gojol.notto.model.datasource.option.OptionRemoteDataSource
+import com.gojol.notto.model.datasource.option.OptionRemoteDataSourceImpl
+import com.gojol.notto.network.GithubService
 import com.gojol.notto.ui.option.DayAlarmManager
 import com.gojol.notto.ui.option.DayAlarmManagerImpl
 import dagger.Module
@@ -13,23 +15,15 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import com.gojol.notto.network.GithubService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
 class OptionModule {
-
-    @Provides
-    @Named("optionLocalDataSource")
-    fun provideOptionLocalDataSource(sharedPrefManager: SharedPrefManager): OptionDataSource {
-        return OptionLocalDataSource(sharedPrefManager)
-    }
 
     @Singleton
     @Provides
@@ -37,10 +31,9 @@ class OptionModule {
         return SharedPrefManagerImpl(context)
     }
 
-    @Singleton
     @Provides
-    fun provideDayAlarmManagerImpl(@ApplicationContext context: Context): DayAlarmManager {
-        return DayAlarmManagerImpl(context)
+    fun provideOptionLocalDataSource(sharedPrefManager: SharedPrefManager): OptionLocalDataSource {
+        return OptionLocalDataSourceImpl(sharedPrefManager)
     }
 
     @Singleton
@@ -63,9 +56,14 @@ class OptionModule {
     }
 
     @Provides
-    @Named("optionRemoteDataSource")
-    fun provideOptionRemoteDataSource(githubService: GithubService): OptionDataSource {
-        return OptionRemoteDataSource(githubService)
+    fun provideOptionRemoteDataSource(githubService: GithubService): OptionRemoteDataSource {
+        return OptionRemoteDataSourceImpl(githubService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDayAlarmManagerImpl(@ApplicationContext context: Context): DayAlarmManager {
+        return DayAlarmManagerImpl(context)
     }
 
     companion object {

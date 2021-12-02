@@ -2,13 +2,12 @@ package com.gojol.notto.model.datasource.option
 
 import com.gojol.notto.network.GithubResponse
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class OptionRepository @Inject constructor(
-    @Named("optionLocalDataSource") private val optionLocalDataSource: OptionDataSource,
-    @Named("optionRemoteDataSource") private val optionRemoteDataSource: OptionDataSource
+    private val optionLocalDataSource: OptionLocalDataSource,
+    private val optionRemoteDataSource: OptionRemoteDataSource
 ) : OptionDataSource {
 
     override fun isPushNotificationChecked(): Boolean {
