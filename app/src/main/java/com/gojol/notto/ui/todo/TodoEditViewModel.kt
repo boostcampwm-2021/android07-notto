@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nottokeyword.KeywordRepository
+import com.example.nottokeyword.KeywordDB
 import com.gojol.notto.common.Event
 import com.gojol.notto.common.LABEL_ADD
 import com.gojol.notto.common.TimeRepeatType
@@ -28,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoEditViewModel @Inject constructor(
     private val repository: TodoLabelRepository,
-    private val keywordRepository: KeywordRepository,
+    private val keywordDB: KeywordDB,
     private val todoAlarmManager: TodoAlarmManager
 ) : ViewModel() {
 
@@ -305,7 +305,7 @@ class TodoEditViewModel @Inject constructor(
 
     private fun insertKeywords(content: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            val result = keywordRepository.insertKeyword(content)
+            val result = keywordDB.insertKeyword(content)
 
             Log.i(TAG, "insertKeyword result: $result")
         }

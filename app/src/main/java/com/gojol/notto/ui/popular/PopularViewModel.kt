@@ -5,13 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nottokeyword.Keyword
-import com.example.nottokeyword.KeywordRepository
+import com.example.nottokeyword.KeywordDB
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PopularViewModel @Inject constructor(private val keywordRepository: KeywordRepository) :
+class PopularViewModel @Inject constructor(private val keywordDB: KeywordDB) :
     ViewModel() {
 
     private val _items = MutableLiveData<List<Keyword>?>()
@@ -19,7 +19,7 @@ class PopularViewModel @Inject constructor(private val keywordRepository: Keywor
 
     fun fetchKeywords() {
         viewModelScope.launch {
-            keywordRepository.getKeywords(::onGetKeywords)
+            keywordDB.getKeywords(::onGetKeywords)
         }
     }
 

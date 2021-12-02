@@ -51,7 +51,7 @@ internal class KeywordRemoteDataSourceImpl @Inject constructor(
         return result
     }
 
-    override suspend fun getKeywords(callback: (List<Keyword>) -> Unit) {
+    override suspend fun getKeywords(callbackFromRepository: (List<Keyword>) -> Unit) {
         database.orderByValue().limitToLast(POPULAR_KEYWORD_LIMIT).get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
@@ -63,7 +63,7 @@ internal class KeywordRemoteDataSourceImpl @Inject constructor(
                 }
             }.reversed()
 
-            callback(newList)
+            callbackFromRepository(newList)
         }
     }
 

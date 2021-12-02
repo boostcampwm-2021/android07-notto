@@ -2,8 +2,10 @@ package com.example.nottokeyword.di
 
 import android.content.Context
 import com.example.nottokeyword.BuildConfig
-import com.example.nottokeyword.KeywordRepository
-import com.example.nottokeyword.KeywordRepositoryImpl
+import com.example.nottokeyword.KeywordDB
+import com.example.nottokeyword.KeywordDBImpl
+import com.example.nottokeyword.datasource.KeywordRepository
+import com.example.nottokeyword.datasource.KeywordRepositoryImpl
 import com.example.nottokeyword.datasource.local.KeywordLocalDataSource
 import com.example.nottokeyword.datasource.local.KeywordLocalDataSourceImpl
 import com.example.nottokeyword.datasource.remote.KeywordRemoteDataSource
@@ -45,5 +47,10 @@ object KeywordModule {
         keywordLocalDataSource: KeywordLocalDataSource
     ): KeywordRepository {
         return KeywordRepositoryImpl(keywordRemoteDataSource, keywordLocalDataSource)
+    }
+
+    @Provides
+    fun provideKeywordDB(repository: KeywordRepository): KeywordDB {
+        return KeywordDBImpl(repository)
     }
 }

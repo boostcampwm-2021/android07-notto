@@ -1,32 +1,26 @@
 package com.example.nottokeyword
 
-import com.example.nottokeyword.datasource.local.KeywordLocalDataSource
-import com.example.nottokeyword.datasource.remote.KeywordRemoteDataSource
+import com.example.nottokeyword.datasource.KeywordRepository
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
-internal class KeywordRepositoryImpl @Inject constructor(
-    private val keywordRemoteDataSource: KeywordRemoteDataSource,
-    private val keywordLocalDataSource: KeywordLocalDataSource
-) : KeywordRepository {
+internal class KeywordDBImpl @Inject constructor(private val repository: KeywordRepository) :
+    KeywordDB {
 
     override suspend fun insertKeyword(content: String): Boolean {
-        return keywordRemoteDataSource.insertKeyword(content)
+        return repository.insertKeyword(content)
     }
 
-    override suspend fun getKeywords(callback: (List<Keyword>) -> Unit) {
+    override suspend fun getKeywords(callbackFromViewModel: (List<Keyword>) -> Unit) {
         coroutineScope {
-            keywordRemoteDataSource.getKeywords(::onGetKeywordsFromRemoteDB)
+            val oldList = repository.getKeywordsFromLocal()
+            val newList = repository.getKeywordsFromRemote()
+            val keywords = reorderKeywords(oldList, newList)
 
-            callback(keywordLocalDataSource.getPopularKeywords())
+            repository.updateLocalCache(keywords)
+
+            callbackFromViewModel(repository.getKeywordsFromLocal())
         }
-    }
-
-    private fun onGetKeywordsFromRemoteDB(newList: List<Keyword>) {
-        val oldList = keywordLocalDataSource.getPopularKeywords()
-        val keywords = reorderKeywords(oldList, newList)
-
-        keywordLocalDataSource.updatePopularKeywords(keywords)
     }
 
     private fun reorderKeywords(
@@ -77,6 +71,6 @@ internal class KeywordRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteKeyword(keyword: String): Boolean {
-        return keywordRemoteDataSource.deleteKeyword(keyword)
+        return repository.deleteKeyword(keyword)
     }
 }

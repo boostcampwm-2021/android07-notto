@@ -1,10 +1,10 @@
 package com.example.nottokeyword
 
-interface KeywordRepository {
+interface KeywordDB {
 
     suspend fun insertKeyword(content: String): Boolean
 
-    suspend fun getKeywords(callback: (List<Keyword>) -> Unit)
+    suspend fun getKeywords(callbackFromViewModel: (List<Keyword>) -> Unit)
 
     suspend fun deleteKeyword(keyword: String): Boolean
 }
