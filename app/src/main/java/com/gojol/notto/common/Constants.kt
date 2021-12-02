@@ -25,6 +25,8 @@ const val REPEAT_TYPE = "repeatType"
 const val TIME_REPEAT_DATA = "timeRepeatData"
 const val TIME_REPEAT = "timeRepeat"
 
+const val NOTIFICATION_CHECK_WORKER_UNIQUE_ID = "notificationCheckWorkerUniqueId"
+
 const val EMPTY_DATE = 0
 
 const val LABEL_ADD = "+ 라벨 추가"
