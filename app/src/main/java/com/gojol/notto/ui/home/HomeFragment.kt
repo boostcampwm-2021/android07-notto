@@ -15,8 +15,11 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.gojol.notto.R
 import com.gojol.notto.common.LabelEditType
+import com.gojol.notto.common.NOTIFICATION_CHECK_WORKER_UNIQUE_ID
 import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.model.data.LabelWithCheck
 import com.gojol.notto.model.database.todo.DailyTodo
@@ -33,6 +36,8 @@ import com.gojol.notto.ui.home.util.TodoSwipeListener
 import com.gojol.notto.ui.label.EditLabelActivity
 import com.gojol.notto.ui.todo.TodoEditActivity
 import com.gojol.notto.util.EditLabelDialogBuilder
+import com.gojol.notto.util.SuccessButtonWorker
+import com.gojol.notto.util.SuccessButtonWorker_AssistedFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -181,6 +186,16 @@ class HomeFragment : Fragment(), DayClickListener, MonthSwipeListener {
                 startTodoEditActivity(pair.first, pair.second)
             }
         })
+
+        WorkManager.getInstance(requireContext())
+            .getWorkInfosForUniqueWorkLiveData(NOTIFICATION_CHECK_WORKER_UNIQUE_ID)
+            .observe(viewLifecycleOwner, { works ->
+                works.forEach {
+                    if(it.state == WorkInfo.State.SUCCEEDED) {
+                        homeViewModel.updateTodoList()
+                    }
+                }
+            })
     }
 
     private fun updateViewPager() {
