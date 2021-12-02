@@ -17,10 +17,6 @@
             name="clickKeywordListener"
             type="android.view.View.OnClickListener" />
 
-        <variable
-            name="state"
-            type="android.graphics.drawable.Drawable" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -14,6 +14,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.common.POPULAR_KEYWORD
 import com.gojol.notto.databinding.FragmentPopularBinding
@@ -84,7 +85,14 @@ class PopularFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        adapter = PopularAdapter(::onKeywordClick)
+        adapter = PopularAdapter(::onKeywordClick).apply {
+            registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+
+                override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+                    binding.rvPopularKeyword.layoutManager?.scrollToPosition(0)
+                }
+            })
+        }
         binding.rvPopularKeyword.adapter = adapter
     }
 
