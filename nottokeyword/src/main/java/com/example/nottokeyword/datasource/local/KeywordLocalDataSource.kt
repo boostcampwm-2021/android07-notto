@@ -1,8 +1,8 @@
-package com.example.nottokeyword.cache
+package com.example.nottokeyword.datasource.local
 
 import com.example.nottokeyword.Keyword
 
-interface CacheManager {
+interface KeywordLocalDataSource {
 
     fun updatePopularKeywords(keywords: List<Keyword>)
 
