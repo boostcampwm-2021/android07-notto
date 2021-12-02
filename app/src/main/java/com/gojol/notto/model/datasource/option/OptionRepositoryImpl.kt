@@ -2,9 +2,7 @@ package com.gojol.notto.model.datasource.option
 
 import com.gojol.notto.network.GithubResponse
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class OptionRepositoryImpl @Inject constructor(
     private val optionLocalDataSource: OptionLocalDataSource,
     private val optionRemoteDataSource: OptionRemoteDataSource
