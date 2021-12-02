@@ -29,7 +29,7 @@ class OptionModule {
 
     @Singleton
     @Provides
-    fun provideSharedPrefManagerImpl(@ApplicationContext context: Context): SharedPrefManager {
+    fun provideSharedPrefManager(@ApplicationContext context: Context): SharedPrefManager {
         return SharedPrefManagerImpl(context)
     }
 
@@ -73,7 +73,7 @@ class OptionModule {
 
     @Singleton
     @Provides
-    fun provideDayAlarmManagerImpl(@ApplicationContext context: Context): DayAlarmManager {
+    fun provideDayAlarmManager(@ApplicationContext context: Context): DayAlarmManager {
         return DayAlarmManagerImpl(context)
     }
 
