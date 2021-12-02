@@ -100,8 +100,8 @@ class TodoEditActivity : AppCompatActivity() {
         val todo = intent.getSerializableExtra("todo") as Todo?
         val keyword = intent.getStringExtra(POPULAR_KEYWORD)
 
-        todoEditViewModel.updateDate(date)
         todoEditViewModel.updateIsTodoEditing(todo)
+        todoEditViewModel.updateDate(date)
 
         if (keyword != null) todoEditViewModel.fillContentWithKeyword(keyword)
     }
@@ -119,17 +119,11 @@ class TodoEditActivity : AppCompatActivity() {
     private fun initObserver() {
         todoEditViewModel.clickWrapper.isTodoEditing.observe(this) {
             if (it) {
-                todoEditViewModel.setupExistedTodo()
                 binding.tbTodoEdit.title = getString(R.string.todo_edit_title_edit)
+                todoEditViewModel.existedTodo.value?.let { existedTodo -> initTodoDialog(existedTodo) }
             } else {
                 binding.btnTodoEditDelete.visibility = View.GONE
-            }
-        }
-        todoEditViewModel.todoWrapper.observe(this) {
-            if (it.existedTodo != null) {
-                initTodoDialog(it.existedTodo)
-            } else {
-                initTodoDialog(it.todo)
+                todoEditViewModel.todo.value?.let { todo -> initTodoDialog(todo) }
             }
         }
         todoEditViewModel.clickWrapper.isBeforeToday.observe(this, {
@@ -183,14 +177,14 @@ class TodoEditActivity : AppCompatActivity() {
             if (it) todoTimeStartDialog.show(
                 supportFragmentManager,
                 TIME_START,
-                todoEditViewModel.todoWrapper.value?.todo?.endTime
+                todoEditViewModel.todo.value?.endTime
             )
         })
         todoEditViewModel.clickWrapper.timeFinishClick.observe(this, EventObserver {
             if (it) todoTimeFinishDialog.show(
                 supportFragmentManager,
                 TIME_FINISH,
-                todoEditViewModel.todoWrapper.value?.todo?.startTime
+                todoEditViewModel.todo.value?.startTime
             )
         })
         todoEditViewModel.clickWrapper.timeRepeatClick.observe(this, EventObserver {

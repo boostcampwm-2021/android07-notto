@@ -2,10 +2,14 @@ package com.example.nottokeyword.di
 
 import android.content.Context
 import com.example.nottokeyword.BuildConfig
-import com.example.nottokeyword.KeywordDatabase
-import com.example.nottokeyword.KeywordDatabaseImpl
-import com.example.nottokeyword.cache.CacheManager
-import com.example.nottokeyword.cache.CacheManagerImpl
+import com.example.nottokeyword.KeywordDB
+import com.example.nottokeyword.KeywordDBImpl
+import com.example.nottokeyword.datasource.KeywordRepository
+import com.example.nottokeyword.datasource.KeywordRepositoryImpl
+import com.example.nottokeyword.datasource.local.KeywordLocalDataSource
+import com.example.nottokeyword.datasource.local.KeywordLocalDataSourceImpl
+import com.example.nottokeyword.datasource.remote.KeywordRemoteDataSource
+import com.example.nottokeyword.datasource.remote.KeywordRemoteDataSourceImpl
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import dagger.Module
@@ -20,19 +24,34 @@ import javax.inject.Singleton
 object KeywordModule {
 
     @Provides
-    fun provideCacheManager(@ApplicationContext context: Context): CacheManager {
-        return CacheManagerImpl(context)
+    @Singleton
+    fun provideKeywordLocalDataSource(@ApplicationContext context: Context): KeywordLocalDataSource {
+        return KeywordLocalDataSourceImpl(context)
     }
 
     @Provides
     @Singleton
-    fun provideKeywordDatabase(cacheManager: CacheManager): KeywordDatabase {
+    fun provideKeywordRemoteDataSource(): KeywordRemoteDataSource {
         val database = Firebase.database(BuildConfig.FIREBASE_DB_URL)
             .apply { setPersistenceEnabled(true) }
 
-        return KeywordDatabaseImpl(
-            database.getReference("keywords"),
-            cacheManager
+        return KeywordRemoteDataSourceImpl(
+            database.getReference("keywords")
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideKeywordRepository(
+        keywordRemoteDataSource: KeywordRemoteDataSource,
+        keywordLocalDataSource: KeywordLocalDataSource
+    ): KeywordRepository {
+        return KeywordRepositoryImpl(keywordRemoteDataSource, keywordLocalDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideKeywordDB(repository: KeywordRepository): KeywordDB {
+        return KeywordDBImpl(repository)
     }
 }
