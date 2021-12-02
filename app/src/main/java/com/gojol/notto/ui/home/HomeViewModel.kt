@@ -84,6 +84,12 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch { addTodoListByLabels(checkList) }
     }
 
+    fun updateTodoList() {
+        viewModelScope.launch {
+            _todoList.value = _date.value?.let { repository.getTodosWithTodayDailyTodos(it) }
+        }
+    }
+
     private suspend fun addTodoListByLabels(labels: List<LabelWithCheck>) {
         val todoIdList = labels
             .asSequence()
