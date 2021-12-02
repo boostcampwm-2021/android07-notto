@@ -29,13 +29,12 @@ object KeywordModule {
 
     @Provides
     @Singleton
-    fun provideKeywordRemoteDataSource(keywordLocalDataSource: KeywordLocalDataSource): KeywordRemoteDataSource {
+    fun provideKeywordRemoteDataSource(): KeywordRemoteDataSource {
         val database = Firebase.database(BuildConfig.FIREBASE_DB_URL)
             .apply { setPersistenceEnabled(true) }
 
         return KeywordRemoteDataSourceImpl(
-            database.getReference("keywords"),
-            keywordLocalDataSource
+            database.getReference("keywords")
         )
     }
 

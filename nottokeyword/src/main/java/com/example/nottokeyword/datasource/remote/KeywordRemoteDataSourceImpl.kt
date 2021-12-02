@@ -3,8 +3,6 @@ package com.example.nottokeyword.datasource.remote
 import android.util.Log
 import com.example.nottokeyword.Keyword
 import com.example.nottokeyword.POPULAR_KEYWORD_LIMIT
-import com.example.nottokeyword.PlaceState
-import com.example.nottokeyword.datasource.local.KeywordLocalDataSource
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.tasks.await
 import kr.bydelta.koala.hnn.Tagger
@@ -12,8 +10,7 @@ import java.util.*
 import javax.inject.Inject
 
 internal class KeywordRemoteDataSourceImpl @Inject constructor(
-    private val database: DatabaseReference,
-    private val keywordLocalDataSource: KeywordLocalDataSource
+    private val database: DatabaseReference
 ) : KeywordRemoteDataSource {
 
     override suspend fun insertKeyword(content: String): Boolean {
@@ -54,12 +51,11 @@ internal class KeywordRemoteDataSourceImpl @Inject constructor(
         return result
     }
 
-    override suspend fun getKeywords() {
+    override suspend fun getKeywords(callback: (List<Keyword>) -> Unit) {
         database.orderByValue().limitToLast(POPULAR_KEYWORD_LIMIT).get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
-            val oldList = keywordLocalDataSource.getPopularKeywords()
-            val tempList = it.children.mapNotNull { child ->
+            val newList = it.children.mapNotNull { child ->
                 child.key?.let { key ->
                     child.value?.let { value ->
                         Keyword(key, (value as Long).toInt())
@@ -67,56 +63,8 @@ internal class KeywordRemoteDataSourceImpl @Inject constructor(
                 }
             }.reversed()
 
-            val newList = comparePopularKeywords(oldList, tempList)
-            keywordLocalDataSource.updatePopularKeywords(newList)
+            callback(newList)
         }
-    }
-
-    private fun comparePopularKeywords(
-        oldList: List<Keyword>,
-        newList: List<Keyword>
-    ): List<Keyword> {
-        val result = mutableListOf<Keyword>()
-
-        newList.forEachIndexed { index, keyword ->
-            val oldKeyword = oldList.find {
-                it.word == keyword.word
-            }
-
-            val oldPlace = oldKeyword?.place
-            val state: PlaceState
-            val notch: Int?
-            val hasChanged: Boolean
-
-            when {
-                oldPlace == null -> {
-                    state = PlaceState.New
-                    notch = null
-                    hasChanged = false
-                }
-                oldPlace > index -> {
-                    state = PlaceState.Up
-                    notch = oldPlace - index
-                    hasChanged = true
-                }
-                oldPlace < index -> {
-                    state = PlaceState.Down
-                    notch = index - oldPlace
-                    hasChanged = true
-                }
-                else -> {
-                    state = PlaceState.Same
-                    notch = 0
-                    hasChanged = false
-                }
-            }
-
-            val newKeyword =
-                keyword.copy(place = index, state = state, notch = notch, hasChanged = hasChanged)
-            result.add(newKeyword)
-        }
-
-        return result
     }
 
     override suspend fun deleteKeyword(keyword: String): Boolean {
