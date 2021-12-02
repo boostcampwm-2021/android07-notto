@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TodoLabelRepository @Inject constructor(
-    private val localDataSource: TodoLabelDataSource
+    private val localDataSource: TodoLabelLocalDataSource
 ) : TodoLabelDataSource {
 
     override suspend fun getTodosWithLabels(): List<TodoWithLabel> {
