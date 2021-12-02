@@ -21,6 +21,7 @@ class SuccessButtonWorker @AssistedInject constructor(
     private val repository: TodoLabelRepository,
     private val alarmManager: TodoAlarmManager
 ) : CoroutineWorker(context, params) {
+
     override suspend fun doWork(): Result = runCatching {
         onButtonClick()
         Result.success()

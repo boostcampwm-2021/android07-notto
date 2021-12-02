@@ -11,8 +11,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DeleteLabelDialogViewModel @Inject constructor(private val repository: TodoLabelRepository) :
-    DialogViewModel() {
+class DeleteLabelDialogViewModel @Inject constructor(
+    private val repository: TodoLabelRepository
+) : DialogViewModel() {
 
     private val _label = MutableLiveData<Label>()
     val label: LiveData<Label> = _label

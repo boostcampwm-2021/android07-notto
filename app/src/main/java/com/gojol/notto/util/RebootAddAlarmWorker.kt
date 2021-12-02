@@ -9,8 +9,6 @@ import com.gojol.notto.model.datasource.todo.TodoAlarmManager
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.time.ZoneId
-import java.util.*
 
 @HiltWorker
 class RebootAddAlarmWorker @AssistedInject constructor(
@@ -19,6 +17,7 @@ class RebootAddAlarmWorker @AssistedInject constructor(
     private val repository: TodoLabelRepository,
     private val todoAlarmManager: TodoAlarmManager
 ) : CoroutineWorker(context, params) {
+
     override suspend fun doWork(): Result = runCatching {
         recreateAlarm()
         Result.success()
