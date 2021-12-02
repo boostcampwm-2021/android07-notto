@@ -52,7 +52,7 @@ class TodoEditViewModel @Inject constructor(
 
     init {
         _todo.value = Todo(
-            "",
+            EMPTY_CONTENT,
             false,
             RepeatType.DAY,
             LocalDate.now(),
@@ -119,8 +119,8 @@ class TodoEditViewModel @Inject constructor(
         deleteTodo()
     }
 
-    fun updateTodoContent(s: CharSequence, start: Int, before: Int, count: Int) {
-        _todo.value = todo.value?.copy(content = s.toString())
+    fun updateTodoContent(letters: CharSequence, start: Int, before: Int, count: Int) {
+        _todo.value = todo.value?.copy(content = letters.toString())
     }
 
     fun updateDate(date: LocalDate?) {
@@ -289,6 +289,7 @@ class TodoEditViewModel @Inject constructor(
 
     companion object {
         val TAG: String = TodoEditViewModel::class.java.simpleName
+        const val EMPTY_CONTENT = ""
         val FINISH_DATE: LocalDate? = LocalDate.of(2099, 12, 31)
     }
 }
