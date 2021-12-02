@@ -7,6 +7,8 @@ import com.gojol.notto.model.datasource.option.OptionLocalDataSource
 import com.gojol.notto.model.datasource.option.OptionLocalDataSourceImpl
 import com.gojol.notto.model.datasource.option.OptionRemoteDataSource
 import com.gojol.notto.model.datasource.option.OptionRemoteDataSourceImpl
+import com.gojol.notto.model.datasource.option.OptionRepository
+import com.gojol.notto.model.datasource.option.OptionRepositoryImpl
 import com.gojol.notto.network.GithubService
 import com.gojol.notto.ui.option.DayAlarmManager
 import com.gojol.notto.ui.option.DayAlarmManagerImpl
@@ -58,6 +60,15 @@ class OptionModule {
     @Provides
     fun provideOptionRemoteDataSource(githubService: GithubService): OptionRemoteDataSource {
         return OptionRemoteDataSourceImpl(githubService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideOptionRepository(
+        optionLocalDataSource: OptionLocalDataSource,
+        optionRemoteDataSource: OptionRemoteDataSource
+    ): OptionRepository {
+        return OptionRepositoryImpl(optionLocalDataSource, optionRemoteDataSource)
     }
 
     @Singleton
