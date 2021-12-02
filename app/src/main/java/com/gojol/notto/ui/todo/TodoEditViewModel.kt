@@ -41,11 +41,7 @@ class TodoEditViewModel @Inject constructor(
     private val _selectedLabelList = MutableLiveData(listOf<Label>())
     val selectedLabelList: LiveData<List<Label>> = _selectedLabelList
 
-    val clickWrapper = ClickWrapper(
-        MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(),
-        MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData(),
-        MutableLiveData(), MutableLiveData(), MutableLiveData(), MutableLiveData()
-    )
+    val clickWrapper = ClickWrapper.getClickWrapper()
 
     init {
         _todoWrapper.value = TodoWrapper(
@@ -183,38 +179,6 @@ class TodoEditViewModel @Inject constructor(
     fun updateIsKeywordChecked(isChecked: Boolean) {
         val todo = todoWrapper.value?.todo ?: return
         _todoWrapper.value = todoWrapper.value?.copy(todo = todo.copy(isKeywordOpen = isChecked))
-    }
-
-    fun onIsCloseButtonClicked() {
-        clickWrapper.isCloseButtonCLicked.value = Event(Unit)
-    }
-
-    fun onDeleteButtonCLick(){
-        clickWrapper.deleteButtonClick.value = Event(Unit)
-    }
-
-    fun onRepeatTypeClick() {
-        clickWrapper.repeatTypeClick.value = Event(true)
-    }
-
-    fun onRepeatStartClick() {
-        clickWrapper.repeatStartClick.value = Event(true)
-    }
-
-    fun onTimeStartClick() {
-        clickWrapper.timeStartClick.value = Event(true)
-    }
-
-    fun onTimeFinishClick() {
-        clickWrapper.timeFinishClick.value = Event(true)
-    }
-
-    fun onTimeRepeatClick() {
-        clickWrapper.timeRepeatClick.value = Event(true)
-    }
-
-    fun onPopLabelAddDialogClick() {
-        clickWrapper.popLabelAddDialog.value = Event(true)
     }
 
     private fun onLabelAddClick() {
