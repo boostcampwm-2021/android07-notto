@@ -20,6 +20,7 @@ internal class KeywordDBImpl @Inject constructor(private val repository: Keyword
     private fun onGetRemoteData(newList: List<Keyword>) {
         val oldList = repository.getKeywordsFromLocal()
         val keywords = reorderKeywords(oldList, newList)
+
         repository.updateLocalCache(keywords)
         callbackFromViewModel(repository.getKeywordsFromLocal())
     }
@@ -68,7 +69,9 @@ internal class KeywordDBImpl @Inject constructor(private val repository: Keyword
             result.add(newKeyword)
         }
 
-        return result
+        return if (result.isEmpty()) {
+            oldList.map { it.copy(state = PlaceState.Same) }
+        } else result
     }
 
     override suspend fun deleteKeyword(keyword: String): Boolean {
