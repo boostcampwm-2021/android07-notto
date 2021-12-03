@@ -33,11 +33,9 @@ class CalendarFragment : Fragment(), TodayClickListener, TodoSwipeListener {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        if (parentFragment != null) {
-            if (parentFragment is HomeFragment) {
-                dayClickListener = (parentFragment as DayClickListener)
-                monthSwipeListener = (parentFragment as MonthSwipeListener)
-            }
+        (parentFragment as? HomeFragment)?.let { homeFragment ->
+            dayClickListener = homeFragment
+            monthSwipeListener = homeFragment
         }
     }
 
@@ -56,15 +54,12 @@ class CalendarFragment : Fragment(), TodayClickListener, TodoSwipeListener {
 
         initRecyclerView()
         initObserver()
-        setMonthlyData()
     }
 
     override fun onResume() {
         super.onResume()
-        if (parentFragment is HomeFragment){
-            (parentFragment as HomeFragment).setCalendarListener(this)
-        }
 
+        (parentFragment as? HomeFragment)?.setCalendarListener(this)
         binding.progressCircular.isVisible = true
 
         setMonthlyData()
