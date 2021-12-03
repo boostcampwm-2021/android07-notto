@@ -64,6 +64,8 @@ internal class KeywordRemoteDataSourceImpl @Inject constructor(
             }.reversed()
 
             callbackFromRepository(newList)
+        }.addOnFailureListener {
+            callbackFromRepository(emptyList())
         }
     }
 
