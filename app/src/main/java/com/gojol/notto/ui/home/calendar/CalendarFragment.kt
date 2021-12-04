@@ -10,6 +10,8 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentCalendarBinding
 import com.gojol.notto.ui.home.HomeFragment
@@ -24,6 +26,7 @@ import java.time.LocalDate
 @AndroidEntryPoint
 class CalendarFragment : Fragment(), TodayClickListener, TodoSwipeListener {
 
+    private lateinit var viewPool: RecyclerView.RecycledViewPool
     private lateinit var binding: FragmentCalendarBinding
     private val calendarViewModel: CalendarViewModel by viewModels()
     private val calendarDayAdapter = CalendarDayAdapter(::dayClickCallback)
@@ -77,6 +80,10 @@ class CalendarFragment : Fragment(), TodayClickListener, TodoSwipeListener {
         binding.rvCalendar.apply {
             adapter = calendarDayAdapter
             itemAnimator = null
+            if (::viewPool.isInitialized) {
+                setRecycledViewPool(viewPool)
+                (layoutManager as GridLayoutManager).recycleChildrenOnDetach = true
+            }
         }
     }
 
@@ -106,9 +113,10 @@ class CalendarFragment : Fragment(), TodayClickListener, TodoSwipeListener {
 
     companion object {
         const val ITEM_ID_ARGUMENT = "item id"
-        fun newInstance(itemId: Long): CalendarFragment {
+        fun newInstance(itemId: Long, calendarPool: RecyclerView.RecycledViewPool): CalendarFragment {
             return CalendarFragment().apply {
                 arguments = bundleOf(ITEM_ID_ARGUMENT to itemId)
+                viewPool = calendarPool
             }
         }
     }
