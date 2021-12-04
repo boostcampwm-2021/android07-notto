@@ -29,7 +29,10 @@ class EditLabelDialogFragment : BaseDialog<DialogFragmentEditLabelBinding, EditL
 
     override fun confirmClick() {
         viewModel.clickOkay()
-        this.dialog?.cancel()
+
+        if (viewModel.enabled.value!!) {
+            this.dialog?.cancel()
+        }
     }
 
     override fun dismissClick() {
@@ -44,4 +47,3 @@ class EditLabelDialogFragment : BaseDialog<DialogFragmentEditLabelBinding, EditL
         }
     }
 }
-
