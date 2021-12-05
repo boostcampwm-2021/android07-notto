@@ -3,6 +3,7 @@ package com.gojol.notto.ui.home.calendar.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.gojol.notto.ui.home.calendar.CalendarFragment
 import java.time.LocalDate
@@ -14,6 +15,7 @@ class CalendarViewPagerAdapter(
     lifecycle: Lifecycle
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
+    private val calendarPool = RecyclerView.RecycledViewPool()
     val firstFragmentPosition = Int.MAX_VALUE / 2
 
     override fun getItemCount(): Int = Int.MAX_VALUE
@@ -21,7 +23,7 @@ class CalendarViewPagerAdapter(
     override fun createFragment(position: Int): Fragment {
         val itemId = getItemId(position)
 
-        return CalendarFragment.newInstance(itemId)
+        return CalendarFragment.newInstance(itemId, calendarPool)
     }
 
     override fun getItemId(position: Int): Long {
