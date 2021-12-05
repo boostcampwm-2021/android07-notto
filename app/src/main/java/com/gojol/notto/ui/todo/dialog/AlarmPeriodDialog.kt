@@ -23,7 +23,6 @@ class AlarmPeriodDialog : BaseDialog<DialogTodoAlarmPeriodBinding, AlarmPeriodDi
         super.onViewCreated(view, savedInstanceState)
         binding.viewmodel = viewModel
         alarmPeriodCallback?.let { viewModel.setAlarmPeriodCallback(it) }
-        initObserver()
         initTimeRepeat()
     }
 

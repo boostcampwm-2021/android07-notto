@@ -14,7 +14,7 @@ import com.gojol.notto.databinding.ItemTodoBinding
 import com.gojol.notto.model.data.TodoWithTodayDailyTodo
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.ui.home.util.ItemTouchHelperListener
+import com.gojol.notto.ui.home.util.todo.ItemTouchHelperListener
 
 class TodoAdapter(
     private val swipeCallback: (DailyTodo) -> (Unit),

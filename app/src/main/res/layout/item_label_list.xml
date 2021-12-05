@@ -17,7 +17,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_median">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_home_label"
@@ -38,14 +39,14 @@
             android:id="@+id/btn_home_label_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/space_median"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/edit_label"
             android:onClick="@{editClickListener}"
             android:src="@drawable/ic_more_vert"
             app:layout_constraintBottom_toBottomOf="@+id/rv_home_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/rv_home_label" />
+            app:layout_constraintTop_toTopOf="@+id/rv_home_label"
+            app:tint="@color/icon_default" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home.adapter
+package com.gojol.notto.ui.home.calendar.adapter
 
 import android.graphics.Typeface
 import android.view.LayoutInflater
@@ -35,6 +35,11 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: DayWithSuccessLevelAndSelect) {
+            binding.todoCount = when {
+                item.todoCount in 1..9 -> item.todoCount.toString()
+                item.todoCount > 9 -> "9+"
+                else -> null
+            }
             val date = item.day
             val achievement = item.successLevel.toIntAlpha()
 
@@ -47,6 +52,7 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
                     dayClickCallback(binding.tvCalendarDay.text.toString().toInt())
                 }
             } else {
+                binding.ivSuccessLevelBackground.visibility = View.INVISIBLE
                 binding.ivSuccessLevel.visibility = View.INVISIBLE
             }
 
@@ -54,26 +60,29 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
         }
 
         private fun setDayText(date: Int, isSelected: Boolean) {
-            val context = binding.root.context
             val color: Int
             val style: Typeface
             if (isSelected) {
-                color = R.color.black
+                color = R.color.calendar_day_selected
                 style = Typeface.DEFAULT_BOLD
             } else {
-                color = R.color.gray_deep
+                color = R.color.calendar_day_default
                 style = Typeface.DEFAULT
             }
 
-            binding.tvCalendarDay.text = date.toString()
-            binding.tvCalendarDay.setTextColor(ContextCompat.getColor(context, color))
-            binding.tvCalendarDay.typeface = style
+            binding.tvCalendarDay.apply {
+                text = date.toString()
+                typeface = style
+                setTextColor(ContextCompat.getColor(context, color))
+            }
         }
-
 
         private fun setSuccessLevel(achievement: Int) {
             binding.ivSuccessLevel.backgroundTintList = if (achievement == 0) {
-                ContextCompat.getColorStateList(binding.root.context, R.color.gray_light)
+                ContextCompat.getColorStateList(
+                    binding.root.context,
+                    R.color.calendar_day_background_default
+                )
             } else {
                 ContextCompat.getColorStateList(binding.root.context, R.color.yellow_deep)
                     ?.withAlpha(achievement)

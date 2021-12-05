@@ -5,10 +5,12 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.Window
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import com.gojol.notto.R
-import com.gojol.notto.common.SET_TIME_START
+import com.gojol.notto.common.TIME_START_DATA
 import com.gojol.notto.databinding.DialogTodoTimeStartBinding
 import com.gojol.notto.ui.BaseDialog
 import com.gojol.notto.ui.todo.dialog.util.TimeStartDialogViewModel
@@ -21,6 +23,8 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
     override val viewModel: TimeStartDialogViewModel by viewModels()
     override var layoutId: Int = R.layout.dialog_todo_time_start
 
+    private var endTime: LocalTime? = null
+
     var setTimeCallback: ((LocalTime) -> Unit)? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,6 +32,7 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
         binding.viewmodel = viewModel
         setTimeCallback?.let { viewModel.setTimeStartCallback(it) }
         initDate()
+        initObserver()
         setClickListener()
     }
 
@@ -36,11 +41,16 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
         resetDialogSize()
     }
 
+    fun show(manager: FragmentManager, tag: String?, endTime: LocalTime?) {
+        super.show(manager, tag)
+        this.endTime = endTime
+    }
+
     private fun resetDialogSize() {
         val deviceWidth = resources.displayMetrics.widthPixels
         val deviceHeight = resources.displayMetrics.heightPixels
 
-        if(deviceWidth > deviceHeight) {
+        if (deviceWidth > deviceHeight) {
             val dialogWidth = deviceWidth * 0.8
             val dialogHeight = deviceHeight * 0.8
             dialog?.window?.setLayout(dialogWidth.toInt(), dialogHeight.toInt())
@@ -64,9 +74,9 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
 
     private fun initDate() {
         arguments?.let { arg ->
-            (arg.getSerializable(SET_TIME_START) as LocalTime?)?.let {
+            (arg.getSerializable(TIME_START_DATA) as LocalTime?)?.let {
                 viewModel.setTimeStart(it)
-                arg.remove(SET_TIME_START)
+                arg.remove(TIME_START_DATA)
             }
         }
     }
@@ -90,7 +100,7 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
     }
 
     private fun setClickListener() {
-        binding.tpTimeStart.setOnTimeChangedListener { timePicker, hour, minute ->
+        binding.tpTimeStart.setOnTimeChangedListener { _, hour, minute ->
             viewModel.setTimeStart(LocalTime.of(hour, minute))
         }
     }
@@ -98,12 +108,31 @@ class TimeStartDialog : BaseDialog<DialogTodoTimeStartBinding, TimeStartDialogVi
     override fun confirmClick() {
         with(binding.tpTimeStart) {
             if (Build.VERSION.SDK_INT >= 23) {
-                viewModel.setTimeStartCallback.value?.let { it(LocalTime.of(hour, minute)) }
+                val currTime = LocalTime.of(hour, minute)
+                if (!isCorrectTime(currTime)) return
+                viewModel.setTimeStartCallback.value?.let { it(currTime) }
             } else {
-                viewModel.setTimeStartCallback.value?.let { it(LocalTime.of(currentHour, currentMinute)) }
+                val currTime = LocalTime.of(currentHour, currentMinute)
+                if (!isCorrectTime(currTime)) return
+                viewModel.setTimeStartCallback.value?.let { it(currTime) }
             }
         }
         this.dismiss()
+    }
+
+    private fun isCorrectTime(currTime: LocalTime): Boolean {
+        val context = requireContext()
+        endTime?.let {
+            if (currTime >= endTime) {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.dialog_start_exception),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return false
+            }
+        }
+        return true
     }
 
     override fun dismissClick() {

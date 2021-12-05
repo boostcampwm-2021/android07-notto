@@ -25,7 +25,11 @@ class RepeatTimeDialog : BaseDialog<DialogTodoRepeatTimeBinding, RepeatTimeDialo
         super.onViewCreated(view, savedInstanceState)
         binding.viewmodel = viewModel
         repeatTimeCallback?.let { viewModel.setRepeatTimeCallback(it) }
-        initObserver()
+
+        binding.cvRepeatTime.state().edit().setMinimumDate(
+            Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
+        ).commit()
+
         initRepeatTime()
         initClickListener()
     }
@@ -49,7 +53,6 @@ class RepeatTimeDialog : BaseDialog<DialogTodoRepeatTimeBinding, RepeatTimeDialo
 
     override fun initObserver() {
         viewModel.repeatTime.observe(this) {
-            println(it)
             binding.cvRepeatTime.setSelectedDate(
                 Date.from(
                     it.atStartOfDay(ZoneId.systemDefault()).toInstant()

@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home
+package com.gojol.notto.ui.home.calendar
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,10 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gojol.notto.model.data.DayWithSuccessLevelAndSelect
 import com.gojol.notto.model.data.MonthlyCalendar
-import com.gojol.notto.model.data.DailyTodoSuccess
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
-import com.gojol.notto.ui.home.CalendarFragment.Companion.ITEM_ID_ARGUMENT
+import com.gojol.notto.ui.home.calendar.CalendarFragment.Companion.ITEM_ID_ARGUMENT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -45,20 +44,27 @@ class CalendarViewModel @Inject constructor(
     fun updateSelectedDay(date: Int) {
         _monthlyCalendar.value = _monthlyCalendar.value?.copy(selectedDay = date)
 
-        setMonthlyDailyTodos()
+        _monthlyAchievement.value = _monthlyAchievement.value?.map {
+            if (it.day == date) {
+                it.copy(isSelected = true)
+            } else {
+                it.copy(isSelected = false)
+            }
+        }
     }
 
     fun setMonthlyDailyTodos() {
         val calendar = _monthlyCalendar.value ?: return
 
         viewModelScope.launch {
-            // TODO DailyTodo를 가져오는 코드인데 없으면 setting을 해줌 -> 분리 필요
-            repository.getTodosWithTodayDailyTodos(
-                LocalDate.of(calendar.year, calendar.month, calendar.selectedDay)
-            )
+            val dateList = (calendar.startDate.dayOfMonth..calendar.endDate.dayOfMonth).map {
+                LocalDate.of(calendar.year, calendar.month, it)
+            }
+            repository.insertDailyTodosWithDateRange(dateList)
 
-            val monthlyDailyTodos = repository.getAllDailyTodos().filter { it.isActive &&
-                it.date in calendar.startDate..calendar.endDate
+            val monthlyDailyTodos = repository.getAllDailyTodos().filter {
+                it.isActive &&
+                        it.date in calendar.startDate..calendar.endDate
             }
 
             setMonthlyAchievement(monthlyDailyTodos)
@@ -72,7 +78,7 @@ class CalendarViewModel @Inject constructor(
             val todayDailyTodos = monthlyDailyTodos
                 .filter { it.date.dayOfMonth == date }
 
-            DayWithSuccessLevelAndSelect(date, DailyTodoSuccess(todayDailyTodos).getSuccessLevel(), isSelected(date))
+            DayWithSuccessLevelAndSelect(date, todayDailyTodos, isSelected(date))
         }
     }
 

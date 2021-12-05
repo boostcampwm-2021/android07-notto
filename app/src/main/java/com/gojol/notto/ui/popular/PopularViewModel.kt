@@ -4,21 +4,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nottokeyword.FirebaseDB
 import com.example.nottokeyword.Keyword
-import com.gojol.notto.BuildConfig
+import com.example.nottokeyword.KeywordDB
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PopularViewModel : ViewModel() {
+@HiltViewModel
+class PopularViewModel @Inject constructor(private val keywordDB: KeywordDB) :
+    ViewModel() {
 
-    private var _items = MutableLiveData<List<Keyword>?>()
+    private val _items = MutableLiveData<List<Keyword>?>()
     val items: LiveData<List<Keyword>?> = _items
-
-    private val firebaseDB = FirebaseDB(BuildConfig.FIREBASE_DB_URL)
 
     fun fetchKeywords() {
         viewModelScope.launch {
-            _items.value = firebaseDB.getKeywords()
+            keywordDB.getKeywords(::onGetKeywords)
         }
+    }
+
+    private fun onGetKeywords(keywords: List<Keyword>) {
+        _items.value = keywords
     }
 }

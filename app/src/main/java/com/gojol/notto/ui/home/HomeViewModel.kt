@@ -75,13 +75,19 @@ class HomeViewModel @Inject constructor(
                 }?.filter { currentShowTodoList.contains(it.todo) }
             }
 
-            todoAlarmManager.deleteAlarms()
+            todoAlarmManager.updateAlarms()
         }
     }
 
     fun updateTodoList(list: List<LabelWithCheck>) {
         val checkList = list.filter { it.isChecked }
         viewModelScope.launch { addTodoListByLabels(checkList) }
+    }
+
+    fun updateTodoList() {
+        viewModelScope.launch {
+            _todoList.value = _date.value?.let { repository.getTodosWithTodayDailyTodos(it) }
+        }
     }
 
     private suspend fun addTodoListByLabels(labels: List<LabelWithCheck>) {

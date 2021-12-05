@@ -9,40 +9,40 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.gojol.notto.R
-import com.gojol.notto.common.AdapterViewType
 import com.gojol.notto.common.LabelEditType
+import com.gojol.notto.common.NOTIFICATION_CHECK_WORKER_UNIQUE_ID
 import com.gojol.notto.databinding.FragmentHomeBinding
 import com.gojol.notto.model.data.LabelWithCheck
 import com.gojol.notto.model.database.todo.DailyTodo
 import com.gojol.notto.model.database.todo.Todo
-import com.gojol.notto.ui.home.CalendarFragment.Companion.DATE_CLICK_BUNDLE_KEY
-import com.gojol.notto.ui.home.CalendarFragment.Companion.DATE_CLICK_KEY
-import com.gojol.notto.ui.home.CalendarFragment.Companion.UPDATE_HEIGHT_KEY
-import com.gojol.notto.ui.home.adapter.CalendarAdapter
+import com.gojol.notto.ui.home.calendar.adapter.CalendarAdapter
 import com.gojol.notto.ui.home.adapter.LabelAdapter
 import com.gojol.notto.ui.home.adapter.LabelWrapperAdapter
 import com.gojol.notto.ui.home.adapter.TodoAdapter
-import com.gojol.notto.ui.home.util.TodoItemTouchCallback
+import com.gojol.notto.ui.home.util.DayClickListener
+import com.gojol.notto.ui.home.util.MonthSwipeListener
+import com.gojol.notto.ui.home.util.TodayClickListener
+import com.gojol.notto.ui.home.util.todo.TodoItemTouchCallback
+import com.gojol.notto.ui.home.util.TodoSwipeListener
 import com.gojol.notto.ui.label.EditLabelActivity
 import com.gojol.notto.ui.todo.TodoEditActivity
 import com.gojol.notto.util.EditLabelDialogBuilder
+import com.gojol.notto.util.SuccessButtonWorker
+import com.gojol.notto.util.SuccessButtonWorker_AssistedFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), DayClickListener, MonthSwipeListener {
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -52,22 +52,8 @@ class HomeFragment : Fragment() {
     private lateinit var labelWrapperAdapter: LabelWrapperAdapter
     private lateinit var todoAdapter: TodoAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setFragmentResultListener(DATE_CLICK_KEY) { _, bundle ->
-            val selectedDate = bundle.get(DATE_CLICK_BUNDLE_KEY) as LocalDate
-            val year = selectedDate.year
-            val month = selectedDate.monthValue
-            val date = selectedDate.dayOfMonth
-
-            homeViewModel.updateDate(year, month, date)
-        }
-
-        setFragmentResultListener(UPDATE_HEIGHT_KEY) { _, _ ->
-            updateViewPager()
-        }
-    }
+    private lateinit var todayClickListener: TodayClickListener
+    private lateinit var todoSwipeListener: TodoSwipeListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -96,8 +82,29 @@ class HomeFragment : Fragment() {
         initData()
     }
 
+    override fun onClick(selectedDate: LocalDate) {
+        val year = selectedDate.year
+        val month = selectedDate.monthValue
+        val date = selectedDate.dayOfMonth
+
+        homeViewModel.updateDate(year, month, date)
+    }
+
+    override fun onSwipe() {
+        updateViewPager()
+    }
+
+    fun setCalendarListener(calendarFragment: Fragment) {
+        todayClickListener = calendarFragment as TodayClickListener
+        todoSwipeListener = calendarFragment as TodoSwipeListener
+    }
+
     private fun initRecyclerView() {
-        calendarAdapter = CalendarAdapter(parentFragmentManager, lifecycle)
+        calendarAdapter = CalendarAdapter(
+            ::todayClickCallback,
+            childFragmentManager,
+            viewLifecycleOwner.lifecycle
+        )
         labelAdapter = LabelAdapter(::labelTouchCallback)
         labelWrapperAdapter = LabelWrapperAdapter(labelAdapter, ::onClickLabelMenu)
         todoAdapter = TodoAdapter(::todoTouchCallback, ::todoEditButtonCallback)
@@ -111,7 +118,6 @@ class HomeFragment : Fragment() {
 
         binding.rvHome.apply {
             adapter = concatAdapter
-            layoutManager = getLayoutManager(concatAdapter)
             (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         }
     }
@@ -180,6 +186,16 @@ class HomeFragment : Fragment() {
                 startTodoEditActivity(pair.first, pair.second)
             }
         })
+
+        WorkManager.getInstance(requireContext())
+            .getWorkInfosForUniqueWorkLiveData(NOTIFICATION_CHECK_WORKER_UNIQUE_ID)
+            .observe(viewLifecycleOwner, { works ->
+                works.forEach {
+                    if(it.state == WorkInfo.State.SUCCEEDED) {
+                        homeViewModel.updateTodoList()
+                    }
+                }
+            })
     }
 
     private fun updateViewPager() {
@@ -199,25 +215,13 @@ class HomeFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.rvHome)
     }
 
-    private fun getLayoutManager(adapter: ConcatAdapter): RecyclerView.LayoutManager {
-        val layoutManager = GridLayoutManager(context, 7)
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (adapter.getItemViewType(position)) {
-                    AdapterViewType.CALENDAR.viewType -> 7
-                    AdapterViewType.LABEL.viewType -> 1
-                    AdapterViewType.TODO.viewType -> 7
-                    else -> 7
-                }
-            }
-        }
-
-        return layoutManager
+    private fun todayClickCallback() {
+        todayClickListener.onClick()
     }
 
     private fun todoTouchCallback(dailyTodo: DailyTodo) {
         homeViewModel.updateDailyTodo(dailyTodo)
-        setFragmentResult(TODO_SWIPE_KEY, bundleOf())
+        todoSwipeListener.onSwipe()
     }
 
     private fun todoEditButtonCallback(todo: Todo) {
@@ -239,9 +243,5 @@ class HomeFragment : Fragment() {
         intent.putExtra("todo", todo)
         intent.putExtra("date", date)
         startActivity(intent)
-    }
-
-    companion object {
-        const val TODO_SWIPE_KEY = "todo_swipe"
     }
 }

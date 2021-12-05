@@ -4,6 +4,8 @@
     package="com.gojol.notto">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".NottoApplication"
@@ -43,6 +45,9 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".ui.option.DayNotificationReceiver"
+            android:exported="true" />
 
         <activity
             android:name=".ui.splash.SplashActivity"
@@ -70,10 +75,9 @@
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
             android:theme="@style/LicenseTheme" />
-
-        <receiver
-            android:name=".ui.option.DayNotificationReceiver"
-            android:exported="true" />
+        <activity
+            android:name=".ui.option.ContributorActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

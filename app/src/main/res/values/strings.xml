@@ -20,6 +20,7 @@
     <string name="edit_label_order">라벨 순서 이동</string>
     <string name="edit_label_edit_text_hint">라벨 이름을 입력해주세요.</string>
     <string name="edit_label_delete_alert">더 이상 이 라벨이 표시되지 않습니다. 정말 삭제하시겠습니까?</string>
+    <string name="edit_label_duplicate">이미 존재하는 라벨입니다.</string>
 
     <string name="todo_edit_repeat_date">선택한 날짜</string>
     <string name="todo_edit_repeat_setting">반복 설정</string>
@@ -32,6 +33,7 @@
     <string name="todo_edit_keyword_setting">키워드 공개 여부 설정</string>
     <string name="todo_edit_title_create">Not Todo 생성</string>
     <string name="todo_edit_title_edit">Not Todo 편집</string>
+    <string name="todo_edit_title_detail">Not Todo 상세</string>
     <string name="todo_edit_edit_text_hint">Not Todo를 입력하세요</string>
     <string name="todo_edit_label_select">라벨 선택</string>
     <string name="todo_edit_label_select_sentence">라벨을 선택하세요</string>
@@ -39,6 +41,7 @@
     <string name="todo_edit_delete_message">Not Todo가 삭제되었습니다.</string>
     <string name="todo_edit_save_button_title">Not Todo 업데이트</string>
     <string name="todo_edit_save_button_msg">업데이트하면 이전에 작성한 Not Todo가 변경될 수 있습니다.</string>
+    <string name="todo_edit_before_today_msg">이전 날짜로는 Not Todo를 생성할 수 없어 오늘 날짜로 생성합니다.</string>
 
     <string name="dialog_deletion_title">Not Todo 삭제하기</string>
     <string name="dialog_deletion_description">삭제하면 다시 복구할 수 없습니다. \n정말 삭제하시겠습니까?</string>
@@ -78,7 +81,7 @@
     <string name="notification_todo_fail">실패</string>
 
     <string name="option_title">옵션</string>
-    <string name="option_push_notification">푸쉬 알림</string>
+    <string name="option_push_notification">푸시 알림</string>
     <string name="option_push_notification_day">하루 마무리 알림</string>
     <string name="option_open_source_license">오픈소스 라이선스</string>
     <string name="option_team">개발팀</string>
@@ -86,8 +89,20 @@
     <string name="option_notification_description">오늘의 마무리 알림입니다.</string>
     <string name="option_notification_title">오늘의 마무리 알림</string>
     <string name="option_notification_content">하루를 마무리하기 전에 Not Todo를 체크해주세요!</string>
+    <string name="option_notification_tooltip_msg">매일 밤, 잊지 않고 Not Todo 성공 여부를 체크하도록 알림을 보냅니다.</string>
+    <string name="option_contributors">Contributors</string>
+    <string name="option_contributor_login">\@%1$s</string>
 
     <string name="popular_keyword">인기 키워드</string>
     <string name="popular_place_format">%d</string>
     <string name="popular_count_format">%d</string>
+    <string name="popular_network_state_alert">데이터 요청에 실패하였습니다.\n네트워크 상태를 확인해주세요.</string>
+    <string name="dialog_start_exception">시작 시간은 종료 시간보다 낮게 설정해야 합니다.</string>
+    <string name="dialog_end_exception">종료 시간은 시작 시간보다 높게 설정해야 합니다.</string>
+    <string name="popular_refresh">새로 고침</string>
+    <string name="popular_dialog">%s&#160;Not Todo에 추가하시겠습니까?</string>
+    <string name="popular_keyword_info">원하는 키워드를 터치해 Not Todo에 추가해보세요!</string>
+    <string name="popular_keyword_up">순위 상승</string>
+    <string name="popular_keyword_down">순위 하락</string>
+    <string name="popular_keyword_new">NEW</string>
 </resources>

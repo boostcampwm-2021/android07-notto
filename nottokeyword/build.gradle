@@ -1,7 +1,11 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     compileSdk 31
@@ -14,6 +18,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField("String", "FIREBASE_DB_URL", properties.getProperty("db_url"))
     }
 
     buildTypes {
@@ -45,6 +51,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.2.1"
 
-    // koala nlp
+    // KoalaNLP 한나눔
     implementation "kr.bydelta:koalanlp-hnn:2.1.4:assembly"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.9'
 }
