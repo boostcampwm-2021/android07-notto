@@ -63,7 +63,7 @@
 
 |홈 화면|
 |:-----:|
-|<img width=300 src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/58ccb135-b855-469f-a6d5-878e4abbc4ab/1.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211205%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211205T131652Z&X-Amz-Expires=86400&X-Amz-Signature=7eb1bab7b6a3111024e93549cbfccd9f3bce586a9a7bc6efa3369dd8340bc2bf&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%221.GIF.gif%22&x-id=GetObject">|
+|<img width=300 src="https://user-images.githubusercontent.com/39328846/144753142-b42851da-5e44-4502-956d-5ce6497ae947.gif">|
 
 2️⃣ **Not Todo마다 커스텀 라벨을 달고 라벨 별 Not Todo를 확인할 수 있습니다!**
 - Todo마다 `여러 개의 라벨`을 달아서 관리할 수도 있습니다!
@@ -74,7 +74,7 @@
 
 |라벨 추가 및 편집|Not Todo 생성과 푸시 알림|
 |:--------------:|:----------------------:|
-|<img width=300 src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/acf915dd-0a8c-4c3f-b420-9abda1d72adc/2%EB%9D%BC%EB%B2%A8.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211205%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211205T132029Z&X-Amz-Expires=86400&X-Amz-Signature=93e46b85f2a61714ddf0c799e0bce69bfbdd61cab692bf7105b07fe6143af581&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%222%25EB%259D%25BC%25EB%25B2%25A8.GIF.gif%22&x-id=GetObject">|<img width=300 src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/10898663-6aad-42c5-94b6-9b7ef3b8001f/34.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211205%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211205T132249Z&X-Amz-Expires=86400&X-Amz-Signature=6537a88eb3760dcf536e18b0e677a39e6c9a8291a956fff1aeb2bfa4e37799b6&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%2234.GIF.gif%22&x-id=GetObject">|
+|<img width=300 src="https://user-images.githubusercontent.com/39328846/144753162-bb1d94dc-efc2-414a-b8e2-a7704f93b087.gif">|<img width=300 src="https://user-images.githubusercontent.com/39328846/144753195-4f308c25-5e55-462c-8080-021b5d02f18f.gif">|
 
 4️⃣ **notto 사용자들이 작성한 인기 Not Todo 키워드를 보여줍니다!**
 - 당신이 작성한 Not Todo에서 키워드를 추출해 `인기 키워드`에 반영합니다. 남에게 보여주기 싫으시다구요? 걱정마세요! `공개 / 비공개 처리`를 할 수 있으니까요!
@@ -83,8 +83,8 @@
 - Not Todo를 작성할 때 인기 키워드를 참고해보세요!
    
 |인기 키워드|
-|:-----------:|
-|<img width=300 src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7abe59e4-744d-4922-89e5-638df7e4d4d8/5%EC%9D%B8%EA%B8%B0%ED%82%A4%EC%9B%8C%EB%93%9C.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211205%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211205T132427Z&X-Amz-Expires=86400&X-Amz-Signature=aa1e8cb0973daabb8c1db39fd6d3a91e31d47aa21001a4aba378d497bab118f9&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%225%25EC%259D%25B8%25EA%25B8%25B0%25ED%2582%25A4%25EC%259B%258C%25EB%2593%259C.gif%22&x-id=GetObject">|
+|:---------:|
+|<img width=300 src="https://user-images.githubusercontent.com/39328846/144753250-9f4a6ec9-ade0-4cf7-b6cb-50fcd5527205.gif">|
 
 ### 📚Task 관리
 > 우리는 Github 마스타...😎
