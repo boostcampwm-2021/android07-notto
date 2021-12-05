@@ -29,4 +29,5 @@
 
     <color name="splash_title_color">@color/blue_normal</color>
     <color name="icon_default">@color/black</color>
+    <color name="icon_on_primary_color">@color/white</color>
 </resources>
