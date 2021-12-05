@@ -20,6 +20,7 @@
     <string name="edit_label_order">라벨 순서 이동</string>
     <string name="edit_label_edit_text_hint">라벨 이름을 입력해주세요.</string>
     <string name="edit_label_delete_alert">더 이상 이 라벨이 표시되지 않습니다. 정말 삭제하시겠습니까?</string>
+    <string name="edit_label_duplicate">이미 존재하는 라벨입니다.</string>
 
     <string name="todo_edit_repeat_date">선택한 날짜</string>
     <string name="todo_edit_repeat_setting">반복 설정</string>

@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <variable
             name="viewmodel"
             type="com.gojol.notto.ui.label.dialog.edit.EditLabelDialogViewModel" />
@@ -43,6 +45,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_edit_label_dialog_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_median"
+            android:text="@string/edit_label_duplicate"
+            android:textSize="@dimen/text_x_x_small"
+            android:textColor="@color/blue_normal"
+            android:visibility="@{viewmodel.enabled ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_edit_label" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

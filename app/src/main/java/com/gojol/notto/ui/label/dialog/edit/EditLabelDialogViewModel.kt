@@ -16,6 +16,8 @@ class EditLabelDialogViewModel @Inject constructor(
     private val repository: TodoLabelRepository
 ) : DialogViewModel() {
 
+    private lateinit var labels: List<Label>
+
     private val _type = MutableLiveData<LabelEditType>()
     val type: LiveData<LabelEditType> = _type
 
@@ -25,37 +27,42 @@ class EditLabelDialogViewModel @Inject constructor(
     val title = MutableLiveData<String>()
     val name = MutableLiveData<String>()
 
+    private val _enabled = MutableLiveData(true)
+    val enabled: LiveData<Boolean> = _enabled
+
+    init {
+        getLabels()
+    }
+
+    private fun getLabels() {
+        viewModelScope.launch {
+            labels = repository.getAllLabel()
+        }
+    }
+
     fun clickOkay() {
         val labelName = name.value?.apply {
             if (isBlank()) return
         } ?: return
 
+        if (labels.find { it.name == labelName } != null) {
+            _enabled.value = false
+            return
+        } else {
+            _enabled.value = true
+        }
+
         viewModelScope.launch {
             when (type.value) {
-                LabelEditType.CREATE -> createLabel(
-                    Label(
-                        repository.getAllLabel().size,
-                        name.value!!
-                    )
-                )
+                LabelEditType.CREATE -> {
+                    repository.insertLabel(Label(repository.getAllLabel().size, name.value!!))
+                }
                 LabelEditType.UPDATE -> {
                     val updatedLabel = label.value ?: return@launch
-                    updateLabel(updatedLabel.copy(name = labelName))
+                    repository.updateLabel(updatedLabel.copy(name = labelName))
                 }
                 else -> return@launch
             }
-        }
-    }
-
-    private fun createLabel(label: Label) {
-        viewModelScope.launch {
-            repository.insertLabel(label)
-        }
-    }
-
-    private fun updateLabel(label: Label) {
-        viewModelScope.launch {
-            repository.updateLabel(label)
         }
     }
 
