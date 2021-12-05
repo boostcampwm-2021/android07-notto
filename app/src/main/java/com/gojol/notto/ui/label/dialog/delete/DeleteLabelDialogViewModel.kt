@@ -2,11 +2,12 @@ package com.gojol.notto.ui.label.dialog.delete
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.ui.DialogViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +22,14 @@ class DeleteLabelDialogViewModel @Inject constructor(
     fun clickOkay() {
         label.value ?: return
 
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             repository.deleteLabel(label.value!!)
+
+            repository.getAllLabel().forEachIndexed { index, label ->
+                if (label.order != index) {
+                    repository.updateLabel(label.copy(order = index))
+                }
+            }
         }
     }
 
