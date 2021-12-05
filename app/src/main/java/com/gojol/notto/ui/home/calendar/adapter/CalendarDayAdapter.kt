@@ -54,6 +54,7 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
             } else {
                 binding.ivSuccessLevelBackground.visibility = View.INVISIBLE
                 binding.ivSuccessLevel.visibility = View.INVISIBLE
+                binding.tvCalendarDay.visibility = View.INVISIBLE
             }
 
             binding.executePendingBindings()

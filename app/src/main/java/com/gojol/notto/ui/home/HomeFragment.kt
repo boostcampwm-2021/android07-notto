@@ -244,4 +244,16 @@ class HomeFragment : Fragment(), DayClickListener, MonthSwipeListener {
         intent.putExtra("date", date)
         startActivity(intent)
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        labelWrapperAdapter.onSaveState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (savedInstanceState != null) {
+            labelWrapperAdapter.onRestoreState(savedInstanceState)
+        }
+    }
 }
