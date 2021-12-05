@@ -247,7 +247,9 @@ class HomeFragment : Fragment(), DayClickListener, MonthSwipeListener {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        labelWrapperAdapter.onSaveState(outState)
+        if (::labelWrapperAdapter.isInitialized){
+            labelWrapperAdapter.onSaveState(outState)
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

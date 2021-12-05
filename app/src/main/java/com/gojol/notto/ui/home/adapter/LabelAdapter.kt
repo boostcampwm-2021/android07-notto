@@ -21,7 +21,6 @@ class LabelAdapter(
 
     override fun onBindViewHolder(holder: LabelViewHolder, position: Int) {
         holder.bind(getItem(position), labelClickCallback = labelClickCallback)
-        holder.binding.item = currentList[position].labelWithTodo.label
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -32,6 +31,7 @@ class LabelAdapter(
 
         fun bind(labelWithCheck: LabelWithCheck, labelClickCallback: (LabelWithCheck) -> (Unit)) {
             with(binding) {
+                item = labelWithCheck.labelWithTodo.label
                 chipHomeLabel.isChecked = labelWithCheck.isChecked
                 when (labelWithCheck.labelWithTodo.label.order) {
                     0 -> setHeaderLabel(labelWithCheck, labelClickCallback)
