@@ -28,4 +28,5 @@
     <color name="calendar_day_background_default">@color/gray_light</color>
 
     <color name="splash_title_color">@color/blue_normal</color>
+    <color name="icon_default">@color/black</color>
 </resources>
