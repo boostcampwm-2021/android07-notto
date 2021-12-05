@@ -10,4 +10,6 @@
     <color name="calendar_day_background_default">@color/gray_normal</color>
 
     <color name="splash_title_color">@color/white</color>
+    <color name="icon_default">@color/white</color>
+    <color name="icon_on_primary_color">@color/black</color>
 </resources>
