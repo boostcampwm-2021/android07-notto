@@ -77,6 +77,8 @@ class LabelWrapperAdapter(
                     }
                 })
             }
+
+            binding.executePendingBindings()
         }
     }
 
