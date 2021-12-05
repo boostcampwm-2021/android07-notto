@@ -1,13 +1,17 @@
-package com.example.nottokeyword
+package com.example.nottokeyword.datasource.remote
 
 import android.util.Log
+import com.example.nottokeyword.Keyword
+import com.example.nottokeyword.POPULAR_KEYWORD_LIMIT
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.tasks.await
 import kr.bydelta.koala.hnn.Tagger
+import java.util.*
 import javax.inject.Inject
 
-internal class KeywordDatabaseImpl @Inject constructor(private val database: DatabaseReference) :
-    KeywordDatabase {
+internal class KeywordRemoteDataSourceImpl @Inject constructor(
+    private val database: DatabaseReference
+) : KeywordRemoteDataSource {
 
     override suspend fun insertKeyword(content: String): Boolean {
         val keywords = getKeywordsFrom(content)
@@ -47,21 +51,22 @@ internal class KeywordDatabaseImpl @Inject constructor(private val database: Dat
         return result
     }
 
-    override suspend fun getKeywords(): List<Keyword> {
-        var list = listOf<Keyword>()
-
-        database.get().addOnSuccessListener {
+    override suspend fun getKeywords(callbackFromRepository: (List<Keyword>) -> Unit) {
+        database.orderByValue().limitToLast(POPULAR_KEYWORD_LIMIT).get().addOnSuccessListener {
             Log.i(TAG, "Got value ${it.value}")
 
-            list = it.children
-                .filter { child -> child.key != null && child.value != null }
-                .map { child -> Keyword(child.key!!, (child.value!! as Long).toInt()) }
-                .sortedByDescending { keyword -> keyword.count }
-        }.addOnFailureListener {
-            Log.e(TAG, "Error getting data", it)
-        }.await()
+            val newList = it.children.mapNotNull { child ->
+                child.key?.let { key ->
+                    child.value?.let { value ->
+                        Keyword(key, (value as Long).toInt())
+                    }
+                }
+            }.reversed()
 
-        return list
+            callbackFromRepository(newList)
+        }.addOnFailureListener {
+            callbackFromRepository(emptyList())
+        }
     }
 
     override suspend fun deleteKeyword(keyword: String): Boolean {
@@ -86,6 +91,6 @@ internal class KeywordDatabaseImpl @Inject constructor(private val database: Dat
     }
 
     companion object {
-        val TAG: String = KeywordDatabaseImpl::class.java.simpleName
+        val TAG: String = KeywordRemoteDataSourceImpl::class.java.simpleName
     }
 }

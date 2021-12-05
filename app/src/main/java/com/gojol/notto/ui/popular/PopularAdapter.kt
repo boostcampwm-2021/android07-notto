@@ -1,14 +1,16 @@
 package com.gojol.notto.ui.popular
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nottokeyword.Keyword
+import com.example.nottokeyword.PlaceState
 import com.gojol.notto.databinding.ItemPopularKeywordBinding
 
-class PopularAdapter :
+class PopularAdapter(private val callback: (String?) -> Unit) :
     ListAdapter<Keyword, PopularAdapter.PopularViewHolder>(PopularDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularViewHolder {
@@ -17,7 +19,8 @@ class PopularAdapter :
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            callback
         )
     }
 
@@ -25,13 +28,47 @@ class PopularAdapter :
         holder.bind(getItem(position))
     }
 
-    class PopularViewHolder(private val binding: ItemPopularKeywordBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class PopularViewHolder(
+        private val binding: ItemPopularKeywordBinding,
+        private val callback: (String?) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.apply {
+                setClickKeywordListener {
+                    callback(keyword?.word)
+                }
+            }
+        }
 
         fun bind(item: Keyword) {
             binding.apply {
                 keyword = item
                 place = absoluteAdapterPosition + 1
+
+                when (item.state) {
+                    PlaceState.New -> {
+                        binding.ivPopularKeywordUp.visibility = View.INVISIBLE
+                        binding.ivPopularKeywordDown.visibility = View.INVISIBLE
+                        binding.tvPopularKeywordNew.visibility = View.VISIBLE
+                    }
+                    PlaceState.Up -> {
+                        binding.ivPopularKeywordUp.visibility = View.VISIBLE
+                        binding.ivPopularKeywordDown.visibility = View.INVISIBLE
+                        binding.tvPopularKeywordNew.visibility = View.INVISIBLE
+                    }
+                    PlaceState.Down -> {
+                        binding.ivPopularKeywordUp.visibility = View.INVISIBLE
+                        binding.ivPopularKeywordDown.visibility = View.VISIBLE
+                        binding.tvPopularKeywordNew.visibility = View.INVISIBLE
+                    }
+                    else -> {
+                        binding.ivPopularKeywordUp.visibility = View.INVISIBLE
+                        binding.ivPopularKeywordDown.visibility = View.INVISIBLE
+                        binding.tvPopularKeywordNew.visibility = View.INVISIBLE
+                    }
+                }
+
                 executePendingBindings()
             }
         }

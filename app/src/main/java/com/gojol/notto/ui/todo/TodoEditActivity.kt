@@ -18,13 +18,15 @@ import com.gojol.notto.common.DELETE
 import com.gojol.notto.common.EventObserver
 import com.gojol.notto.common.LABEL_ADD
 import com.gojol.notto.common.LabelEditType
+import com.gojol.notto.common.POPULAR_KEYWORD
 import com.gojol.notto.common.REPEAT_TIME
 import com.gojol.notto.common.REPEAT_TIME_DATA
 import com.gojol.notto.common.REPEAT_TYPE
 import com.gojol.notto.common.REPEAT_TYPE_DATA
-import com.gojol.notto.common.SET_TIME_DATA
-import com.gojol.notto.common.SET_TIME_FINISH
-import com.gojol.notto.common.SET_TIME_START
+import com.gojol.notto.common.TIME_FINISH
+import com.gojol.notto.common.TIME_FINISH_DATA
+import com.gojol.notto.common.TIME_START
+import com.gojol.notto.common.TIME_START_DATA
 import com.gojol.notto.common.TIME_REPEAT
 import com.gojol.notto.common.TIME_REPEAT_DATA
 import com.gojol.notto.databinding.ActivityTodoEditBinding
@@ -65,7 +67,6 @@ class TodoEditActivity : AppCompatActivity() {
         initIntentExtra()
         initSelectedLabelRecyclerView()
         initObserver()
-        initTodoDialog()
         initEditTextTouchListener()
     }
 
@@ -95,10 +96,14 @@ class TodoEditActivity : AppCompatActivity() {
     }
 
     private fun initIntentExtra() {
-        val todo = intent.getSerializableExtra("todo") as Todo?
         val date = intent.getSerializableExtra("date") as LocalDate?
+        val todo = intent.getSerializableExtra("todo") as Todo?
+        val keyword = intent.getStringExtra(POPULAR_KEYWORD)
+
         todoEditViewModel.updateIsTodoEditing(todo)
         todoEditViewModel.updateDate(date)
+
+        if (keyword != null) todoEditViewModel.fillContentWithKeyword(keyword)
     }
 
     private fun initSelectedLabelRecyclerView() {
@@ -114,10 +119,11 @@ class TodoEditActivity : AppCompatActivity() {
     private fun initObserver() {
         todoEditViewModel.clickWrapper.isTodoEditing.observe(this) {
             if (it) {
-                todoEditViewModel.setupExistedTodo()
                 binding.tbTodoEdit.title = getString(R.string.todo_edit_title_edit)
+                todoEditViewModel.existedTodo.value?.let { existedTodo -> initTodoDialog(existedTodo) }
             } else {
                 binding.btnTodoEditDelete.visibility = View.GONE
+                todoEditViewModel.todo.value?.let { todo -> initTodoDialog(todo) }
             }
         }
         todoEditViewModel.clickWrapper.isBeforeToday.observe(this, {
@@ -155,9 +161,9 @@ class TodoEditActivity : AppCompatActivity() {
             if (!it) showSaveButtonDisabled()
             else finish()
         }
-        todoEditViewModel.clickWrapper.popLabelAddDialog.observe(this) {
+        todoEditViewModel.clickWrapper.popLabelAddDialog.observe(this, EventObserver {
             if (it) showLabelAddDialog()
-        }
+        })
         todoEditViewModel.clickWrapper.labelAddClicked.observe(this, EventObserver {
             onLabelAddClick()
         })
@@ -168,10 +174,18 @@ class TodoEditActivity : AppCompatActivity() {
             if (it) todoRepeatTimeDialog.show(supportFragmentManager, REPEAT_TIME)
         })
         todoEditViewModel.clickWrapper.timeStartClick.observe(this, EventObserver {
-            if (it) todoTimeStartDialog.show(supportFragmentManager, SET_TIME_START)
+            if (it) todoTimeStartDialog.show(
+                supportFragmentManager,
+                TIME_START,
+                todoEditViewModel.todo.value?.endTime
+            )
         })
         todoEditViewModel.clickWrapper.timeFinishClick.observe(this, EventObserver {
-            if (it) todoTimeFinishDialog.show(supportFragmentManager, SET_TIME_FINISH)
+            if (it) todoTimeFinishDialog.show(
+                supportFragmentManager,
+                TIME_FINISH,
+                todoEditViewModel.todo.value?.startTime
+            )
         })
         todoEditViewModel.clickWrapper.timeRepeatClick.observe(this, EventObserver {
             if (it) todoAlarmPeriodDialog.show(supportFragmentManager, TIME_REPEAT)
@@ -203,31 +217,31 @@ class TodoEditActivity : AppCompatActivity() {
                 .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
     }
 
-    private fun initTodoDialog() {
+    private fun initTodoDialog(todo: Todo) {
         todoDeletionDialog = DeletionDialog.newInstance(todoEditViewModel::updateTodoDeleteType)
 
         todoRepeatTypeDialog = RepeatTypeDialog.newInstance(
-            bundleOf(REPEAT_TYPE_DATA to todoEditViewModel.todoWrapper.value?.todo?.repeatType),
+            bundleOf(REPEAT_TYPE_DATA to todo.repeatType),
             todoEditViewModel::updateRepeatType
         )
 
         todoRepeatTimeDialog = RepeatTimeDialog.newInstance(
-            bundleOf(REPEAT_TIME_DATA to todoEditViewModel.todoWrapper.value?.todo?.startDate),
+            bundleOf(REPEAT_TIME_DATA to todo.startDate),
             todoEditViewModel::updateStartDate
         )
 
         todoAlarmPeriodDialog = AlarmPeriodDialog.newInstance(
-            bundleOf(TIME_REPEAT_DATA to todoEditViewModel.todoWrapper.value?.todo?.periodTime),
+            bundleOf(TIME_REPEAT_DATA to todo.periodTime),
             todoEditViewModel::updateTimeRepeat
         )
 
         todoTimeStartDialog = TimeStartDialog.newInstance(
-            bundleOf(SET_TIME_DATA to todoEditViewModel.todoWrapper.value?.todo?.startTime),
+            bundleOf(TIME_START_DATA to todo.startTime),
             todoEditViewModel::updateTimeStart
         )
 
         todoTimeFinishDialog = TimeFinishDialog.newInstance(
-            bundleOf(SET_TIME_DATA to todoEditViewModel.todoWrapper.value?.todo?.endTime),
+            bundleOf(TIME_FINISH_DATA to todo.endTime),
             todoEditViewModel::updateTimeFinish
         )
     }

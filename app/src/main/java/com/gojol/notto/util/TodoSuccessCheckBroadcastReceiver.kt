@@ -11,9 +11,11 @@ import android.app.PendingIntent
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.work.WorkRequest
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
 import com.gojol.notto.common.ACTION_FAIL
 import com.gojol.notto.common.ACTION_SUCCESS
+import com.gojol.notto.common.NOTIFICATION_CHECK_WORKER_UNIQUE_ID
 import com.gojol.notto.common.NOTIFICATION_TODO
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -21,7 +23,7 @@ import java.lang.reflect.Type
 
 class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
 
-    private lateinit var workRequest: WorkRequest
+    private lateinit var workRequest: OneTimeWorkRequest
     private val gson: Gson = Gson()
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -47,14 +49,21 @@ class TodoSuccessCheckBroadcastReceiver : HiltBroadcastReceiver() {
                 .setInputData(data)
                 .build()
         }
-        workManager.enqueue(workRequest)
-        notificationManager.cancel(todo.todoId)
-        if(notificationManager.activeNotifications.size == 1) {
+        workManager.enqueueUniqueWork(
+            NOTIFICATION_CHECK_WORKER_UNIQUE_ID,
+            ExistingWorkPolicy.APPEND,
+            workRequest
+        )
+        if(notificationManager.activeNotifications.size == LAST_NOTIFICATION_SIZE) {
             notificationManager.cancelAll()
+        } else {
+            notificationManager.cancel(todo.todoId)
         }
     }
 
     companion object {
+        const val LAST_NOTIFICATION_SIZE = 2
+
         fun getPendingIntent(context: Context, id: Int, data: Uri, action: String): PendingIntent {
             val intent = Intent(context, TodoSuccessCheckBroadcastReceiver::class.java).apply {
                 setData(data)

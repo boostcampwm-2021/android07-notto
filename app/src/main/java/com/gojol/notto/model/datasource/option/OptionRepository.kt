@@ -1,18 +1,12 @@
 package com.gojol.notto.model.datasource.option
 
-import javax.inject.Inject
-import javax.inject.Singleton
+import com.gojol.notto.network.GithubResponse
 
-@Singleton
-class OptionRepository @Inject constructor(
-    private val optionLocalDataSource: OptionDataSource
-) : OptionDataSource {
+interface OptionRepository {
 
-    override fun isPushNotificationChecked(): Boolean {
-        return optionLocalDataSource.isPushNotificationChecked()
-    }
+    fun isPushNotificationChecked(): Boolean
 
-    override fun saveIsPushNotificationChecked(isPushChecked: Boolean) {
-        optionLocalDataSource.saveIsPushNotificationChecked(isPushChecked)
-    }
+    fun saveIsPushNotificationChecked(isPushChecked: Boolean)
+
+    suspend fun getGitContributors(owner: String, repo: String): Result<GithubResponse>
 }

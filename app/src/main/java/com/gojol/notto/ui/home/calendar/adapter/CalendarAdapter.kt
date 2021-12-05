@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home.adapter
+package com.gojol.notto.ui.home.calendar.adapter
 
 import android.view.LayoutInflater
 import android.view.View.MeasureSpec
@@ -58,13 +58,13 @@ class CalendarAdapter(
         init {
             binding.today = LocalDate.now().dayOfMonth.toString()
             binding.vpCalendar.adapter = calendarViewPagerAdapter
+            setViewPagerPosition()
             setViewPagerPage(false)
-            setViewPagerDynamicHeight()
         }
 
         fun bind(date: LocalDate) {
             binding.date = date.format(formatter)
-            // submit 되기 전 height가 계산된 경우를 새로 계산
+
             setViewPagerHeightWithContent(calendarPosition)
 
             binding.btnToday.setOnClickListener {
@@ -85,14 +85,12 @@ class CalendarAdapter(
             )
         }
 
-        private fun setViewPagerDynamicHeight() {
+        private fun setViewPagerPosition() {
             binding.vpCalendar.registerOnPageChangeCallback(object :
                 ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
                     calendarPosition = position
-
-                    setViewPagerHeightWithContent(position)
                 }
             })
         }

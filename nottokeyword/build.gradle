@@ -51,10 +51,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.2.1"
 
-    // koala nlp
+    // KoalaNLP 한나눔
     implementation "kr.bydelta:koalanlp-hnn:2.1.4:assembly"
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.9'
 }

@@ -1,4 +1,4 @@
-package com.gojol.notto.ui.home.adapter
+package com.gojol.notto.ui.home.calendar.adapter
 
 import android.graphics.Typeface
 import android.view.LayoutInflater
@@ -54,6 +54,7 @@ class CalendarDayAdapter(private val dayClickCallback: (Int) -> (Unit)) :
             } else {
                 binding.ivSuccessLevelBackground.visibility = View.INVISIBLE
                 binding.ivSuccessLevel.visibility = View.INVISIBLE
+                binding.tvCalendarDay.visibility = View.INVISIBLE
             }
 
             binding.executePendingBindings()

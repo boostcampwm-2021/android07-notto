@@ -26,4 +26,8 @@
     <color name="calendar_day_default">@color/gray_deep</color>
     <color name="calendar_today_button">@color/black</color>
     <color name="calendar_day_background_default">@color/gray_light</color>
+
+    <color name="splash_title_color">@color/blue_normal</color>
+    <color name="icon_default">@color/black</color>
+    <color name="icon_on_primary_color">@color/white</color>
 </resources>

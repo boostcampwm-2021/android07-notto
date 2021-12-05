@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import com.gojol.notto.model.database.TodoLabelDatabase
 import com.gojol.notto.model.database.todolabel.TodoLabelDao
-import com.gojol.notto.model.datasource.todo.TodoLabelDataSource
 import com.gojol.notto.model.datasource.todo.TodoLabelLocalDataSource
+import com.gojol.notto.model.datasource.todo.TodoLabelLocalDataSourceImpl
+import com.gojol.notto.model.datasource.todo.TodoLabelRepository
+import com.gojol.notto.model.datasource.todo.TodoLabelRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,7 +35,13 @@ class TodoLabelDatabaseModule {
     }
 
     @Provides
-    fun provideLocalDataSource(todoLabelDao: TodoLabelDao): TodoLabelDataSource {
-        return TodoLabelLocalDataSource(todoLabelDao)
+    fun provideTodoLabelLocalDataSource(todoLabelDao: TodoLabelDao): TodoLabelLocalDataSource {
+        return TodoLabelLocalDataSourceImpl(todoLabelDao)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTodoLabelRepository(todoLabelLocalDataSource: TodoLabelLocalDataSource): TodoLabelRepository {
+        return TodoLabelRepositoryImpl(todoLabelLocalDataSource)
     }
 }

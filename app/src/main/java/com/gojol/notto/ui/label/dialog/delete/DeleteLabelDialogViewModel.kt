@@ -7,12 +7,14 @@ import com.gojol.notto.model.database.label.Label
 import com.gojol.notto.model.datasource.todo.TodoLabelRepository
 import com.gojol.notto.ui.DialogViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DeleteLabelDialogViewModel @Inject constructor(private val repository: TodoLabelRepository) :
-    DialogViewModel() {
+class DeleteLabelDialogViewModel @Inject constructor(
+    private val repository: TodoLabelRepository
+) : DialogViewModel() {
 
     private val _label = MutableLiveData<Label>()
     val label: LiveData<Label> = _label
@@ -20,8 +22,14 @@ class DeleteLabelDialogViewModel @Inject constructor(private val repository: Tod
     fun clickOkay() {
         label.value ?: return
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.deleteLabel(label.value!!)
+
+            repository.getAllLabel().forEachIndexed { index, label ->
+                if (label.order != index) {
+                    repository.updateLabel(label.copy(order = index))
+                }
+            }
         }
     }
 

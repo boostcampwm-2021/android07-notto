@@ -6,6 +6,7 @@
 
 package com.gojol.notto.ui.home.adapter
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +42,14 @@ class LabelWrapperAdapter(
 
     override fun getItemCount(): Int = 1
 
+    fun onSaveState(outState: Bundle) {
+        outState.putInt(KEY_SCROLL_X, lastScrollX)
+    }
+
+    fun onRestoreState(savedState: Bundle) {
+        lastScrollX = savedState.getInt(KEY_SCROLL_X)
+    }
+
     class LabelWrapperViewHolder(
         private val binding: ItemLabelListBinding,
         private val onClickMenu: (View) -> Unit
@@ -48,7 +57,6 @@ class LabelWrapperAdapter(
 
         init {
             binding.setEditClickListener {
-//                it.context.startActivity(Intent(it.context, EditLabelActivity::class.java))
                 onClickMenu(it)
             }
         }
@@ -69,6 +77,12 @@ class LabelWrapperAdapter(
                     }
                 })
             }
+
+            binding.executePendingBindings()
         }
+    }
+
+    companion object {
+        private const val KEY_SCROLL_X = "horizontal.wrapper.adapter.key_scroll_x"
     }
 }
