@@ -1,6 +1,5 @@
 package com.gojol.notto.ui.home.calendar
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,8 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.gojol.notto.R
 import com.gojol.notto.databinding.FragmentCalendarBinding
 import com.gojol.notto.ui.home.HomeFragment
@@ -24,20 +25,14 @@ import java.time.LocalDate
 @AndroidEntryPoint
 class CalendarFragment : Fragment(), TodayClickListener, TodoSwipeListener {
 
+    private lateinit var viewPool: RecyclerView.RecycledViewPool
     private lateinit var binding: FragmentCalendarBinding
     private val calendarViewModel: CalendarViewModel by viewModels()
     private val calendarDayAdapter = CalendarDayAdapter(::dayClickCallback)
-    private lateinit var dayClickListener: DayClickListener
-    private lateinit var monthSwipeListener: MonthSwipeListener
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        (parentFragment as? HomeFragment)?.let { homeFragment ->
-            dayClickListener = homeFragment
-            monthSwipeListener = homeFragment
-        }
-    }
+    private val dayClickListener: DayClickListener?
+        get() = parentFragment as? DayClickListener
+    private val monthSwipeListener: MonthSwipeListener?
+        get() = parentFragment as? MonthSwipeListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,6 +72,10 @@ class CalendarFragment : Fragment(), TodayClickListener, TodoSwipeListener {
         binding.rvCalendar.apply {
             adapter = calendarDayAdapter
             itemAnimator = null
+            if (::viewPool.isInitialized) {
+                setRecycledViewPool(viewPool)
+                (layoutManager as GridLayoutManager).recycleChildrenOnDetach = true
+            }
         }
     }
 
@@ -84,10 +83,10 @@ class CalendarFragment : Fragment(), TodayClickListener, TodoSwipeListener {
         calendarViewModel.monthlyAchievement.observe(viewLifecycleOwner, { itemList ->
             calendarDayAdapter.submitList(itemList)
             binding.progressCircular.isVisible = false
-            monthSwipeListener.onSwipe()
+            monthSwipeListener?.onSwipe()
         })
         calendarViewModel.monthlyCalendar.observe(viewLifecycleOwner, {
-            dayClickListener.onClick(LocalDate.of(it.year, it.month, it.selectedDay))
+            dayClickListener?.onClick(LocalDate.of(it.year, it.month, it.selectedDay))
         })
     }
 
@@ -106,9 +105,13 @@ class CalendarFragment : Fragment(), TodayClickListener, TodoSwipeListener {
 
     companion object {
         const val ITEM_ID_ARGUMENT = "item id"
-        fun newInstance(itemId: Long): CalendarFragment {
+        fun newInstance(
+            itemId: Long,
+            calendarPool: RecyclerView.RecycledViewPool
+        ): CalendarFragment {
             return CalendarFragment().apply {
                 arguments = bundleOf(ITEM_ID_ARGUMENT to itemId)
+                viewPool = calendarPool
             }
         }
     }
